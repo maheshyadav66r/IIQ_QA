@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Requester email">
+  <Source>
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.*;
+  public void sendEmail(String identityName,String approver,String status,String requesterName,String requesterEmail){
+    List toAddresses=new ArrayList();
+    EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-ContractorEmailTemplate-ApprovalNotification");  
+    if (emailTemplate != null) {
+      try{
+     log.error("approver is"+approver);
+        HashMap variables = null;
+        variables = new HashMap();
+        variables.put("status", status);
+        variables.put("approver",approver);
+        variables.put("identityName",identityName);
+          variables.put("requesterdisplayName",requesterName);
+        EmailOptions ops = new EmailOptions(requesterEmail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+      }
+      catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+      }
+    }
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

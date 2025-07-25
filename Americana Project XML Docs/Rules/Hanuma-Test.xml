@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Hanuma-Test">
+  <Source>
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.AuditConfig;
+  import sailpoint.object.*;
+  import java.util.*;
+  import java.text.SimpleDateFormat;
+  import java.text.*;
+  // required changes : identityName a
+  import java.text.SimpleDateFormat;
+  //  1. name of the identity(identityName).
+  // 2. name of the event (string1 value of audit event object and replace it in filter(Leaver)).
+  
+  String identityName = "000293";
+  identityName = "Identity:"+identityName;
+  //String DateOfEvent = "";  
+  QueryOptions qop = new QueryOptions();
+  qop.addFilter(Filter.and(Filter.eq("target",identityName),(Filter.eq("string1","Americana-LifecycleEvent-Leaver"))));
+  Iterator search = context.search(AuditEvent.class, qop);
+  
+  while(search.hasNext()) {
+    AuditEvent auditEvent = (AuditEvent) search.next();
+    //DateOfEvent = auditEvent.getCreated().toString();
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd"); // This line
+
+  return df.format(auditEvent.getCreated());
+    //return auditEvent.getCreated().toString();
+    return expiry;
+    //context.encrypt(DateOfEvent);
+    
+  }
+  //return DateOfEvent;
+
+
+
+  </Source>
+</Rule>
+
+</sailpoint>

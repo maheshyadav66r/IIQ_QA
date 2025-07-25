@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Manual_PowerBI_createfor_requestid">
+  <Source>
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.object.*;
+import java.sql.*;
+import java.io.*;
+import sailpoint.tools.Util;
+import sailpoint.api.Provisioner;
+import sailpoint.api.SailPointContext;
+import sailpoint.api.SailPointFactory;
+import sailpoint.object.IdentityRequest;
+import sailpoint.object.ProvisioningProject;
+import sailpoint.tools.GeneralException;
+
+import java.util.ArrayList;
+import java.util.List;  
+  
+String url = "jdbc:sqlserver://americana-server.database.windows.net:1433;database=BI_UserDB";
+String username = "BI_UserAccess";
+String password = "Biuser!@123#";
+Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+Connection connection = DriverManager.getConnection(url, username, password);  
+
+  try{  
+      
+      List addGroupList = new ArrayList();  
+      List fnlAccess = new ArrayList();
+      String idRequest = "0000011517";
+      String selectQuery = null; 
+      String costCenter = null;
+      String userStatus  = "T";  
+      String areaID = null;
+      String chainIDLocal = null;
+      String restNumber = null;
+      String compNumber = null;
+      String displayName = null;
+      String jobTitle = null;
+      String empID = null;
+      String userName = null; 
+      String email = null; 
+      String salesFlag = null;
+      String plFlag = null;
+      String marketingFlag = null;
+      int count = 0;
+      IdentityRequest idReqObj = context.getObjectByName(IdentityRequest.class, idRequest);
+      userName = idReqObj.getProvisionedProject().getMasterPlan().getNativeIdentity();  
+      //return   userName;
+      Identity identity = context.getObjectByName(Identity.class,userName);  
+      displayName = (String) identity.getAttribute("displayName");
+      jobTitle = (String) identity.getAttribute("jobTitle") == null ? "Not Available" : (String)identity.getAttribute("jobTitle");
+      empID = (null == (String)identity.getAttribute("employeeNumber")) ? "0" : (String)identity.getAttribute("employeeNumber") ;
+      // (String) identity.getAttribute("COST_CENTER") != null ? (String) identity.getAttribute("COST_CENTER") : "0";  
+      //return empID;  
+      ProvisioningPlan.AccountRequest acctReq = (ProvisioningPlan.AccountRequest) idReqObj.getProvisionedProject().getMasterPlan().getAccountRequest("Microsoft Power BI");
+      addGroupList = acctReq.getAttributeRequests("addGroups");
+      email = acctReq.getNativeIdentity();
+      //return email;  
+      addGroupList = (List) acctReq.getAttributeRequest("addGroups").getValue(context);  
+       costCenter = String.valueOf(acctReq.getAttributeRequest("COST_CENTER").getValue());
+      //return  addGroupList; 
+     fnlAccess = (List) acctReq.getAttributeRequest("fnlAccess").getValue(context);  
+     //return fnlAccess;
+      for (Object sName : addGroupList){
+        String rName = String.valueOf(sName).split("\\|")[0].trim();
+       // return rName;
+        if (rName.contains("'")){
+          rName = rName.replace("'", "''");
+        }
+      String cDesc = sName.split("\\|")[2].trim();
+      selectQuery = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+      Statement st = connection.createStatement();
+      ResultSet rs = st.executeQuery(selectQuery);
+        while(rs.next()){
+          String storeID = rs.getString("StoreID");
+          areaID = rs.getString("AREA_ID");
+          chainIDLocal = rs.getString("CHAIN_ID_LOCAL");
+          if (storeID.length() &gt; 5) {
+            restNumber = storeID.substring((storeID.length()-5),(storeID.length()));
+            if (storeID.length() == 6) {
+              compNumber = storeID.substring(0,1);
+            } else if (storeID.length() == 7) {
+              compNumber = storeID.substring(0,2);
+            }
+          }
+        }
+      //return "CN--"+compNumber+"-RN-"+restNumber+"-CHN-"+chainIDLocal+"-AN-"+areaID;
+      salesFlag = fnlAccess.contains("Sales") ? "T" :"F";
+      plFlag = fnlAccess.contains("P/L") ? "T" :"F";
+      marketingFlag = fnlAccess.contains("Marketing") ? "T" :"F";
+      //return salesFlag+"-"+plFlag+"-"+marketingFlag;
+      insertQuery = "INSERT INTO USERDB.User_Security VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+      PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+      insertStatement.setString(1, userName+" - "+displayName+" - ("+jobTitle+")");
+      insertStatement.setString(2, "A");
+      insertStatement.setString(3, "F");
+      insertStatement.setString(4,email);
+      insertStatement.setInt(5, Integer.parseInt(empID));
+      insertStatement.setInt(6, Integer.parseInt(compNumber));
+      insertStatement.setInt(7, Integer.parseInt(restNumber));
+      insertStatement.setInt(8, Integer.parseInt(chainIDLocal));
+      insertStatement.setInt(9, Integer.parseInt(areaID));
+      insertStatement.setString(10, "F");
+      insertStatement.setString(11, "F");
+      insertStatement.setString(12, "F");
+      insertStatement.setString(13, salesFlag);
+      insertStatement.setString(14, plFlag);
+      insertStatement.setString(15, marketingFlag);
+      insertStatement.setString(16, "F");
+      insertStatement.setString(17, "F");
+      insertStatement.setString(18, userName+" - "+jobTitle);
+      insertStatement.setInt(19, Integer.parseInt(empID));
+      insertStatement.setInt(20, Integer.parseInt(costCenter));
+      insertStatement.setString(21, "T");
+      int rows = insertStatement.executeUpdate();
+      System.out.println("Number of Rows Affected: "+rows);
+      
+      count = count +rows; 
+      }
+      System.out.println("Number of Rows Count: "+count);
+  } 
+  catch (Exception e){
+        System.out.println("JDBCApplication Create Error exception: " +e.getMessage());    
+  }
+	finally{ 
+    try
+		 { 
+       if (connection != null) 
+       connection.close(); 
+     }
+		catch (SQLException e) 
+		 { 
+       e.printStackTrace(); 
+     } 
+  }
+  
+</Source>
+</Rule>
+
+</sailpoint>

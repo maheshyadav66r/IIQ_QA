@@ -1,0 +1,1189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow explicitTransitions="true" name="Americana-Workflow-Creation of Store Email Accounts">
+  <Variable initializer="false" name="transient" />
+  <Variable initializer="true" name="trace" />
+  <Variable initializer="adUserCreate" name="flow" />
+  <Variable name="identityName" />
+  <Variable name="Work_group" />
+  <Variable name="wg_mail" />
+  <Variable name="WG" />
+  <Variable name="storeNumber" />
+  <Variable name="secondaryApprover" />
+  <Variable initializer="false" name="optimisticProvisioning" />
+  <Variable name="launcher">
+    <Description>The name of the identity.</Description>
+    <Script>
+      <Source>
+        return context.getUserName();     
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="launcheremail">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import org.apache.log4j.Logger;
+
+          
+//Logger log=Logger.getLogger("customRule4");
+        String launcherEmail;
+        
+          Identity currentUser = context.getObjectByName(Identity.class,launcher);
+         if(currentUser!=null){
+          launcherEmail=currentUser.getEmail();
+		 // log.error("launcher is not null :"+launcherEmail);
+		  return launcherEmail;
+          }
+              
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="launchername">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import org.apache.log4j.Logger;
+
+          
+//Logger log=Logger.getLogger("customRule4");
+        String launcherEmail;
+        
+          Identity currentUser = context.getObjectByName(Identity.class,launcher);
+         if(currentUser!=null){
+          launcherEmail=currentUser.getDisplayName();
+		  //log.error("launcher is not null :"+launcherEmail);
+		  return launcherEmail;
+          }
+              
+      </Source>
+    </Script>
+  </Variable>
+  <Variable initializer="owner,manager" name="approvalScheme">
+    <Description>
+      none
+      owner
+      manager
+      securityOfficer
+      identity
+    </Description>
+  </Variable>
+  <Variable initializer="serial" input="true" name="approvalMode">
+    <Description>
+      parallel
+      parallelPoll
+      serial
+      serialPoll
+      any
+    </Description>
+  </Variable>
+  <Variable initializer="none" input="true" name="notificationScheme">
+    <Description>
+      none or null
+      user
+      manager
+      requester
+    </Description>
+  </Variable>
+  <Variable input="true" name="approvalEmailTemplate">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable name="fileParameters" />
+  <Description>Managing Identity Workflow</Description>
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="Americana_Contractor_Rule_Library" />
+  </RuleLibraries>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="User verifycation" />
+  </Step>
+  <Step icon="Default" name="User verifycation" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName" send="">
+      <AfterScript>
+        <Source>
+  
+import org.apache.log4j.Logger;
+import sailpoint.object.Identity;
+          
+//Logger log=Logger.getLogger("customRule4");
+          
+          log.error("Country" +Country);
+           log.error("Brand" +Brand);
+           wfcontext.setVariable("Brand",Brand);
+           wfcontext.setVariable("Location",Location);
+           wfcontext.setVariable("storeNumber",storeNumber);
+           wfcontext.setVariable("Country",Country);
+           wfcontext.setVariable("Department",Department); wfcontext.setVariable("displayName",displayName);wfcontext.setVariable("managerName",managerName);
+        wfcontext.setVariable("launcheremail",launcheremail);
+        
+    
+          String deptHead="37984";
+           String wg;
+          String wg_name;
+		   String wg_mail;
+        wfcontext.setVariable("secondaryApprover",deptHead);
+          
+      if(Country != null &amp;&amp; Country.equals("United Arab Emirates")){
+        wg="Mohamed Hassan/Ahmed Elkabany/Imran Shaikh";
+          wg_name="UAE_WG_SLC";
+		  wg_mail="mhelnagar@americana-food.com/akapany@americana-food.com/ishaikh@americana-food.com";
+        log.error("UAE");
+          log.error("wg"+wg);
+          log.error("wg_name :"+wg_name);
+          
+          }
+          
+          else if(Country.equalsIgnoreCase("Qatar")){
+           wg="Nayer Sayed";
+           wg_name="QA_WG_SL";
+          wg_mail="nsalah@americana-food.com";
+          
+          }
+          else if(Country.equalsIgnoreCase("Kuwait")){
+           wg="Mohamed Hassan/Mohamed Ezz";
+           wg_name="KW_WG_SL";
+           wg_mail="mhelnagar@americana-food.com/maabuelezz@americana-food.com";
+         
+          }
+          
+          else if(Country.equalsIgnoreCase("Lebanon")){
+           wg="Mohamed Hassan/Imran Shaikh";
+           wg_name="LB_WG_SLC";
+           wg_mail="mhelnagar@americana-food.com/ishaikh@americana-food.com";
+          }
+          
+           else if(Country.equalsIgnoreCase("India")){
+           wg="Mohamed Hassan/Imran Shaikh";
+           wg_name="IN_WG_SLC";
+          wg_mail="mhelnagar@americana-food.com/ishaikh@americana-food.com";
+          }
+          
+           else if(Country.equalsIgnoreCase("Morocco")){
+           wg="Mohamed Hassan/Imran Shaikh";
+           wg_name="MO_WG_SLC";
+          wg_mail="mhelnagar@americana-food.com/ishaikh@americana-food.com";
+          }
+          
+           else if(Country.equalsIgnoreCase("Oman")){
+           wg="Mohamed Hassan/Imran Shaikh";
+           wg_name="OM_WG_SLC";
+          wg_mail="mhelnagar@americana-food.com/ishaikh@americana-food.com";
+          }
+        
+           else if(Country.equalsIgnoreCase("Bahrain")){
+           wg="Ali Tawfiq ";
+           wg_name="BH_WG_SLC";
+          wg_mail="ashheimat@americana-food.com";
+          
+          
+          }
+        
+           else if(Country.equalsIgnoreCase("KSA")){
+           wg="Ali Tawfiq";
+           wg_name="SA_WG_SLC";
+           wg_mail="ashheimat@americana-food.com";
+          
+          }
+        
+           else if(Country.equalsIgnoreCase("Kazakhstan")){
+           wg="Vadim Chshannikov";
+           wg_name="KZ_WG_SLC";
+          
+           wg_mail="vchshannikov@americana-food.com";
+          }
+        
+           else if(Country.equalsIgnoreCase("Iraq-Erbil") || Country.equalsIgnoreCase("Iraq-Baghdad")){
+           wg="Mohammad Khair Eid";
+           wg_name="IQ_WG_SLC";
+           wg_mail="mkhair@americana-food.com";
+          
+          }
+            else if(Country.equalsIgnoreCase("Egypt")){
+           wg="Mohamed Abdelsamee Elsayed";
+           wg_name="EG_WG_SLC";
+          wg_mail="mabdelsamee@americana-food.com";
+          
+          }
+            else if(Country.equalsIgnoreCase("Jordan")){
+           wg="Ghanem Mohammad Mohamadrdan";
+           wg_name="JO_WG_SLC";
+            wg_mail="gmohammad@americana-food.com";
+          
+          }
+        
+          wfcontext.setVariable("WG",wg);
+           wfcontext.setVariable("Work_group", wg_name);
+           wfcontext.setVariable("wg_mail", wg_mail);
+          
+          
+          //wfcontext.setVariable("launcheremail",launcheremail);
+         
+          
+          
+          
+</Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="PS_Identity_Selection_Form" />
+      <Arg name="workItemDescription" value="Store Account Creation Form" />
+      <InterceptorScript>
+        <Source>
+
+        import sailpoint.workflow.IdentityRequestLibrary;
+        import java.util.List;
+		import sailpoint.object.Workflow;  
+        import sailpoint.object.Attributes;
+        import java.util.Date;
+        import java.util.Calendar;
+          
+        if (method != null &amp;&amp; method.equals(Workflow.INTERCEPTOR_OPEN_WORK_ITEM)) {
+			if (workflow != null) {
+				if (item != null &amp;&amp; context != null) {
+					Calendar cal = Calendar.getInstance();
+					cal.add(Calendar.MINUTE,15);
+          
+					item.setExpiration(cal.getTime());
+					item.setWakeUpDate(cal.getTime()); 
+					context.saveObject(item);
+					context.commitTransaction();
+				}
+			}
+			IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+        }
+        </Source>
+      </InterceptorScript>
+    </Approval>
+    <Transition to="getCSVWG" when="approved" />
+    <Transition to="Stop" when="&quot;Expired&quot;.equals(lastApprovalState) || &quot;Rejected&quot;.equals(lastApprovalState)" />
+  </Step>
+  <Step name="getCSVWG" posX="738" posY="10">
+    <Script>
+      <Source>
+         import org.apache.log4j.Logger;
+
+          
+
+         String csvData =getCSVFormatStoreFirstLevel(Work_group,WG,wg_mail);
+        wfcontext.setVariable("csvData",csvData);
+      </Source>
+    </Script>
+    <Transition to="launcher Detailes" />
+  </Step>
+  <Step icon="Default" name="launcher Detailes" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName" send="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName,Work_group,WG,wg_mail,csvData">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="PS_Identity_Selection_Approval_Form" />
+      <Arg name="workItemDescription" value="User Account Request" />
+    </Approval>
+    <Transition to="File Upload Form" when="approved" />
+    <Transition to="User verifycation" when="!approved" />
+  </Step>
+  <Step icon="Approval" name="File Upload Form" posX="928" posY="126">
+    <Approval mode="serial" owner="ref:launcher" renderer="lcmFileUploadRenderer.xhtml" send="identityModel">
+      <Arg name="launcher" value="$(launcher)" />
+      <Arg name="workItemDescription" value="Store Creation : Upload File For $(displayName)" />
+      <Arg name="workItemRequester" value="$(launcher)" />
+      <Arg name="workItemType" value="Generic" />
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="SendEmail-initialNotification" />
+  </Step>
+  <Step icon="Task" name="SendEmail-initialNotification">
+    <Arg name="displayName" value="ref:displayName" />
+    <Arg name="requester" value="ref:launchername" />
+    <Arg name="storeNumber" value="ref:storeNumber" />
+    <Arg name="WG" value="ref:WG" />
+    <Arg name="Work_group" value="ref:Work_group" />
+    <Arg name="wg_mail" value="ref:wg_mail" />
+    <Arg name="launcheremail" value="ref:launcheremail" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the 
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.EmailOptions;
+        import sailpoint.object.EmailTemplate;
+        import sailpoint.object.*;
+        log.error("inside send email step");
+        
+         /* Changes added as a part of file upload process */
+		WorkflowCase wfCase = wfcontext.getWorkflowCase();
+		if(null != wfCase @and null != wfCase.getWorkflow() @and null != wfCase.getWorkflow().getVariables() @and null != wfCase.getWorkflow().getVariables().get("fileParameters")){
+			List vars = (List) wfCase.getWorkflow().getVariables().get("fileParameters");
+			if(null != vars @and vars.size() &gt; 0){
+				Map mapVars = (Map) vars.get(0);
+				if(null != mapVars){
+					String url = mapVars.get("url");
+					String updatedURL = "";
+					if(null != url @and !"".equalsIgnoreCase(url)){
+						updatedURL = "&lt;a href=\""+url+"\" target=\"_blank\"&gt;View Attachment&lt;/a&gt;";
+					}
+					String description = mapVars.get("description");
+					if(null != updatedURL @and !"".equalsIgnoreCase(updatedURL) @and null != description @and !"".equalsIgnoreCase(description)){
+						Map fileDetailsMap = new HashMap();
+						fileDetailsMap.put("Attachment",updatedURL);
+						fileDetailsMap.put("Description",description);
+						if(null != fileDetailsMap @and fileDetailsMap.size() &gt; 0){
+							wfcontext.setVariable("fileParameters",fileDetailsMap);	
+						}
+					}
+				}
+			}
+		}
+     /* Changes Until Above */   
+     
+        List toAddresses=new ArrayList();
+       // toAddresses.add(launcheremail);
+        EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-StoreLevel-IniatialNotification-To-Requestor");  
+        if (emailTemplate != null) {
+        try{
+       
+
+        HashMap variables = null;
+        variables = new HashMap();
+        variables.put("requester", requester);
+        variables.put("displayName",displayName);
+        variables.put("Work_group",Work_group);
+         variables.put("WG",WG);
+		 variables.put("wg_mail",wg_mail);
+         variables.put("storeNumber",storeNumber);
+        EmailOptions ops = new EmailOptions(launcheremail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+        }
+        catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="IDRInitailize" />
+  </Step>
+  <Step icon="Default" name="IDRInitailize" posX="138" posY="13">
+    <Arg name="identityName" value="ref:launcher" />
+    <Arg name="identityDisplayName" value="ref:launcher" />
+    <Arg name="optimisticProvisioning" value="ref:optimisticProvisioning" />
+    <Arg name="flow" value="Store Level Email Account Approvals" />
+    <Arg name="plan">
+      <Script>
+        <Source>
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.object.Identity;
+          import sailpoint.object.ProvisioningPlan.AccountRequest;
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.api.Provisioner;
+          
+          Identity idObj =  context.getObjectByName(Identity.class,launcher);
+          ProvisioningPlan plan = new ProvisioningPlan(); 
+          plan.setIdentity(idObj);
+          AccountRequest accReq = new AccountRequest();
+          accReq.setApplication("Active Directory");
+          accReq.setOp(ProvisioningPlan.ObjectOperation.Create);
+
+
+          accReq.setNativeIdentity(idObj.getName());
+          plan.add(accReq);
+          return plan;
+
+        </Source>
+      </Script>
+    </Arg>
+    <Return name="identityRequestId" to="identityRequestId" />
+    <Return name="approvalSet" to="approvalSet" />
+    <Return name="project" to="project" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Identity Request Initialize" />
+    </WorkflowRef>
+    <Transition to="WorkGroupApproval" />
+  </Step>
+  <Step name="WorkGroupApproval">
+    <Approval mode="any" name="Blaaa" return="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName" send="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName,Work_group,WG,fileParameters,csvData">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="PS_Identity_Selection_Approval_WorkGroupApproval" />
+      <Arg name="workItemNotificationTemplate" value="Americana-ContractorApprover-Notification-StoreLevel-WGA" />
+      <Arg name="workItemDescription" value="Store Level Email Creation - First Level Approval Form" />
+      <Arg name="displayName" value="ref:displayName" />
+      <Arg name="requester" value="ref:launchername" />
+      <Arg name="storeNumber" value="ref:storeNumber" />
+      <Arg name="WG" value="ref:WG" />
+      <Arg name="wg_mail" value="ref:wg_mail" />
+      <Arg name="Work_group" value="ref:Work_group" />
+      <Arg name="description" value="ref:workItemDescription" />
+      <Arg name="launcheremail" value="ref:launcheremail" />
+      <OwnerScript>
+        <Source>
+          if(Country != null &amp;&amp; Country.equals("United Arab Emirates"))
+          return "UAE_WG_SLC";
+          if(Country != null &amp;&amp; Country.equals("Qatar")) 
+          return "QA_WG_SLC";     
+          if(Country != null &amp;&amp; Country.equals("Kuwait")) 
+          return "KW_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("Oman")) 
+          return "OM_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("Lebanon")) 
+          return "LB_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("India")) 
+          return "IN_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("Morocco")) 
+          return "MO_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("Bahrain")) 
+          return "BH_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("KSA")) 
+          return "SA_WG_SLC";
+           if(Country != null &amp;&amp; Country.equals("Kazakhstan")) 
+          return "KZ_WG_SLC";
+           if(Country != null &amp;&amp; (Country.equals("Iraq-Erbil") || Country.equals("Iraq-Baghdad"))) 
+          return "IQ_WG_SLC";
+		       if(Country != null &amp;&amp; Country.equals("Egypt")) 
+          return "EG_WG_SLC";
+		       if(Country != null &amp;&amp; Country.equals("Jordan")) 
+          return "JO_WG_SLC";
+        </Source>
+      </OwnerScript>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if ((ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) @and (ownerIdentity.isWorkgroup() @and !currentUser.isInWorkGroup(ownerIdentity))) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="SendEmail-WGapprovalNotification" when="approved" />
+    <Transition to="closeAR" when="!approved" />
+  </Step>
+  <Step icon="Task" name="SendEmail-WGapprovalNotification">
+    <Arg name="displayName" value="ref:displayName" />
+    <Arg name="requester" value="ref:launchername" />
+    <Arg name="storeNumber" value="ref:storeNumber" />
+    <Arg name="WG" value="ref:WG" />
+    <Arg name="Work_group" value="ref:Work_group" />
+    <Arg name="wg_mail" value="ref:wg_mail" />
+    <Arg name="launcheremail" value="ref:launcheremail" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the 
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.EmailOptions;
+        import sailpoint.object.EmailTemplate;
+        import sailpoint.object.*;
+        log.error("inside send email step");
+     
+        List toAddresses=new ArrayList();
+       // toAddresses.add(launcheremail);
+        EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-StoreLevel-IniatialNotification-To-Requestor-deptHead is pending");  
+        if (emailTemplate != null) {
+        try{
+       
+
+        HashMap variables = null;
+        variables = new HashMap();
+         variables.put("requester", requester);
+        variables.put("displayName",displayName);
+        variables.put("Work_group",Work_group);
+         variables.put("WG",WG);
+		 variables.put("wg_mail",wg_mail);
+         variables.put("storeNumber",storeNumber);
+        EmailOptions ops = new EmailOptions(launcheremail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+        }
+        catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+        }
+        }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		 </Source>
+    </Script>
+    <Transition to="getCSVdeptHead" />
+  </Step>
+  <Step name="getCSVdeptHead" posX="738" posY="10">
+    <Script>
+      <Source>
+         import org.apache.log4j.Logger;
+
+          
+
+         String csvDatadeptHead = getCSVFormatStoreSecondLevel(Work_group, WG,wg_mail);
+        wfcontext.setVariable("csvDatadeptHead",csvDatadeptHead);
+		
+		
+		
+		
+      </Source>
+    </Script>
+    <Transition to="Department Head Approval" />
+  </Step>
+  <Step icon="Default" name="Department Head Approval" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:secondaryApprover" return="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName" send="Brand,Location,storeNumber,Country,Department,displayName,justification,otherJustificationReason,managerName,Work_group,WG,fileParameters,csvDatadeptHead">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="PS_Identity_Selection_Approval_DepartmentHead" />
+      <Arg name="workItemDescription" value="Store Level Email Creation - Second Level (Department Head) Approval Form" />
+      <Arg name="workItemNotificationTemplate" value="Americana-ContractorApprover-Notification-StoreLevel-DeptHead" />
+      <Arg name="displayName" value="ref:displayName" />
+      <Arg name="requester" value="ref:launchername" />
+      <Arg name="WG" value="ref:WG" />
+      <Arg name="Work_group" value="ref:Work_group" />
+      <Arg name="wg_mail" value="ref:wg_mail" />
+      <Arg name="description" value="ref:workItemDescription" />
+      <Arg name="storeNumber" value="ref:storeNumber" />
+    </Approval>
+    <Transition to="ApproValCompletionNotification" when="approved" />
+    <Transition to="closeAR" when="!approved" />
+  </Step>
+  <Step icon="Task" name="ApproValCompletionNotification">
+    <Arg name="displayName" value="ref:displayName" />
+    <Arg name="requester" value="ref:launchername" />
+    <Arg name="storeNumber" value="ref:storeNumber" />
+    <Arg name="WG" value="ref:WG" />
+    <Arg name="Work_group" value="ref:Work_group" />
+    <Arg name="wg_mail" value="ref:wg_mail" />
+    <Arg name="launcheremail" value="ref:launcheremail" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the 
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.EmailOptions;
+        import sailpoint.object.EmailTemplate;
+        import sailpoint.object.*;
+        log.error("inside send email step");
+     
+        List toAddresses=new ArrayList();
+        //toAddresses.add(launcheremail);
+        EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-StoreLevel-IniatialNotification-To-Requestor-completion");  
+        if (emailTemplate != null) {
+        try{
+       
+
+        HashMap variables = null;
+        variables = new HashMap();
+         variables.put("requester", requester);
+        variables.put("displayName",displayName);
+        variables.put("Work_group",Work_group);
+         variables.put("WG",WG);
+         variables.put("storeNumber",storeNumber);
+		  variables.put("wg_mail",wg_mail);
+        EmailOptions ops = new EmailOptions(launcheremail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+        }
+        catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="create" />
+  </Step>
+  <Step icon="Default" name="create" posX="248" posY="10" resultVariable="identityName">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import java.util.*;
+
+        
+        HashMap map=new HashMap();
+        map.put("T.G.I FRIDAYS","tgi");
+        map.put("Hardees","hrd");
+        map.put("KFC","kfc");
+        map.put("Pizza Hut","pht");
+        map.put("Krispy Kreme","kk");
+        map.put("Wimpy","wmp");
+        map.put("Chicken Tikka","tk");
+        map.put("Pavilion","pav");
+        map.put("Peet's Coffee","pts");
+        map.put("Costa","costa");
+		    map.put("Grand Cafe","grand");
+		    map.put("Fish Market","fm");
+		    map.put("Baskin Robins","bsk");
+
+        HashMap map1=new HashMap();
+        map1.put("United Arab Emirates","ae");
+        map1.put("Qatar","qa");
+        map1.put("Kuwait","kw");
+        map1.put("Lebanon","lb");
+        map1.put("India","in");
+        map1.put("Morocco","ma");
+        map1.put("Oman","om");
+        map1.put("Bahrain","bh");
+        map1.put("KSA","sa");
+        map1.put("Kazakhstan","kz");
+        map1.put("Iraq-Erbil","iq");
+        map1.put("Iraq-Baghdad","iqb");
+        map1.put("Egypt", "eg");
+        map1.put("Jordan", "jo");
+        
+        HashMap countryMap=new HashMap();
+        countryMap.put("United Arab Emirates","AE");
+        countryMap.put("Qatar","QA");
+        countryMap.put("Kuwait","KW");
+        countryMap.put("Lebanon","LB");
+        countryMap.put("India","IN");
+        countryMap.put("Morocco","MA");
+        countryMap.put("Oman","OM");
+        countryMap.put("Bahrain","BH");
+        countryMap.put("KSA","SA");
+        countryMap.put("Kazakhstan","KZ");
+        countryMap.put("Iraq-Erbil","IQ");
+        countryMap.put("Iraq-Baghdad","IQ");
+		    countryMap.put("Egypt","EG");
+		    countryMap.put("Jordan","JO");
+
+        String disName=map1.get(Country)+map.get(Brand)+storeNumber+"ID";
+        String email = map1.get(Country)+map.get(Brand)+storeNumber+"@americana-food.com";
+        Identity id=new Identity();
+        
+        id.setName(disName.toLowerCase());
+        id.setFirstname(Brand);
+        id.setLastname(Location);
+        id.setEmail(email);
+        id.setDisplayName(displayName);
+        id.setAttribute("gradeCode","SE");
+        id.setAttribute("country",countryMap.get(Country));
+		/* Added this as a part of Form Changes */
+		Identity managerIdentity = context.getObject(Identity.class,managerName);
+        if(null != managerIdentity){
+        	id.setManager(managerIdentity);
+        }
+		
+		/* Changes Until Above */
+
+        context.saveObject(id);
+        context.commitTransaction();
+
+        return id.getName();
+      
+      </Source>
+    </Script>
+    <Transition to="adProvision" />
+  </Step>
+  <Step icon="Default" name="adProvision" posX="326" posY="10" resultVariable="resultPlan">
+    <Script>
+      <Source>
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+
+        import sailpoint.api.PasswordGenerator;
+        import sailpoint.object.PasswordPolicy;
+        import sailpoint.tools.Util;
+
+
+        String policyName = "Americana-AD-PasswordPolicy";
+        PasswordPolicy policyAD = context.getObjectByName(PasswordPolicy.class, policyName);
+        String   password = new PasswordGenerator(context).generatePassword(policyAD);
+        policyAD = null;
+
+
+        if(identityName !=null) {
+
+        HashMap qaOUmap=new HashMap();
+        qaOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("KFC","OU=KFC,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Peet's Coffee","OU=Peet’s Coffee,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Chicken Tikka","OU=Chicken Tikka,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Wimpy","OU=Wimpy,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+        qaOUmap.put("Pavilion","OU=Pavilion,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+
+
+        HashMap aeOUmap=new HashMap();
+        aeOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("KFC","OU=KFC,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Peet's Coffee","OU=PEETS,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Chicken Tikka","OU=TIKKA,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Wimpy","OU=WIMPY,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        aeOUmap.put("Pavilion","OU=Pavilion,OU=Chains,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap kwOUmap=new HashMap();
+        kwOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("KFC","OU=KFC,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Peet's Coffee","OU=PEETS,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=UAE-Office,OU=Americana Office,OU=Test HCM,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Chicken Tikka","OU=TIKKA,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Wimpy","OU=WIMPY,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        kwOUmap.put("Pavilion","OU=WIMPY,OU=Chains,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap omOUmap=new HashMap();
+        omOUmap.put("Hardees", "OU=HARDEES,OU=Chains,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global");
+		    omOUmap.put("KFC", "OU=KFC,OU=Chains,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global");
+		    omOUmap.put("T.G.I FRIDAYS", "OU=TGI,OU=Chains,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap bhOUmap=new HashMap();
+        bhOUmap.put("Hardees", "OU=HARDEES,OU=Chains,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global");
+        bhOUmap.put("KFC","OU=KFC,OU=Chains,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global");
+        bhOUmap.put("Krispy Kreme", "OU=Krispy Kreme,OU=Chains,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global");
+        bhOUmap.put("Pizza Hut", "OU=Pizza Hut,OU=Chains,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global");
+        bhOUmap.put("T.G.I FRIDAYS", "OU=TGI,OU=Chains,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global");
+                        
+        HashMap lbOUmap=new HashMap();
+        lbOUmap.put("KFC", "OU=KFC,OU=Chains,OU=Lebanon-Office,OU=Americana Office,DC=Americana,DC=global");
+        lbOUmap.put("Krispy Kreme", "OU=Krispy Kreme,OU=Chains,OU=Lebanon-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap moOUmap=new HashMap();
+        moOUmap.put("KFC","OU=KFC,OU=Chains,OU=Morocco-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap saOUmap=new HashMap();
+        saOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("KFC","OU=KFC,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("KKD Catering","OU=KKD Catering,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Long Horn","OU=Long Horn,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Olive Garden","OU=Olive Garden,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Peet's Coffee","OU=PEETS,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Red Lobster","OU=Red Lobster,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        saOUmap.put("Chicken Tikka","OU=TIKKA,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap kzOUmap=new HashMap();
+        kzOUmap.put("Costa","OU=Costa,OU=Chains,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global");
+        kzOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global");
+        kzOUmap.put("KFC","OU=KFC,OU=Chains,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global");
+        kzOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global");
+        kzOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global");
+        
+        HashMap iqOUmap=new HashMap();
+        iqOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Iraq-Office,OU=Americana Office,DC=Americana,DC=global");
+        iqOUmap.put("KFC","OU=KFC,OU=Chains,OU=Iraq-Office,OU=Americana Office,DC=Americana,DC=global");
+        iqOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=Iraq-Office,OU=Americana Office,DC=Americana,DC=global");
+		
+		HashMap egOUmap=new HashMap();
+        egOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("KFC","OU=KFC,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Baskin Robins","OU=Baskin,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Costa","OU=Costa,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Fish Market","OU=Fish Market,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Grand Cafe","OU=Grand Cafe,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Wimpy","OU=Wimpy,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("T.G.I FRIDAYS","OU=TGI,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+        egOUmap.put("Chicken Tikka","OU=TIKKA,OU=Chains,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global");
+		
+		HashMap joOUmap=new HashMap();
+        joOUmap.put("Hardees","OU=HARDEES,OU=Chains,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global");
+        joOUmap.put("KFC","OU=KFC,OU=Chains,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global");
+        joOUmap.put("Pizza Hut","OU=Pizza Hut,OU=Chains,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global");
+		    joOUmap.put("Krispy Kreme","OU=Krispy Kreme,OU=Chains,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global");
+		    joOUmap.put("Costa","OU=Costa,OU=Chains,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global");
+
+        HashMap map1=new HashMap();
+        map1.put("United Arab Emirates","6844");
+        map1.put("Qatar","4548");
+        map1.put("India","5087");
+        map1.put("Lebanon","135797");
+        map1.put("Oman","3629");
+        map1.put("Bahrain","5087");
+        map1.put("Morocco","5087");
+        map1.put("KSA","4027");
+        map1.put("Kazakhstan","NA");
+        map1.put("Iraq-Erbil","NA");
+        map1.put("Iraq-Baghdad","NA");
+	    	map1.put("Egypt","379");
+		    map1.put("Jordan","941051");
+
+        HashMap map2=new HashMap();
+        map2.put("United Arab Emirates","Sharjah");
+        map2.put("Qatar","Doha");
+        map2.put("Kuwait","Safat");
+        map2.put("India","Haryana");
+        map2.put("Morocco","Casablanca");
+        map2.put("Lebanon","Beirut");
+        map2.put("Oman","Muscat");
+        map2.put("Bahrain","Manama");
+        map2.put("KSA","Riyadh");
+        map2.put("Kazakhstan","Almaty");
+        map2.put("Iraq","Iraq – Baghdad");
+		map2.put("Egypt","Giza");
+		map2.put("Jordan","Amman");
+
+        HashMap map3=new HashMap();
+        map3.put("United Arab Emirates","AE");
+        map3.put("Qatar","QA");
+        map3.put("Kuwait","KW");
+        map3.put("India","IN");
+        map3.put("Morocco","MA");
+        map3.put("Lebanon","LB");
+        map3.put("Oman","OM");
+        map3.put("Bahrain","BH");
+        map3.put("KSA","SA");
+        map3.put("Kazakhstan","KZ");
+        map3.put("Iraq-Erbil","IQ");
+        map3.put("Iraq-Baghdad","IQ");
+        map3.put("Egypt","EG");
+        map3.put("Jordan","JO");
+
+        Identity ide = context.getObjectByName(Identity.class, identityName);
+        String samAccountName = identityName.substring(0,identityName.length()-2);
+
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(ide);
+
+        AccountRequest acr = new AccountRequest();
+        acr.setApplication("Active Directory");
+        acr.setOperation(AccountRequest.Operation.Create);
+        
+        if(Country.equalsIgnoreCase("United Arab Emirates") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+aeOUmap.get(Brand));
+
+        if(Country.equalsIgnoreCase("Qatar") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+qaOUmap.get(Brand));
+        
+        if(Country.equalsIgnoreCase("Kuwait") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+kwOUmap.get(Brand));
+        
+        if(Country.equalsIgnoreCase("Oman") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+omOUmap.get(Brand));
+        
+        if(Country.equalsIgnoreCase("Bahrain") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+bhOUmap.get(Brand));
+       
+        if(Country.equalsIgnoreCase("Lebanon") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+lbOUmap.get(Brand));
+        
+        if(Country.equalsIgnoreCase("Morocco") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+moOUmap.get(Brand));
+        
+        if(Country.equalsIgnoreCase("KSA") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+saOUmap.get(Brand));
+
+        if(Country.equalsIgnoreCase("Kazakhstan") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+kzOUmap.get(Brand));
+
+        if(Country.contains("Iraq") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+iqOUmap.get(Brand));
+		
+		    if(Country.equalsIgnoreCase("Egypt") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+egOUmap.get(Brand));
+		
+		    if(Country.equalsIgnoreCase("Jordan") &amp;&amp; Brand != null)
+        acr.setNativeIdentity("CN="+displayName+","+joOUmap.get(Brand));
+       
+        acr.add(new AttributeRequest("givenName", ProvisioningPlan.Operation.Add, Brand));
+        acr.add(new AttributeRequest("sn", ProvisioningPlan.Operation.Add, Location));
+        acr.add(new AttributeRequest("sAMAccountName", ProvisioningPlan.Operation.Add, samAccountName));
+        acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Add, "Restaurant"));
+        acr.add(new AttributeRequest("physicalDeliveryOfficeName", ProvisioningPlan.Operation.Add, Country+" Restaurants"));
+        acr.add(new AttributeRequest("mail", ProvisioningPlan.Operation.Add, samAccountName+"@americana-food.com"));	
+        acr.add(new AttributeRequest("title", ProvisioningPlan.Operation.Add, "Restaurant General Manager"));
+        acr.add(new AttributeRequest("department", ProvisioningPlan.Operation.Add, Department));	
+        acr.add(new AttributeRequest("company", ProvisioningPlan.Operation.Add, "Americana"));
+        acr.add(new AttributeRequest("userPrincipalName", ProvisioningPlan.Operation.Add, samAccountName+"@americana-food.com"));
+        acr.add(new AttributeRequest("co", ProvisioningPlan.Operation.Add, Country));
+        acr.add(new AttributeRequest("password", ProvisioningPlan.Operation.Set, password));
+        acr.add(new AttributeRequest("c", ProvisioningPlan.Operation.Add,  map3.get(Country)));
+       /* added as a part of Business justification changes */
+	   // acr.add(new AttributeRequest("comment", ProvisioningPlan.Operation.Add,  Comment));
+	   
+	   
+        String description = "";
+        if(null != justification @and !"".equalsIgnoreCase(justification)){
+        	if("Other".equalsIgnoreCase(justification)){
+        		acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Add,  otherJustificationReason));
+        	}else{
+       			acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Add,  justification));
+        	}
+        }
+        
+        if(null != managerName){
+        	Identity managerIdentity = context.getObject(Identity.class,managerName);
+        	List linksList = managerIdentity.getLinks();
+        	if(null != linksList @and linksList.size() &gt; 0){
+        		for(Link link : linksList){
+        			if(null != link @and null != link.getApplicationName() @and ("Active Directory".equalsIgnoreCase(link.getApplicationName()) || "AD Contractors".equalsIgnoreCase(link.getApplicationName()))){
+        					acr.add(new AttributeRequest("manager", ProvisioningPlan.Operation.Set,  link.getAttribute("distinguishedName")));
+        			}
+        		}
+        	}
+        }
+		/* Changes Until Above */
+	   
+        acr.add(new AttributeRequest("displayName", ProvisioningPlan.Operation.Add,  displayName));
+
+        acr.add(new AttributeRequest("postOfficeBox", ProvisioningPlan.Operation.Add, map1.get(Country)));
+        
+        acr.add(new AttributeRequest("st", ProvisioningPlan.Operation.Add, map2.get(Country)));
+        
+        if(Country.equalsIgnoreCase("United Arab Emirates") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add,"CN=UAE WiFi,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        if(Country.equalsIgnoreCase("Qatar") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Qatar Wifi,OU=Groups,OU=Users,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+
+        if(Country.equalsIgnoreCase("Kuwait") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Kuwait Wifi,OU=Groups,OU=Users,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global"));
+        }
+
+        if(Country.equalsIgnoreCase("Oman") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Oman WiFi,OU=Groups,OU=Users,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+
+        if(Country.equalsIgnoreCase("Lebanon") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Lebanon Internet Limited Access,OU=Groups,OU=Users,OU=Lebanon-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        if(Country.equalsIgnoreCase("KSA") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=KSA WiFi,OU=Groups,OU=Users,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        if(Country.equalsIgnoreCase("Kazakhstan") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Kazakhstan WiFi,OU=Groups,OU=Users,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        if(Country.contains("Iraq") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Iraq WiFi,OU=Groups,OU=Users,OU=Iraq-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+		
+		    if(Country.equalsIgnoreCase("Egypt") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Egypt WiFi,OU=Groups,OU=Users,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+		
+		    if(Country.equalsIgnoreCase("Jordan") &amp;&amp; Brand != null){ 
+          acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=Jordan WiFi,OU=Groups,OU=Users,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+
+        
+        //Adding WebService Account============
+
+        AccountRequest acctReq = new AccountRequest();
+        acctReq.setOperation(AccountRequest.Operation.Create);
+        acctReq.setApplication("Oracle BPM IDCS");
+        acctReq.add(new AttributeRequest("userName", ProvisioningPlan.Operation.Add, samAccountName+"@americana-food.com"));
+        acctReq.add(new AttributeRequest("givenName", ProvisioningPlan.Operation.Add, ide.getFirstname()));
+        acctReq.add(new AttributeRequest("familyName", ProvisioningPlan.Operation.Add, ide.getLastname()));
+		
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "c890e1e059604f1f82f2f15cf073b0f2"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "08f64796b2a14b77ba541da86e65824c"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "dc4e0cef31a940da8cb2e48c0c68fa82"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "57e8beecb4aa4ac382c502075f84b810"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "30a0873f00fc4a5e830f664263894bcd"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "de1e1f2629bb45809e7a69c20f4de5a6"));
+        acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "ec7cf56ec55a467fafe5a68785dd4e0a"));
+        //acctReq.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "f9c75f0c84834a7c8d0163204c24dc20"));
+
+        plan.add(acctReq);
+        plan.add(acr);
+
+        return plan;
+        }
+      </Source>
+    </Script>
+    <Transition to="closeAR" />
+  </Step>
+  <Step icon="Default" name="closeAR" posX="289" posY="37">
+    <Script>
+      <Source>
+        import sailpoint.object.*;
+        import sailpoint.object.IdentityRequestItem;
+        import sailpoint.object.TaskResult;
+        import sailpoint.object.ApprovalItem.ProvisioningState;
+        import sailpoint.object.WorkflowSummary.ApprovalSummary;
+        
+        IdentityRequest reqId =  context.getObjectByName(IdentityRequest.class,identityRequestId);
+        String taskResultId = reqId.getTaskResultId();
+        TaskResult objectByName = context.getObjectById(TaskResult.class,taskResultId);
+        Object attribute = objectByName.getAttribute("workflowSummary");
+        List apSList = attribute.getInteractions();
+        for(ApprovalSummary apS : apSList){
+        if(null ==  apS.getState()){
+        apS.setEndDate(new Date());
+        if(approved){
+        apS.setState(sailpoint.object.WorkItem.State.Finished);
+        }
+        else {
+        apS.setState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        }
+        }
+        
+        List reqItems =  reqId.getItems();
+        for(IdentityRequestItem reqItem : reqItems){
+        if(approved){
+        reqItem.setProvisioningState(sailpoint.object.ApprovalItem.ProvisioningState.Finished);
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Finished);
+        }
+        else {
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        }
+        reqId.setApprovalSummaries(attribute.getInteractions());
+        reqId.setCompletionStatus(IdentityRequest.CompletionStatus.Success);
+        reqId.setExecutionStatus(IdentityRequest.ExecutionStatus.Completed);
+        reqId.setState("End");
+        context.saveObject(reqId);
+        context.commitTransaction();
+      </Source>
+    </Script>
+    <Transition to="provisionLCM" />
+  </Step>
+  <Step icon="Default" name="provisionLCM" posX="444" posY="10">
+    <Arg name="notificationScheme" value="ref:notificationScheme" />
+    <Arg name="approvalScheme" value="none" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="launcher" value="ref:launcher" />
+    <Arg name="plan" value="ref:resultPlan" />
+    <Arg name="flow" value="ref:flow" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning" />
+    </WorkflowRef>
+    <Transition to="Schedule AzureAD License Assignment Workflow" />
+  </Step>
+  <Step icon="Task" name="Schedule AzureAD License Assignment Workflow" posX="50" posY="10">
+    <Description>
+      Schedule workflow 'Americana-Workflow-AzureADLicenseAssignment' to launch after 35 minutes, as Active Directity to Azure Sync job is scheduled for every 30 minutes
+    </Description>
+    <Script>
+      <Source>
+
+        import java.util.Date;
+
+        import sailpoint.api.RequestManager;
+        import sailpoint.object.Attributes;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Request;
+        import sailpoint.object.RequestDefinition;
+        import sailpoint.object.Workflow;
+        import sailpoint.tools.GeneralException;
+        import sailpoint.workflow.StandardWorkflowHandler;
+
+        import org.apache.log4j.Logger;
+        import org.apache.log4j.Level;
+
+
+        Logger logger = Logger.getLogger("Americana.Workflow.LifecycleEvent.Joiner.Step.ScheduleAzureADLicenseAssignmentWorkflow");
+        logger.setLevel(Level.DEBUG);
+
+        logger.debug("Start Step.ScheduleAzureADLicenseAssignmentWorkflow");
+
+
+        String workflowName = "Americana-Workflow-AzureADLicenseAssignment";
+        String caseName     = "Run '" + workflowName + "' for: " + identityName;
+        String requesterId  = "spadmin";
+
+        Workflow eventWorkflow = context.getObject(Workflow.class, workflowName);
+        if (null == eventWorkflow) {
+        logger.error("Could not find a workflow named: " + workflowName);
+        throw new GeneralException("Invalid worklfow: " + workflowName);
+        }
+
+        // Simulate the request being submitted by a user. Default: spadmin.
+        Identity id = context.getObjectByName(Identity.class, requesterId);
+        if (null == id) {
+        logger.error("Could not find a requester Identity: " + requesterId);
+        throw new GeneralException("Invalid identity: " + requesterId);
+        }
+
+        // Ask the Request Processor to start the workflow 35 minutes from now.
+        // Append the time stamp to the workflow case name to ensure it's unique. 
+        long launchTime = System.currentTimeMillis() + (35 * 60 * 1000);
+        caseName = caseName + "(" + launchTime + ")";
+
+        // Build out a map of arguments to pass to the Request Scheduler.
+        Attributes reqArgs = new Attributes();
+        reqArgs.put(StandardWorkflowHandler.ARG_REQUEST_DEFINITION, sailpoint.request.WorkflowRequestExecutor.DEFINITION_NAME);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_WORKFLOW, workflowName);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_REQUEST_NAME, caseName);
+        reqArgs.put( "requestName", caseName );            
+
+        // Build a map of arguments to pass to the Workflow case when it launches.
+        Attributes wfArgs = new Attributes();
+        wfArgs.put("identityName",    identityName);
+        wfArgs.put("workflow",        eventWorkflow.getName());
+
+        reqArgs.putAll(wfArgs);
+
+        // Use the Request Launcher to schedule the workflow reqeust.  This requires
+        // a Request object to store the properties of the request item.
+        Request req = new Request();
+        RequestDefinition reqdef = context.getObject(RequestDefinition.class, "Workflow Request");
+        req.setDefinition(reqdef);
+        req.setEventDate( new Date( launchTime ) );
+        req.setOwner(id);
+        req.setName(caseName);
+        req.setAttributes( reqdef, reqArgs );
+
+        // Schedule the work flow via the request manager.
+        RequestManager.addRequest(context, req);
+
+        logger.debug("End Step.ScheduleAzureADLicenseAssignmentWorkflow");
+      </Source>
+    </Script>
+    <Transition to="Stop" />
+  </Step>
+  <Step catches="complete" icon="Catches" name="Finalize" posX="64" posY="10">
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="approvalSet" value="ref:approvalSet" />
+    <Arg name="project" value="ref:project" />
+    <Arg name="identityRequestId" value="ref:identityRequestId" />
+    <Arg name="identityDisplayName" value="ref:identityName" />
+    <Description>
+      Call the standard subprocess that can audit/finalize the request.
+    </Description>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Americana-Identity Request Finalize" />
+    </WorkflowRef>
+    <Transition to="Stop" />
+  </Step>
+  <Step icon="Stop" name="Stop" posX="570" posY="10" />
+</Workflow>
+
+</sailpoint>

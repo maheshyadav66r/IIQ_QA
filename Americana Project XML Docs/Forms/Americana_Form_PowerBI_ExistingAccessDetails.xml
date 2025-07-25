@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_ExistingAccessDetails" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section name="Your current access in Power BI:">
+    <Field displayName="Existing Power BI Accesses" multi="true" name="stores" readOnly="true" type="string">
+      <Script>
+        <Source>
+		  import sailpoint.tools.Util;
+		  if(null != stores @and void != stores){
+          return stores;
+            }
+          </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Next" />
+</Form>
+
+</sailpoint>

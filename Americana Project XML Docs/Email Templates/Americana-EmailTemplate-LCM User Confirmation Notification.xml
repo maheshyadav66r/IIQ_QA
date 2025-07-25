@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<EmailTemplate name="Americana-EmailTemplate-LCM User Confirmation Notification">
+  <Body>
+    #set($ctx = $spTools.class.forName("sailpoint.api.SailPointFactory").getMethod("getFactory", null).invoke(null,null).getCurrentContext())
+    #set($launcherObj = $ctx.getObjectByName($spTools.class.forName("sailpoint.object.Identity"), $launcher))
+    Dear $launcherObj.getDisplayName(), 
+    
+      Your requested role/access has been successfully provisioned, kindly validate the below requested Roles/Access
+    
+    User Name : $idName
+    
+    User DisplayName : $identityDisplayName
+    
+    #if ($access)
+    #foreach ($ac in $access)
+    $ac
+    #end
+    #end
+    
+    If you have any queries, please reach out at IAMsupport@Americana-food.com
+  </Body>
+  <Description>
+    Email Template for notifying users when accounts have been changed through Life Cycle Manager.
+    Note that in addition to the declared arguments, all workflow variables,
+    Step arguments, and Approval arguments defined in the Workflow are
+    also available.
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="access" type="java.util.List">
+        <Description>list of access that are provisioned to the user.</Description>
+      </Argument>
+      <Argument name="launcher" type="string">
+        <Description>The name of the Identity that launched the workflow.</Description>
+      </Argument>
+      <Argument name="idName" type="string">
+        <Description>The name of the Identity that is being changed.</Description>
+      </Argument>
+      <Argument name="identityDisplayName" type="string">
+        <Description>The display name of the Identity that is being changed.</Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>Access has been Added Successfully for : $identityDisplayName</Subject>
+</EmailTemplate>
+
+</sailpoint>

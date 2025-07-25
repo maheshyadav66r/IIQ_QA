@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-ActiveDirectoryAggregateSingleAccount">
+  <Description>Aggregate single account from application</Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="accountName" />
+      <Argument name="applicationName" />
+    </Inputs>
+  </Signature>
+  <Source>
+  import sailpoint.object.Application;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.ResourceObject; 
+  import sailpoint.connector.Connector;
+  import sailpoint.object.TaskResult; 
+  import sailpoint.api.Aggregator;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+
+  Logger logger = Logger.getLogger("Americana.Rule.AzureAD.AfterProvisioning");
+  logger.setLevel(Level.DEBUG);
+
+
+  logger.debug("Start - AD Single Account Aggregation"); 
+
+  String applicationName = "Oracle BPM IDCS";
+  String accountName = "38074b567d374468a5f9b7e774e276a8";
+  Attributes attributes = new Attributes();
+
+  try { 
+
+
+    Application appObject = context.getObjectByName(Application.class, applicationName);
+    if(null != appObject){
+      String appConnName = appObject.getConnector();  
+      logger.debug("Application " + applicationName + " uses connector " + appConnName);  
+
+      Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);  
+      if (null != appConnector) {  
+
+        logger.debug("Connector instantiated, calling getObject() to read account details...");  
+
+        ResourceObject rObj = null;  
+
+        rObj = (ResourceObject) appConnector.getObject("account", accountName, null);
+
+        Attributes argMap = new Attributes();  
+        argMap.put("correlateEntitlements",   "true");  
+        argMap.put("noOptimizeReaggregation", "true");
+
+        Aggregator agg = new Aggregator(context, argMap); 
+
+        TaskResult result = agg.aggregate(appObject, rObj);
+        log.debug("aggregation complete.");  
+
+        if (result != null) {
+          attributes = result.getAttributes();
+          attributes.put("account", accountName);
+          logger.debug("attributes : "+attributes);
+        }
+
+      }
+    }
+  } catch (Exception e) {  
+    logger.error("Exception : "+e.getMessage());
+  } 
+
+  logger.debug("End - AD Single Account Aggregation");
+  return attributes;
+  </Source>
+</Rule>
+
+</sailpoint>

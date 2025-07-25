@@ -1,0 +1,461 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Rule_PowerBI_Modify_Provisioning" type="JDBCOperationProvisioning">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult" />
+  <Source>
+  import java.lang.*;
+  import java.util.*;
+  import java.io.*;
+  import java.sql.ResultSet;
+  import java.sql.Statement;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import sailpoint.api.SailPointContext;  
+  import sailpoint.object.Identity;
+  import sailpoint.object.*;  
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.tools.Util;
+  import sailpoint.api.*;
+
+  System.out.println("Starting PowerBI_Modify_Prov_Rule");  
+
+  ProvisioningResult provresult = new ProvisioningResult();
+
+  if (plan != null) 
+  {
+    System.out.println("Plan in Modify Rule is: " + plan.toXml());  
+	String userName = plan.getNativeIdentity();
+    if (plan.getSource().equalsIgnoreCase("LCM")) 
+    {
+      //	System.out.println("Plan in Modify Rule is: " + plan.toXml());  
+      List accRequests = plan.getAccountRequests();
+      if (( accRequests != null ) &amp;&amp; ( accRequests.size() &gt; 0 )) 
+      {
+        for(AccountRequest accRequest : accRequests) 
+        {  
+         // String empID = accRequest.getNativeIdentity();
+		 String email = accRequest.getNativeIdentity();
+          Identity idObj = context.getObjectByName(Identity.class, userName);
+          Application appObj = context.getObjectByName(Application.class,"Microsoft Power BI");
+          IdentityService identityServiceObj = new IdentityService(context);
+          List links = identityServiceObj.getLinks(idObj, appObj);
+
+          String displayName = idObj.getAttribute("displayName");
+		  String empID = idObj.getAttribute("employeeNumber");
+	if (null == empID)
+	{
+	  empID = userName;
+	}
+          String jobTitle = idObj.getAttribute("jobTitle");
+          if (null == jobTitle)
+          {
+            jobTitle = "Not Available";
+          }
+       //   String email = idObj.getAttribute("email");
+          String userStatus = "T"; 
+          List fnlAccess = new ArrayList();
+          List storeName = new ArrayList();
+          String costCenter = null;
+          String salesFlag = null;
+          String plFlag = null;
+          String marketingFlag = null;
+          String remQuery = null;
+          String query = null;
+          String query1 = null;
+          String updateQuery = null;
+          String insertQuery = null;
+          String userTitle = empID+" - "+jobTitle;  
+
+          if ((accRequest.getApplicationName()).equalsIgnoreCase("Microsoft Power BI"))
+          {
+            try
+            {
+              if(AccountRequest.Operation.Modify.equals(accRequest.getOperation())) 
+              {
+                AttributeRequest atr1 = (AttributeRequest) accRequest.getAttributeRequest("REST_NUMBER");
+                AttributeRequest atr2 = (AttributeRequest) accRequest.getAttributeRequest("COMPANY_NO");
+                AttributeRequest atr3 = (AttributeRequest) accRequest.getAttributeRequest("addGroups");
+                AttributeRequest atr4 = (AttributeRequest) accRequest.getAttributeRequest("fnlAccess");
+                AttributeRequest atr5 = (AttributeRequest) accRequest.getAttributeRequest("COST_CENTER");
+
+                if(atr4 != null &amp;&amp; atr4.getValue() != null)
+                {
+                  System.out.println("atr4.getValue() is : " + atr4.getValue());
+
+                  if (atr4.getValue() instanceof List)
+                  { fnlAccess = atr4.getValue(); }
+                  else if (atr4.getValue() instanceof String)
+                  { fnlAccess.add(atr4.getValue()); }
+
+                  System.out.println("fnlAccess is : " + fnlAccess);
+
+                }
+
+                if (atr5 != null &amp;&amp; atr5.getValue() != null) {
+                  costCenter = atr5.getValue();
+                }
+                System.out.println("costCenter is : " + costCenter);
+/*
+                if (idObj.getAttribute("status").equalsIgnoreCase("ACTIVE")) 
+                {
+                  userStatus = "T";
+                } 
+                else if (idObj.getAttribute("status").equalsIgnoreCase("INACTIVE")) 
+                {
+                  userStatus = "F";
+                }
+                else if (null == idObj.getAttribute("status"))
+                {
+                  userStatus = "T";
+                }
+                System.out.println("userStatus is : " + userStatus);
+*/
+                if((atr1 != null) &amp;&amp; (ProvisioningPlan.Operation.Remove.equals(atr1.getOperation())) &amp;&amp; (atr2 != null) &amp;&amp; (ProvisioningPlan.Operation.Remove.equals(atr2.getOperation())))
+                {
+                  remQuery ="UPDATE USERDB.User_Security SET DELETE_FLAG='T', SALES_FLAG='F', PL_FLAG='F', Marketing_FLAG='F' WHERE EMAIL_ADDRESS=\'" + email + "\'";
+                  PreparedStatement st = connection.prepareStatement(remQuery);
+                  System.out.println("remQuery is: " +remQuery);
+                  st.executeUpdate();
+                }
+
+                if (atr3 != null &amp;&amp; atr3.getValue() != null) {
+
+                  if (atr3.getValue() instanceof List)
+                  { storeName = atr3.getValue(); }
+                  else if (atr3.getValue() instanceof String)
+                  { storeName.add(atr3.getValue()); }
+
+                  if((Util.nullSafeSize(storeName) &gt; 0) &amp;&amp; ProvisioningPlan.Operation.Add.equals(atr3.getOperation())) {
+                    String storeID = null;
+                    String areaID = null;
+                    String chainIDLocal = null;
+                    String restNumber = null;
+                    String compNumber = null;
+                    
+                    for (int i=0; i &lt; storeName.size(); i++)
+                    {
+                      String value = storeName.get(i);
+                    
+                      if (value.contains("Unmapped"))
+                      {
+                        storeName.remove(value);
+                      }
+                    }
+
+                    for (String eachStoreName : storeName) {
+                      String rName = eachStoreName.split("\\|")[0].trim();
+                      System.out.println("rName is : " + rName);
+                      if (rName.contains("'"))
+                        rName = rName.replace("'", "''");
+                      String cDesc = eachStoreName.split("\\|")[2].trim();
+                      System.out.println("cDesc is : " + cDesc);
+
+                      query = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+                      System.out.println("query is : " + query);
+
+                      Statement st = connection.createStatement();
+                      ResultSet rs = st.executeQuery(query);
+                      while (rs.next())
+                      {
+                        storeID = rs.getString("StoreID");
+                        areaID = rs.getString("AREA_ID");
+                        chainIDLocal = rs.getString("CHAIN_ID_LOCAL");
+
+                        if (storeID.length() &gt; 5) {
+                          restNumber = storeID.substring((storeID.length()-5),(storeID.length()));
+                          System.out.println("restNumber is :" + restNumber);
+                          if (storeID.length() == 6) {
+                            compNumber = storeID.substring(0,1);
+                            System.out.println("compNumber is :" + compNumber);
+                          } else if (storeID.length() == 7) {
+                            compNumber = storeID.substring(0,2);
+                            System.out.println("compNumber is :" + compNumber);
+                          }
+                        }
+                        query1 = "SELECT * FROM USERDB.User_Security where EMAIL_ADDRESS=\'" + email + "\' and COMPANY_NO=\'" + compNumber + "\' and REST_NUMBER=\'" + restNumber + "\'";
+                        System.out.println("query1 is : " + query1);
+
+                        Statement st1 = connection.createStatement();
+                        ResultSet rs1 = st1.executeQuery(query1);
+                        if (rs1.next()) {
+
+                          if (fnlAccess.contains("Sales"))
+                          { salesFlag = "T"; }
+                          else if (rs1.getString("SALES_FLAG") != null)
+                          { salesFlag = rs1.getString("SALES_FLAG"); }
+                          else 
+                          { salesFlag = "F"; }
+
+                          if (fnlAccess.contains("P/L"))
+                          { plFlag = "T"; }
+                          else if (rs1.getString("PL_FLAG") != null)
+                          { plFlag = rs1.getString("PL_FLAG"); }
+                          else 
+                          { plFlag = "F"; }
+
+                          if (fnlAccess.contains("Marketing"))
+                          { marketingFlag = "T"; }
+                          else if (rs1.getString("Marketing_FLAG") != null)
+                          { marketingFlag = rs1.getString("Marketing_FLAG"); }
+                          else 
+                          { marketingFlag = "F"; }
+
+                          updateQuery = "UPDATE USERDB.User_Security SET DELETE_FLAG='F', SALES_FLAG=\'" + salesFlag + "\', PL_FLAG=\'" + plFlag + "\', Marketing_FLAG=\'" + marketingFlag + "\', USER_TITLE=\'" + userTitle + "\', USER_ID=\'" + empID + "\' WHERE EMAIL_ADDRESS=\'" + email + "\' and COMPANY_NO=\'" + compNumber + "\' and REST_NUMBER=\'" + restNumber + "\'";
+                          System.out.println("updateQuery is :" + updateQuery);
+                          PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+                          updateStatement.executeUpdate();
+                        }
+                        else if (!rs1.next()) {
+
+                          if (fnlAccess.contains("Sales")) {
+                            salesFlag = "T";
+                          } else {
+                            salesFlag = "F";
+                          }
+                          if (fnlAccess.contains("P/L")) {
+                            plFlag = "T";
+                          } else {
+                            plFlag = "F";
+                          }
+                          if (fnlAccess.contains("Marketing")) {
+                            marketingFlag = "T";
+                          } else {
+                            marketingFlag = "F";
+                          }
+
+                          insertQuery = "INSERT INTO USERDB.User_Security VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                          System.out.println("insertQuery is :" + insertQuery);
+                          PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                          insertStatement.setString(1, empID+" - "+displayName+" - ("+jobTitle+")");
+                          insertStatement.setString(2, "A");
+                          insertStatement.setString(3, "F");
+                          insertStatement.setString(4, email);
+                          if (empID.matches("^[a-zA-Z]*$"))
+                          {
+                            insertStatement.setInt(5, 0); 
+                          }
+                          else if (empID.matches("^[0-9]*$"))
+                          {
+                            insertStatement.setInt(5, Integer.valueOf(empID));
+                          }
+                          insertStatement.setInt(6, Integer.valueOf(compNumber));
+                          insertStatement.setInt(7, Integer.valueOf(restNumber));
+                          insertStatement.setInt(8, Integer.valueOf(chainIDLocal));
+                          insertStatement.setInt(9, Integer.valueOf(areaID));
+                          insertStatement.setString(10, "F");
+                          insertStatement.setString(11, "F");
+                          insertStatement.setString(12, "F");
+                          insertStatement.setString(13, salesFlag);
+                          insertStatement.setString(14, plFlag);
+                          insertStatement.setString(15, marketingFlag);
+                          insertStatement.setString(16, "F");
+                          insertStatement.setString(17, "F");
+                          insertStatement.setString(18, userTitle);
+                          if (empID.matches("^[a-zA-Z]*$"))
+                          {
+                            insertStatement.setInt(19, 0); 
+                          }
+                          else if (empID.matches("^[0-9]*$"))
+                          {
+                            insertStatement.setInt(19, Integer.valueOf(empID));
+                          }
+                          insertStatement.setInt(20, Integer.valueOf(costCenter));
+                          insertStatement.setString(21, userStatus);
+                          insertStatement.executeUpdate();
+                        }
+
+                      }
+                    }
+                  }
+                }
+              }
+              System.out.println("Power BI Application- Modify User Result is " +provresult);
+              provresult.setStatus(ProvisioningResult.STATUS_COMMITTED);
+              System.out.println("plan in modify rule" + plan.toXml());
+            }
+            catch (Exception e) 
+            {
+              System.out.println("Power BI application Modify Error e: " +e.getMessage());    
+            }
+            finally 
+            { 
+              try
+              { 
+                if (connection != null) 
+                  connection.close(); 
+              }
+              catch (SQLException e) 
+              { 
+                e.printStackTrace(); 
+              }  
+            }      
+          }  
+        }
+      }
+    }
+    else if (plan.getSource().equalsIgnoreCase("Certification"))
+    {
+      String query2 = null;
+      String certUpdatequery = null;
+      String finalUpdateQuery = null;
+
+      List accrequestList = plan.getAccountRequests();
+      if (( accrequestList != null ) &amp;&amp; ( accrequestList.size() &gt; 0 )) 
+      {
+        AccountRequest certAccRequest = accrequestList.get(0);
+
+        if ((certAccRequest.getApplicationName()).equalsIgnoreCase("Microsoft Power BI"))
+        {
+          try
+          {
+            if(AccountRequest.Operation.Modify.equals(certAccRequest.getOperation())) 
+            {
+
+              String nativeIdentity = certAccRequest.getNativeIdentity();
+              List attrRequestList =  certAccRequest.getAttributeRequests();
+
+              for(AttributeRequest certAttrRequest : attrRequestList){
+                // SALES Flag here
+                if(certAttrRequest.getName().equalsIgnoreCase("SALES_GROUP")){
+                  List attrValueList = new ArrayList();
+
+                  if(certAttrRequest.getValue() instanceof String)
+                    attrValueList.add(certAttrRequest.getValue());
+                  else
+                    attrValueList.addAll(certAttrRequest.getValue());
+
+
+                  for(String attrValue : attrValueList){
+
+                    String[] attrValueArray = attrValue.split(":");
+
+                    String companyID = null;
+                    String restaurantCode = null;
+                    
+                    String resName = attrValueArray[2].trim();
+                    if (resName.contains("'"))
+                        resName = rName.replace("'", "''");
+
+                    query2 = "SELECT COMPANY_ID, [Restaurant Code] from USERDB.DimRestaurant where [Restaurant Name]=\'" + resName + "\'";
+                    Statement stmt = connection.createStatement();  
+                    ResultSet rs2 = stmt.executeQuery(query2);  
+                    while(rs2.next()){
+                      companyID = rs2.getString(1);
+                      restaurantCode = rs2.getString(2);
+                    }
+
+                    certUpdatequery = "Update USERDB.User_Security set SALES_FLAG='F' where EMAIL_ADDRESS=\'" + nativeIdentity + "\' and COMPANY_NO=\'" + companyID + "\' and REST_NUMBER=\'" + restaurantCode + "\'";
+                    Statement stmt2 = connection.prepareStatement(certUpdatequery);
+                    stmt2.executeUpdate();
+                  }
+                }
+                // P/L Flag here
+                if(certAttrRequest.getName().equalsIgnoreCase("PL_GROUP")){
+                  List attrValueList = new ArrayList();
+
+                  if(certAttrRequest.getValue() instanceof String)
+                    attrValueList.add(certAttrRequest.getValue());
+                  else
+                    attrValueList.addAll(certAttrRequest.getValue());
+
+
+                  for(String attrValue : attrValueList){
+
+                    String[] attrValueArray = attrValue.split(":");
+
+                    String companyID = null;
+                    String restaurantCode = null;
+                    
+                    String resName = attrValueArray[2].trim();
+                    if (resName.contains("'"))
+                        resName = rName.replace("'", "''");
+
+                    query2 = "SELECT COMPANY_ID, [Restaurant Code] from USERDB.DimRestaurant where [Restaurant Name]=\'" + resName + "\'";
+                    Statement stmt = connection.createStatement();  
+                    ResultSet rs2 = stmt.executeQuery(query2);  
+                    while(rs2.next()){
+                      companyID = rs2.getString(1);
+                      restaurantCode = rs2.getString(2);
+                    }
+
+                    certUpdatequery = "Update USERDB.User_Security set PL_FLAG='F' where EMAIL_ADDRESS=\'" + nativeIdentity + "\' and COMPANY_NO=\'" + companyID + "\' and REST_NUMBER=\'" + restaurantCode + "\'";
+                    Statement stmt2 = connection.prepareStatement(certUpdatequery);
+                    stmt2.executeUpdate();
+                  }
+                }
+                //Marketing Flag here
+                if(certAttrRequest.getName().equalsIgnoreCase("MARKETING_GROUP")){
+                  List attrValueList = new ArrayList();
+
+                  if(certAttrRequest.getValue() instanceof String)
+                    attrValueList.add(certAttrRequest.getValue());
+                  else
+                    attrValueList.addAll(certAttrRequest.getValue());
+
+
+                  for(String attrValue : attrValueList){
+
+                    String[] attrValueArray = attrValue.split(":");
+
+                    String companyID = null;
+                    String restaurantCode = null;
+                    
+                    String resName = attrValueArray[2].trim();
+                    if (resName.contains("'"))
+                        resName = rName.replace("'", "''");
+
+                    query2 = "SELECT COMPANY_ID, [Restaurant Code] from USERDB.DimRestaurant where [Restaurant Name]=\'" + resName + "\'";
+                    Statement stmt = connection.createStatement();  
+                    ResultSet rs2 = stmt.executeQuery(query2);  
+                    while(rs2.next()){
+                      companyID = rs2.getString(1);
+                      restaurantCode = rs2.getString(2);
+                    }
+
+                    certUpdatequery = "Update USERDB.User_Security set Marketing_FLAG='F' where EMAIL_ADDRESS=\'" + nativeIdentity + "\' and COMPANY_NO=\'" + companyID + "\' and REST_NUMBER=\'" + restaurantCode + "\'";
+                    Statement stmt2 = connection.prepareStatement(certUpdatequery);
+                    stmt2.executeUpdate();
+                  }
+                }
+              }
+              finalUpdateQuery = "Update USERDB.User_Security set DELETE_FLAG='T' where EMAIL_ADDRESS=\'" + nativeIdentity + "\' and SALES_FLAG='F' and PL_FLAG='F' and Marketing_FLAG='F'";
+              Statement stmt3 = connection.prepareStatement(finalUpdateQuery);
+              stmt3.executeUpdate();
+            }
+            System.out.println("Power BI Application- CERT Modify User Result is " +provresult);
+            provresult.setStatus(ProvisioningResult.STATUS_COMMITTED);
+            System.out.println("plan in cert modify rule" + plan.toXml());
+          }
+          catch (Exception e) 
+          {
+            System.out.println("Power BI application Modify Error e: " +e.getMessage());    
+          }
+          finally 
+          { 
+            try
+            { 
+              if (connection != null) 
+                connection.close(); 
+            }
+            catch (SQLException e) 
+            { 
+              e.printStackTrace(); 
+            }  
+          }
+        }
+      }
+    }
+  }
+  System.out.println("Ending PowerBI_Modify_Prov_Rule");  
+  return provresult;
+  </Source>
+</Rule>
+
+</sailpoint>

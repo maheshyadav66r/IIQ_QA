@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana-Custom-AD-CountryVSDisabledOUMapping">
+  <Attributes>
+    <Map>
+      <entry key="AE" value="OU=Disabled Accounts,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="BH" value="OU=Disabled Accounts,OU=Bahrain-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="EG" value="OU=Disabled Accounts,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="IN" value="OU=Disabled Users,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="IQ" value="OU=Disabled Accounts,OU=Iraq-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="JO" value="OU=Disabled Accounts,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="KW" value="OU=Disabled Accounts,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="KZ" value="OU=Disabled Accounts,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="LB" value="OU=Disabled Accounts,OU=Lebanon-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="MA" value="OU=Disabled Accounts,OU=Morocco-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="MasterDisabledOU" value="OU=Disabled Users,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="OM" value="OU=Disabled Accounts,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="QA" value="OU=Disabled Accounts,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global" />
+      <entry key="SA" value="OU=Disabled Accounts,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

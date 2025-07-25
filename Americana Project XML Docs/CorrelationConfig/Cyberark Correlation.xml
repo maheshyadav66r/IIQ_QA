@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="Cyberark Correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="adLogOnName" value="username" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

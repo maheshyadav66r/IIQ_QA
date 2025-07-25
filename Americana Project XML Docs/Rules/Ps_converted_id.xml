@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_converted_id">
+  <Source>
+           
+       import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+  import java.util.*;
+
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.ResourceObject;
+import sailpoint.tools.Util;
+  import sailpoint.object.*;
+  import java.io.FileWriter;
+
+try {
+
+System.out.println("step1");	
+List al=new ArrayList();
+  
+ 
+ // al.add("test");
+ Filter f = Filter.eq("correlated",true);
+ /*Filter f2= Filter.and(Filter.ne("links.application.name","Oracle Fusion HCM"),Filter.ne("links.application.name","AD Contractors"));
+Filter f3 = Filter.and(f,f2);
+  Filter f4 = Filter.eq("links.application.name","Active Directory");
+  Filter f5 = Filter.and(f3,f4);*/
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+				List cubes = context.getObjects(Identity.class,qo);
+  
+ 
+				if (cubes != null &amp;&amp; cubes.size() &gt; 0) {
+       
+          int numid=cubes.size();
+					for (Object obj1 : cubes) {
+           
+            
+						Identity id= (Identity)obj1;
+
+if (id!=null){
+ 
+  boolean isValid =false;
+    String userType=(String)id.getAttribute("userType");   
+  String idName=id.getName();
+  
+ System.out.println(idName);
+  List links =id.getLinks();
+for(Link link :links)
+{
+  
+ 
+  
+  if((link.getApplicationName().equalsIgnoreCase("Oracle Fusion HCM")||link.getApplicationName().equalsIgnoreCase("AD Contractors"))&amp;&amp;link.getApplicationName().equalsIgnoreCase("Active Directory"))
+
+{
+  
+    isValid=true;
+    break;
+    
+  }
+  
+  
+}
+ 
+  
+  //valid is not true and userType is nt E
+  
+ if(!isValid)
+ {
+/* id.setCorrelated(false);
+	  context.saveObject(id);
+	  context.commitTransaction();
+  */
+  // al.add(idName);
+   
+ }
+  
+  
+
+					}
+          
+        
+        
+          
+		
+          }
+}
+
+ FileWriter writer=new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\file.txt",true);
+   for(Object obj2 :al)
+  {
+    
+    String name=(String)obj2;
+    
+   
+  		writer.write(name);
+  
+  writer.write("\n");
+  
+    
+  }
+  writer.close(); 
+  System.out.println("end");
+  
+}
+  
+  
+  catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+       
+</Source>
+</Rule>
+
+</sailpoint>

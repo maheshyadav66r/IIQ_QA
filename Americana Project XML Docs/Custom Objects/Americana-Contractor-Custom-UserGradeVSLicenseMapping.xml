@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana-Contractor-Custom-UserGradeVSLicenseMapping">
+  <Attributes>
+    <Map>
+      <entry key="0" />
+      <entry key="A1" />
+      <entry key="A2" />
+      <entry key="A3" />
+      <entry key="B1" value="License_E5" />
+      <entry key="B2" value="License_E5" />
+      <entry key="B3" value="License_E5" />
+      <entry key="C1" value="License_E5" />
+      <entry key="C2" value="License_E5" />
+      <entry key="C3" value="License_E5" />
+      <entry key="D1" value="License_E5" />
+      <entry key="E1" value="License_E5" />
+      <entry key="E2" value="License_E5" />
+      <entry key="E3" value="License_E5" />
+      <entry key="E5" value="License_E5" />
+      <entry key="F1" value="License_E5" />
+      <entry key="F2" value="License_E5" />
+      <entry key="License_E3">
+        <value>
+          <List>
+            <String>ENTERPRISEPACK : POWER_VIRTUAL_AGENTS_O365_P2</String>
+            <String>ENTERPRISEPACK : MCOSTANDARD</String>
+            <String>ENTERPRISEPACK : MICROSOFTBOOKINGS</String>
+            <String>ENTERPRISEPACK : FORMS_PLAN_E3</String>
+            <String>ENTERPRISEPACK : PROJECT_O365_P2</String>
+            <String>ENTERPRISEPACK : MYANALYTICS_P2</String>
+            <String>ENTERPRISEPACK : OFFICESUBSCRIPTION</String>
+            <String>ENTERPRISEPACK : DYN365_CDS_O365_P2</String>
+            <String>ENTERPRISEPACK : MIP_S_CLP1</String>
+            <String>ENTERPRISEPACK : TEAMS1</String>
+            <String>ENTERPRISEPACK : SHAREPOINTENTERPRISE</String>
+            <String>ENTERPRISEPACK : YAMMER_ENTERPRISE</String>
+            <String>ENTERPRISEPACK : FLOW_O365_P2</String>
+            <String>ENTERPRISEPACK : Deskless</String>
+            <String>ENTERPRISEPACK : WHITEBOARD_PLAN2</String>
+            <String>ENTERPRISEPACK : CDS_O365_P2</String>
+            <String>ENTERPRISEPACK : STREAM_O365_E3</String>
+            <String>ENTERPRISEPACK : SWAY</String>
+            <String>ENTERPRISEPACK : VIVAENGAGE_CORE</String>
+            <String>ENTERPRISEPACK : KAIZALA_O365_P3</String>
+            <String>ENTERPRISEPACK : PROJECTWORKMANAGEMENT</String>
+            <String>ENTERPRISEPACK : VIVA_LEARNING_SEEDED</String>
+            <String>ENTERPRISEPACK : RMS_S_ENTERPRISE</String>
+            <String>ENTERPRISEPACK : POWERAPPS_O365_P2</String>
+            <String>ENTERPRISEPACK : BPOS_S_TODO_2</String>
+            <String>ENTERPRISEPACK : SHAREPOINTWAC</String>
+            <String>ENTERPRISEPACK : EXCHANGE_S_ENTERPRISE</String>
+            <String>EMS : AAD_PREMIUM</String>
+            <String>EMS : MFA_PREMIUM</String>
+            <String>EMS : INTUNE_A</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="License_E5">
+        <value>
+          <List>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : FLOW_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : KAIZALA_STANDALONE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MCOSTANDARD</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MICROSOFTBOOKINGS</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : DYN365_CDS_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : M365_ADVANCED_AUDITING</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MYANALYTICS_P2</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : EXCHANGE_ANALYTICS</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : BPOS_S_TODO_3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : COMMUNICATIONS_COMPLIANCE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : OFFICESUBSCRIPTION</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : DATA_INVESTIGATIONS</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MCOEV</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : WHITEBOARD_PLAN3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : EQUIVIO_ANALYTICS</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MIP_S_CLP1</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : EXCEL_PREMIUM</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : TEAMS1</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : SHAREPOINTENTERPRISE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : PREMIUM_ENCRYPTION</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : RECORDS_MANAGEMENT</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : STREAM_O365_E5</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : CUSTOMER_KEY</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : COMMUNICATIONS_DLP</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : BI_AZURE_P2</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : YAMMER_ENTERPRISE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : ADALLOM_S_O365</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : Deskless</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : THREAT_INTELLIGENCE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : POWERAPPS_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : LOCKBOX_ENTERPRISE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : SWAY</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MICROSOFT_COMMUNICATION_COMPLIANCE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : GRAPH_CONNECTORS_SEARCH_INDEX</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : CDS_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : PAM_ENTERPRISE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : PROJECT_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : PROJECTWORKMANAGEMENT</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : VIVA_LEARNING_SEEDED</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : RMS_S_ENTERPRISE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MTP</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : INFORMATION_BARRIERS</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MIP_S_Exchange</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : POWER_VIRTUAL_AGENTS_O365_P3</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : FORMS_PLAN_E5</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : INFO_GOVERNANCE</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : SHAREPOINTWAC</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : MIP_S_CLP2</String>
+            <String>ENTERPRISEPREMIUM_NOPSTNCONF : EXCHANGE_S_ENTERPRISE</String>
+            <String>EMSPREMIUM : ATA</String>
+            <String>EMSPREMIUM : ADALLOM_S_STANDALONE</String>
+            <String>EMSPREMIUM : AAD_PREMIUM</String>
+            <String>EMSPREMIUM : MFA_PREMIUM</String>
+            <String>EMSPREMIUM : RMS_S_ENTERPRISE</String>
+            <String>EMSPREMIUM : INTUNE_A</String>
+            <String>EMSPREMIUM : M365_AUDIT_PLATFORM</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="T1" value="License_E5" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

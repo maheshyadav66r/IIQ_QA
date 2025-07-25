@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="ps-RuleLibrary" type="FieldValue">
+  <Description>tryIng to creaTe a table in form.</Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="identity" type="Identity">
+        <Description>
+          The Identity object that represents the user needing the field value.
+        </Description>
+      </Argument>
+      <Argument name="link" type="Link">
+        <Description>
+          The sailpoint.object.Link that is being acted upon. If the link is not applicable,
+          this value will be null.
+        </Description>
+      </Argument>
+      <Argument name="group" type="AccountGroupDTO">
+        <Description>
+          The sailpoint.web.group.AccountGroupDTO that is being acted upon. If the AccountGroupDTO
+          is not applicable, the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="project" type="ProvisioningProject">
+        <Description>
+          The provisioning project being acted upon. If a provisioning project is not applicable,
+          the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="accountRequest" type="ProvisioningPlan.AccountRequest">
+        <Description>
+          The account request. If an account request is not applicable, the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="objectRequest" type="ProvisioningPlan.ObjectRequest">
+        <Description>
+          The object request. If an object request is not applicable, the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="role" type="Bundle">
+        <Description>
+          The role with the template we are compiling. If the role is
+          not applicable, the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="application" type="Application">
+        <Description>
+          The sailpont.object.Application with the template we are compiling. If the application
+          is not applicable, the value will be null.
+        </Description>
+      </Argument>
+      <Argument name="template" type="Template">
+        <Description>
+          The Template that contains this field.
+        </Description>
+      </Argument>
+      <Argument name="field" type="Field">
+        <Description>
+          The current field being computed.
+        </Description>
+      </Argument>
+      <Argument name="current" type="Object">
+        <Description>
+          The current value corresponding to the identity or account attribute that the field represents.
+          If no current value is set, this value will be null.
+        </Description>
+      </Argument>
+      <Argument name="operation" type="ProvisioningPlan.Operation">
+        <Description>
+          The operation being performed.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="value">
+        <Description>
+          The string value created.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Identity;
+  import java.util.*;
+    import sailpoint.object.Identity;
+        import org.apache.log4j.Logger;
+
+          
+
+
+  public static List parseCSVData(String csvData) {
+    
+   
+     //   List&lt;Map&lt;String, String&gt;&gt; dataList = new ArrayList&lt;&gt;();
+    List dataList = new ArrayList();
+        String[] lines = csvData.split("\n");
+        String[] headers = lines[0].split(",");
+        for (int i = 1; i &lt; lines.length; i++) {
+            String[] values = lines[i].split(",");
+            Map data = new LinkedHashMap();
+            for (int j = 0; j &lt; headers.length; j++) {
+                data.put(headers[j], values[j]);
+            }
+            dataList.add(data);
+        }
+        return dataList;
+    }
+  
+    public static List parseCSVDatadeptHead(String csvDatadeptHead) {
+    
+   
+     //   List&lt;Map&lt;String, String&gt;&gt; dataList = new ArrayList&lt;&gt;();
+    List dataList = new ArrayList();
+        String[] lines = csvDatadeptHead.split("\n");
+        String[] headers = lines[0].split(",");
+        for (int i = 1; i &lt; lines.length; i++) {
+            String[] values = lines[i].split(",");
+            Map data = new LinkedHashMap();
+            for (int j = 0; j &lt; headers.length; j++) {
+                data.put(headers[j], values[j]);
+            }
+            dataList.add(data);
+        }
+        return dataList;
+    }
+  
+  
+    public static List parseCSVSecondLevelApproval(String csvDataSecondLevelApproval) {
+    
+   
+     //   List&lt;Map&lt;String, String&gt;&gt; dataList = new ArrayList&lt;&gt;();
+    List dataList = new ArrayList();
+        String[] lines = csvDataSecondLevelApproval.split("\n");
+        String[] headers = lines[0].split(",");
+        for (int i = 1; i &lt; lines.length; i++) {
+            String[] values = lines[i].split(",");
+            Map data = new LinkedHashMap();
+            for (int j = 0; j &lt; headers.length; j++) {
+                data.put(headers[j], values[j]);
+            }
+            dataList.add(data);
+        }
+        return dataList;
+    }
+  
+  
+
+    public static String getFormTable(List dataList) {
+      
+       
+        StringBuilder sb = new StringBuilder();
+     //sb.append("&lt;table border='1' width='100%' style='text-align: center;'&gt;");  //to allign contents
+      // sb.append("&lt;table border='1' width='100%'&gt;");
+//sb.append("&lt;style&gt;th { text-align: center; }&lt;/style&gt;");
+sb.append("&lt;table border='1' width='100%' style='text-align:center;'&gt;");
+      
+    // Header row
+    sb.append("&lt;tr style='background-color:#E8E8E8;'&gt;");
+        // Header row
+        sb.append("&lt;tr&gt;");
+        for (String header : dataList.get(0).keySet()) {
+        sb.append("&lt;th style='text-align: center;'&gt;").append(header).append("&lt;/th&gt;"); // Center-align header cells
+          // sb.append("&lt;th align=\"center\"&gt;").append(header).append("&lt;/th&gt;");
+           // sb.append("&lt;th&gt;").append(header).append("&lt;/th&gt;");
+        }
+        sb.append("&lt;/tr&gt;");
+
+        // Data rows
+        for (Map data : dataList) {
+            sb.append("&lt;tr&gt;");
+            for (String value : data.values()) {
+                sb.append("&lt;td&gt;").append(value).append("&lt;/td&gt;");
+            }
+            sb.append("&lt;/tr&gt;");
+        }
+
+        sb.append("&lt;/table&gt;");
+        return sb.toString();
+    }
+  
+  
+  
+
+ 
+</Source>
+</Rule>
+
+</sailpoint>

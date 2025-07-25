@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Task Status Result Report Rule" type="AllowedValues">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+import java.io.*;
+import java.net.URI;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+
+import com.lowagie.text.pdf.*;
+import org.joda.time.DateTime;
+import sailpoint.api.Provisioner;
+import sailpoint.object.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Paragraph;
+
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import sailpoint.object.TaskResult;
+import com.lowagie.text.Font;
+import java.awt.*;
+import java.util.Map;
+import com.lowagie.text.*;
+import sailpoint.tools.GeneralException;
+import org.apache.commons.lang.StringUtils;  
+  
+  
+class PageNumber extends PdfPageEventHelper {
+
+  public void onEndPage(PdfWriter writer, Document document) {
+    PdfContentByte cb = writer.getDirectContent();
+    Rectangle pageSize = document.getPageSize();
+    cb.beginText();
+    cb.setFontAndSize(com.lowagie.text.pdf.BaseFont.createFont(), 10);
+    cb.setTextMatrix(pageSize.getRight(60), pageSize.getBottom(30));
+    cb.showText(String.valueOf(writer.getPageNumber()));
+    cb.endText();
+    cb.setColorStroke(Color.LIGHT_GRAY);
+    cb.setLineWidth(2f);
+    cb.rectangle(0,0,pageSize.getWidth(),pageSize.getHeight());
+    cb.stroke();
+  }
+}  
+  
+
+Date todaydate = new Date();
+  SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh.mm aa");
+  SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+  String reportdate = formatter.format(todaydate);
+  //reportdate = "04-02-2024 09.30 PM";
+  String filepath = "E:\\TaskStatusReport\\TaskResultReport-"+reportdate+".pdf";
+  File reportfile = new File(filepath);
+  if(!reportfile.exists())
+    reportfile.createNewFile();
+  FileOutputStream fos = new FileOutputStream(reportfile);
+  String strdf = df.format(todaydate);
+  String ddd = formatter.format(todaydate);
+  Date date1=new SimpleDateFormat("M/dd/yy").parse(strdf);
+  //Date dateago = new DateTime(date1).minusDays(1).toDate();
+
+  try{
+    QueryOptions qo = new QueryOptions();
+    //Filter filter = Filter.ge("TaskResult.completed",date1);
+    Filter filter = Filter.and(Filter.ge("TaskResult.completed",date1),Filter.ne("TaskResult.type","System"));
+    qo.addFilter(filter);
+    qo.addOrdering("TaskResult.name",true);
+    List taskresultObj = (List)context.getObjects(TaskResult.class,qo);
+    Document document = new Document(PageSize.A4.rotate());
+    //PdfWriter.getInstance(document, fos);
+    PdfWriter writer = PdfWriter.getInstance(document,fos);
+    PageNumber pageEvent = new PageNumber();
+    writer.setPageEvent(pageEvent);
+    document.open();
+    
+    Font headingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+    headingFont.setColor(new Color(0, 102, 204));
+    Paragraph heading = new Paragraph("Task Result Status Report: "+reportdate, headingFont);
+    heading.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(heading);
+    document.add(Chunk.NEWLINE);
+    PdfPTable table = new PdfPTable(5);
+    Font theaderFont = FontFactory.getFont(FontFactory.HELVETICA, 10,Font.BOLD, Color.WHITE);
+    Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.BLACK);
+    Font successFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.GREEN);
+    Font errorFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.RED);
+    Font msgFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.ORANGE);
+    PdfPCell namecell = new PdfPCell(new Phrase("Task Name",theaderFont));
+    namecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(namecell);
+    PdfPCell statuscell = new PdfPCell(new Phrase("Status",theaderFont));
+    statuscell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(statuscell);
+    PdfPCell errcell = new PdfPCell(new Phrase("Error Msg",theaderFont));
+    errcell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(errcell);
+    PdfPCell sdatecell = new PdfPCell(new Phrase("Start Date",theaderFont));
+    sdatecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(sdatecell);
+    PdfPCell cdatecell = new PdfPCell(new Phrase("Completion Date",theaderFont));
+    cdatecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(cdatecell);
+    table.setHeaderRows(1);
+    for (TaskResult tr : taskresultObj)
+    {
+      TaskResult tasktr =context.getObjectByName(TaskResult.class,tr.getName());
+      if(tasktr != null){
+        String name = String.valueOf(tasktr.getName());
+        table.addCell(new PdfPCell(new Paragraph(name,bodyFont)));
+        String status = String.valueOf(tasktr.getCompletionStatus());
+        if(status.equalsIgnoreCase("Success")){
+          table.addCell(new PdfPCell(new Paragraph(status,successFont)));
+          table.addCell(new PdfPCell(new Paragraph("",bodyFont)));
+        }
+        else if(status.equalsIgnoreCase("Error")){
+          table.addCell(new PdfPCell(new Paragraph(status,errorFont)));
+          List errList = tasktr.getErrors();
+          String errString = StringUtils.join(errList,",");
+          table.addCell(new PdfPCell(new Paragraph(errString,errorFont)));
+        }
+        else {
+         List msgList = tasktr.getMessages();
+         String msgString = StringUtils.join(msgList,",");
+         table.addCell(new PdfPCell(new Paragraph(status,msgFont))); 
+         table.addCell(new PdfPCell(new Paragraph(msgString,msgFont)));  
+        }  
+        SimpleDateFormat formatTime = new SimpleDateFormat("M/dd/yy hh.mm aa");
+        Date startdate = tasktr.getCreated();
+        String strStartDate = formatTime.format(startdate);
+        table.addCell(new PdfPCell(new Paragraph(strStartDate,bodyFont)));
+        Date completiondate = tasktr.getCompleted();
+        String strCdate = formatTime.format(completiondate);
+        table.addCell(new PdfPCell(new Paragraph(strCdate,bodyFont)));
+      }
+    }
+    document.add(table);
+    document.add(Chunk.NEWLINE);
+    Paragraph footer = new Paragraph("Task Result Status Report End", headingFont);
+    footer.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(footer);    
+    table.flushContent();
+    document.close();
+    writer.close();
+    //Send Email 
+    EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class,"Americana-Task-Status-Report-Notification");
+    EmailOptions emailOptions = new EmailOptions();
+    Map args = new HashMap();
+    args.put("firstname","Shibu");
+    args.put("lastname","Kurian");
+    args.put("reportdate",reportdate);
+    emailOptions.setTo("skurian@americana-food.com");
+    emailOptions.setCc("rajesh.kumar@paramountassure.com");
+    emailOptions.setVariables(args);
+    String fileName = "TaskResultReport-"+reportdate+".pdf";
+    byte[] fileData = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(filepath));
+    System.out.println("Data :"+fileData);
+    EmailFileAttachment attachment = new EmailFileAttachment( fileName, EmailFileAttachment.MimeType.MIME_PDF, fileData );
+    emailOptions.addAttachment( attachment );
+    context.sendEmailNotification( emailTemplate, emailOptions );
+  } catch (Exception e) {
+    System.out.println("Exception :"+e);
+    throw new RuntimeException(e);
+  }  
+  return "Exit with Success";
+</Source>
+</Rule>
+
+</sailpoint>

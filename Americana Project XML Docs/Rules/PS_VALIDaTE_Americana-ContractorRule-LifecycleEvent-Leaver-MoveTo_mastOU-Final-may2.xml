@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_VALIDaTE_Americana-ContractorRule-LifecycleEvent-Leaver-MoveTo_mastOU-Final-may2">
+  <Source>
+  
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+   import java.util.regex.Pattern;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+  import sailpoint.object.*;
+
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Logger;
+  Logger logger=Logger.getLogger("customRule4");
+
+
+  boolean leaverTriggerFlg = false;
+//Filter f = Filter.eq("application.name","AD Contractors");
+
+  QueryOptions qo= new QueryOptions();
+ // qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+String info;
+String idname;
+ String country;
+String linkstatus;
+String endDate;
+String ContractorCreation;
+Boolean disabled;
+  String IIQDisabled;
+  String Type;
+  String status;
+   String disabledDate;
+  String endDate;
+  String status1;
+  String status2;
+ String isContractor;
+List al=new ArrayList();
+
+
+for(Identity newIdentity :ids)
+{
+
+  if(null != newIdentity){
+
+ // if( null != newIdentity.getAttribute("endDate")&amp;&amp;!newIdentity.getAttribute("endDate").equalsIgnoreCase("never")&amp;&amp; null != newIdentity.getAttribute("disabledDate")&amp;&amp;null != newIdentity.getAttribute("isContractor")&amp;&amp;newIdentity.getAttribute("isContractor").equalsIgnoreCase("Disabled")){
+  
+  
+  //for cleanup://2024-04-30
+ if( null != newIdentity.getAttribute("endDate")&amp;&amp;null != newIdentity.getAttribute("isContractor")&amp;&amp;newIdentity.getAttribute("isContractor").equalsIgnoreCase("Disabled")&amp;&amp;(null == newIdentity.getAttribute("disabledDate")||newIdentity.getAttribute("disabledDate").equalsIgnoreCase("2024-04-22"))){
+  
+ // if( null != newIdentity.getAttribute("endDate")&amp;&amp;null != newIdentity.getAttribute("isContractor")&amp;&amp;newIdentity.getAttribute("isContractor").equalsIgnoreCase("Disabled")&amp;&amp;(null == newIdentity.getAttribute("disabledDate"))){
+  
+  
+  
+  idname=newIdentity.getName();
+ContractorCreation =(String) newIdentity.getAttribute("ContractorCreation");
+              isContractor =(String) newIdentity.getAttribute("isContractor");
+      String strEndDate = (String) newIdentity.getAttribute("endDate");
+       status=(String) newIdentity.getAttribute("status");
+              country=(String) newIdentity.getAttribute("country");
+      Type=(String) newIdentity.getAttribute("type");
+	  
+	  disabledDate=(String) newIdentity.getAttribute("disabledDate");
+  
+  
+ //  Identity idObj = context.getObjectByName(Identity.class, "newIdentity");
+  Application appObj = context.getObjectByName(Application.class, "AD Contractors");
+    log.error("appObj "+appObj);
+ IdentityService isr = new IdentityService(context);
+            List links = isr.getLinks(newIdentity, appObj);
+			//countLinks(Identity identity, Application application)
+      			
+            if(Util.nullSafeSize(links) &gt; 0){
+               Link adLink = links.get(0);
+               
+ String userAdDn = links.get(0).getAttribute("distinguishedName");
+             log.debug("testing isr");
+                 
+  boolean disabled=adLink.isDisabled();
+  if(disabled)
+   
+ {
+   
+   
+      String strEndDate = (String) newIdentity.getAttribute("disabledDate");
+      
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+			
+    if(strEndDate != null){
+        Date endDate = sf.parse(strEndDate);
+      log.error("formatting string to date: " + endDate);}
+        
+        Date goLiveDate = sf.parse("2022-12-23");
+       log.error("goLiveDate: " + goLiveDate);
+       
+  
+        
+      
+            Date currentDate = new Date();
+            int diff = Util.getDaysDifference(new Date(), endDate);
+      logger.debug(" diff : "+diff);
+      if(diff &gt; 30){
+			
+			
+    
+       String masterDisabledOU = "";
+         /* Custom custom = context.getObjectByName(Custom.class, "Americana-Custom-AD-CountryVSDisabledOUMapping");
+          logger.debug(" custom : "+custom);
+          if(null != custom){
+            masterDisabledOU = custom.get("MasterDisabledOU");
+          }*/
+        
+        masterDisabledOU="OU=Disabled Contractors,OU=Americana Office,DC=Americana,DC=global";
+
+          logger.debug(" masterDisabledOU : "+masterDisabledOU);
+//it will check if pattern "OU=Disabled Users,OU=Americana Office,OU=Test HCM,OU=Americana Office,DC=Americana,DC=global" is in the user dn, if it has then boolean isInMaterDisabledOU is true. else false
+  				
+          boolean isInMaterDisabledOU = Pattern.compile(Pattern.quote(masterDisabledOU), Pattern.CASE_INSENSITIVE).matcher(userAdDn).find();
+          if(isInMaterDisabledOU){
+             status1=String.valueOf(isInMaterDisabledOU);
+          }
+
+          boolean isInCountryDisabledOU = Pattern.compile(Pattern.quote("OU=Disabled"), Pattern.CASE_INSENSITIVE).matcher(userAdDn).find();
+          logger.debug("isInCountryDisabledOU : "+isInCountryDisabledOU);
+          if(!isInCountryDisabledOU){
+            status2=String.valueOf(isInCountryDisabledOU);
+          }
+    if(!isInMaterDisabledOU&amp;&amp;isInCountryDisabledOU){
+          info=idname+","+strEndDate+","+ContractorCreation+","+linkstatus+","+Type+","+status+","+isContractor+","+country+","+disabledDate;
+                        leaverTriggerFlg = true;
+						//return info;
+						al.add(info);
+      System.out.println(" info   ::" +info);
+        
+      
+    }
+      }
+       
+           }
+			
+		
+  	
+			  
+			  
+			  }
+  
+ 
+      
+     
+        
+  
+  }
+  
+
+        
+    }
+
+  }
+        
+        
+    
+  
+    
+ if (!al.isEmpty()&amp;&amp; al.size()&gt;0) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\moveTomasterdisbledOUmay20.csv", true);
+        for (String info : al) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+  
+    
+     
+  
+
+
+
+
+  
+  
+</Source>
+</Rule>
+
+</sailpoint>

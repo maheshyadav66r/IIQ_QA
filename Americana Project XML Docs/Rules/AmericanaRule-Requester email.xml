@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="AmericanaRule-Requester email">
+  <Source>
+
+   import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.*;
+  import org.apache.log4j.Logger;
+
+Logger log=Logger.getLogger("customRule4");  
+  public void sendEmail(String identityName,String approver,String status,String requesterName,String requesterEmail,String primaryApprover,String primaryApproverName,String primaryApproverEmail,String secondaryApprover,String secondaryApproverName,String secondaryApproverEmail){
+    List toAddresses=new ArrayList();
+    EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-ContractorEmailTemplate-ApprovalNotification");  
+    if (emailTemplate != null) {
+      try{
+        log.error("inside sendEmail method");
+     log.error("approver is"+approver);
+        HashMap variables = null;
+        variables = new HashMap();
+        variables.put("status", status);
+        variables.put("approver",approver);
+        variables.put("identityName",identityName);
+        variables.put("primaryApproverName",primaryApproverName);
+		variables.put("secondaryApproverName",secondaryApproverName);
+		variables.put("secondaryApproverEmail",secondaryApproverEmail);variables.put("primaryApproverEmail",primaryApproverEmail);
+        variables.put("secondaryApprover",secondaryApprover);
+          variables.put("primaryApprover",primaryApprover);
+        variables.put("launchername",launchername);
+        
+        log.error("primaryApprover :"+primaryApprover);
+         log.error("secondaryApprover :"+secondaryApprover);
+         log.error("secondaryApproverName :"+secondaryApproverName);
+         log.error("primaryApproverName :"+primaryApproverName);
+        
+		
+		
+          variables.put("requesterdisplayName",requesterName);
+        EmailOptions ops = new EmailOptions(requesterEmail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+      }
+      catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+      }
+    }
+  }
+  
+  
+  
+    
+public void sendEmail(String identityName,String approver,String status,String requesterName,String requesterEmail){
+    List toAddresses=new ArrayList();
+    EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-ContractorEmailTemplate-ApprovalNotification");  
+    if (emailTemplate != null) {
+      try{
+    // log.error("approver is"+approver);
+        HashMap variables = null;
+        variables = new HashMap();
+        variables.put("status", status);
+        variables.put("approver",approver);
+        variables.put("identityName",identityName);
+          variables.put("requesterdisplayName",requesterName);
+        EmailOptions ops = new EmailOptions(requesterEmail, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+      }
+      catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+      }
+    }
+  }
+  
+  
+  </Source>
+</Rule>
+
+</sailpoint>

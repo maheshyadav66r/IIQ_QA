@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Manual_PowerBI_Provisioning_Modify_Test_Rule">
+  <Source>
+  import java.util.*;
+import sailpoint.api.*;
+import sailpoint.object.*;
+import java.sql.*;
+import java.io.*;
+import sailpoint.tools.Util;
+import sailpoint.api.SailPointContext;
+import sailpoint.api.SailPointFactory;
+import sailpoint.object.IdentityRequest;
+import sailpoint.tools.GeneralException;
+import java.util.ArrayList;
+import java.util.List;
+import sailpoint.object.*;
+import java.io.File;
+import java.util.Scanner;  
+
+public static List readCSVfnlData(String csvFilePath, int rIndex, int cIndex, String requesterId) {
+	List fnlAccess = new ArrayList();
+	try {
+		File file = new File(csvFilePath);
+		Scanner scanner = new Scanner(file);
+		for (int i= 0; i &lt; rIndex; i++){
+			if(scanner.hasNextLine()){
+				scanner.nextLine();
+			} else{
+				throw new IndexOutOfBoundsException("Row index out of bounds");
+			}
+		}
+		while(scanner.hasNext()){
+			String row = scanner.nextLine();
+			String[] celldata = row.split(",");
+			if(cIndex &lt; celldata.length){
+				if (requesterId.equalsIgnoreCase(String.valueOf(celldata[cIndex]))){
+					String fnl = celldata[cIndex + 3];
+          for(int j= 0; j &lt; fnl.split("!").length; j++) {
+            fnlAccess.add(fnl.split("!")[j].trim());
+          }
+					if(fnlAccess != null)
+						break;
+				}
+			}
+		}
+	}
+	catch (Exception e){
+		throw new RuntimeException(e);
+	}
+	return fnlAccess;
+}
+
+  
+public static List readCSVStoreData(String csvFilePath, int rIndex, int cIndex, String requesterId){
+	List storeAR = new ArrayList();
+	try {
+		File file = new File(csvFilePath);
+		Scanner scanner = new Scanner(file);
+		for (int i= 0; i &lt; rIndex; i++){
+			if(scanner.hasNextLine()){
+				scanner.nextLine();
+			} else{
+				throw new IndexOutOfBoundsException("Row index out of bounds");
+			}
+		}
+		while(scanner.hasNext()){
+			String row = scanner.nextLine();
+			String[] celldata = row.split(",");
+			if(cIndex &lt; celldata.length){
+				if (requesterId.equalsIgnoreCase(String.valueOf(celldata[cIndex]))){
+					storeAR.add(celldata[cIndex + 2]);
+				}
+			}
+		}
+	}
+	catch (Exception e){
+		throw new RuntimeException(e);
+	}
+	return storeAR;
+}
+  
+String csvFilePath="E:\\WorkItemReport\\PowerBIWorkItemDetails-06-May-24.csv";//Do not change this. This is production file path
+int rIndex = 1;//Do not change this
+int cIndex = 2; //Do not change this
+String requesterId = "0a0805a48dc11597818dd1b69a8a3b54";  //provide requester Id(id of the user)
+//List fnlAccessValue =  readCSVfnlData(csvFilePath,rIndex,cIndex, requesterId); //call the method to get fnlAccess details from csv
+//List storeNameList =  readCSVStoreData(csvFilePath,rIndex,cIndex, requesterId); //call the method to get store details from csv  
+  
+String url = "jdbc:sqlserver://americana-server.database.windows.net:1433;database=BI_UserDB";
+String biusername = "BI_UserAccess";
+String bipassword = "Biuser!@123#";
+//String idRequest = "0000009533";
+Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+Connection connection = DriverManager.getConnection(url, biusername, bipassword);
+ProvisioningPlan.AttributeRequest addGroupsAttr = null;
+ProvisioningPlan.AttributeRequest fnlAccessAttr = null;
+List fnlAccessValue = new ArrayList();
+List storeNameList = new ArrayList();
+String userStatus = null;
+String costCenter = null;
+String selectQuery = null;
+String selectQuery1 = null;
+String insertQuery = null;
+String updateQuery = null;
+String removeQuery = null;
+String restNumberOp = null;
+String compNumberOP = null;
+String addGroupOp = null;
+String salesFlag = null;
+String plFlag = null;
+String marketingFlag = null;
+String displayName = null;
+String jobTitle = null;
+String empID = null;
+String userName = null;
+String email = null;
+int newRecordcount = 0;
+int updateRecordcount = 0;
+
+try {
+	IdentityRequest idReqObj = context.getObjectByName(IdentityRequest.class, idRequest);
+	ProvisioningPlan.AccountRequest acctReq = (ProvisioningPlan.AccountRequest) idReqObj.getProvisionedProject().getMasterPlan().getAccountRequest("Microsoft Power BI");
+	userName = idReqObj.getProvisionedProject().getMasterPlan().getNativeIdentity();
+	
+	Identity identity = context.getObjectByName(Identity.class, userName);
+	displayName = (String) identity.getAttribute("displayName");
+	empID = (null == (String)identity.getAttribute("employeeNumber")) ? "0" : (String)identity.getAttribute("employeeNumber") ;
+	jobTitle = (String) identity.getAttribute("jobTitle") == null ? "Not Available" : (String) identity.getAttribute("jobTitle");
+	costCenter = String.valueOf(acctReq.getAttributeRequest("COST_CENTER").getValue());
+	email = acctReq.getNativeIdentity();
+	if (String.valueOf(identity.getAttribute("status")).equalsIgnoreCase("ACTIVE")) {
+		userStatus = "T";
+	} else if (String.valueOf(identity.getAttribute("status")).equalsIgnoreCase("INACTIVE")) {
+		userStatus = "F";
+	}
+	addGroupsAttr = acctReq.getAttributeRequest("addGroups");
+	fnlAccessAttr = acctReq.getAttributeRequest("fnlAccess");
+
+	restNumberOp = acctReq.getAttributeRequest("REST_NUMBER") == null ? null : String.valueOf(acctReq.getAttributeRequest("REST_NUMBER").getOp());
+	compNumberOP = acctReq.getAttributeRequest("COMPANY_NO") == null ? null : String.valueOf(acctReq.getAttributeRequest("COMPANY_NO").getOp());
+	addGroupOp = acctReq.getAttributeRequest("addGroups") == null ? null : String.valueOf(acctReq.getAttributeRequest("addGroups").getOp());
+	if (restNumberOp != null &amp;&amp; restNumberOp.equalsIgnoreCase("Remove") &amp;&amp; compNumberOP != null &amp;&amp; compNumberOP.equalsIgnoreCase("Remove")) {
+		removeQuery = "UPDATE USERDB.User_Security SET DELETE_FLAG='T', SALES_FLAG='F', PL_FLAG='F', Marketing_FLAG='F' WHERE EMP_ID=\'" + empID + "\'";
+		PreparedStatement st = connection.prepareStatement(removeQuery);
+		System.out.println("remQuery is: " + removeQuery);
+		st.executeUpdate();
+	}
+	if (fnlAccessAttr != null &amp;&amp; fnlAccessAttr.getValue() != null) {
+		if (fnlAccessAttr.getValue() instanceof List) {
+			fnlAccessValue = (List) fnlAccessAttr.getValue();
+		} else if (fnlAccessAttr.getValue() instanceof String) {
+			fnlAccessValue.add(fnlAccessAttr.getValue());
+		}
+	}
+	if (addGroupsAttr != null &amp;&amp; addGroupsAttr.getValue() != null) {
+		if (addGroupsAttr.getValue() instanceof List) {
+			storeNameList = (List) addGroupsAttr.getValue();
+		} else if (addGroupsAttr.getValue() instanceof String) {
+			storeNameList.add(addGroupsAttr.getValue());
+		}
+		if ((Util.nullSafeSize(storeNameList) &gt; 0) &amp;&amp; addGroupOp.equalsIgnoreCase("Add")) {
+			String storeID = null;
+			String areaID = null;
+			String chainIDLocal = null;
+			String restNumber = null;
+			String compNumber = null;
+
+			for (String storeName : storeNameList) {
+				String rName = storeName.split("\\|")[0].trim();
+				System.out.println("rName is : " + rName);
+				String cDesc = storeName.split("\\|")[2].trim();
+				System.out.println("cDesc is : " + cDesc);
+				selectQuery = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'" + cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+				System.out.println("query is : " + selectQuery);
+				Statement st = connection.createStatement();
+				ResultSet rs = st.executeQuery(selectQuery);
+				while (rs.next()) {
+					storeID = rs.getString("StoreID");
+					areaID = rs.getString("AREA_ID");
+					chainIDLocal = rs.getString("CHAIN_ID_LOCAL");
+					if (storeID.length() &gt; 5) {
+						restNumber = storeID.substring((storeID.length() - 5), (storeID.length()));
+						System.out.println("restNumber is :" + restNumber);
+						if (storeID.length() == 6) {
+							compNumber = storeID.substring(0, 1);
+							System.out.println("compNumber is :" + compNumber);
+						} else if (storeID.length() == 7) {
+							compNumber = storeID.substring(0, 2);
+							System.out.println("compNumber is :" + compNumber);
+						}
+					}
+					selectQuery1 = "SELECT * FROM USERDB.User_Security where EMP_ID=\'" + empID + "\' and COMPANY_NO=\'" + compNumber + "\' and REST_NUMBER=\'" + restNumber + "\'";
+					System.out.println("query1 is : " + selectQuery1);
+					Statement st1 = connection.createStatement();
+					ResultSet rs1 = st1.executeQuery(selectQuery1);
+					if (rs1.next()) {
+						if (fnlAccessValue.contains("Sales")) {
+							salesFlag = "T";
+						} else if (rs1.getString("SALES_FLAG") != null) {
+							salesFlag = rs1.getString("SALES_FLAG");
+						} else {
+							salesFlag = "F";
+						}
+
+						if (fnlAccessValue.contains("P/L")) {
+							plFlag = "T";
+						} else if (rs1.getString("PL_FLAG") != null) {
+							plFlag = rs1.getString("PL_FLAG");
+						} else {
+							plFlag = "F";
+						}
+						if (fnlAccessValue.contains("Marketing")) {
+							marketingFlag = "T";
+						} else if (rs1.getString("Marketing_FLAG") != null) {
+							marketingFlag = rs1.getString("Marketing_FLAG");
+						} else {
+							marketingFlag = "F";
+						}
+						updateQuery = "UPDATE USERDB.User_Security SET SALES_FLAG=\'" + salesFlag + "\', PL_FLAG=\'" + plFlag + "\', Marketing_FLAG=\'" + marketingFlag + "\', USER_TITLE=\'" + userTitle + "\', USER_ID=\'" + empID + "\' WHERE EMP_ID=\'" + empID + "\' and COMPANY_NO=\'" + compNumber + "\' and REST_NUMBER=\'" + restNumber + "\'";
+						System.out.println("updateQuery is :" + updateQuery);
+						PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+						int urows = updateStatement.executeUpdate();
+						System.out.println("Affected Update Rows :" + urows);
+						updateRecordcount = updateRecordcount +urows;
+					} else if (!rs1.next()) {
+						salesFlag = fnlAccessValue.contains("Sales") ? "T" : "F";
+						plFlag = fnlAccessValue.contains("P/L") ? "T" : "F";
+						marketingFlag = fnlAccessValue.contains("Marketing") ? "T" : "F";
+						insertQuery = "INSERT INTO USERDB.User_Security VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+						System.out.println("insertQuery is :" + insertQuery);
+						PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+						insertStatement.setString(1, empID + " - " + displayName + " - (" + jobTitle + ")");
+						insertStatement.setString(2, "A");
+						insertStatement.setString(3, "F");
+						insertStatement.setString(4, email);
+						insertStatement.setInt(5, Integer.parseInt(empID));
+						insertStatement.setInt(6, Integer.parseInt(compNumber));
+						insertStatement.setInt(7, Integer.parseInt(restNumber));
+						insertStatement.setInt(8, Integer.parseInt(chainIDLocal));
+						insertStatement.setInt(9, Integer.parseInt(areaID));
+						insertStatement.setString(10, "F");
+						insertStatement.setString(11, "F");
+						insertStatement.setString(12, "F");
+						insertStatement.setString(13, salesFlag);
+						insertStatement.setString(14, plFlag);
+						insertStatement.setString(15, marketingFlag);
+						insertStatement.setString(16, "F");
+						insertStatement.setString(17, "F");
+						insertStatement.setString(18, empID + " - " + jobTitle);
+						insertStatement.setInt(19, Integer.parseInt(empID));
+						insertStatement.setInt(20, Integer.parseInt(costCenter));
+						insertStatement.setString(21, userStatus);
+						int nrows = insertStatement.executeUpdate();
+						System.out.println("Affected Inserted Rows :" + nrows);
+						newRecordcount = newRecordcount +nrows;
+					}
+					System.out.println("New Record Count :" + newRecordcount);
+					System.out.println("Update Record Count :" + updateRecordcount);
+				}
+			}
+		}
+	}
+}
+catch (Exception e)
+{
+	System.out.println("Power BI Modify Error e: " +e.getMessage());
+}
+finally {
+	try
+	{
+		if (connection != null)
+			connection.close();
+	}
+	catch (SQLException e)
+	{
+		e.printStackTrace();
+	}
+}
+</Source>
+</Rule>
+
+</sailpoint>

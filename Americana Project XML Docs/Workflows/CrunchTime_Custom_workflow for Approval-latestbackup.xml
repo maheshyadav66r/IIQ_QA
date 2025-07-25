@@ -1,0 +1,546 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow explicitTransitions="true" name="CrunchTime_Custom_workflow for Approval-latestbackup(11/02/2024)">
+  <Variable initializer="true" name="trace">
+    <Description>Used for debugging this workflow and when set to true trace will be sent to stdout.</Description>
+  </Variable>
+  <Variable initializer="spadmin" input="true" name="fallbackApprover" />
+  <Variable initializer="Quick Link Approval" name="flow" />
+  <Variable name="launcher">
+    <Description>The name of the identity.</Description>
+    <Script>
+      <Source>
+        return context.getUserName();     
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="applicationName">
+    <Description>Name of the application</Description>
+  </Variable>
+  <Variable name="hasLinks">
+    <Description>User Crunch Time applicationLinks</Description>
+  </Variable>
+  <Variable name="firstName" />
+  <Variable name="lastName" />
+  <Variable name="userId" />
+  <Variable name="email" />
+  <Variable name="links" />
+  <Variable name="environment">
+    <Description>Assigning the custom object.</Description>
+  </Variable>
+  <Variable name="marketValue">
+    <Description>Assigning the marketField custom object.</Description>
+  </Variable>
+  <Variable name="MARKET_NAME">
+    <Description>Link Attribute MARKET_NAME of user.</Description>
+  </Variable>
+  <Variable name="managerName">
+    <Description>requester manager Name.</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerName  = "";
+        if (launcher != null) {
+        Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getName() != null) {
+        managerName = launchObject.getManager().getName();
+        context.decache(launchObject);
+        }
+        }
+        return managerName;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="managerDisplayName">
+    <Description>requester manager display Name.</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerDisplayName  = "";
+        if (launcher != null) {
+         Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getDisplayName() != null) {
+        managerDisplayName  = launchObject.getManager().getDisplayName();
+wfcontext.setVariable("managerDisplayName",managerDisplayName);
+        context.decache(launchObject);
+        }
+       
+        }
+        return managerDisplayName  ;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="managerEmail">
+    <Description>requester manager display Name.</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerEmail  = "";
+        if (launcher != null) {
+         Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getDisplayName() != null) {
+        managerEmail  = launchObject.getManager().getEmail();
+wfcontext.setVariable("managerEmail",managerEmail);
+        context.decache(launchObject);
+        }
+       
+        }
+        return managerEmail  ;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable initializer="ebaldemeca@americana-food.com" input="true" name="thirdlevelApprovalEmail" />
+  <Variable initializer="Esmeraldo Baldemeca" input="true" name="thirdlevelApprovalName" />
+  <Variable initializer="Nauman Jillani" input="true" name="WG1" />
+  <Variable initializer="Fathima Siddique" input="true" name="WG2" />
+  <Variable initializer="Mohamed Ajmal Liyakath Ali" input="true" name="WG3" />
+  <Variable name="HIERARCHY_TYPE(LOGICAL_NAME)">
+    <Description>Link Attribute HIERARCHY_TYPE of user.</Description>
+  </Variable>
+  <Variable name="USER_GROUP_NAME">
+    <Description>Link Attribute USER_GROUP_NAME of user.</Description>
+  </Variable>
+  <Variable input="true" name="workItemDescription" />
+  <Variable initializer="CrunchTimeManagerNotify" input="true" name="CrunchTimeManagerNotify">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="CrunchTimeUserNotify" input="true" name="CrunchTimeUserNotify">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="CrunchTimeUserlastNotification" input="true" name="CrunchTimeUserlastNotification">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable name="identityName" />
+  <Variable name="managerApprover" />
+  <Variable name="secondlevelApproval" />
+  <Variable name="thirdlevelApproval">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+
+
+        Identity essie = context.getObjectByName(Identity.class,"28061");//Add Essie user name.
+        
+        if(null != essie @and essie.getName() != null){
+        wfcontext.setVariable("thirdlevelApproval",essie.getName());
+        return essie.getName();
+
+        }
+        else{
+        wfcontext.setVariable("thirdlevelApproval","spadmin");
+        return "spadmin";
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Step icon="Start" name="Start" posX="11" posY="11">
+    <Transition to="fetching User Detailes" />
+  </Step>
+  <Step icon="Start" name="fetching User Detailes" posX="11" posY="11">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import sailpoint.api.IdentityService;
+        import sailpoint.object.Application;
+        import sailpoint.object.Link;
+        import java.util.*;
+
+        List marketList = new ArrayList();
+        List hierarchyList = new ArrayList();
+        List userGroupNameList = new ArrayList();
+
+        Identity idObject = context.getObjectByName(Identity.class, launcher);
+
+        if(null != idObject){
+        Application appObj = context.getObjectByName(Application.class,"Crunch Time");//add applicaion
+        wfcontext.setVariable("applicationName", appObj.getName());
+        IdentityService identityService = new IdentityService(context);
+        List links = identityService.getLinks(idObject, appObj);
+
+        if(Util.nullSafeSize(links)&gt;0){
+        wfcontext.setVariable("links", links);
+        wfcontext.setVariable("hasLinks", true);
+        if(null != links.get(0).getAttribute("MARKET_NAME")){//add link Attribute
+        if(links.get(0).getAttribute("MARKET_NAME") instanceof List){
+        marketList.addAll(links.get(0).getAttribute("MARKET_NAME"));
+        }else{
+        marketList.add(links.get(0).getAttribute("MARKET_NAME"));
+        }
+        wfcontext.setVariable("MARKET_NAME", marketList);
+        }
+        if(null != links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)")){//add link Attribute
+        if(links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)") instanceof List){
+        hierarchyList.addAll(links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)"));
+        }else{
+        hierarchyList.add(links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)"));
+        }
+        wfcontext.setVariable("HIERARCHY_TYPE(LOGICAL_NAME)", hierarchyList);
+        }
+        if(null != links.get(0).getAttribute("USER_GROUP_NAME")){//add link Attribute
+        wfcontext.setVariable("USER_GROUP_NAME", links.get(0).getAttribute("USER_GROUP_NAME"));
+        }
+
+        }else{
+        wfcontext.setVariable("hasLinks", false);
+        }
+        wfcontext.setVariable("userId", idObject.getName());
+        wfcontext.setVariable("firstName", idObject.getFirstname());
+        wfcontext.setVariable("lastName",idObject.getLastname());
+        wfcontext.setVariable("email",idObject.getEmail());
+
+        }
+
+      </Source>
+    </Script>
+    <Transition to="Assigning custom Object" />
+  </Step>
+  <Step icon="Start" name="Assigning custom Object" posX="11" posY="11">
+    <Script>
+      <Source>
+        import sailpoint.object.Custom;
+
+        Custom customObj =  context.getObjectByName(Custom.class,"Custom_CrunchTime");//add custom object name
+        Custom customObjMarket =  context.getObjectByName(Custom.class,"CrunchTime_MarketField");//add custom object for market Field 
+
+        if(null != customObj || null != customObjMarket ){
+        wfcontext.setVariable("environment",customObj.getAttributes().getMap());
+        wfcontext.setVariable("marketValue",customObjMarket.getAttributes().getMap());
+        }
+      </Source>
+    </Script>
+    <Transition to="User verifycation" />
+  </Step>
+  <Step icon="Default" name="User verifycation" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="radioSection" send="hasLinks">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_HomePageOflauncherApprovalForm" />
+      <Arg name="workItemDescription" value="User Account Request" />
+    </Approval>
+    <Transition to="launcher Detailes" when="approved &amp;&amp; &quot;Yes&quot;.equals(radioSection)" />
+    <Transition to="addNewAccess" when="approved &amp;&amp; &quot;No&quot;.equals(radioSection)" />
+  </Step>
+  <Step icon="Default" name="addNewAccess" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="ModifyAccess" send="hasLinks">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_addNewAccess" />
+      <Arg name="workItemDescription" value="User Account Request" />
+    </Approval>
+    <Transition to="User verifycation" when="!approved" />
+    <Transition to="launcher Detailes" />
+  </Step>
+  <Step icon="Default" name="launcher Detailes" posX="138" posY="13">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,ModifySection" send="launcher,firstName,lastName,email,hasLinks,links">
+      <Arg name="environment" value="ref:environment" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_launcherApprovalForm" />
+      <Arg name="workItemDescription" value="User Account Request" />
+      <Return name="name" to="identityName" />
+    </Approval>
+    <Transition to="Notify User" when="approved" />
+    <Transition to="User verifycation" when="!approved" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Notify User" posX="98" posY="10">
+    <Arg name="template" value="ref:launcher" />
+    <Arg name="template" value="ref:CrunchTimeUserNotify" />
+    <Arg name="approverName" value="ref:managerName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="UsermanagerNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="UsermanagerNotify" posX="98" posY="10">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:CrunchTimeManagerNotify" />
+    <Arg name="workItemDescription" value="string:Manager Approval for $(requesterName)" />
+    <Arg name="to" value="script:getEmail(managerName)" />
+    <Transition to="ManagerApproval" />
+  </Step>
+  <Step icon="Default" name="ManagerApproval" posX="138" posY="13">
+    <Approval name="AD_ManagerApproval" owner="ref:managerName" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,WG1,WG2,WG3,thirdlevelApprovalName,thirdlevelApprovalEmail,managerDisplayName,managerEmail">
+      <Arg name="environment" value="ref:environment" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_ManagerApproval" />
+      <Arg name="workItemDescription" value="string:Crunch Time First Level Manager Approval for : $(requesterName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if ((ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) || (ownerIdentity.isWorkgroup() @and !currentUser.isInWorkGroup(ownerIdentity))) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="ManagerUserNotify" when="approved" />
+    <Transition to="end" when="rejected" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="ManagerUserNotify" posX="98" posY="10">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:CrunchTimeUserNotify" />
+    <Arg name="approverName" value="CrunchTime WorkGroup" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="managerNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="managerNotify" posX="98" posY="10">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:CrunchTimeManagerNotify" />
+    <Arg name="workItemDescription" value="string:Work Group Approval for $(requesterName)" />
+    <Arg name="to" value="string:CrunchTime WorkGroup" />
+    <Transition to="second level Approval" />
+  </Step>
+  <Step icon="Default" name="second level Approval" posX="138" posY="13">
+    <Approval name="AD_secondlevelApproval" owner="string:CrunchTime WorkGroup" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,group,HierarchyLogicalName,teamworx,language,marketgroup" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,marketValue,MARKET_NAME,HIERARCHY_TYPE(LOGICAL_NAME),USER_GROUP_NAME,ModifyAccess,WG1,WG2,WG3,thirdlevelApprovalName,thirdlevelApprovalEmail,managerDisplayName,managerEmail">
+      <Arg name="environment" value="ref:environment" />
+      <Arg name="approvalScheme" value="identity" />
+      <Arg name="approvingIdentities" value="ref:approvingIdentities" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_secondlevelApproval" />
+      <Arg name="workItemDescription" value="string:Crunch Time Second Level Approval for : $(requesterName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if ((ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) @and (ownerIdentity.isWorkgroup() @and !currentUser.isInWorkGroup(ownerIdentity))) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="workGroupUserNotify" when="approved" />
+    <Transition to="end" when="rejected" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="workGroupUserNotify" posX="98" posY="10">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:CrunchTimeUserNotify" />
+    <Arg name="approverName" value="Essie" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="workGroupNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="workGroupNotify" posX="98" posY="10">
+    <Arg name="template" value="ref:CrunchTimeManagerNotify" />
+    <Arg name="workItemDescription" value="string:Essie Approval for $(requesterName)" />
+    <Arg name="to" value="ref:thirdlevelApproval" />
+    <Transition to="third level Approval" />
+  </Step>
+  <Step icon="Default" name="third level Approval" posX="138" posY="13">
+    <Approval name="AD_thirdlevelApproval" owner="ref:thirdlevelApproval" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,group,HierarchyLogicalName,teamworx,language,marketgroup" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,conceptName,locationName,group,HierarchyLogicalName,teamworx,language,marketgroup,marketValue,MARKET_NAME,HIERARCHY_TYPE(LOGICAL_NAME),USER_GROUP_NAME,ModifyAccess,WG1,WG2,WG3,thirdlevelApprovalName,thirdlevelApprovalEmail,managerDisplayName,managerEmail">
+      <Arg name="environment" value="ref:environment" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="CrunchTime_thirdlevelApproval" />
+      <Arg name="workItemDescription" value="string:Crunch Time Third Level Approval for : $(requesterName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if ((ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) || (ownerIdentity.isWorkgroup() @and !currentUser.isInWorkGroup(ownerIdentity))) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="Essie Notify" when="approved" />
+    <Transition to="end" when="rejected" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Essie Notify" posX="98" posY="10">
+    <Arg name="template" value="ref:CrunchTimeUserlastNotification" />
+    <Arg name="approverName" value="ref:thirdlevelApproval" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="Account Provision Plan" />
+  </Step>
+  <Step icon="Default" name="Account Provision Plan" posX="289" posY="37" resultVariable="plan">
+    <Script>
+      <Source>
+
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+
+
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+
+        wfcontext.setVariable("identityName", requesterName);	
+
+        List conceptGroup = new ArrayList();
+        List locationgroup = new ArrayList();
+
+
+        if(Util.nullSafeSize(locationName) &gt; 0){
+        for(String locationNames : locationName){
+        
+        String[] Obj = locationNames.split("\\|");
+        String locationValue = Obj[0];
+        String conceptValue = Obj[1];
+
+
+        Filter filter = Filter.and(Filter.or(Filter.eq("displayName",conceptValue),(Filter.eq("displayName",locationValue))),Filter.eq("application.name",applicationName));
+        QueryOptions qop = new QueryOptions();
+        qop.addFilter(filter);
+
+        Iterator search = context.search(ManagedAttribute.class, qop);
+        while(search.hasNext()) {
+        ManagedAttribute  managedAttribute = search.next();
+
+        if(managedAttribute != null @and managedAttribute.getDisplayName() != null @and managedAttribute.getDisplayName().equals(conceptValue)){
+        conceptGroup.add(managedAttribute.getValue());
+        }
+
+        else  if(managedAttribute != null @and managedAttribute.getDisplayName() != null @and managedAttribute.getDisplayName().equals(locationValue)){
+        locationgroup.add(managedAttribute.getValue());
+        }
+
+
+        }
+
+        }
+
+        }
+
+        // creating a plan  based on user selection
+        ProvisioningPlan plan = new ProvisioningPlan();
+
+        AccountRequest accountRequestProv = new AccountRequest();
+        accountRequestProv.setApplication(applicationName); 
+        accountRequestProv.setNativeIdentity(email);
+        accountRequestProv.setOperation(AccountRequest.Operation.Modify);
+        
+
+        if(links != null &amp;&amp; "Remove my existing access and add new access".equals(ModifyAccess)){
+        
+
+        if(null != links.get(0).getAttribute("TEAMWORX_FLAG")){
+        accountRequestProv.add(new AttributeRequest("TEAMWORX_FLAG", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("TEAMWORX_FLAG")));
+        }
+        if(null != links.get(0).getAttribute("USER_LANGUAGE")){
+        accountRequestProv.add(new AttributeRequest("USER_LANGUAGE", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("USER_LANGUAGE")));
+        }
+
+        if(null !=links.get(0).getAttribute("MARKET_NAME")){
+        accountRequestProv.add(new AttributeRequest("MARKET_NAME", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("MARKET_NAME")));
+        }
+        if(null !=links.get(0).getAttribute("LOCATION_CODE")){
+        accountRequestProv.add(new AttributeRequest("LOCATION_CODE", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("LOCATION_CODE")));
+        }
+        if(null != links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)")){
+        accountRequestProv.add(new AttributeRequest("HIERARCHY_TYPE(LOGICAL_NAME)", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("HIERARCHY_TYPE(LOGICAL_NAME)")));
+        }
+        if(null !=links.get(0).getAttribute("CONCEPT_CODE")){
+        accountRequestProv.add(new AttributeRequest("CONCEPT_CODE", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("CONCEPT_CODE")));
+        }
+
+
+
+        }
+        
+        String[] mail = email.split("@");
+        String diplayName = mail[0].toUpperCase();
+        
+        accountRequestProv.add(new AttributeRequest("DisplayName", ProvisioningPlan.Operation.Add,diplayName));
+        accountRequestProv.add(new AttributeRequest("FIRST_NAME", ProvisioningPlan.Operation.Add,requesterFirstName));
+        accountRequestProv.add(new AttributeRequest("LAST_NAME", ProvisioningPlan.Operation.Add,requesterLastName));
+        //accountRequestProv.add(new AttributeRequest("EMAIL", ProvisioningPlan.Operation.Add,requesterEmail));
+        accountRequestProv.add(new AttributeRequest("USER_LANGUAGE", ProvisioningPlan.Operation.Add,language));
+
+        String teamWorkFlag = "";
+
+        if(teamworx != null){
+        String teamWF = String.valueOf(teamworx);
+        if(teamWF.equalsIgnoreCase("true")){
+        teamWorkFlag="Y";
+        }
+        else teamWorkFlag="N";
+        }
+        else teamWorkFlag="N";
+        
+        accountRequestProv.add(new AttributeRequest("TEAMWORX_FLAG", ProvisioningPlan.Operation.Add, String.valueOf(teamWorkFlag)));
+
+        if(Util.nullSafeSize(marketgroup) &gt; 0){
+        accountRequestProv.add(new AttributeRequest("MARKET_NAME",ProvisioningPlan.Operation.Add,marketgroup));
+        }
+
+        if(Util.nullSafeSize(conceptGroup) &gt; 0){
+        Set conceptData = new HashSet(conceptGroup);
+        List conceptList = new ArrayList(conceptData);
+        accountRequestProv.add(new AttributeRequest("CONCEPT_CODE",ProvisioningPlan.Operation.Add,conceptList)); 
+        }
+
+        if(Util.nullSafeSize(locationgroup) &gt; 0){
+        Set locationData = new HashSet(locationgroup);
+        List locationList = new ArrayList(locationData);
+        accountRequestProv.add(new AttributeRequest("LOCATION_CODE",ProvisioningPlan.Operation.Add,locationList));
+        }
+
+        if(null != group @and void != group){
+        accountRequestProv.add(new AttributeRequest("USER_GROUP_NAME",ProvisioningPlan.Operation.Add,group));
+        }
+        if(Util.nullSafeSize(HierarchyLogicalName) &gt; 0){
+        accountRequestProv.add(new AttributeRequest("HIERARCHY_TYPE(LOGICAL_NAME)",ProvisioningPlan.Operation.Add,HierarchyLogicalName));  
+        }
+        plan.add(accountRequestProv);
+        
+        return plan;  
+      </Source>
+    </Script>
+    <Transition to="provisionLCM" />
+  </Step>
+  <Step icon="Default" name="provisionLCM" posX="444" posY="10">
+    <Arg name="approvalScheme" value="none" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="plan" value="ref:plan" />
+    <Arg name="flow" value="ref:flow" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning" />
+    </WorkflowRef>
+  </Step>
+  <Step icon="Default" name="end" posX="451" posY="31" />
+</Workflow>
+
+</sailpoint>

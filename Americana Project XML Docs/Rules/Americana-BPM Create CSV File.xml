@@ -1,0 +1,332 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-BPM Create CSV File">
+  <Source>
+  import java.io.FileReader;
+  import java.io.BufferedReader;
+  import java.util.List;
+  import java.util.ArrayList;
+  import java.util.Map;
+  import java.util.HashMap;
+  
+  import sailpoint.object.Application;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.Profile;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.connector.DelimitedFileConnector;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Message.Type;
+  import sailpoint.tools.Util;
+  import sailpoint.tools.RFC4180LineParser;
+  
+  public List getFileData(String filePath){
+  	FileReader fr=new FileReader(filePath);    
+          BufferedReader br=new BufferedReader(fr);    
+  				String header = br.readLine();
+    			List headersList = null;
+    			List dataList = new ArrayList();
+    			if(null != header){
+    				headersList = Util.csvToList(header);
+          }
+    			String content = "";
+          
+    			List listOfdata = new ArrayList();
+          while((content = br.readLine()) != null){  
+            if(null != content @and !"".equalsIgnoreCase(content)){
+            	
+              if(null != headersList){
+					    	Map mapData =	DelimitedFileConnector.defaultBuildMap(headersList, Util.csvToList(content));
+                if(null != mapData @and mapData.size() &gt; 0){
+                	dataList.add(mapData);
+                }
+              }
+            }
+          }  
+          br.close();    
+          fr.close();
+    return dataList;
+  }
+  
+  
+  Map mergeDepartments(List listOfMaps, String uniqueAttribute, String attributeToMerge,Custom customObj){
+    System.out.println("Inside the merge departments"+listOfMaps+" unique attribute "+uniqueAttribute+" attribute to merge "+attributeToMerge);
+    Map mergedMap = new HashMap();
+    Map countryMap = new HashMap();
+    if(null != listOfMaps @and listOfMaps.size() &gt; 0 @and null != uniqueAttribute @and null != attributeToMerge){
+      for(Map map : listOfMaps){
+        if(null != map){
+        	String uniqueValue = map.get(uniqueAttribute);
+          String countryValue = map.get("COUNTRY");
+          String valueToMerge = map.get(attributeToMerge);
+          
+          if(null != uniqueValue @and !"".equalsIgnoreCase(uniqueValue) @and null != countryValue @and !"".equalsIgnoreCase(countryValue) @and !"ALL".equalsIgnoreCase(countryValue)){
+          	uniqueValue = uniqueValue+" ("+countryValue+")";
+          }
+          
+         	if(null != uniqueValue @and !"".equalsIgnoreCase(uniqueValue) @and null != countryValue @and !"".equalsIgnoreCase(countryValue)){
+          	countryMap.put(uniqueValue,countryValue);
+         	}
+          
+          
+          if(null != uniqueValue @and null != valueToMerge){
+          	List mergedValues = mergedMap.get(uniqueValue);
+            if(null != mergedValues @and mergedValues.size() &gt; 0){
+              if(!mergedValues.contains(valueToMerge)){
+              	mergedValues.add(valueToMerge);
+                mergedMap.put(uniqueValue,mergedValues);
+              }
+            }else{
+              List valuesList = new ArrayList();
+              valuesList.add(valueToMerge);
+            	mergedMap.put(uniqueValue,valuesList);
+            }
+          }
+        }
+      }
+      
+      Map newMergedMap = new HashMap();
+      if(null != mergedMap @and mergedMap.size() &gt; 0){
+        
+      	Set mergedMapKeys = mergedMap.keySet();
+          System.out.println(" mergedMapKeys "+mergedMapKeys);
+        Map mapObj = null;
+        Set keysOfCustomobj = null;
+        if(null != mergedMapKeys){
+          if(null != customObj){
+            mapObj = customObj.get("Oracle BPM");
+            //mapKeys = null;
+          	mapObj = mapObj.get("businessRole_defaultHeadersAndValues");
+            keysOfCustomobj = mapObj.keySet();
+             
+          }
+          for(String key : mergedMapKeys){
+            if(null != key){
+              System.out.println(" key "+key);
+            	if(null != mapObj){
+            		mapKeys = mapObj.keySet();
+                if(null != keysOfCustomobj @and keysOfCustomobj.size() &gt; 0){
+              	
+                
+                  System.out.println(" keysOfCustomobj "+keysOfCustomobj);
+                  Map valuesMap = new HashMap();
+                  for(String customObjectKey : keysOfCustomobj){
+                    if(null != customObjectKey){
+                      if("department".equalsIgnoreCase(customObjectKey)){
+                        if(null != countryMap @and countryMap.containsKey(key)){
+                        	String countryFromFile = countryMap.get(key);
+                          if(null != countryFromFile @and !"ALL".equalsIgnoreCase(countryFromFile)){
+                        		if(key.contains("(") @and key.contains(")") @and key.lastIndexOf(")") ==  key.length()-1) {
+                          		int openingBracketIndex = key.lastIndexOf("(");
+                          		String department = key.substring(0,openingBracketIndex);
+                          		if(null != department){
+                          			valuesMap.put(customObjectKey,department.trim());	
+                          		}
+                        		}  
+                          }else{
+                        		valuesMap.put(customObjectKey,key);
+                        	}
+                        }
+                      }else if("country".equalsIgnoreCase(customObjectKey) ){
+                        if(null != countryMap @and countryMap.containsKey(key)){
+                        	String countryFromFile = countryMap.get(key);
+                          if(null != countryFromFile @and !"ALL".equalsIgnoreCase(countryFromFile)){
+                        		if(key.contains("(") @and key.contains(")") @and key.lastIndexOf(")") ==  key.length()-1) {
+                          		int openingBracketIndex = key.lastIndexOf("(");
+                          		int closingBracketIndex = key.lastIndexOf(")");
+                          		String country = key.substring(openingBracketIndex+1,closingBracketIndex);
+                          		if(null != country){
+                          			valuesMap.put(customObjectKey,country);	
+                          		}
+                        		}  
+                          }else{
+                        		valuesMap.put(customObjectKey,"");
+                        	}
+                        }
+                      }else if("EntitlementNames".equalsIgnoreCase(customObjectKey)){
+                      	valuesMap.put(customObjectKey,Util.listToCsv(mergedMap.get(key)));
+                      }else if("Role Description".equalsIgnoreCase(customObjectKey)){
+                      	List descriptionDept = mergedMap.get(key);
+            						if(null != descriptionDept){
+                          valuesMap.put(customObjectKey,Util.listToCsv(descriptionDept));
+              					}
+                      }else{
+                      	valuesMap.put(customObjectKey,mapObj.get(customObjectKey));
+                      }
+                  	}
+                  }
+                  System.out.println(" values mapa "+valuesMap);
+                  newMergedMap.put(key,valuesMap);
+                
+              }
+            	}	
+            }
+          }
+        }
+      }
+     
+      return newMergedMap;
+    }
+  }
+  
+  
+  List buildListOfMapsForRoles(List headersList, Map mapData, Map customObjMap,String roleType){
+    System.out.println("Headers"+headersList+" roleType "+roleType);
+    List rolesMapList = new ArrayList();
+    
+    if("IT Role".equalsIgnoreCase(roleType)){
+    
+    }else if("Business Role".equalsIgnoreCase(roleType)){
+    
+    }
+    
+    Map defaultValuesMap =null;
+    if(null != customObjMap){
+      System.out.println("Custom obj map"+customObjMap);
+      defaultValuesMap = customObjMap.get(roleType+"_DefaultValues");
+    }
+    System.out.println("defaultValuesMap"+defaultValuesMap);
+    if(null != mapData @and mapData.size() &gt; 0){
+    	Set keys = mapData.keySet();
+      if(null != keys @and keys.size() &gt; 0){
+        System.out.println("keys are not null"+keys);
+        Set subKeys = null;
+        for(String key: keys){
+          if(null != key){
+            Map mapValues = mapData.get(key);
+            if(null != mapValues){
+            	subKeys = mapValues.keySet();
+            }
+            System.out.println("Map values "+mapValues);
+            Map roleMap = new HashMap();
+            if(null != headersList @and headersList.size() &gt; 0){
+               System.out.println("Headers List "+headersList);
+              for(String header : headersList){
+                if(null != header){
+                  if(null != defaultValuesMap @and defaultValuesMap.size() &gt; 0){
+                    System.out.println("Key "+key+" header "+header);
+                    if(subKeys.contains(header)){
+                      roleMap.put(header,mapValues.get(header));
+                    }
+                    
+                    if(null != defaultValuesMap.get(header)){
+                  		roleMap.put(header,defaultValuesMap.get(header));
+                    }else if("IT Role".equalsIgnoreCase(header)){
+                      roleMap.put(header,defaultValuesMap.get("Application")+" - "+key+" - "+header);
+                    }else if("Role Name".equalsIgnoreCase(header) || "Role Display Name".equalsIgnoreCase(header)){
+                      if("IT Role".equalsIgnoreCase(roleType)){
+                      	roleMap.put(header,defaultValuesMap.get("Application")+" - "+key+" - "+roleType);
+                      }else{
+                      	roleMap.put(header,defaultValuesMap.get("Application")+" - "+key);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+             if(null != roleMap @and roleMap.size() &gt; 0){
+          	rolesMapList.add(roleMap);
+          }
+          }
+          
+         
+        }
+      }
+    	
+    }
+    return rolesMapList;
+  }
+  
+  String buildStringBuilder(List headersList,List listOfMaps){
+  	StringBuilder stringBuilder = new StringBuilder();
+    if(null != headersList @and headersList.size() &gt; 0){
+    	stringBuilder.append(Util.listToCsv(headersList));
+      stringBuilder.append("\n");
+      	if(null != listOfMaps @and listOfMaps.size() &gt; 0){
+          for(Map mapObj : listOfMaps){
+            if(null != mapObj){
+              List data = new ArrayList();
+              for(String header : headersList){
+                if(null != header){
+                	data.add(mapObj.get(header));
+                }
+              }
+              stringBuilder.append(Util.listToCsv(data));
+              stringBuilder.append("\n");
+            }
+          }
+        }
+    }
+    return stringBuilder.toString();
+  }
+  
+ 
+  try{
+    List roleMessages = new ArrayList();
+		
+    Custom rbacCustomObj = context.getObjectByName(Custom.class,"Americana-RBAC Attribute Mapping");
+  	List  listOfData = getFileData("E:\\BPM-RBAC\\BPM File Updated-0523.csv");
+    
+    if(null != listOfData @and listOfData.size() &gt; 0){
+    	Map mergedMap = mergeDepartments(listOfData,"DEPARTMENT","PROCESS_CODE",rbacCustomObj);
+      
+      System.out.println("Maps merged "+mergedMap);
+      if(null != mergedMap @and mergedMap.size() &gt; 0){
+        if(null != rbacCustomObj){
+        	Map mapObj = rbacCustomObj.get("Oracle BPM");
+          if(null != mapObj @and mapObj.size() &gt; 0){
+          	List itRoleHeaders = mapObj.get("itRole_Headers");
+            if(null != itRoleHeaders @and itRoleHeaders.size() &gt; 0){
+              List mapOfITRoles = buildListOfMapsForRoles(itRoleHeaders, mergedMap, mapObj,"IT Role");
+              if(null != mapOfITRoles){
+              	String itRolesFile = buildStringBuilder(itRoleHeaders,mapOfITRoles);
+                Util.writeFile("Oracle BPM IT Role File.csv",itRolesFile);
+              }
+            }
+            List headers = mapObj.get("businessRole_Headers");
+             if(null != headers @and headers.size() &gt; 0){
+              List mapOfbusinessRoles = buildListOfMapsForRoles(headers, mergedMap, mapObj,"Business Role");
+               if(null != mapOfbusinessRoles){
+               String businessRolesFile = buildStringBuilder(headers,mapOfbusinessRoles);
+                 Util.writeFile("Oracle BPM Business Role File.csv",businessRolesFile);
+               }
+            }
+          }
+        }
+        //StringBuilder sb = buildITRoleStringBuilder(mergedMap);
+        
+        
+        
+       // return sb.toString();
+      }
+      
+      //Map mergedDescriptions = mergeDepartments(listOfData,"DEPARTMENT","PROCESS_DESCRIPTION");
+      
+     // if(null != mergedMap @and mergedMap.size() &gt;0 @and null != mergedDescriptions @and  mergedDescriptions.size() &gt; 0){
+     // 	StringBuilder businessRoleBuilder =  buildBusinessRoleStringBuilder(mergedMap, mergedDescriptions);
+      //  return businessRoleBuilder.toString();
+     // }
+    }
+   /* 
+    for(Map currentMap : listOfData){
+      if(null != currentMap @and currentMap.size() &gt; 0){
+        
+        buildITRole(currentMap,roleMessages);
+      }
+    }
+    return finalMap1;
+    if(null != roleMessages @and roleMessages.size() &gt; 0){
+    	return roleMessages;
+    }
+    */
+  }catch(Exception e){
+  
+  }
+	</Source>
+</Rule>
+
+</sailpoint>

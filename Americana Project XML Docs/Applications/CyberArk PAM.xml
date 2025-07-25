@@ -1,0 +1,529 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Application connector="sailpoint.connector.webservices.WebServicesConnector" featuresString="ENABLE, PASSWORD, AUTHENTICATE, UNLOCK" name="CyberArk PAM" profileClass="" type="Web Services">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="Cyberark Correlation" />
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1712080096416</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1712079735107</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule" />
+      <entry key="authenticationMethod" value="No Auth" />
+      <entry key="beforeProvisioningRule" />
+      <entry key="clientCertAuthEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="compositeDefinition" />
+      <entry key="connectionParameters">
+        <value>
+          <List>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;&quot;username&quot;:&quot;ams.ae.iam2pam&quot;,&#13;&#10;&quot;password&quot;:&quot;3yD7-p6GK6&lt;t&quot;,&#13;&#10;&#13;&#10;}&#13;&#10;" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/auth/Cyberark/Logon/" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="POST" />
+              <entry key="operationType" value="Test Connection" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj" />
+              <entry key="rootPath" />
+              <entry key="sequenceNumberForEndpoint" value="1" />
+              <entry key="uniqueNameForEndPoint" value="Test Connection" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/Users/" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Account Aggregation" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="id" value="id" />
+                    <entry key="safename" value="safename" />
+                    <entry key="userType" value="userType" />
+                    <entry key="username" value="username" />
+                    <entry key="vaultAuthorization" value="vaultAuthorization" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$.Users" />
+              <entry key="sequenceNumberForEndpoint" value="2" />
+              <entry key="uniqueNameForEndPoint" value="Account Aggregation" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/UserGroups" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Group Aggregation" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="groupName" value="groupName" />
+                    <entry key="groupType" value="groupType" />
+                    <entry key="id" value="id" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$.value" />
+              <entry key="sequenceNumberForEndpoint" value="3" />
+              <entry key="uniqueNameForEndPoint" value="Group Aggregation" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/Users/$getObject.nativeIdentity$/" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Get Object" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj" />
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="4" />
+              <entry key="uniqueNameForEndPoint" value="Get Object" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/UserGroups/$getObject.nativeIdentity$/" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Get Object-Group" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="groupName" value="groupName" />
+                    <entry key="groupType" value="groupType" />
+                    <entry key="id" value="id" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="5" />
+              <entry key="uniqueNameForEndPoint" value="Get Object Group" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/API/Safes/" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Group Aggregation-safe" />
+              <entry key="paginationSteps" value="$limit$ = 220&#13;&#10;TERMINATE_IF $response.nextStart$ &lt;0&#13;&#10;$offset$ = $response.nextStart$&#13;&#10;$endpoint.fullUrl$ = $application.baseUrl$ + $endpoint.relativeUrl$ + &quot;?offset=&quot; + $offset$ + &quot;&amp;limit=&quot; + $limit$" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="safeName" value="safeName" />
+                    <entry key="safeUrlId" value="safeUrlId" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$.value" />
+              <entry key="sequenceNumberForEndpoint" value="6" />
+              <entry key="uniqueNameForEndPoint" value="Group Aggregation Safe" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="CyberArk Prod Auth" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/api/Safes/$getObject.nativeIdentity$/ " />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Get Object-safe" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="safeName" value="safeName" />
+                    <entry key="safeUrlId" value="safeUrlId" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>2**</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="7" />
+              <entry key="uniqueNameForEndPoint" value="Get Object Safe" />
+              <entry key="xpathNamespaces" />
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="createAccountWithEntReq">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="enableHasMore" value="true" />
+      <entry key="enableStatus" />
+      <entry key="encrypted" value="accesstoken,refresh_token,oauth_token_info,client_secret,private_key,private_key_password,clientCertificate,clientKeySpec,resourceOwnerPassword,custom_auth_token_info" />
+      <entry key="fixedPlanMultivaluedAttribute" value="true" />
+      <entry key="genericWebServiceBaseUrl" value="https://pam.americana-food.com/PasswordVault/" />
+      <entry key="httpCookieSpecsStandard" value="true" />
+      <entry key="isGetObjectRequiredForPTA">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="lastAggregationDate_account" value="2024-04-02T17:48:16Z" />
+      <entry key="lastAggregationDate_group" value="2024-03-26T15:12:49Z" />
+      <entry key="lastAggregationDate_safe" value="2024-03-26T11:46:31Z" />
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements" />
+      <entry key="nativeChangeDetectionAttributes" />
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations" />
+      <entry key="oAuthJwtHeader">
+        <value>
+          <Map>
+            <entry key="alg" value="RS256" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="oAuthJwtPayload">
+        <value>
+          <Map>
+            <entry key="aud" />
+            <entry key="exp" value="15f" />
+            <entry key="iss" />
+            <entry key="sub" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="private_key_to_update" />
+      <entry key="saml_assertion_url" />
+      <entry key="saml_request_body" />
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" value="CyberArk(Vault Authorisation and Priviledged Access)" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Web Services" />
+      <entry key="throwProvAfterRuleException">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="throwProvBeforeRuleException">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="timeoutInSeconds" />
+      <entry key="version" value="v2" />
+    </Map>
+  </Attributes>
+  <CustomizationRule>
+    <Reference class="sailpoint.object.Rule" name="CyberArk_Customization_domainservers" />
+  </CustomizationRule>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin" />
+  </Owner>
+  <Schemas>
+    <Schema displayAttribute="username" groupAttribute="" identityAttribute="id" instanceAttribute="" nativeObjectType="user" objectType="account">
+      <AttributeDefinition name="id" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="username" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="userType" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="groupsMembership" schemaObjectType="group" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="accountEntitlement" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="accountPermission" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="safeId" schemaObjectType="safe" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="safeName" identityAttribute="safeUrlId" instanceAttribute="" nativeObjectType="" objectType="safe">
+      <AttributeDefinition name="safeUrlId" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="safeName" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="memberOf" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema descriptionAttribute="" displayAttribute="id" identityAttribute="id" instanceAttribute="" nativeObjectType="group" objectType="group">
+      <AttributeDefinition name="id" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="groupType" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="groupName" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard />
+</Application>
+
+</sailpoint>

@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_AdminUsers">
+  <Source>
+ 
+ import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+
+ Logger log=Logger.getLogger("customRule4");
+ 
+  
+  
+   Filter f = Filter.eq("correlated",true);
+
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+  for(Identity id :ids)
+  {
+    
+    
+     String idName=id.getName();
+  log.error("idName :"+idName);
+    
+  // if(idName.equalsIgnoreCase("test abbas(Datalife)")||idName.equalsIgnoreCase("test farana(Datalife)")||idName.equalsIgnoreCase("test soumya(ServiceMax)")){
+   if(id!=null){
+      String idName=id.getName();
+      String endDate=id.getAttribute("endDate");
+      String PasswordExpires=id.getAttribute("passwordExpires");
+     String userType=id.getAttribute("userType");
+      Identity manager=id.getManager();
+     
+     if(manager!=null)
+     {
+     managername=manager.getName();
+       if(manager.getAttribute("email")!=null){
+       managermail=manager.getAttribute("email");
+       }
+     }
+     
+     
+      	
+     
+     
+     List links =id.getLinks();
+     
+     for(Link link:links)
+       
+     {
+       if(link.getNativeIdentity().contains("OU=AMD ADMINS,OU=Americana Office,DC=Americana,DC=global")||link.getNativeIdentity().contains("OU=AMD SUPPORT,OU=Americana Office,DC=Americana,DC=global")||link.getNativeIdentity().contains("OU=Service Accounts,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")){
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\TheadminsAfterAggregationmay23.csv", true);
+       String dn=link.getNativeIdentity();
+            writer.write(idName+","+"\""+dn+"\"" +","+endDate+","+PasswordExpires+","+managername+","+managermail+ ","+userType +"\n");
+        //"\""+dn+"\""
+        writer.close();
+         
+       }
+       
+       
+     }
+     
+   }
+    
+  }
+  
+          
+     
+     
+     
+    
+  
+	
+
+       
+</Source>
+</Rule>
+
+</sailpoint>

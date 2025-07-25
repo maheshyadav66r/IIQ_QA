@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_RejectionComments" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Comments for Power BI Access Rejection" />
+    </Map>
+  </Attributes>
+  <Section name="Comments Section">
+    <Field columnSpan="1" displayName="Comments" displayType="textarea" helpKey="Please post comments for rejection" name="comment" postBack="true" required="true" type="string" value="ref:comment" />
+  </Section>
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

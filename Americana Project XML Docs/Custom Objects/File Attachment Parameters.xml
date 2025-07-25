@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="File Attachment Parameters">
+  <Attributes>
+    <Map>
+      <entry key="basePath" value="C:\Program Files\Apache Software Foundation\Tomcat 9.0\webapps\identityiq\ApprovalFiles" />
+      <entry key="baseUrl" value="https://iam.uaenorth.cloudapp.azure.com:8443/identityiq/ApprovalFiles" />
+      <entry key="maxLimit" value="1" />
+      <entry key="maxSizeInMB" value="5" />
+      <entry key="permittedExtensions" value="pdf,csv" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

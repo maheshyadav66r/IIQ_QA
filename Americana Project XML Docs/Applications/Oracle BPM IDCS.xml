@@ -1,0 +1,759 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Application connector="sailpoint.connector.webservices.WebServicesConnector" featuresString="PROVISIONING, ENABLE, PASSWORD, AUTHENTICATE, UNLOCK, ADDITIONAL_ACCOUNT_REQUEST, ACCOUNT_ONLY_REQUEST" name="Oracle BPM IDCS" profileClass="" type="Web Services">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="OracleBPMCorrelation" />
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1717015235773</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1717014600111</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule" value="Americana-Rule-AfterProvisioning-OracleBPMIDCS" />
+      <entry key="authenticationMethod" value="BasicLogin" />
+      <entry key="beforeProvisioningRule" />
+      <entry key="clientCertAuthEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="compositeDefinition" />
+      <entry key="connectionParameters">
+        <value>
+          <List>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Test Connection" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj" />
+              <entry key="rootPath" />
+              <entry key="sequenceNumberForEndpoint" value="1" />
+              <entry key="uniqueNameForEndPoint" value="GET /admin/v1" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" value="Americana-Rule-AfterRule-AccountAggregation" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-Aggregation" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users?startIndex=1" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Account Aggregation" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Account Type" value="meta.resourceType" />
+                    <entry key="Created Date" value="meta.created" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="Email" value="emails.[*].value" />
+                    <entry key="First Name" value="name.givenName" />
+                    <entry key="Group" value="Group" />
+                    <entry key="ID" value="id" />
+                    <entry key="Last Modified Date" value="meta.lastModified" />
+                    <entry key="Last Name" value="name.familyName" />
+                    <entry key="Status" value="active" />
+                    <entry key="User Name" value="userName" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$.Resources.[*]" />
+              <entry key="sequenceNumberForEndpoint" value="2" />
+              <entry key="uniqueNameForEndPoint" value="GET /admin/v1/Users" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" value="Americana-Rule-AfterRule-GroupAggregation" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-Aggregation" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Groups?startIndex=1" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Group Aggregation" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Description" value="urn:ietf:params:scim:schemas:oracle:idcs:extension:group:Group.description" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="ID" value="id" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$.Resources[*]" />
+              <entry key="sequenceNumberForEndpoint" value="3" />
+              <entry key="uniqueNameForEndPoint" value="GET /admin/v1/Groups" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-CreateAccount" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;  &quot;schemas&quot;: [&#13;&#10;    &quot;urn:ietf:params:scim:schemas:core:2.0:User&quot;&#13;&#10;  ],&#13;&#10;  &quot;userName&quot;: &quot;$plan.userName$&quot;,&#13;&#10;  &quot;name&quot;: {&#13;&#10;    &quot;familyName&quot;: &quot;$plan.familyName$&quot;,&#13;&#10;    &quot;givenName&quot;: &quot;$plan.givenName$&quot;&#13;&#10;  },&#13;&#10;  &quot;emails&quot;: [&#13;&#10;    {&#13;&#10;      &quot;value&quot;: &quot;$plan.userName$&quot;,&#13;&#10;      &quot;type&quot;: &quot;work&quot;,&#13;&#10;      &quot;primary&quot;: true&#13;&#10;    }&#13;&#10;  ]&#13;&#10;}" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="POST" />
+              <entry key="operationType" value="Create Account" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Account Type" value="meta.resourceType" />
+                    <entry key="Created Date" value="meta.created" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="Email" value="emails.[*].value" />
+                    <entry key="First Name" value="name.givenName" />
+                    <entry key="ID" value="id" />
+                    <entry key="Last Modified Date" value="meta.lastModified" />
+                    <entry key="Last Name" value="name.familyName" />
+                    <entry key="Status" value="active" />
+                    <entry key="User Name" value="userName" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>201</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="4" />
+              <entry key="uniqueNameForEndPoint" value="POST /admin/v1/Users" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-AddEntitlement" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;    &quot;schemas&quot;: [&#13;&#10;        &quot;urn:ietf:params:scim:api:messages:2.0:PatchOp&quot;&#13;&#10;    ],&#13;&#10;    &quot;Operations&quot;: [&#13;&#10;        {&#13;&#10;            &quot;op&quot;: &quot;add&quot;,&#13;&#10;            &quot;path&quot;: &quot;members&quot;,&#13;&#10;            &quot;value&quot;: [&#13;&#10;                {&#13;&#10;                    &quot;value&quot;: &quot;$plan.nativeIdentity$&quot;,&#13;&#10;                    &quot;type&quot;: &quot;User&quot;&#13;&#10;                }&#13;&#10;            ]&#13;&#10;        }&#13;&#10;    ]&#13;&#10;}" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Groups/$plan.Group$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="PATCH" />
+              <entry key="operationType" value="Add Entitlement" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj" />
+              <entry key="rootPath" />
+              <entry key="sequenceNumberForEndpoint" value="5" />
+              <entry key="uniqueNameForEndPoint" value="PATCH /admin/v1/Groups/{id}" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-DisableAccount" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;  &quot;schemas&quot;: [&#13;&#10;    &quot;urn:ietf:params:scim:api:messages:2.0:PatchOp&quot;&#13;&#10;  ],&#13;&#10;  &quot;Operations&quot;: [&#13;&#10;    {&#13;&#10;      &quot;op&quot;: &quot;replace&quot;,&#13;&#10;      &quot;path&quot;: &quot;active&quot;,&#13;&#10;      &quot;value&quot;: false&#13;&#10;    }&#13;&#10;  ]&#13;&#10;}" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users/$getObject.nativeIdentity$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="PATCH" />
+              <entry key="operationType" value="Disable Account" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Account Type" value="meta.resourceType" />
+                    <entry key="Created Date" value="meta.created" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="Email" value="emails.[*].value" />
+                    <entry key="First Name" value="name.givenName" />
+                    <entry key="Group" value="Group" />
+                    <entry key="ID" value="id" />
+                    <entry key="Last Modified Date" value="meta.lastModified" />
+                    <entry key="Last Name" value="name.familyName" />
+                    <entry key="Status" value="active" />
+                    <entry key="User Name" value="userName" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="6" />
+              <entry key="uniqueNameForEndPoint" value="PATCH /admin/v1/Users/{id} Disable" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-EnableAccount" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;  &quot;schemas&quot;: [&#13;&#10;    &quot;urn:ietf:params:scim:api:messages:2.0:PatchOp&quot;&#13;&#10;  ],&#13;&#10;  &quot;Operations&quot;: [&#13;&#10;    {&#13;&#10;      &quot;op&quot;: &quot;replace&quot;,&#13;&#10;      &quot;path&quot;: &quot;active&quot;,&#13;&#10;      &quot;value&quot;: true&#13;&#10;    }&#13;&#10;  ]&#13;&#10;}" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users/$getObject.nativeIdentity$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="PATCH" />
+              <entry key="operationType" value="Enable Account" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="active" value="active" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="7" />
+              <entry key="uniqueNameForEndPoint" value="PATCH /admin/v1/Users/{id} Enable" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-DeleteAccount" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users/$getobject.nativeIdentity$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="DELETE" />
+              <entry key="operationType" value="Delete Account" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj" />
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>204</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" />
+              <entry key="sequenceNumberForEndpoint" value="8" />
+              <entry key="uniqueNameForEndPoint" value="DELETE /admin/v1/Users/{id}" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-GetObject" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Groups/$getObject.nativeIdentity$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Get Object-Group" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Description" value="urn:ietf:params:scim:schemas:oracle:idcs:extension:group:Group.description" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="ID" value="id" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="9" />
+              <entry key="uniqueNameForEndPoint" value="GET /admin/v1/Groups/{id}" />
+              <entry key="xpathNamespaces" />
+            </Map>
+            <Map>
+              <entry key="afterRule" value="Americana-Rule-AfterRule-GetObject" />
+              <entry key="beforeRule" value="Americana-Rule-BeforeRule-GetObject" />
+              <entry key="body">
+                <value>
+                  <Map>
+                    <entry key="bodyFormData" />
+                    <entry key="bodyFormat" value="raw" />
+                    <entry key="jsonBody" value="{&#13;&#10;&quot;hello&quot;:&quot;$response.id$&quot;&#13;&#10;}" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="contextUrl" value="/admin/v1/Users/$getObject.nativeIdentity$" />
+              <entry key="curlCommand" />
+              <entry key="curlEnabled">
+                <value>
+                  <Boolean />
+                </value>
+              </entry>
+              <entry key="customAuthUrl" />
+              <entry key="header" />
+              <entry key="httpMethodType" value="GET" />
+              <entry key="operationType" value="Get Object" />
+              <entry key="paginationSteps" />
+              <entry key="pagingInitialOffset">
+                <value>
+                  <Integer>0</Integer>
+                </value>
+              </entry>
+              <entry key="pagingSize">
+                <value>
+                  <Integer>50</Integer>
+                </value>
+              </entry>
+              <entry key="parentEndpointName" />
+              <entry key="resMappingObj">
+                <value>
+                  <Map>
+                    <entry key="Account Type" value="meta.resourceType" />
+                    <entry key="Created Date" value="meta.created" />
+                    <entry key="Display Name" value="displayName" />
+                    <entry key="Email" value="emails.[*].value" />
+                    <entry key="First Name" value="name.givenName" />
+                    <entry key="Group" value="Group" />
+                    <entry key="ID" value="id" />
+                    <entry key="Last Modified Date" value="meta.lastModified" />
+                    <entry key="Last Name" value="name.familyName" />
+                    <entry key="Status" value="active" />
+                    <entry key="User Name" value="userName" />
+                  </Map>
+                </value>
+              </entry>
+              <entry key="responseCode">
+                <value>
+                  <List>
+                    <String>200</String>
+                  </List>
+                </value>
+              </entry>
+              <entry key="rootPath" value="$" />
+              <entry key="sequenceNumberForEndpoint" value="10" />
+              <entry key="uniqueNameForEndPoint" value="GET /admin/v1/Users{id}" />
+              <entry key="xpathNamespaces" />
+            </Map>
+          </List>
+        </value>
+      </entry>
+      <entry key="createAccountWithEntReq">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="enableHasMore" value="true" />
+      <entry key="enableStatus" value="Status=true" />
+      <entry key="encrypted" value="accesstoken,refresh_token,oauth_token_info,client_secret,private_key,private_key_password,clientCertificate,clientKeySpec,resourceOwnerPassword,custom_auth_token_info" />
+      <entry key="fixedPlanMultivaluedAttribute" value="true" />
+      <entry key="genericWebServiceBaseUrl" value="https://idcs-fdf3b0329b2c4925a350f9aecd4113a2.identity.oraclecloud.com" />
+      <entry key="httpCookieSpecsStandard" value="true" />
+      <entry key="isGetObjectRequiredForPTA">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="lastAggregationDate_account" value="2024-05-29T20:40:35Z" />
+      <entry key="lastAggregationDate_group" value="2024-05-29T23:00:01Z" />
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements" />
+      <entry key="nativeChangeDetectionAttributes" />
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations" />
+      <entry key="noPermissions" value="true" />
+      <entry key="oAuthJwtHeader">
+        <value>
+          <Map>
+            <entry key="alg" value="RS256" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="oAuthJwtPayload">
+        <value>
+          <Map>
+            <entry key="aud" />
+            <entry key="exp" value="15f" />
+            <entry key="iss" />
+            <entry key="sub" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="operations" value="Create, Modify, Delete, Enable, Disable, Unlock, SetPassword" />
+      <entry key="password" value="1:ACP:ABFuXnBtDtTT/woejLj2hXRaj6etS51ZiW3IYqMs0Dw=" />
+      <entry key="private_key_to_update" />
+      <entry key="saml_assertion_url" />
+      <entry key="saml_request_body" />
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Web Services" />
+      <entry key="throwProvAfterRuleException">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="throwProvBeforeRuleException">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="timeoutInSeconds" value="300" />
+      <entry key="username" value="ams.ae.iam" />
+      <entry key="version" value="v2" />
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="BPM_application_owners" />
+  </Owner>
+  <ProvisioningForms>
+    <Form name="Create Account" objectType="account" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Create Account" />
+        </Map>
+      </Attributes>
+      <Section name="Create Account">
+        <Field displayName="User Name" name="userName" type="string">
+          <Script>
+            <Source>return identity.getAttribute("email");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Given Name" name="givenName" type="string">
+          <Script>
+            <Source>return identity.getAttribute("firstname");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Family Name" name="familyName" type="string">
+          <Script>
+            <Source>return identity.getAttribute("lastname");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Group" name="Group" type="string" value="5c5c42f27c284fa2acfd0afaf63a5f73" />
+      </Section>
+    </Form>
+    <Form name="Enable Account" objectType="account" type="Enable">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Enable Account" />
+        </Map>
+      </Attributes>
+      <Section name="Enable Account">
+        <Field displayName="Status" name="active" type="boolean" value="true" />
+      </Section>
+    </Form>
+    <Form name="Disable Account" objectType="account" type="Disable">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="Disable Account" />
+        </Map>
+      </Attributes>
+      <Section name="Disable Account">
+        <Field displayName="Status" name="active" type="boolean" value="false" />
+      </Section>
+    </Form>
+  </ProvisioningForms>
+  <Schemas>
+    <Schema displayAttribute="Display Name" groupAttribute="" identityAttribute="ID" instanceAttribute="" nativeObjectType="user" objectType="account">
+      <AttributeDefinition name="ID" type="string">
+        <Description>A unique identifier for the user resource in Oracle Applications Cloud</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Display Name" type="string">
+        <Description>The display name of the user, usually the full name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Email" type="string">
+        <Description>The primary e-mail address of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="User Name" type="string">
+        <Description>A unique identifier for the user to authenticate with the service provider directly</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Status" type="string">
+        <Description>Indicates the administrative status of the user. </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="First Name" type="string">
+        <Description>The first name of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last Name" type="string">
+        <Description>The last name of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last Modified Date" type="string">
+        <Description>The last modified date of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Created Date" type="string">
+        <Description>The created date of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Account Type" type="string">
+        <Description>The account type of a user to indicate person or party association</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="Group" schemaObjectType="group" type="string">
+        <Description>The user membership of groups </Description>
+      </AttributeDefinition>
+    </Schema>
+    <Schema descriptionAttribute="Description" displayAttribute="Display Name" identityAttribute="ID" instanceAttribute="" nativeObjectType="group" objectType="group">
+      <AttributeDefinition name="ID" type="string">
+        <Description>Group ID</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Display Name" type="string">
+        <Description>Group Display Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Description" type="string">
+        <Description>Group Description</Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard />
+</Application>
+
+</sailpoint>

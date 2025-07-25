@@ -1,0 +1,318 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-create Business Roles">
+  <Source>
+  import java.io.FileReader;
+  import java.io.BufferedReader;
+  import java.util.List;
+  import java.util.ArrayList;
+  import java.util.Map;
+  import java.util.HashMap;
+  
+  import sailpoint.object.Application;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentitySelector;
+  import sailpoint.object.IdentitySelector.MatchExpression;
+  import sailpoint.object.IdentitySelector.MatchTerm;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.Profile;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.connector.DelimitedFileConnector;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Message.Type;
+  import sailpoint.tools.Util;
+  import sailpoint.tools.RFC4180LineParser;
+  
+  
+  
+  public List getFileData(String filePath){
+  	FileReader fr=new FileReader(filePath);    
+          BufferedReader br=new BufferedReader(fr);    
+  				String header = br.readLine();
+    			List headersList = null;
+    			List dataList = new ArrayList();
+    			if(null != header){
+    				headersList = Util.csvToList(header);
+          }
+    			String content = "";
+          
+    			List listOfdata = new ArrayList();
+          while((content = br.readLine()) != null){  
+            if(null != content @and !"".equalsIgnoreCase(content)){
+            	
+              if(null != headersList){
+					    	Map mapData =	DelimitedFileConnector.defaultBuildMap(headersList, Util.csvToList(content));
+                if(null != mapData @and mapData.size() &gt; 0){
+                	dataList.add(mapData);
+                }
+              }
+            }
+          }  
+          br.close();    
+          fr.close();
+    return dataList;
+  }
+  
+  List getExistingRoles(){
+  	Filter startsWithFilter = Filter.like("name", "Oracle BPM", Filter.MatchMode.START);
+    Filter roleTypeFilter = Filter.eq("type", "business");
+    Filter enableRoleFilter = Filter.ne("disabled",true);
+    
+    Filter andFilter = Filter.and(startsWithFilter,roleTypeFilter,enableRoleFilter);
+    QueryOptions qo = new QueryOptions();
+    qo.addFilter(andFilter);
+    
+    Iterator iterator = context.search(Bundle.class,qo, "name");
+    List listOfExistingRoles = new ArrayList();
+    while(iterator.hasNext()){
+  		Object[] objectArray = iterator.next();
+  		if(null != objectArray){
+      	listOfExistingRoles.add(objectArray[0]);
+      }
+    }
+    return listOfExistingRoles;
+  }
+  
+  public void disableRoles(List rolesToDisable){
+    if(null != rolesToDisable @and rolesToDisable.size() &gt; 0){
+      System.out.println("Roles to disable "+rolesToDisable);
+      for(String role : rolesToDisable){
+        if(null != role){
+          if(!role.contains("Oracle BPM IDCS - Store Level Access")){
+          	Bundle bundleObj = context.getObjectByName(Bundle.class,role);  
+          if(null != bundleObj){
+          	bundleObj.setDisabled(true);
+            context.saveObject(bundleObj);
+            context.commitTransaction();
+          }
+          }
+          
+        }
+      }
+    }
+  }
+  
+  public Map buildBusinessRole (HashMap roleHash, boolean createRoles) {
+  	boolean roleCreated = true;
+    List errorList = new ArrayList();
+  	Map roleStatusMap = new HashMap();
+    try{
+    	
+    Map attributesMap = new HashMap();
+    List defaultFieldsList = new ArrayList();
+    defaultFieldsList.add("Role Name");
+    defaultFieldsList.add("Role Display Name");
+    defaultFieldsList.add("Role Type");
+    defaultFieldsList.add("IT Role");
+    defaultFieldsList.add("Parent Role");
+    defaultFieldsList.add("Role Description");
+    defaultFieldsList.add("Role Disabled");
+    
+    if(null != roleHash @and roleHash.size() &gt; 0){
+    	Set roleHashKeys = roleHash.keySet();
+    	if(null != roleHashKeys @and roleHashKeys.size() &gt; 0){
+      	for(String key: roleHashKeys){
+        	if(null != key @and !defaultFieldsList.contains(key)){
+ 						attributesMap.put(key,roleHash.get(key));     	
+          }
+        }
+      }
+    }
+      
+    String roleName  = (String) roleHash.get("Role Name");
+      String roleDisplayName  = (String) roleHash.get("Role Display Name");
+		String roleType  = (String) roleHash.get("Role Type");
+		String itRoles = (String)roleHash.get("IT Role");
+    String parentRole =   (String)roleHash.get("Parent Role");
+    String roleDescription = (String)roleHash.get("Role Description");
+    String roleDisabled = (String)roleHash.get("Role Disabled");
+    boolean newRole = false;  
+     
+    Bundle role = context.getObjectByName(Bundle.class, roleName);
+		if (null == role) {
+			System.out.println(" - role does not exist, creating new: " + roleName);
+			role = new sailpoint.object.Bundle();
+      newRole = true;
+		}
+      
+      if (roleType.toLowerCase().startsWith("business")) {
+    	//setting Basic Details 
+			role.setName(roleName);
+    	role.setDisplayName(roleDisplayName);
+      
+      
+      if(null != roleDescription){
+        List descriptionDept = Util.csvToList(roleDescription);
+        if(null != descriptionDept @and descriptionDept.size() &gt; 0){
+        StringBuilder sb = new StringBuilder();
+          sb.append("The following Process codes are assigned by this role:");
+          sb.append("&lt;br/&gt;");
+         int count=0;
+         for(int i=0;i &lt; descriptionDept.size();i++){
+           count++;
+           sb.append(count+". "+descriptionDept.get(i));
+           sb.append("&lt;br/&gt;");
+         }
+         role.addDescription("en_US", sb.toString());  
+        }else{
+        	role.addDescription("en_US", "");
+        }
+      }  
+        
+    	
+      if(createRoles){
+					role.setDisabled(Boolean.valueOf(roleDisabled));  
+      }
+      role.setType("business");
+      role.setMergeTemplates(true);
+      Identity ownerId = context.getObject(Identity.class, "spadmin");
+			role.setOwner(ownerId);
+      if(null != parentRole @and !"".equalsIgnoreCase(parentRole)){
+        Bundle parentBundle = context.getObjectByName(Bundle.class,parentRole);
+        if(null != parentBundle){
+        	role.addInheritance(parentBundle); 
+        }else{
+        	errorList.add("Couldn't add the Parent Role "+parentRole);
+        }
+      }else{
+      	errorList.add("Parent role not specified");
+      }
+      
+      //Setting the matchlist for the role
+      if(null != attributesMap @and attributesMap.size() &gt; 0){
+        IdentitySelector identitySelector = new IdentitySelector();
+        MatchExpression matchExpression = new MatchExpression();
+        Set attributesKeys = attributesMap.keySet();
+        if(null != attributesKeys @and attributesKeys.size() &gt; 0){
+          for(String key: attributesKeys){
+            if(null != key @and null != attributesMap.get(key) @and !"".equalsIgnoreCase(attributesMap.get(key))){
+            	MatchTerm matchTerm = new MatchTerm();
+              matchTerm.setName(key);
+              matchTerm.setValue(attributesMap.get(key));
+              matchTerm.setType(MatchTerm.Type.IdentityAttribute);
+              matchExpression.addTerm(matchTerm);
+            }
+          }
+          matchExpression.setAnd(true);
+          identitySelector.setMatchExpression(matchExpression); 
+          if(null != identitySelector @and null != identitySelector.getMatchExpression() @and null != identitySelector.getMatchExpression().getTerms() @and identitySelector.getMatchExpression().getTerms().size() &gt; 0){
+          	role.setSelector(identitySelector);
+          }
+        }else{
+          	errorList.add("Couldn't add the assignment criteria as no conditions are specified");
+        }
+      }
+        
+      
+      if(null != itRoles @and !"".equalsIgnoreCase(itRoles)){
+        List rolesToBeAdded = new ArrayList();
+      	RFC4180LineParser itRolesParser = new RFC4180LineParser(",");
+				List itRolesList = itRolesParser.parseLine(itRoles);
+        if(null != itRolesList @and itRolesList.size() &gt; 0){
+          List itRoleErrors = new ArrayList();
+          for(String itRole : itRolesList){
+            if(null != itRole @and !"".equalsIgnoreCase(itRole)){
+            	Bundle bundle = context.getObjectByName(Bundle.class,itRole);
+              if(null != bundle @and "IT".equalsIgnoreCase(bundle.getType())){
+              	rolesToBeAdded.add(bundle);
+              }else{
+              	itRoleErrors.add(itRole);
+              }
+            }
+          }
+          
+          if(null != itRoleErrors @and itRoleErrors.size() &gt; 0){
+          	errorList.add("The following roles are either not the IT Roles or are not available "+Util.listToCsv(itRoleErrors));
+          }
+        }
+        
+        if(null != rolesToBeAdded @and rolesToBeAdded.size() &gt; 0){
+        	role.setRequirements(rolesToBeAdded);
+        }
+      }else{
+      	errorList.add("No IT Roles are specified from the file");
+      }
+        
+      if(createRoles){
+      	context.saveObject(role);
+				context.commitTransaction();
+      }
+    	roleCreated = true;
+      if(null != errorList){
+       if(errorList.size() == 0){
+        	if(roleCreated){
+      			roleStatusMap.put("Created Success","");
+        	}else{
+      		roleStatusMap.put("Updated Successfully","");
+     	 		}
+        }else{
+        	roleStatusMap.put("Warning(s)",Util.listToCsv(errorList));
+        }
+      }
+    }
+  	}catch(Exception e){
+      errorList.add("Failed creating role ");
+      roleStatusMap.put("Failed",Util.listToCsv(errorList));
+    }
+    return roleStatusMap;
+  }
+    
+	try{
+    List roleMessages = new ArrayList();
+  	List  listOfData = getFileData("E:\\BPM-RBAC\\Oracle BPM Business Role File - Enable Roles.csv");
+    List listOfExistingRoles = getExistingRoles();
+    List listOfRolesFromFile = new ArrayList();
+    StringBuilder newStringBuilder = new StringBuilder();
+    boolean createRoles = true;
+    newStringBuilder.append("Role Name ,Role Status, Comments");
+    newStringBuilder.append("\n");
+    for(Map currentMap : listOfData){
+      if(null != currentMap @and currentMap.size() &gt; 0){
+        if(null != listOfExistingRoles){
+    			roleName = currentMap.get("Role Name");
+          if(null != roleName @and !"".equalsIgnoreCase(roleName)){
+          	listOfRolesFromFile.add(roleName);
+          }
+        }
+        Map roleStatus = buildBusinessRole(currentMap,createRoles);
+        Set roleKeys = roleStatus.keySet();
+        for(String key : roleKeys){
+          if(null != key){
+          	newStringBuilder.append(roleName+", "+key+", "+roleStatus.get(key));
+        	}
+        }
+        newStringBuilder.append("\n");
+      }
+    }
+    Util.writeFile("Business Role Creation Status.csv",newStringBuilder.toString());
+    
+     if(null != listOfExistingRoles @and listOfExistingRoles.size() &gt; 0){
+      System.out.println("list of existing roles "+listOfExistingRoles);
+      System.out.println("list of roles from file "+listOfRolesFromFile);
+    	listOfExistingRoles.removeAll(listOfRolesFromFile);
+      if(null != listOfExistingRoles @and listOfExistingRoles.size() &gt; 0){
+      	disableRoles(listOfExistingRoles);
+        StringBuilder disableStringBuilder = new StringBuilder();
+        disableStringBuilder.append("Roles Disabled");
+        disableStringBuilder.append("\n");
+        for(String disabledRoles : listOfExistingRoles){
+          if(null != disabledRoles){
+          	disableStringBuilder.append(disabledRoles);
+        		disableStringBuilder.append("\n");
+          }
+        }
+        Util.writeFile("Business Role Disabled Roles.csv",disableStringBuilder.toString());
+      }
+    }
+   
+    
+  }catch(Exception e){
+  
+  }
+	</Source>
+</Rule>
+
+</sailpoint>

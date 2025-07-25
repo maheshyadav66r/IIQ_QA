@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_BPM_Rejection-Form" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="$(approvalLevel) Rejection Form For Oracle BPM" />
+      <entry key="subtitle" value="Please review and approve/reject the below form for Oracle BPM access" />
+      <entry key="title" value="$(approvalLevel) Rejection Form for: $(displayName) " />
+    </Map>
+  </Attributes>
+  <Section label="Choose User" name="Manager Requesting Access">
+    <Field displayName="Requested Access For" dynamic="true" name="identityName" postBack="true" readOnly="true" required="true" type="sailpoint.object.Identity" />
+  </Section>
+  <Section columns="2" label="User Details" name="User Details" type="datatable">
+    <Attributes>
+      <Map>
+        <entry key="hideNulls" value="true" />
+        <entry key="subtitle" value="Below are the basic details of the user" />
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="First Name" dynamic="true" name="firstname" type="string" />
+    <Field columnSpan="1" displayName="Last name" dynamic="true" name="lastname" type="string" />
+    <Field columnSpan="1" displayName="Display Name" dynamic="true" name="displayName" type="string" />
+    <Field columnSpan="1" displayName="Email" dynamic="true" name="email" type="string" />
+  </Section>
+  <Section columns="2" label="User Accesses" name="User Accesses">
+    <Attributes>
+      <Map>
+        <entry key="hideNulls" value="true" />
+        <entry key="readOnly" value="true" />
+      </Map>
+    </Attributes>
+    <Field columnSpan="2" displayName="Add Roles" dynamic="true" multi="true" name="addRoles" />
+    <Field columnSpan="1" displayName="Do you want to remove roles?" name="isRemoveRoles" postBack="true" type="boolean" />
+    <Field columnSpan="2" displayName="Remove Roles" displayType="combobox" multi="true" name="removeRoles" postBack="true" />
+    <Field dynamic="true" hidden="true" name="approversList" postBack="true" />
+  </Section>
+  <Section label="Approval Matrix" name="Approval Status" type="datatable">
+    <Field dynamic="true" helpKey="Please find Approval Status">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+              	if(null != identityName){
+                	return false;
+                }else{
+                	return true;
+                }
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Includes>
+          <Reference class="sailpoint.object.Rule" name="Americana-BPM Custom-RuleLibrary" />
+        </Includes>
+        <Source>
+          import java.util.Map;
+          import java.util.HashMap;
+          import sailpoint.object.Identity;
+          
+          String table = "";
+          
+          if(null != form.getField("approversList") @and null != form.getField("approversList").getValue()){
+          	List dataList = form.getField("approversList").getValue();
+          	Custom customObj = context.getObjectByName(Custom.class,"Americana-BPM Custom-Attributes");
+          	if(null != dataList @and dataList.size() &gt; 0 @and null != customObj){
+          		List tableHeaders = customObj.get("approvalTableHeaders");
+          		if(null != tableHeaders @and tableHeaders.size() &gt; 0){
+          			table = getFormTable(dataList,tableHeaders);
+          		}
+          	}
+          }
+          	
+          return table;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section name="Comments Section">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+              	if(void != myAction @and null != myAction){
+                	if("Reject".equalsIgnoreCase(myAction)){
+                		return false;
+                	}
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="Rejection Comments" displayType="textarea" helpKey="Please post comments for rejection" name="rejectionComments" postBack="true" required="true" type="string" />
+  </Section>
+  <Button action="next" label="Confirm Reject" />
+  <Button action="back" label="Back" />
+</Form>
+
+</sailpoint>

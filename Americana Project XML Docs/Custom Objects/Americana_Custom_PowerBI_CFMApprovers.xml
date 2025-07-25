@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana_Custom_PowerBI_CFMApprovers">
+  <Attributes>
+    <Map>
+      <entry key="1">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="mhamohamed@americana-food.com" />
+            <entry key="apprName" value="Mohamed Bondok" />
+            <entry key="apprUserName" value="39733" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="10">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="whammad@americana-food.com" />
+            <entry key="apprName" value="Walid Abdallah Hammed Hammad" />
+            <entry key="apprUserName" value="10021708" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="11">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="pparekh@americana-food.com" />
+            <entry key="apprName" value="Pujeet Girish Himatlal Parekh" />
+            <entry key="apprUserName" value="11029041" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="24">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="aelazarifi@americana-food.com" />
+            <entry key="apprName" value="El Azarifi Adil" />
+            <entry key="apprUserName" value="24005740" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="26">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="hehassan@americana-food.com" />
+            <entry key="apprName" value="Hassan Hassan Moursy" />
+            <entry key="apprUserName" value="26000116" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="27">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="amekhael@americana-food.com" />
+            <entry key="apprName" value="Amir Fahmy Mekhael" />
+            <entry key="apprUserName" value="27000102" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="28">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="wkhoury@americana-food.com" />
+            <entry key="apprName" value="Waheeb Khoury" />
+            <entry key="apprUserName" value="28008827" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="30">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="iawada@americana-food.com" />
+            <entry key="apprName" value="Islam Ahmed Awada" />
+            <entry key="apprUserName" value="30023773" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="31">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="iawada@americana-food.com" />
+            <entry key="apprName" value="Islam Ahmed Awada" />
+            <entry key="apprUserName" value="30023773" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="37">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="mmetwali@americana-food.com" />
+            <entry key="apprName" value="Mohamed Metwally Moustafa" />
+            <entry key="apprUserName" value="37609261" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="5">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="rpatel@americana-food.com" />
+            <entry key="apprName" value="Ravindra Patel" />
+            <entry key="apprUserName" value="15007132" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="55">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="agomaa@americana-food.com" />
+            <entry key="apprName" value="Ahmed Khalil" />
+            <entry key="apprUserName" value="55034098" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="7">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="mhahmed@americana-food.com" />
+            <entry key="apprName" value="Mohamed Ibrahim" />
+            <entry key="apprUserName" value="17005730" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="8">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="mhahmed@americana-food.com" />
+            <entry key="apprName" value="Mohamed Ibrahim" />
+            <entry key="apprUserName" value="17005730" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="9">
+        <value>
+          <Map>
+            <entry key="apprEmail" value="masif@americana-food.com" />
+            <entry key="apprName" value="Muhammad Asif Abdul Rehman" />
+            <entry key="apprUserName" value="19000098" />
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

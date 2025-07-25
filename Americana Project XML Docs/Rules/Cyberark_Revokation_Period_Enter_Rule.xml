@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Cyberark_Revokation_Period_Enter_Rule" type="CertificationPhaseChange">
+  <Description>This rule is run when the certification either enters or leaves a phase.</Description>
+  <Signature returnType="void">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="certification">
+        <Description>
+          The sailpoint.object.Certification being certified.
+        </Description>
+      </Argument>
+      <Argument name="certificationItem">
+        <Description>
+          The sailpoint.object.CertificationItem that is being certified.
+        </Description>
+      </Argument>
+      <Argument name="previousPhase">
+        <Description>
+          Certification.Phase (may be null) that is the previous phase.
+        </Description>
+      </Argument>
+      <Argument name="nextPhase">
+        <Description>
+          Certification.Phase (may be null) that is the next phase.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>
+   import sailpoint.tools.Util;
+  import sailpoint.object.Application;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.CertificationEntity;
+  import sailpoint.object.CertificationItem;
+  import sailpoint.object.Certification;
+  import sailpoint.object.Identity;
+  import sailpoint.object.CertificationAction;
+  
+    import sailpoint.object.CertificationLink;
+    import sailpoint.object.EntitlementSnapshot;
+   
+    import sailpoint.object.IdentityHistoryItem;
+   
+
+  {
+    public void sendNotificationForNonProvisionApplications(CertificationItem certificationItem, String emailTempName, Identity identityObject, String status)
+    {
+
+     
+       
+              String attributeValue;
+                String typeofEntitlement;
+      String permission;
+       
+      if (certificationItem != null)
+      {
+      
+           
+                
+
+        EntitlementSnapshot entitlementSnapshots = certificationItem.getExceptionEntitlements();
+      
+        if (entitlementSnapshots != null)
+        {
+          
+        
+///
+         
+          EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, emailTempName);
+
+          String  displayName=(String)  identityObject.getAttribute("displayName");
+          String  employeeNumber=(String) identityObject.getAttribute("employeeNumber");
+          String  PositionName=(String) identityObject.getAttribute("PositionName");
+          String  department=(String) identityObject.getAttribute("department");
+          String  startDate=(String) identityObject.getAttribute("startDate");
+          String  endDate=(String) identityObject.getAttribute("endDate");
+          String  mail=(String) identityObject.getEmail();
+
+          String  manager;
+          if(identityObject.getManager() != null &amp;&amp; identityObject.getManager().getDisplayName() != null){
+            manager=(String) identityObject.getManager().getDisplayName();
+         
+          }
+
+          EmailOptions emailOptions = new EmailOptions();
+
+
+               String attributeValue = (String) entitlementSnapshots.getAttributeValue();
+               String typeofEntitlement = entitlementSnapshots.getAttributeName();
+          if(typeofEntitlement.equals("groupsMembership"))
+          {
+            typeofEntitlement="Vault Authorization";
+          }
+          if(typeofEntitlement.equals("accountEntitlement"))
+          {
+            typeofEntitlement="Privilege Access";
+            attributeValue= attributeValue.replace("||","=");
+           String[] parts=attributeValue.split("=");
+        attributeValue= parts[0];
+ 
+          permission=parts[1]+" "+parts[2] ;
+           
+            
+          }
+          if(typeofEntitlement.equals("accountPermission"))
+          {
+            typeofEntitlement="Safe Permission";
+              attributeValue= attributeValue.replace("||","=");
+           String[] parts=attributeValue.split("=");
+        attributeValue= parts[0];
+ 
+          permission=parts[1];
+            
+          }
+      
+        
+          
+          Map args = new HashMap();
+          args.put("identityName",displayName);
+          args.put("item",status);
+          args.put("displayName",displayName);
+          args.put("employeeNumber",employeeNumber);
+          args.put("PositionName",PositionName);
+          args.put("department",department);
+          args.put("startDate",startDate);
+          args.put("endDate",endDate);
+          args.put("email",mail);
+          args.put("manager",manager);
+          args.put("EntitlementDisplayname",attributeValue);
+         args.put("TypeofEntitlement", typeofEntitlement);
+           args.put("Permission", permission);
+
+          emailOptions.setVariables(args);
+        
+           emailOptions.setTo("servicedesk@americana-food.com");
+          emailOptions.setCc("skurian@americana-food.com");
+
+
+          context.sendEmailNotification(emailTemplate,emailOptions);
+   
+    }
+      }
+    }
+    try {
+
+      Identity identity = null;
+
+      if (certification != null)
+      {
+        List entities = certification.getEntities();
+        if (Util.nullSafeSize(entities) &gt; 0)
+        {
+          for (CertificationEntity entity : entities)
+          {
+            String identityName =  entity.getIdentity();
+            identity =  context.getObjectByName(Identity.class,identityName);
+            
+            if (entity != null)
+            {
+              List items = entity.getItems();
+              if (Util.nullSafeSize(items) &gt; 0)
+              {
+                for (CertificationItem certificationItem : items)
+                {
+                  
+                  if (certificationItem != null)
+                  {
+                    CertificationAction action = certificationItem.getAction();
+
+                    if (action != null &amp;&amp; action.getStatus() != null &amp;&amp; action.getStatus().equals(CertificationAction.Status.Remediated))
+                    {
+                      
+                      sendNotificationForNonProvisionApplications(certificationItem, "EmailTemplate- CyberArk Accees Review Revocation", identity, "Access Deprovisioning");
+
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+    } 
+    catch (Exception e)
+    {
+      System.out.println(e);
+    }
+  }
+  
+  </Source>
+</Rule>
+
+</sailpoint>

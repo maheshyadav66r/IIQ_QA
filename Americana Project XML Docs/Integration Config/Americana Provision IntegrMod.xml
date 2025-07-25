@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<IntegrationConfig executor="com.crunchtime.integration.ProvisionIntegrMod" name="Americana Provision IntegrMod" roleSyncStyle="none">
+  <Attributes>
+    <Map>
+      <entry key="filePath" value="D:/CrunchTimeFiles" />
+      <entry key="operations" value="Create,Modify,Delete,Disable,Enable" />
+      <entry key="ruleName" value="CrunchTime_Provision" />
+    </Map>
+  </Attributes>
+  <ManagedResources>
+    <ManagedResource name="Crunch Time" />
+  </ManagedResources>
+</IntegrationConfig>
+
+</sailpoint>

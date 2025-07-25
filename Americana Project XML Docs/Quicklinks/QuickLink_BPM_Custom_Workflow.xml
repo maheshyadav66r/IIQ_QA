@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Custom" messageKey="BPM Access Request" name="QuickLink_BPM_Custom_Workflow">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="Americana-BPM Workflow" />
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Everyone" />
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>
+
+</sailpoint>

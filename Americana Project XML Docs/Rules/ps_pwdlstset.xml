@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="ps_pwdlstset" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String" />
+  <Source>import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+
+import org.apache.log4j.Logger;
+
+Logger log = Logger.getLogger("customRule5");
+String pwdLastSet =(String)link.getAttribute("pwdLastSet");
+  String sAMAccountName =(String)link.getAttribute("sAMAccountName");
+
+
+log.info("pwdLastSet: " + pwdLastSet);
+  log.info("sAMAccountName: " + sAMAccountName);
+
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+LocalDate now = LocalDate.now(); // Gets the Current Date 
+
+long DIFF_FOR_DATE_AND_TIMES = 11644473600000L;
+
+if (pwdLastSet != null &amp;&amp; !(pwdLastSet.equalsIgnoreCase("0")) &amp;&amp; !pwdLastSet.isEmpty()) {
+    long adDate = Long.parseLong(pwdLastSet);
+    log.debug("ad date: " + adDate);
+    long epochTime = ((adDate / 10000) - DIFF_FOR_DATE_AND_TIMES);
+    log.debug("epochTime: " + epochTime);
+    Date pwdLastSetDate = new Date(epochTime);
+    log.debug("pwdLastSetDate: " + pwdLastSetDate);
+    String formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(pwdLastSetDate);
+    log.debug("the password last set is: " + formatDate);
+    // LocalDate logon = LocalDate.parse(formatDate, formatter);
+
+   // log.info("logon: " + logon);
+   // log.info("thedate: " + thedate);
+    // log.info(attributeValue.getClass());
+    return formatDate;
+}
+</Source>
+</Rule>
+
+</sailpoint>

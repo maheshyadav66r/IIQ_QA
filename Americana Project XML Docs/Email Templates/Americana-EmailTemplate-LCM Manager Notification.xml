@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<EmailTemplate name="Americana-EmailTemplate-LCM Manager Notification">
+  <Body>
+     #set($ctx = $spTools.class.forName("sailpoint.api.SailPointFactory").getMethod("getFactory", null).invoke(null,null).getCurrentContext())
+    #set($identityObj = $ctx.getObjectByName($spTools.class.forName("sailpoint.object.Identity"), $identityName))
+    #set($launcherObj = $ctx.getObjectByName($spTools.class.forName("sailpoint.object.Identity"), $launcher))
+
+    #if($identityObj)
+      #if($identityObj.getManager())
+        #set($managerDisplayName = $identityObj.getManager().getDisplayName())
+    	#end
+    #end
+    
+ Dear $managerDisplayName,
+    
+#if ( $approvalSet )
+#if ( $approvalSet.hasApproved() ) 
+$launcherObj.getDisplayName() requested the following account changes for employee '$identityDisplayName' and they were APPROVED.
+
+#foreach ($item in $approvalSet.approved)
+#if ( $item.owner &amp;&amp; $item.owner != $launcher ) 
+        Approved By: $item.owner
+#end
+#if ( $item.comments)
+#foreach ($comment in $item.comments)
+Completion Comments: $comment
+#end
+#end
+        Application: $item.applicationName
+#if ( $item.nativeIdentity )       
+           Account : $item.nativeIdentity
+#end           
+#if ( $item.instance ) 
+          Instance : $item.instance
+#end
+          Operation: $item.operation
+#if ( $item.displayName )          
+          Attribute: $item.displayName
+#elseif ( $item.name ) 
+          Attribute: $item.name
+#end
+#if ( $item.displayValue )
+           Value(s): $item.displayValue
+#elseif ( $item.csv ) 
+           Value(s): $item.csv
+#end
+#if ( $item.requesterComments )
+ Requester Comments: $item.requesterComments
+#end
+
+#end
+#end
+#if ( $approvalSet.hasRejected() ) 
+$launcherObj.getDisplayName() requested the following account changes for employee '$identityDisplayName' and they were REJECTED.
+
+#foreach ($item in $approvalSet.rejected)
+        Rejected By: $item.rejecters
+#if ( $item.comments)
+#foreach ($comment in $item.comments)
+Completion Comments: $comment
+#end
+#end
+        Application: $item.applicationName
+#if ( $item.nativeIdentity )       
+           Account : $item.nativeIdentity
+#end           
+#if ( $item.instance ) 
+          Instance : $item.instance
+#end
+          Operation: $item.operation
+#if ( $item.displayName )          
+          Attribute: $item.displayName
+#elseif ( $item.name ) 
+          Attribute: $item.name
+#end
+#if ( $item.displayValue )
+           Value(s): $item.displayValue
+#elseif ( $item.csv ) 
+           Value(s): $item.csv
+#end
+#if ( $item.requesterComments )
+ Requester Comments: $item.requesterComments
+#end
+
+#end
+#end
+## 
+## Handle case where the items are not approved or rejected when the
+## approvalScheme is none.
+##
+#if ( $approvalScheme == "none" )
+$launcherObj.getDisplayName() requested the following changes for employee '$identityDisplayName' and the request required no approval because approvals are disabled.
+
+#foreach ($item in $approvalSet.items)
+#if ( $item.comments)
+#foreach ($comment in $item.comments)
+Completion Comments: $comment
+#end
+#end
+        Application: $item.applicationName
+#if ( $item.nativeIdentity )       
+           Account : $item.nativeIdentity
+#end           
+#if ( $item.instance ) 
+          Instance : $item.instance
+#end
+          Operation: $item.operation
+#if ( $item.displayName )          
+          Attribute: $item.displayName
+#elseif ( $item.name ) 
+          Attribute: $item.name
+#end
+#if ( $item.displayValue )
+           Value(s): $item.displayValue
+#elseif ( $item.csv ) 
+           Value(s): $item.csv
+#end
+#if ( $item.requesterComments )
+ Requester Comments: $item.requesterComments
+#end
+#end
+#end
+#end
+    
+    If you have any queries, please reach out at IAMsupport@Americana-food.com
+      
+    </Body>
+  <Description>
+      Email Template for notifying managers when an employee's account(s) are modified.
+      Note that in addition to the declared arguments, all workflow variables,
+      Step arguments, and Approval arguments defined in the Workflow are
+      also available.
+    </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="workflow" type="Workflow">
+        <Description>The Workflow object being executed.</Description>
+      </Argument>
+      <Argument name="approvalSet" type="ApprovalSet">
+        <Description>The ApprovalSet object contained in the workflow.</Description>
+      </Argument>
+      <Argument name="launcher" type="string">
+        <Description>The name of the Identity that launched the workflow.</Description>
+      </Argument>
+      <Argument name="identityDisplayName" type="string">
+        <Description>The display name of the Identity that is being changed.</Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Subject>Account changes for $identityDisplayName were processed</Subject>
+</EmailTemplate>
+
+</sailpoint>

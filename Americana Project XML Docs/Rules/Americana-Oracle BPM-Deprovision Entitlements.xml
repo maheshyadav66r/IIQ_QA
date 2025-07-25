@@ -1,0 +1,508 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Oracle BPM-Deprovision Entitlements">
+  <Source>
+  import java.io.FileReader;
+  import java.io.BufferedReader;
+  import java.util.List;
+  import java.util.ArrayList;
+  import java.util.Map;
+  import java.util.HashMap;
+  import java.util.Iterator;
+  
+  import sailpoint.object.Application;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityEntitlement;
+  import sailpoint.object.Link;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.Profile;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.connector.DelimitedFileConnector;
+  import sailpoint.object.ApplicationAccountSelectorRule;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Message.Type;
+  import sailpoint.tools.Util;
+  import sailpoint.tools.RFC4180LineParser;
+  import java.util.Set;
+   import sailpoint.object.ProvisioningPlan.AccountRequest;
+    import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningProject;
+  import sailpoint.api.Provisioner;
+  
+  	import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Filter;
+          import sailpoint.api.SailPointContext;
+          import sailpoint.object.QueryOptions;
+          import sailpoint.object.ManagedAttribute;
+          import java.util.List;
+          import java.util.ArrayList;
+  
+  
+  
+  
+  public List getFileData(String filePath){
+  	FileReader fr=new FileReader(filePath);    
+          BufferedReader br=new BufferedReader(fr);    
+  				String header = br.readLine();
+    			List headersList = null;
+    			List dataList = new ArrayList();
+    			if(null != header){
+    				headersList = Util.csvToList(header);
+          }
+    			String content = "";
+          
+    			List listOfdata = new ArrayList();
+          while((content = br.readLine()) != null){  
+            if(null != content @and !"".equalsIgnoreCase(content)){
+            	
+              if(null != headersList){
+					    	Map mapData =	DelimitedFileConnector.defaultBuildMap(headersList, Util.csvToList(content));
+                if(null != mapData @and mapData.size() &gt; 0){
+                	dataList.add(mapData);
+                }
+              }
+            }
+          }  
+          br.close();    
+          fr.close();
+    return dataList;
+  }
+  
+  public Map buildITRoleNew(HashMap roleHash,boolean createRoles ) {
+    context.decache();
+    boolean roleCreated = false;
+     List errorList = new ArrayList();
+    Map roleStatusMap = new HashMap();
+    try{
+    	String roleName  = (String) roleHash.get("Role Name");
+			String roleType  = (String) roleHash.get("Role Type");
+			String applicationName = (String)roleHash.get("Application");
+    	String entitlementNames =   (String)roleHash.get("EntitlementNames");
+    	String entitlementAttribute =   (String)roleHash.get("EntitlementAttribute");
+    	String parentRole =   (String)roleHash.get("Parent Role");
+    	String roleDescription = (String)roleHash.get("Role Description");
+    	String roleDisabled = (String)roleHash.get("Role Disabled");
+    	boolean newRole = false;  
+   
+    	List listOfEntitlementValues = new ArrayList();
+    	StringBuilder entitlementNotFoundBuilder = new StringBuilder();
+		
+   		Bundle role = context.getObjectByName(Bundle.class, roleName);
+			if (null == role) {
+				//System.out.println(" - role does not exist, creating new: " + roleName);
+				role = new sailpoint.object.Bundle();
+      	newRole = true;
+			}  
+
+			role.setName(roleName);
+    	role.setDisplayName(roleName);
+     // System.out.println("roleName"+roleName);
+    	//role.addDescription("en_US", roleDescription);
+      role.setMergeTemplates(true);
+      if(createRoles){
+      		role.setDisabled(Boolean.valueOf(roleDisabled));
+      }
+		
+  		if (roleType.toLowerCase().startsWith("it")) {
+	      role.setType(roleType);
+      	Identity ownerId = context.getObject(Identity.class, "spadmin");
+				role.setOwner(ownerId);
+      	if(null != parentRole @and !"".equalsIgnoreCase(parentRole)){
+        	Bundle parentBundle = context.getObjectByName(Bundle.class,parentRole);
+        	if(null != parentBundle){
+        		role.addInheritance(parentBundle); 
+        	}else{
+        		errorList.add("Couldn't add the Parent Role "+parentRole);
+        	}
+      	}else{
+      		errorList.add("Parent role not specified");
+      	}
+    	
+   //   	System.out.println("Entitlement names "+entitlementNames);
+      	if(null != entitlementNames @and !"".equalsIgnoreCase(entitlementNames)){
+      	RFC4180LineParser entitlementParser = new RFC4180LineParser(",");
+				List entitlementNamesList = entitlementParser.parseLine(entitlementNames);
+        	if(null != entitlementNamesList @and entitlementNamesList.size() &gt; 0){
+          	for(String entitlementName : entitlementNamesList){
+            	if(null != entitlementName @and !"".equalsIgnoreCase(entitlementName)){
+              	Filter entitlementNameFilter = Filter.eq("displayName",entitlementName.trim());
+              	Filter entitlementApplicationFilter = Filter.eq("application.name",applicationName);
+              	Filter entitlementAttributeFilter = Filter.eq("attribute",entitlementAttribute);
+              	Filter andFilter = Filter.and(entitlementNameFilter,entitlementApplicationFilter,entitlementAttributeFilter);
+              
+              	QueryOptions qo = new QueryOptions();
+              	qo.setCloneResults(true);
+              	qo.addFilter(andFilter);
+          //    	System.out.println("entitlementName"+entitlementName);
+              	Iterator managedAttributeIterator = context.search(ManagedAttribute.class,qo,"value");
+              	int count = 0;
+              	while(managedAttributeIterator.hasNext()){
+              		count++;
+                	if(count &gt; 1){
+                		errorList.add("The entitlement "+entitlementName+" wasn't added as there are multiple roles with same displayname");
+                	}else{
+                		Object[] objectArray = managedAttributeIterator.next();
+                  	if(null != objectArray){
+                  		String entitlementvalue = objectArray[0];
+                 //     System.out.println("entitlementvalue"+entitlementvalue);
+                    	if(null != entitlementvalue @and !"".equals(entitlementvalue)){
+                    		listOfEntitlementValues.add(entitlementvalue);
+                    	}
+                  	}
+                	}  
+              	}
+              
+              	if(count == 0){
+                	if(entitlementNotFoundBuilder.length() == 0){
+              			entitlementNotFoundBuilder.append(entitlementName);
+                	}else{
+                		entitlementNotFoundBuilder.append(", "+entitlementName);
+                	}  
+              	}
+              
+            	}
+          	}
+          
+	          if(null != entitlementNotFoundBuilder @and entitlementNotFoundBuilder.length() &gt; 0){
+          		errorList.add("The Following entitlements were not found role "+entitlementNotFoundBuilder.toString()+" and hence are not mapped to the roles ");
+          	}
+          
+          	if(null != listOfEntitlementValues @and listOfEntitlementValues.size() &gt; 0){
+            	List listOfRequiredRoles = new ArrayList();
+          		Profile profile = new Profile();
+            	Application applicationObj = context.getObjectByName(Application.class,applicationName);
+            	if(null != applicationObj){
+	            	profile.setApplication(applicationObj);
+  	          }
+    	        Filter profileFilter = Filter.containsAll(entitlementAttribute,listOfEntitlementValues);
+      	      if(null != profileFilter){
+        	    	profile.addConstraint(profileFilter);
+          	  }
+            
+	            if(null != profile){
+  	          	listOfRequiredRoles.add(profile);
+    	        }
+            
+      	      if(null != listOfRequiredRoles @and listOfRequiredRoles.size() &gt; 0){
+        	    	role.assignProfiles(listOfRequiredRoles);
+          	  }
+            
+          	}
+            
+            Application applicationObj = context.getObjectByName(Application.class,"Oracle BPM IDCS");
+            Rule ruleObj = context.getObjectByName(Rule.class,"Americana-BPM-Account Selector Rule");
+            if(null != applicationObj @and null != ruleObj){
+            	ApplicationAccountSelectorRule appAccountSelectorRule = new ApplicationAccountSelectorRule(applicationObj,ruleObj);
+              if(null != appAccountSelectorRule){
+                List listOfAppAccountSelectorRules = new ArrayList();
+                listOfAppAccountSelectorRules.add(appAccountSelectorRule);
+                	role.setApplicationAccountSelectorRules(listOfAppAccountSelectorRules); 
+              }
+            }
+        	}
+      	}
+    	}
+			
+  //    System.out.println("Outside the true condition of create roles"+createRoles);
+      if(createRoles){
+  //      System.out.println("Inside the true condition of create roles");
+     	context.saveObject(role);
+				context.commitTransaction();
+      }
+  		
+    	roleCreated = true;
+      if(null != errorList){
+        if(errorList.size() == 0){
+        	if(roleCreated){
+      			roleStatusMap.put("Created Success","");
+        	}else{
+      		roleStatusMap.put("Updated Successfully","");
+     	 		}
+        }else{
+        	roleStatusMap.put("Warning(s)",Util.listToCsv(errorList));
+        }
+      }
+    }catch(Exception e){
+      errorList.add("Failed creating role "+roleName);
+      roleStatusMap.put("Failed",Util.listToCsv(errorList));
+    } 
+		return roleStatusMap;
+	}
+  
+  
+  List getExistingRoles(){
+  	Filter startsWithFilter = Filter.like("name", "Oracle BPM", Filter.MatchMode.START);
+    Filter endsWithFilter = Filter.like("name", "IT Role", Filter.MatchMode.END);
+    Filter roleTypeFilter = Filter.eq("type", "it");
+    Filter enableRoleFilter = Filter.ne("disabled",true);
+    
+    Filter andFilter = Filter.and(startsWithFilter,endsWithFilter,roleTypeFilter,enableRoleFilter);
+    QueryOptions qo = new QueryOptions();
+    qo.addFilter(andFilter);
+    
+    Iterator iterator = context.search(Bundle.class,qo, "name");
+    List listOfExistingRoles = new ArrayList();
+    while(iterator.hasNext()){
+  		Object[] objectArray = iterator.next();
+  		if(null != objectArray){
+      	listOfExistingRoles.add(objectArray[0]);
+      }
+    }
+    return listOfExistingRoles;
+  }
+  
+  public void disableRoles(List rolesToDisable){
+    if(null != rolesToDisable @and rolesToDisable.size() &gt; 0){
+  //    System.out.println("Roles to disable "+rolesToDisable);
+      for(String role : rolesToDisable){
+        if(null != role){
+          Bundle bundleObj = context.getObjectByName(Bundle.class,role);  
+          if(null != bundleObj){
+          	bundleObj.setDisabled(true);
+            context.saveObject(bundleObj);
+            context.commitTransaction();
+          }
+        }
+      }
+    }
+  }
+  
+  public ProvisioningPlan deprovisionAccess(String identityName,Set valuesList){
+    ProvisioningPlan plan = new ProvisioningPlan();
+    try{
+    
+    
+   		 List removeEntList = new ArrayList();
+			removeEntList.addAll(valuesList);
+ // System.out.println("Insdie the  deprovisionAccess"+identityName+" set of values "+valuesList);
+        
+        ProvisioningPlan plan = new ProvisioningPlan();
+        AccountRequest acctReq = new AccountRequest();
+        
+        if(null != identityName){
+      ////    System.out.println("Insdie the  identityName"+identityName);
+        		Identity identityObj = context.getObjectByName(Identity.class,identityName);
+        		if(null != identityObj){
+        				List links = identityObj.getLinks();
+        			 	boolean oracleAccountExists = false;
+        			 String nativeIdentity = "";
+            	if(null != links @and links.size() &gt; 0) {
+              	for(Link link : links) {
+									if(null != link @and link.getApplicationName().equalsIgnoreCase("Oracle BPM IDCS")){
+        						oracleAccountExists = true;
+        						nativeIdentity = link.getNativeIdentity();
+        						break;
+        					}
+              	}
+            	}
+        
+        			if(oracleAccountExists){
+        				acctReq.setOperation(AccountRequest.Operation.Modify);
+        			}	
+        					
+        			if(null != nativeIdentity @and !"".equalsIgnoreCase(nativeIdentity)){
+        				acctReq.setNativeIdentity(nativeIdentity);
+        			}
+        
+        			acctReq.setApplication("Oracle BPM IDCS");
+        			if(null != removeEntList @and removeEntList.size() &gt; 0){
+        						AttributeRequest removeAttributeRequest = new AttributeRequest("Group",ProvisioningPlan.Operation.Remove,removeEntList);
+                			acctReq.add(removeAttributeRequest);
+        			}
+        				
+        			if(null != acctReq){
+        				plan.add(acctReq);
+        				plan.setIdentity(identityObj);
+        			}
+        		}
+         // System.out.println("Plan object"+plan.toXml());
+        	}
+   // System.out.println("Provisioning plan"+plan.toXml());
+    			Provisioner pv = new Provisioner(context);
+    			pv.execute(plan);
+    			
+      }catch(Exception e){
+    System.out.println("Exception occured in the code"+e);
+    }
+      
+    return plan;
+        }
+       
+             
+       
+  
+  try{
+    
+    
+  	List  listOfData = getFileData("E:\\BPM-RBAC\\Oracle BPM Entitlements.csv");
+    
+    List listOfEntitlementNames = new ArrayList();
+    boolean createRoles = true;
+    
+    for(Map currentMap : listOfData){
+      String entitlementName = "";
+      if(null != currentMap @and currentMap.size() &gt; 0){
+    		if(null != listOfExistingRoles){
+    			entitlementName = currentMap.get("Entitlement Name");
+          if(null != entitlementName @and !"".equalsIgnoreCase(entitlementName)){
+          	listOfEntitlementNames.add(entitlementName);
+          }
+        }
+      }
+    }
+    
+   
+    if(null != listOfEntitlementNames @and listOfEntitlementNames.size() &gt; 0){
+      StringBuilder newStringBuilder = new StringBuilder();
+      newStringBuilder.append("Entitlements");
+    	newStringBuilder.append("\n");
+      Filter managedAttributeFilter = Filter.in("displayName",listOfEntitlementNames);
+      Filter applicationFilter = Filter.eq("application.name","Oracle BPM IDCS");
+      Filter groupfilter = Filter.eq("attribute","Group");
+      
+      Filter andFilter = Filter.and(managedAttributeFilter,applicationFilter,groupfilter);
+      
+      QueryOptions qo = new QueryOptions();
+      qo.addFilter(andFilter);
+      
+      Iterator managedAttributesIterator = context.search(ManagedAttribute.class,qo,"displayName,value");
+      
+      Map userAndEntitlementMap = new HashMap();
+      Map displayNameAndValueMap = new HashMap();
+      while(managedAttributesIterator.hasNext()){
+      	Object[] objectArray = managedAttributesIterator.next();
+        if(null != objectArray){
+        	String displayName = objectArray[0];
+          String value = objectArray[1];
+        //  System.out.println("The display name "+displayName+" value is "+value);
+          if(null != displayName @and null != value){
+            displayNameAndValueMap.put(value,displayName);
+            newStringBuilder.append(displayName+"\n");
+          } 
+        }
+      }
+      
+      if(null != displayNameAndValueMap @and displayNameAndValueMap.size() &gt; 0){
+      			Set valuesSet = displayNameAndValueMap.keySet();
+        		if(null != valuesSet){
+              for(String valueKey : valuesSet){
+                if(null != valueKey){
+                  Filter nameFilter = Filter.eq("name","Group");
+            Filter valueFilter = Filter.eq("value",valueKey);
+            Filter appFilter = Filter.eq("application.name","Oracle BPM IDCS");
+            Filter combinedFilter = Filter.and(nameFilter,valueFilter,appFilter);
+                        QueryOptions newQueryOptions = new QueryOptions();
+            newQueryOptions.addFilter(combinedFilter);
+            newQueryOptions.setCloneResults(true);
+            newQueryOptions.setFlushBeforeQuery(true);
+            Iterator newIterator = context.search(IdentityEntitlement.class,newQueryOptions,"identity.name");
+                   //     System.out.println("The display name "+displayNameAndValueMap.get(valueKey)+" value is "+valueKey);
+            while(newIterator.hasNext()){
+              Object[] objectArray = newIterator.next();
+              if(null != objectArray){
+                String username = objectArray[0];
+            //    System.out.println("Inside child loop"+username);
+                if(null != username){
+                  if(null != userAndEntitlementMap){
+                    if(userAndEntitlementMap.size() &gt; 0){
+                        Map userMap = userAndEntitlementMap.get(username);
+                        if(null != userMap @and userMap.size() &gt; 0){
+                          Set values = userMap.get("values");
+                          Set entitlement_names = userMap.get("entitlement_names");
+                          if(null != values @and null != entitlement_names){
+                            values.add(valueKey);
+                            entitlement_names.add(displayNameAndValueMap.get(valueKey));
+                            userMap.put("values",values);
+                            userMap.put("entitlement_names",entitlement_names);
+                            userAndEntitlementMap.put(username,userMap);
+                           // System.out.println("userAndEntitlementMap from if size &gt; 0 "+userAndEntitlementMap);
+                          }
+                        }else{
+                          Map userEntitlementMap = new HashMap();
+                          Set valueSet = new HashSet();
+                          Set displayNameSet = new HashSet();
+                          valueSet.add(valueKey);
+                          displayNameSet.add(displayNameAndValueMap.get(valueKey));
+                          userEntitlementMap.put("values",valueSet);
+                          userEntitlementMap.put("entitlement_names",displayNameSet);
+                          userAndEntitlementMap.put(username,userEntitlementMap);
+                     //     System.out.println("userAndEntitlementMap from else "+userAndEntitlementMap);  
+                        }
+                    }else{
+                      Map userEntitlementMap = new HashMap();
+                      Set valueSet = new HashSet();
+                      Set displayNameSet = new HashSet();
+                      valueSet.add(valueKey);
+                      displayNameSet.add(displayNameAndValueMap.get(valueKey));
+                      userEntitlementMap.put("values",valueSet);
+                      userEntitlementMap.put("entitlement_names",displayNameSet);
+                      userAndEntitlementMap.put(username,userEntitlementMap);
+                 //     System.out.println("userAndEntitlementMap "+userAndEntitlementMap);
+                    }
+                  }
+                }
+              }
+            } 
+            Util.flushIterator(newIterator);
+                  
+                  
+              		  
+                }
+              }
+        		}
+      }
+      
+      if(null != newStringBuilder){
+      	Util.writeFile("EntitlementsFoundInSystem.csv",newStringBuilder.toString());
+      }
+      			
+    //  return userAndEntitlementMap;
+      
+      if(null !=userAndEntitlementMap @and userAndEntitlementMap.size() &gt; 0){
+     //   System.out.println("User and entitlement map:::"+userAndEntitlementMap);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Username, Entitlement Values, Entitlement DisplayNames, Department");
+        sb.append("\n");
+      	Set setOfIdentityNames = userAndEntitlementMap.keySet();
+        if(null != setOfIdentityNames){
+          for(String identityName : setOfIdentityNames){
+            if(null != identityName){
+              Identity identityObj = context.getObjectByName(Identity.class,identityName);
+              if(null != identityObj){
+                if(null != identityObj.getStringAttribute("userType") @and !"Contractor".equalsIgnoreCase(identityObj.getStringAttribute("userType"))){
+         //   			System.out.println("IdentityName:::"+identityName);
+              Map mapOfValueAndDisplayName = userAndEntitlementMap.get(identityName);
+           //   System.out.println("mapOfValueAndDisplayName:::"+mapOfValueAndDisplayName);
+              if(null != mapOfValueAndDisplayName @and mapOfValueAndDisplayName.size() &gt; 0){
+                
+            //    System.out.println("mapOfValueAndDisplayName:::"+mapOfValueAndDisplayName);
+              	if(null != mapOfValueAndDisplayName.get("values") @and mapOfValueAndDisplayName.get("values").size() &gt; 0  @and null != mapOfValueAndDisplayName.get("entitlement_names") @and mapOfValueAndDisplayName.get("entitlement_names").size() &gt; 0){
+                	sb.append(identityName+","+Util.setToCsv(mapOfValueAndDisplayName.get("values"))+","+Util.setToCsv(mapOfValueAndDisplayName.get("entitlement_names"))+", "+identityObj.getStringAttribute("department"));
+                  sb.append("\n");
+              //    System.out.println("Launching the deprovisionAccess method:::");
+                 ProvisioningPlan plan = deprovisionAccess(identityName,mapOfValueAndDisplayName.get("values"));
+                //  System.out.println("Plan:::::;"+plan);
+                 // return plan;
+                }
+            	}    
+                }
+            }
+            }	
+          }
+        }
+        
+        Util.writeFile("ProvisioningFile.csv",sb.toString());
+      }      
+    }
+    
+  }catch(Exception e){
+  	e.printStackTrace();
+  }
+	</Source>
+</Rule>
+
+</sailpoint>

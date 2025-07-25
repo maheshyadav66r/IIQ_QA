@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Data-Cleanup">
+  <Source>
+
+
+  import sailpoint.object.Identity;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.api.Terminator;
+  ////////////////////////////////////////////////////////////////////////////////////////////
+  List exList=new ArrayList();
+  exList.add("10010328");
+  exList.add("10013487");
+  exList.add("10013900");
+  exList.add("10017211");
+  exList.add("10020926");
+  exList.add("11001962");
+  exList.add("11003946");
+  exList.add("11004539");
+  exList.add("11018637");
+  exList.add("11022369");
+  exList.add("11023076");
+  exList.add("11023662");
+  exList.add("11024225");
+  exList.add("11025642");
+  exList.add("11025945");
+  exList.add("11025967");
+  exList.add("11028267");
+  exList.add("11028472");
+  exList.add("15001148");
+  exList.add("15003249");
+  exList.add("15003670");
+  exList.add("15005380");
+  exList.add("15005559");
+  exList.add("15006504");
+  exList.add("15007179");
+  exList.add("15007753");
+  exList.add("15007837");
+  exList.add("17005046");
+  exList.add("18642");
+  exList.add("19001075");
+  exList.add("19001394");
+  exList.add("19002188");
+  exList.add("19485");
+  exList.add("22050");
+  exList.add("23619");
+  exList.add("23772");
+  exList.add("28204");
+  exList.add("29181");
+  exList.add("29890");
+  exList.add("30007242");
+  exList.add("30015475");
+  exList.add("30487");
+  exList.add("30920");
+  exList.add("31182");
+  exList.add("34133");
+  exList.add("37008972");
+  exList.add("37045621");
+  exList.add("37064909");
+  exList.add("37114332");
+  exList.add("37159631");
+  exList.add("37606690");
+  exList.add("38386");
+  exList.add("55004475");
+  exList.add("55013509");
+  exList.add("55018697");
+  exList.add("55026832");
+  exList.add("55026886");
+  exList.add("55030711");
+  exList.add("55030820");
+  exList.add("55031232");
+  exList.add("55031534");
+  exList.add("55031822");
+  exList.add("55031942");
+  exList.add("55032686");
+  exList.add("55033183");
+  exList.add("55033619");
+  exList.add("55033808");
+  exList.add("55034356");
+  exList.add("55034392");
+  exList.add("55034423");
+  exList.add("55034696");
+  exList.add("55117312");
+  exList.add("55119005");
+  //////////////////////////////////////////////////////////////////////////////
+  
+  
+
+  Filter filter=Filter.and(Filter.eq("peopleGroup","Store Level"),Filter.eq("storeincharge","N"));
+  QueryOptions qo=new QueryOptions();
+  qo.add(filter);
+ List a = new ArrayList();
+  List identies=context.getObjects(Identity.class,qo);
+ 
+  
+  int i=0;
+  Terminator term = new Terminator(context);
+  for(Identity ide:identies){
+    System.out.println("deleting identity "+ide.getName());
+    if(exList.contains(ide.getName()))
+      continue;
+   
+    //term.deleteObject(ide);
+  }
+
+  </Source>
+</Rule>
+
+</sailpoint>

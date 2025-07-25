@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_AD_GroupRefreshRule" type="GroupAggregationRefresh">
+  <Description>This rule is used to set the owner or modify the account group before it is persisted to the database.</Description>
+  <Signature returnType="Object" />
+  <Source>import sailpoint.tools.Util;
+ import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.*;
+	import sailpoint.connector.*;
+  import org.apache.log4j.Logger; 
+  
+  
+  import java.io.*;
+  import java.net.*;
+ 
+import java.util.*;
+
+	
+	
+
+
+String type = accountGroup.getType();
+
+
+
+ String distinguishedName="";
+String entDescription = "";
+String displayName="";
+entDescription = accountGroup.getAttribute("description");
+distinguishedName= accountGroup.getAttribute("msDS-PrincipalName");
+displayName=  accountGroup.getValue();
+
+//String theDescription="distinguished name is" +distinguishedName+" and description is "+ entDescription ;
+if(type.equalsIgnoreCase("group")){
+
+if (Util.isNotNullOrEmpty(entDescription )) {
+  
+String entDescription = "Description : " +entDescription;
+String value = "OU Details: "+displayName;
+   
+String newDescription = entDescription+"&lt;br&gt;"+value;
+//String newDescription = "Description : " +entDescription+ "Value : "+displayName;
+
+
+
+  accountGroup.addDescription(Locale.US.toString(), newDescription);
+//log.error("account group theDescription is "+theDescription);
+
+}
+
+else
+{
+ accountGroup.addDescription(Locale.US.toString(), displayName);
+
+}
+	
+}
+return accountGroup;</Source>
+</Rule>
+
+</sailpoint>

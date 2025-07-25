@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="crunch time correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="email" value="EMAIL" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

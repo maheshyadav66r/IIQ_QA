@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_ContractorJoiningDateValidationRule" type="Validation">
+  <Description>This rule is used to validate the Field values on a provisioning plan.</Description>
+  <Signature returnType="Object" />
+  <Source>import java.lang.String;
+  import java.util.Date;
+  import java.util.Calendar;
+  import java.util.TimeZone;        
+  import java.text.DateFormat;
+  import java.text.ParseException;
+  import java.text.SimpleDateFormat;
+ import java.util.List;
+  import java.util.ArrayList;
+  import java.util.GregorianCalendar;
+List messages = new ArrayList();
+Date input = form.getField("jdate").getValue();
+  log.error(input);
+DateFormat ddf = new SimpleDateFormat("yyyy/MM/dd");
+  
+  Date today = new Date();
+  String currentDate = ddf.format(today);
+  String inputDate = ddf.format(input);
+ 
+  if((inputDate.compareTo(currentDate) &lt; 0) ||(inputDate.compareTo(currentDate)==0)){
+   messages.add("Can not select the present/past date");
+   return messages;
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

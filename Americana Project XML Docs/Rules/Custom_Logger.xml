@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Custom_Logger">
+  <Source>
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+  public static Logger loggingMethod(){		
+    Logger logger = Logger.getLogger("biworkflow");
+    logger.setLevel(Level.DEBUG);
+    return logger;
+  }
+ // loggingMethod().error("atrmt1");
+
+
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-Rule-JoinerQualifiedUsers">
+  <Source>
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+  import java.text.SimpleDateFormat;
+
+
+  Logger log = Logger.getLogger("rule.americana.JoinerQualifiedUsers");
+  String ruleName = "Test-Rule-JoinerQualifiedUsers";
+  log.setLevel(Level.DEBUG);
+  List joinerQualifiedList = new ArrayList();
+  List fList = new ArrayList();
+
+  Filter filter1 = Filter.or(Filter.eq("userType","E"),Filter.eq("userType","P"));
+  Filter filter2 = Filter.eq("peopleGroup","RSC");
+  Filter filter3 = Filter.eq("status","ACTIVE");
+  Filter filter4 = Filter.isnull("email");
+  Filter filter5 = Filter.isnull("distinguishedName");
+
+  fList.add(filter1);
+  fList.add(filter2);
+  fList.add(filter3);
+  fList.add(filter4);
+  fList.add(filter5);
+  Iterator iterator = null;
+
+  Filter filter = Filter.and(fList);
+  QueryOptions options = new QueryOptions();
+  options.addFilter(filter);
+  // return context.countObjects(Identity.class,options);
+  log.debug("==============THE JoinerQualifiedUsers Filter Initial Count :"+context.countObjects(Identity.class,options));
+  try {
+
+    iterator = context.search(Identity.class,options);
+    while (iterator != null &amp;&amp; iterator != void &amp;&amp; iterator.hasNext()) {
+      Identity identity = (Identity) iterator.next();
+      if (identity != null) {
+        boolean joinerTrigger = false;
+        String startDate = identity.getStringAttribute("startDate");
+        String userType = identity.getStringAttribute("userType");
+
+        if (Util.isNullOrEmpty(userType) || Util.isNullOrEmpty(startDate)) {
+          return joinerTrigger;
+        }
+        if (Util.isNotNullOrEmpty(startDate) &amp;&amp; Util.isNotNullOrEmpty(userType) &amp;&amp; "E".equalsIgnoreCase(userType)) {
+          SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+          Date startDt = sf.parse(startDate);
+          Date goLiveDate = sf.parse("2022-12-23");
+          if (Util.isDateAfter(startDt,goLiveDate)) {
+            joinerTrigger = true;
+            log.debug("==============THE TRIGGER POINT IN IF startDt :"+startDt);
+          }
+
+
+        } else if (Util.isNotNullOrEmpty(startDate) &amp;&amp; Util.isNotNullOrEmpty(userType) &amp;&amp; "P".equalsIgnoreCase(userType)) {
+          SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+          Date startDt = sf.parse(startDate);
+          int diff = Util.getDaysDifference(startDt,new Date());
+          log.debug("==============THE TRIGGER POINT IN ELSE diff :"+diff);
+
+          if (diff &lt;= 15) {
+            joinerTrigger = true;
+          }
+        }
+        if (joinerTrigger) {
+          joinerQualifiedList.add(identity.getName());
+        }
+      }
+      if (identity != null) {
+        context.decache(identity);
+      }
+    }
+  } catch (Exception e) {
+    String exceptMsg = "Exception Occuredn IN [ "+ruleName+ " ]  ::: "+e.getMessage();
+    logger.error(exceptMsg);
+  }
+  finally {
+    Util.flushIterator(iterator);
+  }
+  log.debug("*******************THE joinerQualifiedList :" +joinerQualifiedList);
+  return joinerQualifiedList;
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="TestRule-accountexpires">
+  <Description>This rule is used to update accountExpires attribute of AD. used in contrctor joiner and contractor end date extension. in prod the time zone is GST and in dev its UTC therefor match the time zone we have added minusHour(4)</Description>
+  <Source>
+ import java.time.LocalDate;
+
+  import java.time.Month;
+  import java.util.Calendar;
+  import java.util.TimeZone;
+  import org.apache.log4j.Logger;
+
+Logger log=Logger.getLogger("customRule4");
+
+
+  /*******************replacing this rule to avoid leap year dependancies****************
+  public String getAcccountExpiresValue(String terminationDate) {
+    // "2020-07-18" - example date
+    String ldapTimeStamp = "never";
+
+    if (null != terminationDate &amp;&amp; !"never".equalsIgnoreCase(terminationDate)) {
+log.error("terminationDate inside ruleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:"+terminationDate);
+      LocalDate currentDate = LocalDate.parse(terminationDate);
+      // Get day from date
+      int day = currentDate.getDayOfMonth();
+      // Get month from date
+      Month month = currentDate.getMonth();
+      // Get year from date
+      int year = currentDate.getYear();
+      // Print the day, month, and year
+      System.out.println("Day: " + day);
+      System.out.println("Month: " + month.getValue());
+      System.out.println("Year: " + year);
+      Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+      c.clear();
+      c.set(year, month.getValue(), day); // your date
+      long time1 = c.getTimeInMillis();
+      c.set(1601, 1, 1);
+      long time2 = c.getTimeInMillis();
+      long ldap = (time1 - time2) * 10000;
+      System.out.println(ldap);
+      ldapTimeStamp = Long.toString(ldap);
+log.error("ldapTimeStamp :"+ldapTimeStamp);
+    }
+    return ldapTimeStamp;
+  }
+ // return getAcccountExpiresValue("2023-11-03");
+ */
+ 
+  
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneOffset;
+ import org.apache.log4j.Logger;
+
+//Logger log=Logger.getLogger("customRule4");
+public static String getAcccountExpiresValue(String terminationDate) {
+    String ldapTimeStamp = "never";
+
+    if (terminationDate != null &amp;&amp; !"never".equalsIgnoreCase(terminationDate)) {
+      
+     // log.error("terminationDate inside ruleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:"+terminationDate);
+        LocalDate currentDate = LocalDate.parse(terminationDate);
+        int day = currentDate.getDayOfMonth();
+        Month month = currentDate.getMonth();
+        int year = currentDate.getYear();
+        //log.error("currentDate "+currentDate);
+      // log.error("day "+day);
+      // log.error("month "+month);
+      // log.error("year "+year);
+      
+        // Use LocalDateTime for consistent date handling
+        LocalDateTime dateTime = LocalDateTime.of(year, month, day, 0, 0).minusHours(4);
+   // LocalDateTime dateTime = LocalDateTime.of(year, month, day, 0, 0);
+     // LocalDateTime dateTime = LocalDateTime.of(year, month, day);
+        // log.error("dateTime "+dateTime);
+        // Convert LocalDateTime to milliseconds since Unix epoch
+        long unixTime = dateTime.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        // log.error("unixTime "+unixTime);
+        // Convert milliseconds to LDAP timestamp
+        long ldap = (unixTime + 11644473600000L) * 10000L;
+      // log.error ("ldap inside ruleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:"+ldap);
+        ldapTimeStamp = Long.toString(ldap);
+       log.error ("ldapTimeStamp inside ruleeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee:"+ldapTimeStamp);
+        return ldapTimeStamp;
+    }
+    return ldapTimeStamp;
+}
+ 
+  </Source>
+</Rule>
+
+</sailpoint>

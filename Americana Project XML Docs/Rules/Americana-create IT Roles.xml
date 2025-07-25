@@ -1,0 +1,320 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-create IT Roles">
+  <Source>
+  import java.io.FileReader;
+  import java.io.BufferedReader;
+  import java.util.List;
+  import java.util.ArrayList;
+  import java.util.Map;
+  import java.util.HashMap;
+  import java.util.Iterator;
+  import sailpoint.object.Rule;
+  import sailpoint.object.Application;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.Profile;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.connector.DelimitedFileConnector;
+  import sailpoint.object.ApplicationAccountSelectorRule;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Message.Type;
+  import sailpoint.tools.Util;
+  import sailpoint.tools.RFC4180LineParser;
+  
+  
+  
+  public List getFileData(String filePath){
+  	FileReader fr=new FileReader(filePath);    
+          BufferedReader br=new BufferedReader(fr);    
+  				String header = br.readLine();
+    			List headersList = null;
+    			List dataList = new ArrayList();
+    			if(null != header){
+    				headersList = Util.csvToList(header);
+          }
+    			String content = "";
+          
+    			List listOfdata = new ArrayList();
+          while((content = br.readLine()) != null){  
+            if(null != content @and !"".equalsIgnoreCase(content)){
+            	
+              if(null != headersList){
+					    	Map mapData =	DelimitedFileConnector.defaultBuildMap(headersList, Util.csvToList(content));
+                if(null != mapData @and mapData.size() &gt; 0){
+                	dataList.add(mapData);
+                }
+              }
+            }
+          }  
+          br.close();    
+          fr.close();
+    return dataList;
+  }
+  
+  public Map buildITRoleNew(HashMap roleHash,boolean createRoles ) {
+    context.decache();
+    boolean roleCreated = false;
+     List errorList = new ArrayList();
+    Map roleStatusMap = new HashMap();
+    try{
+    	String roleName  = (String) roleHash.get("Role Name");
+			String roleType  = (String) roleHash.get("Role Type");
+			String applicationName = (String)roleHash.get("Application");
+    	String entitlementNames =   (String)roleHash.get("EntitlementNames");
+    	String entitlementAttribute =   (String)roleHash.get("EntitlementAttribute");
+    	String parentRole =   (String)roleHash.get("Parent Role");
+    	String roleDescription = (String)roleHash.get("Role Description");
+    	String roleDisabled = (String)roleHash.get("Role Disabled");
+    	boolean newRole = false;  
+   
+    	List listOfEntitlementValues = new ArrayList();
+    	StringBuilder entitlementNotFoundBuilder = new StringBuilder();
+		
+   		Bundle role = context.getObjectByName(Bundle.class, roleName);
+			if (null == role) {
+				System.out.println(" - role does not exist, creating new: " + roleName);
+				role = new sailpoint.object.Bundle();
+      	newRole = true;
+			}  
+
+			role.setName(roleName);
+    	role.setDisplayName(roleName);
+      System.out.println("roleName"+roleName);
+    	//role.addDescription("en_US", roleDescription);
+      role.setMergeTemplates(true);
+      if(createRoles){
+      		role.setDisabled(Boolean.valueOf(roleDisabled));
+      }
+		
+  		if (roleType.toLowerCase().startsWith("it")) {
+	      role.setType(roleType);
+      	Identity ownerId = context.getObject(Identity.class, "spadmin");
+				role.setOwner(ownerId);
+      	if(null != parentRole @and !"".equalsIgnoreCase(parentRole)){
+        	Bundle parentBundle = context.getObjectByName(Bundle.class,parentRole);
+        	if(null != parentBundle){
+        		role.addInheritance(parentBundle); 
+        	}else{
+        		errorList.add("Couldn't add the Parent Role "+parentRole);
+        	}
+      	}else{
+      		errorList.add("Parent role not specified");
+      	}
+    	
+      	System.out.println("Entitlement names "+entitlementNames);
+      	if(null != entitlementNames @and !"".equalsIgnoreCase(entitlementNames)){
+      	RFC4180LineParser entitlementParser = new RFC4180LineParser(",");
+				List entitlementNamesList = entitlementParser.parseLine(entitlementNames);
+        	if(null != entitlementNamesList @and entitlementNamesList.size() &gt; 0){
+          	for(String entitlementName : entitlementNamesList){
+            	if(null != entitlementName @and !"".equalsIgnoreCase(entitlementName)){
+              	Filter entitlementNameFilter = Filter.eq("displayName",entitlementName.trim());
+              	Filter entitlementApplicationFilter = Filter.eq("application.name",applicationName);
+              	Filter entitlementAttributeFilter = Filter.eq("attribute",entitlementAttribute);
+              	Filter andFilter = Filter.and(entitlementNameFilter,entitlementApplicationFilter,entitlementAttributeFilter);
+              
+              	QueryOptions qo = new QueryOptions();
+              	qo.setCloneResults(true);
+              	qo.addFilter(andFilter);
+              	System.out.println("entitlementName"+entitlementName);
+              	Iterator managedAttributeIterator = context.search(ManagedAttribute.class,qo,"value");
+              	int count = 0;
+              	while(managedAttributeIterator.hasNext()){
+              		count++;
+                	if(count &gt; 1){
+                		errorList.add("The entitlement "+entitlementName+" wasn't added as there are multiple roles with same displayname");
+                	}else{
+                		Object[] objectArray = managedAttributeIterator.next();
+                  	if(null != objectArray){
+                  		String entitlementvalue = objectArray[0];
+                      System.out.println("entitlementvalue"+entitlementvalue);
+                    	if(null != entitlementvalue @and !"".equals(entitlementvalue)){
+                    		listOfEntitlementValues.add(entitlementvalue);
+                    	}
+                  	}
+                	}  
+              	}
+              
+              	if(count == 0){
+                	if(entitlementNotFoundBuilder.length() == 0){
+              			entitlementNotFoundBuilder.append(entitlementName);
+                	}else{
+                		entitlementNotFoundBuilder.append(", "+entitlementName);
+                	}  
+              	}
+              
+            	}
+          	}
+          
+	          if(null != entitlementNotFoundBuilder @and entitlementNotFoundBuilder.length() &gt; 0){
+          		errorList.add("The Following entitlements were not found role "+entitlementNotFoundBuilder.toString()+" and hence are not mapped to the roles ");
+          	}
+          
+          	if(null != listOfEntitlementValues @and listOfEntitlementValues.size() &gt; 0){
+            	List listOfRequiredRoles = new ArrayList();
+          		Profile profile = new Profile();
+            	Application applicationObj = context.getObjectByName(Application.class,applicationName);
+            	if(null != applicationObj){
+	            	profile.setApplication(applicationObj);
+  	          }
+    	        Filter profileFilter = Filter.containsAll(entitlementAttribute,listOfEntitlementValues);
+      	      if(null != profileFilter){
+        	    	profile.addConstraint(profileFilter);
+          	  }
+            
+	            if(null != profile){
+  	          	listOfRequiredRoles.add(profile);
+    	        }
+            
+      	      if(null != listOfRequiredRoles @and listOfRequiredRoles.size() &gt; 0){
+        	    	role.assignProfiles(listOfRequiredRoles);
+          	  }
+            
+          	}
+            
+            Application applicationObj = context.getObjectByName(Application.class,"Oracle BPM IDCS");
+            Rule ruleObj = context.getObjectByName(Rule.class,"Americana-BPM-Account Selector Rule");
+            if(null != applicationObj @and null != ruleObj){
+            	ApplicationAccountSelectorRule appAccountSelectorRule = new ApplicationAccountSelectorRule(applicationObj,ruleObj);
+              if(null != appAccountSelectorRule){
+                List listOfAppAccountSelectorRules = new ArrayList();
+                listOfAppAccountSelectorRules.add(appAccountSelectorRule);
+                	role.setApplicationAccountSelectorRules(listOfAppAccountSelectorRules); 
+              }
+            }
+        	}
+      	}
+    	}
+			
+      System.out.println("Outside the true condition of create roles"+createRoles);
+      if(createRoles){
+        System.out.println("Inside the true condition of create roles");
+     	context.saveObject(role);
+				context.commitTransaction();
+      }
+  		
+    	roleCreated = true;
+      if(null != errorList){
+        if(errorList.size() == 0){
+        	if(roleCreated){
+      			roleStatusMap.put("Created Success","");
+        	}else{
+      		roleStatusMap.put("Updated Successfully","");
+     	 		}
+        }else{
+        	roleStatusMap.put("Warning(s)",Util.listToCsv(errorList));
+        }
+      }
+    }catch(Exception e){
+      errorList.add("Failed creating role "+roleName);
+      roleStatusMap.put("Failed",Util.listToCsv(errorList));
+    } 
+		return roleStatusMap;
+	}
+  
+  
+  List getExistingRoles(){
+  	Filter startsWithFilter = Filter.like("name", "Oracle BPM", Filter.MatchMode.START);
+    Filter endsWithFilter = Filter.like("name", "IT Role", Filter.MatchMode.END);
+    Filter roleTypeFilter = Filter.eq("type", "it");
+    Filter enableRoleFilter = Filter.ne("disabled",true);
+    
+    Filter andFilter = Filter.and(startsWithFilter,endsWithFilter,roleTypeFilter,enableRoleFilter);
+    QueryOptions qo = new QueryOptions();
+    qo.addFilter(andFilter);
+    
+    Iterator iterator = context.search(Bundle.class,qo, "name");
+    List listOfExistingRoles = new ArrayList();
+    while(iterator.hasNext()){
+  		Object[] objectArray = iterator.next();
+  		if(null != objectArray){
+      	listOfExistingRoles.add(objectArray[0]);
+      }
+    }
+    return listOfExistingRoles;
+  }
+  
+  public void disableRoles(List rolesToDisable){
+    if(null != rolesToDisable @and rolesToDisable.size() &gt; 0){
+      System.out.println("Roles to disable "+rolesToDisable);
+      for(String role : rolesToDisable){
+        if(null != role){
+          if(!role.contains("Oracle BPM IDCS - Store Level Access")){
+          	Bundle bundleObj = context.getObjectByName(Bundle.class,role);  
+          	if(null != bundleObj){
+          	bundleObj.setDisabled(true);
+            context.saveObject(bundleObj);
+            context.commitTransaction();
+          	}
+          }
+          
+        }
+      }
+    }
+  }
+  
+  try{
+    
+    List roleMessages = new ArrayList();
+  	List  listOfData = getFileData("E:\\BPM-RBAC\\Oracle BPM IT Role File 0523.csv");
+    List listOfExistingRoles = getExistingRoles();
+    List listOfRolesFromFile = new ArrayList();
+    StringBuilder newStringBuilder = new StringBuilder();
+    boolean createRoles = true;
+    newStringBuilder.append("Role Name ,Role Status, Comments");
+    newStringBuilder.append("\n");
+    for(Map currentMap : listOfData){
+      String roleName = "";
+      if(null != currentMap @and currentMap.size() &gt; 0){
+    		if(null != listOfExistingRoles){
+    			roleName = currentMap.get("Role Name");
+          if(null != roleName @and !"".equalsIgnoreCase(roleName)){
+          	listOfRolesFromFile.add(roleName);
+          }
+        }
+        Map roleStatus = buildITRoleNew(currentMap,createRoles);
+        Set roleKeys = roleStatus.keySet();
+        for(String key : roleKeys){
+          if(null != key){
+          	newStringBuilder.append(roleName+", "+key+", "+roleStatus.get(key));
+        	}
+        }
+        newStringBuilder.append("\n");
+        
+      }
+    }
+    Util.writeFile("IT Role Creation Status.csv",newStringBuilder.toString());
+    
+    if(null != listOfExistingRoles @and listOfExistingRoles.size() &gt; 0){
+      System.out.println("list of existing roles "+listOfExistingRoles);
+      System.out.println("list of roles from file "+listOfRolesFromFile);
+    	listOfExistingRoles.removeAll(listOfRolesFromFile);
+      if(null != listOfExistingRoles @and listOfExistingRoles.size() &gt; 0){
+      	disableRoles(listOfExistingRoles);
+        StringBuilder disableStringBuilder = new StringBuilder();
+        disableStringBuilder.append("Roles Disabled");
+        disableStringBuilder.append("\n");
+        for(String disabledRoles : listOfExistingRoles){
+          if(null != disabledRoles){
+          	disableStringBuilder.append(disabledRoles);
+        		disableStringBuilder.append("\n");
+          }
+        }
+        Util.writeFile("IT Role Disabled Roles.csv",disableStringBuilder.toString());
+      }
+    }
+    
+    
+    
+   
+  }catch(Exception e){
+  	e.printStackTrace();
+  }
+	</Source>
+</Rule>
+
+</sailpoint>

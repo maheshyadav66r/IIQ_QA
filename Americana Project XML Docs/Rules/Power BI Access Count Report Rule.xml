@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Power BI Access Count Report Rule" type="AllowedValues">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+  import sailpoint.object.*;
+import sailpoint.tools.GeneralException;
+import java.io.*;
+import org.joda.time.DateTime;  
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;  
+
+
+public void writeRow(BufferedWriter writer, String[] datarow) throws IOException {
+	StringBuilder csvRow = new StringBuilder();
+	for (String cell : datarow) {
+		csvRow.append(cell).append(",");
+	}
+	csvRow.deleteCharAt(csvRow.length() - 1);
+	csvRow.append("\n");
+	writer.write(csvRow.toString());
+}
+
+String tskSuccess = "Failed";
+Date todaydate = new Date();
+SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh.mm aa");
+SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+Date dateago = new DateTime(todaydate).minusDays(100).toDate();
+String strDateago = df.format(dateago);
+Date filterfromDate = new SimpleDateFormat("M/dd/yy").parse(strDateago);  
+String reportdate = formatter.format(todaydate);
+String csvfilepath = "E:\\PowerBIAccessCountReport\\PowerBIAccessCountReport-"+reportdate+".csv";
+Date startdate=new SimpleDateFormat("M/dd/yy").parse("2/22/24");
+File reportfile = new File(csvfilepath);
+if(!reportfile.exists())
+	reportfile.createNewFile();
+FileOutputStream fos = new FileOutputStream(reportfile);
+
+try {
+	FileWriter writer = new FileWriter(csvfilepath);
+	BufferedWriter bufferedWriter = new BufferedWriter(writer);
+	String[] header = {"Employee Number", "Email", "PL Group(Count)", "Sales Group(Count)", "Marketing Group(Count)", "Created Date"};
+	writeRow(bufferedWriter,header);
+	QueryOptions qo = new QueryOptions();
+	//Filter filter = Filter.and(Filter.ge("Identity.created",startdate),Filter.eq("links.application.name","Microsoft Power BI"));
+  Filter filter1 = Filter.collectionCondition("links", (Filter.and(Filter.eq("application.name", "Microsoft Power BI"),Filter.ge("created",filterfromDate))));
+	qo.addFilter(filter1);
+	//qo.addOrdering("Identity.name", true);
+	List powerBIidentityList = context.getObjects(Identity.class,qo);
+  //return powerBIidentityList.size();
+  for (Identity identity : powerBIidentityList) {
+    List links = identity.getLinks();
+    for(Link link : links){
+      if (link != null &amp;&amp; link.getCreated().after(filterfromDate)) {
+        if (link.getApplicationName().equalsIgnoreCase("Microsoft Power BI")) {
+          String identityName = identity.getAttribute("employeeNumber");
+          String email = identity.getEmail();
+          String plGroup = null;
+          String salesGroup = null;
+          String marketingGroup = null;
+          Date createdDate = null;
+          String strCreatedDate = null;
+          int plGroupCount = 0;
+          int salesGroupCount = 0;
+          int marketingGroupCount = 0;
+          //String deleteflag = (String) link.getAttributes().get("DELETE_FLAG");
+          //if(deleteflag != null &amp;&amp; deleteflag.equalsIgnoreCase("F")){
+            Object plObj = link.getAttributes().get("PL_GROUP");
+            if(plObj !=null){
+              if (plObj instanceof List) {
+                plGroupCount = ((List) plObj).size();
+              }
+              else if (plObj instanceof String) {
+                plGroupCount ++;
+              }
+            }
+            Object salesObj = link.getAttributes().get("SALES_GROUP");
+            if(salesObj !=null){
+              if (salesObj instanceof List) {
+                salesGroupCount = ((List) salesObj).size();
+              }
+              else if (salesObj instanceof String) {
+                salesGroupCount ++;
+              }
+            }
+            Object marketingObj = link.getAttributes().get("MARKETING_GROUP");
+            if(marketingObj !=null){
+              if (marketingObj instanceof List) {
+                marketingGroupCount = ((List) marketingObj).size();
+              }
+              else if (marketingObj instanceof String) {
+                marketingGroupCount ++;
+              }
+            }
+            createdDate = link.getCreated();
+            strCreatedDate = formatter.format(createdDate);
+            String[] datarow = {identityName + "," + email + "," + plGroupCount + "," + salesGroupCount + "," + marketingGroupCount + "," + strCreatedDate};
+            writeRow(bufferedWriter, datarow);
+         // }
+        }
+      }
+    }
+  }
+	bufferedWriter.close();
+  EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class,"Americana-Task-Status-Report-Notification");
+  EmailOptions emailOptions = new EmailOptions();
+  Map args = new HashMap();
+  args.put("firstname","Binu");
+  args.put("lastname","Varghese");
+  args.put("reportdate",reportdate);
+  emailOptions.setTo("binu.v@paramountassure.com");
+  emailOptions.setVariables(args);
+  String fileName = "PowerBIAccessReport-"+reportdate+".csv";
+  byte[] fileData = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(csvfilepath));
+  System.out.println("Data :"+fileData);
+  EmailFileAttachment attachment = new EmailFileAttachment( fileName, EmailFileAttachment.MimeType.MIME_CSV, fileData );
+  emailOptions.addAttachment( attachment );
+  context.sendEmailNotification( emailTemplate, emailOptions );
+	tskSuccess = "Success";
+} catch (Exception e) {
+	throw new RuntimeException(e);
+}
+return tskSuccess;
+  </Source>
+</Rule>
+
+</sailpoint>

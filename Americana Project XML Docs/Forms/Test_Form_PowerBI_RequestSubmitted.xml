@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Test_Form_PowerBI_RequestSubmitted" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section name="Success Message" type="text">
+    <Field displayName="Access Request Submitted" name="submission">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+	   String message = "Please click on OK button to send your request for Manager approval";
+	   StringBuilder sb = new StringBuilder();
+          System.out.println("Before message");
+	   sb.append("&lt;p style='color:#4472C4'&gt;" + message + "&lt;/p&gt;");
+          System.out.println("After message");
+         return sb.toString();
+         </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Button action="next" label="OK" />
+</Form>
+
+</sailpoint>

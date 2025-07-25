@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Rule_CALL_POWERSHELL_RULE" type="ConnectorAfterCreate">
+  <Source>
+  import org.apache.commons.logging.Log;
+  import org.apache.commons.logging.LogFactory;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.Operation;
+  import sailpoint.object.RpcResponse;
+  import sailpoint.object.RpcRequest;
+  import sailpoint.object.Rule;
+  import sailpoint.connector.RPCService;
+  import sailpoint.api.SailPointFactory;
+  import sailpoint.object.Application;
+  import sailpoint.object.Signature;
+  import sailpoint.object.Argument;
+ 
+    try {
+
+    String IQServiceHostName = "aedxbsrvprdapp2";
+    int iqServicePort = 5050;
+    Map dataMap = new HashMap();
+    Application ad = context.getObjectByName(Application.class, "Active Directory");
+    dataMap.put("Application", ad.getAttributes());
+
+    System.out.println("Enetered in a rule");
+    //callPowerSdeptNamehellScript("OU=Users,OU=Rajasekhar5,DC=Eshiam,DC=com","Americana Office One");
+
+
+    Rule rule = context.getObjectByName(Rule.class, "AD Powershell");
+    System.out.println("Enetered in a rule 1");
+   
+    System.out.println("Enetered in a rule 8"+rule.toXml());
+    dataMap.put("postScript", rule);
+    
+   
+ AccountRequest accountRequest = new AccountRequest();
+  accountRequest.setApplication("Active Directory");
+  accountRequest.setOperation(AccountRequest.Operation.Create);
+  AttributeRequest attributeRequest = new AttributeRequest();
+  attributeRequest.setName("baseDN");  // use this to get a response back
+  attributeRequest.setValue("OU=Test HCM,OU=Americana Office,DC=Americana,DC=global");
+      
+  accountRequest.add(attributeRequest);
+   
+   
+      AttributeRequest attributeRequest1 = new AttributeRequest();
+  attributeRequest1.setName("departmentName");  // use this to get a response back
+ 
+  attributeRequest1.setValue("ExecutedRemote111");
+  accountRequest.add(attributeRequest1);
+   
+   
+    dataMap.put("Request", accountRequest);
+    RPCService service = new RPCService(IQServiceHostName, iqServicePort,true);
+    service.setConnectorServices(new sailpoint.connector.DefaultConnectorServices());
+    RpcRequest request = new RpcRequest("ScriptExecutor", "runAfterScript" , dataMap);
+    System.out.println("Enetered in a rule 4");
+     service.execute(request);
+     System.out.println("Enetered in a rule 5");
+    return request;
+   
+  } catch (Exception e){
+    System.out.println("Log::  "+e.getMessage());
+    log.error(e.getMessage(), e);
+  }
+
+  </Source>
+</Rule>
+
+</sailpoint>

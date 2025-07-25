@@ -1,0 +1,397 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow explicitTransitions="true" libraries="Identity" name="Americana_ContractorBirthRight_Provisioning" type="IdentityLifecycle">
+  <Variable input="true" name="trigger">
+    <Description>The IdentityTrigger</Description>
+  </Variable>
+  <Variable input="true" name="event" transient="true">
+    <Description>
+
+      The IdentityChangeEvent.  It can be used to build
+
+      the provisioning plan, but does not need to be
+
+      persisted with the case, so marked as transient.
+
+    </Description>
+  </Variable>
+  <Variable name="trace">
+    <Description>Used for debugging this workflow and when set to true trace will be sent to stdout.
+
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity.</Description>
+  </Variable>
+  <Variable initializer="script:(identityDisplayName != void) ? identityDisplayName : resolveDisplayName(identityName)" input="true" name="identityDisplayName">
+    <Description>
+
+      The displayName of the identity being updated. Query for this using a projection query and fall back to the name.
+
+    </Description>
+  </Variable>
+  <Variable name="birthrightPlan">
+    <Description>The provisioning plan, which is built by a service method.</Description>
+  </Variable>
+  <Variable name="birthrightProject">
+    <Description>ProvisioningProject which is just a compiled version of the ProvisioningPlan.</Description>
+  </Variable>
+  <Variable name="FutureHire" />
+  <Variable name="managerName" />
+  <Variable name="launcher" />
+  <Description>Process a new employee.</Description>
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="TestRule-accountexpires" />
+  </RuleLibraries>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="Create BirthRight Plan" />
+  </Step>
+  <Step icon="Task" name="Create BirthRight Plan" posX="103" posY="164" resultVariable="birthrightPlan">
+    <Script>
+      <Source>
+
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+        import sailpoint.object.ProvisioningProject;
+        import sailpoint.api.PasswordGenerator;
+        import sailpoint.object.PasswordPolicy;
+        import sailpoint.tools.Util;
+        log.error("inside plan identity name is:"+identityName);
+        String id=identityName;
+        String idendDate=null;
+        String idstartDate=null;
+        if(id !=null) {
+
+        Identity ide = context.getObjectByName(Identity.class, id);
+        if(ide!=null){
+        ide.setAttribute("status","ACTIVE");
+        ide.setAttribute("ImmediateJoiner","joinertriggered");
+        context.saveObject(ide);
+        context.commitTransaction();
+        idendDate=ide.getAttribute("endDate");
+        String accountExpDate=getAcccountExpiresValue(idendDate);
+        idstartDate=ide.getAttribute("startDate");
+
+        String strLicense=ide.getStringAttribute("ContractorLicense");
+        String strwifiAccess=ide.getStringAttribute("wifiaccess");
+		
+		/*Added as a part of BPM Approval Changes */
+        String bpmApprovalID = ide.getStringAttribute("contractorCreationBpmApprovalID");
+        String creationJustification = ide.getStringAttribute("contractorCreationJustification");
+        /* Changes until Above */
+        
+		log.error("string licenses are :::"+strLicense);
+        Custom custom = context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+        if(custom!=null){
+        String ent=custom.get(ide.getStringAttribute("country"));
+        log.error("checking string ent custom:::");
+        String entVpn=custom.get(ide.getStringAttribute("country")+"_vpn");
+        log.error("checking string entVpn custom:::");
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(ide);
+
+        AccountRequest acr = new AccountRequest();
+        acr.setApplication("AD Contractors");
+        acr.setOperation(AccountRequest.Operation.Create);
+        if(ide.getAttribute("userType")!=null&amp;&amp;(ide.getAttribute("userType").equalsIgnoreCase("Interim"))){
+        log.error("user type is interim");
+        acr.setNativeIdentity("CN="+identityName+",OU=Interim,OU=Americana Office,DC=Americana,DC=global");  
+        }
+        if(ide.getAttribute("userType")!=null&amp;&amp;(ide.getAttribute("userType").equalsIgnoreCase("ServiceMax"))){
+        log.error("user type is service max");
+        acr.setNativeIdentity("CN="+identityName+",OU=Service Max,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");  
+        }
+        if(ide.getAttribute("userType")!=null&amp;&amp;(ide.getAttribute("userType").equalsIgnoreCase("General Use"))){
+        log.error("user type is general");
+        acr.setNativeIdentity("CN="+identityName+",OU=Generic-Use,OU=Americana Office,DC=Americana,DC=global");  
+        }
+        if(ide.getAttribute("userType")!=null&amp;&amp;(ide.getAttribute("userType").equalsIgnoreCase("Contractor"))){
+        log.error("user type is contractor");
+        acr.setNativeIdentity("CN="+identityName+",OU=Outsource,OU=Americana Office,DC=Americana,DC=global");
+        }
+		/* Commenting as a part of form changes as the requestor comments needed to be populated for description
+        acr.add(new AttributeRequest("description", "OutSource"));
+        log.error("adding description as outsource");
+		*/
+       // acr.add(new AttributeRequest("accountExpires",accountExpDate));
+       //acr.add(new AttributeRequest("whenCreated", idstartDate));
+	   
+		/* Adding the below changes as a part of BPM Approval changes */
+      //  if(null != bpmApprovalID @and !"".equalsIgnoreCase(bpmApprovalID)){
+        	if(null != creationJustification @and !"".equalsIgnoreCase(creationJustification)){
+        		//String description = bpmApprovalID+"-"+creationJustification;
+        		String description = creationJustification;
+        		if(null != description @and !"".equalsIgnoreCase(description)){
+        			acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set, description));
+        		}
+        	}
+       // }
+        /* Changes until above */
+
+        if(strLicense.contains("Email")){
+        ide.setAttribute("gradeCode","E5");
+        context.saveObject(ide);
+        context.commitTransaction();
+        }
+
+        if(strwifiAccess!=null&amp;&amp;ent!=null&amp;&amp;(strwifiAccess.equalsIgnoreCase("TRUE") )){
+        log.error("checking for memberof condition");
+        acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add,ent));
+        // acr.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add,entDefault));
+        log.error("adding member of attribute");
+        }
+
+        plan.add(acr);
+        log.error("plan is:"+plan.toXml());
+
+        log.error("end of the plan");
+        return plan;
+        }
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="Compile BirthRight Project" />
+  </Step>
+  <Step action="call:compileProvisioningProject" name="Compile BirthRight Project" posX="406" posY="10" resultVariable="birthrightProject">
+    <Arg name="requester" value="string:spadmin" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="noLocking" value="true" />
+    <Arg name="source" value="string:UI" />
+    <Arg name="optimisticProvisioning" value="string:true" />
+    <Arg name="plan" value="ref:birthrightPlan" />
+    <Description>
+
+      Compile the provisioning plan into a provisioning project.
+
+      If you need to pass in provisioner options like "noFiltering"
+
+      or "noRoleDeprovisioning" you must pass them as explicit
+
+      arguments to the call.
+
+      The evaluation options "requester" and "source" are commonly
+
+      set here.
+
+      You can also pass things into the Template and Field scripts by
+
+      defining Args in this step.
+
+    </Description>
+    <Transition to="Birthright Provision" />
+  </Step>
+  <Step action="call:provisionProject" icon="Provision" name="Birthright Provision" posX="682" posY="10">
+    <Arg name="noTriggers" value="true" />
+    <Arg name="background" value="string:false" />
+    <Arg name="project" value="ref:birthrightProject" />
+    <Description>Provision the project.</Description>
+    <Transition to="updateEnddate" />
+  </Step>
+  <Step icon="Task" name="updateEnddate" posX="50" posY="10">
+    <Script>
+      <Source>
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+        import java.lang.String;
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+        import sailpoint.object.ProvisioningProject;
+        Identity userId=context.getObjectByName(Identity.class, identityName);
+        log.error("userId is:::"+userId);
+
+        if(userId!=null){
+        log.error("userid not nulland end date is :::"+ strnewEndDate);
+
+      
+        idendDate=userId.getAttribute("endDate");
+        String accountExpDate=getAcccountExpiresValue(idendDate);
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(userId);
+
+        AccountRequest acr = new AccountRequest();
+        acr.setApplication("AD Contractors");
+        acr.setOperation(AccountRequest.Operation.Modify);
+        // acr.add(new AttributeRequest("distinguishedName", "CN=Test User45(Kelton),OU=Outsource,OU=Americana Office,OU=Test HCM,OU=Americana Office,DC=Americana,DC=global"));
+        // acr.add(new AttributeRequest("sAMAccountName", "tuser45(kelton)"));
+
+        acr.add(new AttributeRequest("accountExpires", accountExpDate));
+
+
+        plan.add(acr);
+        log.error("plan is:"+plan.toXml());
+
+        log.error("end of the plan");
+        //  return plan.toXml();
+        Provisioner prov=new Provisioner(context);
+        prov.setNoLocking(true);
+        prov.setOptimisticProvisioning(true);
+        ProvisioningProject project = prov.compile(plan);
+        prov.execute(plan);
+        }
+      </Source>
+    </Script>
+    <Transition to="Schedule Contractor AzureAD License Assignment Workflow" />
+  </Step>
+  <Step icon="Task" name="Schedule Contractor AzureAD License Assignment Workflow" posX="50" posY="10">
+    <Description>
+      Schedule workflow 'Americana-ContractorWorkflow-AzureADLicenseAssignment' to launch after 35 minutes, as Active Directity to Azure Sync job is scheduled for every 30 minutes
+    </Description>
+    <Script>
+      <Source>
+
+        import java.util.Date;
+
+        import sailpoint.api.RequestManager;
+        import sailpoint.object.Attributes;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Request;
+        import sailpoint.object.RequestDefinition;
+        import sailpoint.object.Workflow;
+        import sailpoint.tools.GeneralException;
+        import sailpoint.workflow.StandardWorkflowHandler;
+
+        import org.apache.log4j.Logger;
+        import org.apache.log4j.Level;
+
+
+        Logger logger = Logger.getLogger("Americana.ContractorWorkflow.LifecycleEvent.Joiner.Step.ScheduleAzureADLicenseAssignmentWorkflow");
+        logger.setLevel(Level.DEBUG);
+
+        logger.debug("Start Step.ScheduleAzureADLicenseAssignmentWorkflow");
+
+
+        String workflowName = "Americana-ContractorWorkflow-AzureADLicenseAssignment";
+        String caseName     = "Run '" + workflowName + "' for: " + identityName;
+        String requesterId  = "spadmin";
+
+        Workflow eventWorkflow = context.getObject(Workflow.class, workflowName);
+        if (null == eventWorkflow) {
+        logger.error("Could not find a workflow named: " + workflowName);
+        throw new GeneralException("Invalid worklfow: " + workflowName);
+        }
+
+        // Simulate the request being submitted by a user. Default: spadmin.
+        Identity id = context.getObjectByName(Identity.class, requesterId);
+        if (null == id) {
+        logger.error("Could not find a requester Identity: " + requesterId);
+        throw new GeneralException("Invalid identity: " + requesterId);
+        }
+
+        // Ask the Request Processor to start the workflow 35 minutes from now.
+        // Append the time stamp to the workflow case name to ensure it's unique. 
+        long launchTime = System.currentTimeMillis() + (35 * 60 * 1000);
+        caseName = caseName + "(" + launchTime + ")";
+
+        // Build out a map of arguments to pass to the Request Scheduler.
+        Attributes reqArgs = new Attributes();
+        reqArgs.put(StandardWorkflowHandler.ARG_REQUEST_DEFINITION, sailpoint.request.WorkflowRequestExecutor.DEFINITION_NAME);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_WORKFLOW, workflowName);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_REQUEST_NAME, caseName);
+        reqArgs.put( "requestName", caseName );            
+
+        // Build a map of arguments to pass to the Workflow case when it launches.
+        Attributes wfArgs = new Attributes();
+        wfArgs.put("identityName",    identityName);
+        wfArgs.put("workflow",        eventWorkflow.getName());
+
+        reqArgs.putAll(wfArgs);
+
+        // Use the Request Launcher to schedule the workflow reqeust.  This requires
+        // a Request object to store the properties of the request item.
+        Request req = new Request();
+        RequestDefinition reqdef = context.getObject(RequestDefinition.class, "Workflow Request");
+        req.setDefinition(reqdef);
+        req.setEventDate( new Date( launchTime ) );
+        req.setOwner(id);
+        req.setName(caseName);
+        req.setAttributes( reqdef, reqArgs );
+
+        // Schedule the work flow via the request manager.
+        RequestManager.addRequest(context, req);
+
+        logger.debug("End Step.ScheduleAzureADLicenseAssignmentWorkflow");
+      </Source>
+    </Script>
+    <Transition to="Create AuditEvent" />
+  </Step>
+  <Step action="audit" name="Create AuditEvent" posX="1360" posY="252">
+    <Script>
+      <Source>
+        import sailpoint.server.Auditor;
+        import sailpoint.object.AuditEvent;
+        import org.apache.log4j.Logger;
+        import java.util.Date;
+        import java.text.SimpleDateFormat;
+        String strManager=null;
+        Identity id = context.getObjectByName(Identity.class,identityName);
+        if(id!=null){
+        Identity manager = id.getManager();
+        if(manager!=null){
+        strManager = manager.getName();
+        }
+        }
+        String strAuditAction=null;
+        String strAction=null;
+        String strTarget=null;
+        SimpleDateFormat sdf = null;
+        String strCurrentDate=null;
+
+        AuditEvent adtEvent=null;
+        Logger logger = Logger.getLogger("com.CustomLogs");
+        log.error("Inside Create Audit Event - Start");
+        try{ 
+        sdf = new SimpleDateFormat("MM/dd/yyyy");
+        strCurrentDate = sdf.format(new Date());
+
+        log.error("manager is"+managerdetails);
+        log.error("Create Audit Event::identityName= "+identityName);
+        log.error("Create Audit Event::managerName= "+managerName);
+        strAuditAction="User-Joiner event:"+identityName;
+        strTarget="Joiner event triggered for user:"+identityName;
+        strAction = "User_Onboarding";
+        log.error("audit name is"+strAction);
+        if(Auditor.isEnabled(strAction)){
+
+        log.error("Create Audit Event::Onboarding Enabled!!!");
+        adtEvent = new AuditEvent();
+        adtEvent.setSource("User-Joiner Event");
+        adtEvent.setTarget(strTarget);
+        adtEvent.setAction(strAction);
+        adtEvent.setAccountName(identityName);
+        adtEvent.setAttributeName("User Onboarding Event");
+        adtEvent.setString1(strAuditAction);
+
+        adtEvent.setString2("Joiner Event Triggered on:"+strCurrentDate);
+        adtEvent.setString3("User Manager is:"+strManager);
+        Auditor.log(adtEvent);
+        context.commitTransaction();
+        }
+        }catch(Exception e){
+
+        logger.error("Exception= "+e.printStackTrace()); 
+        throw e;
+        }
+        log.error("Create Audit Event- End");
+      </Source>
+    </Script>
+    <Transition to="Refresh Identity" />
+  </Step>
+  <Step action="refreshIdentity" icon="Task" name="Refresh Identity" posX="1028" posY="7">
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="promoteAttributes" value="true" />
+    <Description>
+    </Description>
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="540" posY="10" />
+</Workflow>
+
+</sailpoint>

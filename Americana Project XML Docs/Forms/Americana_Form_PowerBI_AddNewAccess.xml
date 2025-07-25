@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_AddNewAccess" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section name="Section For user Data">
+    <Field displayName="Choose an option" displayType="radio" name="ModifyAccess" postBack="true">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Remove my existing access and add new access</String>
+            <String>Only Add additional access</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <ValidationScript>
+        <Source>
+          if("Remove my existing access and add new access".equalsIgnoreCase(value) @and !hasLinks)
+          return "WARNING : You do not have a Power BI Account";
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

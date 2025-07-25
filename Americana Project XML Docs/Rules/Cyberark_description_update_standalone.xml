@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Cyberark_description_update_standalone">
+  <Source>
+
+    import sailpoint.object.*;
+	import org.apache.commons.logging.*;
+	import org.apache.commons.logging.Log;
+	import org.apache.commons.logging.LogFactory;
+	import sailpoint.api.SailPointContext;
+	import sailpoint.object.Identity;
+	import sailpoint.object.Link;
+	import sailpoint.tools.GeneralException;
+	import sailpoint.tools.Util.*;
+	import  sailpoint.object.QueryOptions;
+  import org.apache.commons.*;
+  import java.util.Iterator.*;
+  import org.apache.commons.lang3.*;
+  import java.util.*;
+  import java.util.Locale;
+import sailpoint.object.AttributeDefinition;
+import sailpoint.object.ManagedAttribute;
+import sailpoint.api.ManagedAttributer;
+  import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.Entitlements;
+  import com.fasterxml.jackson.databind.ObjectMapper;
+  import sailpoint.object.Filter;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ResourceObject;
+  import java.util.*;
+  import java.util.ArrayList;
+  import java.util.List;
+  import net.minidev.json.parser.JSONParser;
+  import org.apache.commons.io.IOUtils;
+  import org.apache.http.HttpEntity;
+  import org.apache.http.HttpResponse;
+  import org.apache.http.client.methods.CloseableHttpResponse;
+  import org.apache.http.client.methods.HttpGet;
+  import org.apache.http.client.methods.HttpPost;
+  import org.apache.http.client.utils.URIBuilder;
+  import org.apache.http.entity.ContentType;
+  import org.apache.http.entity.StringEntity;
+  import org.apache.http.impl.client.CloseableHttpClient;
+  import org.apache.http.impl.client.HttpClientBuilder;
+  import org.apache.http.impl.client.HttpClients;
+  import org.apache.http.message.BasicHeader;
+  import org.json.JSONArray;
+  import org.json.JSONException;
+  import org.json.JSONObject;
+  import org.json.JSONTokener;
+  import sailpoint.tools.GeneralException;
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.URI;
+  import java.net.URISyntaxException;
+  import java.net.URLDecoder;
+  import java.nio.charset.StandardCharsets;
+  import sailpoint.object.Custom;
+     import sailpoint.tools.Util;
+  import org.apache.log4j.Logger;
+  import sailpoint.object.*;
+  Logger log=Logger.getLogger("cyberarkobj");
+  
+
+  public String GetAuthenticationKey() throws IOException {
+    Custom logonKeyObj = context.getObjectByName(Custom.class,"CyberArk-Api-Credentials-Prod");
+    String apiKey = (String)logonKeyObj.get("apikey");
+    String apiValue = (String)logonKeyObj.get("apivalue");
+    String apiUrl = (String)logonKeyObj.get("logonAuthApi");
+    JSONObject userObject= new JSONObject();
+    userObject.put("username",apiKey);
+    //userObject.put("password","3yD7-p6GK6&lt;t");
+    userObject.put("password",apiValue );
+    //userObject.put("concurrentSession","True" );
+  
+    CloseableHttpClient client = HttpClients.createDefault();
+    HttpPost loginPost = new HttpPost(apiUrl);
+    loginPost.setEntity(new StringEntity(userObject.toString(), ContentType.APPLICATION_JSON));
+    loginPost.addHeader(new BasicHeader("cache-control", "no-cache"));
+    CloseableHttpResponse loginResponse = client.execute(loginPost);
+    InputStream inputStream = loginResponse.getEntity().getContent();
+    log.error("Input Stream :"+inputStream);
+    String logonAuth = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    log.error("LogonAuth :"+logonAuth);
+    return logonAuth;
+  }
+
+  public JSONObject GetApiResponseObject(String apiUrl) throws IOException, JSONException, URISyntaxException {
+    String sessionToken = GetAuthenticationKey();
+    sessionToken = sessionToken.substring(1, sessionToken.length() - 1);
+    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+    //String encodedUrl = URLEncoder.encode(apiUrl, "UTF-8");
+    
+    URIBuilder uriBuilder = new URIBuilder(apiUrl);
+    URI uri = uriBuilder.build();
+   log.error("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"+apiUrl);  
+    //HttpGet httpGet = new HttpGet(URLDecoder.decode(apiUrl, StandardCharsets.UTF_8.toString()));
+    HttpGet httpGet = new HttpGet(uri);
+    httpGet.setHeader("Authorization",sessionToken);
+    HttpResponse httpResponse = httpClient.execute(httpGet);
+    HttpEntity responseEntity = httpResponse.getEntity();
+    InputStream content = responseEntity.getContent();
+    log.error("Content :"+content);
+    JSONParser jsonParser = new JSONParser();
+    JSONObject responseObject = new JSONObject(new JSONTokener(content));
+    return responseObject;
+  }  
+  
+   String appName="CyberArk PAM";
+//Map descMap = new HashMap();
+//Custom customObj = context.getObjectByName(Custom.class,"CyberArk Safe Permission");
+Filter filter = Filter.eq("application.name",appName);
+ 
+QueryOptions qo = new QueryOptions();
+qo.addFilter(filter);
+   qo.addFilter(Filter.eq("attribute", "accountEntitlement"));
+
+List list = context.getObjects(ManagedAttribute.class,qo);
+for(ManagedAttribute ma :list){
+     log.error("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;MA"+ma);  
+	if(ma.getAttribute().equalsIgnoreCase("accountEntitlement")){
+		if(Util.isNotNullOrEmpty(ma.getValue()) ){
+      log.error("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; MA VALUE"+ma.getValue());  
+      String mavalue=ma.getValue();
+      //String platform = mavalue.split("\\|\\|", 3)[0].trim();
+      String[] parts = mavalue.split("\\|\\|");
+      if(parts.length==4){
+      String accountId = mavalue.split("\\|\\|", 4)[3].trim();
+         log.error("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; platform VALUE"+accountId);
+      
+      if(accountId.startsWith("AccountID:")){
+      accountId=accountId.split("AccountID:",2)[1].trim();
+        log.error("Privileged Account:"+accountId);
+     // String apiUrl = "https://pam.americana-food.com/PasswordVault/API/platforms?Search="+"\""+platform+"\"";
+        String apiUrl = "https://pam.americana-food.com/PasswordVault/API/accounts/"+accountId;
+     // String conturl=apiUrl+platform;
+      log.error("FULL URL"+apiUrl);
+	 JSONObject platformResponseObject = GetApiResponseObject(apiUrl);
+    //    JSONObject jsonObject = new JSONObject(jsonString);
+       // JSONArray valueArray = platformResponseObject.getJSONArray("value");
+       // JSONObject firstObject = valueArray.getJSONObject(0);
+     
+        
+      log.error("Account Response Object:"+platformResponseObject);
+     //JSONArray platformsArray = platformResponseObject.getJSONArray("platformAccountProperties");
+    //   log.error("platformObject&gt;&gt;&gt;"+platformsArray);
+      
+        
+        if (platformResponseObject.getJSONObject("platformAccountProperties") !=null) {
+          
+           //String details = platformResponseObject.getJSONObject("platformAccountProperties").getString("Details");
+          JSONObject platformAccountProperties = platformResponseObject.getJSONObject("platformAccountProperties");
+       // String logonDomain = platformAccountProperties.getString("LogonDomain");
+     
+     //  JSONObject platformObject = platformsArray.getJSONObject(0);
+          
+            if(platformAccountProperties.getString("Details")!=null){
+               String details = platformAccountProperties.getString("Details");  
+                //JSONObject generalObject = platformObject.getJSONObject("general");
+           // String description = platformObject.getString("Details");
+            log.error("Description: " + details);
+      descMap = new HashMap();
+              descMap.put("en_US",details);
+					ma.setDescriptions(descMap);
+            }
+          }
+      
+			//	if(ma.getValue().contains(k)){
+  /*
+					descMap = new HashMap();
+					//String description = (String)customObj.get(k);
+					System.out.println("Description-Details :"+description);
+					descMap.put("en_US",description);
+					ma.setDescriptions(descMap);
+                                        
+		//		}
+		//	}
+    
+    */
+		}
+    }
+	context.saveObject(ma);
+	    context.commitTransaction();
+
+	}
+  
+  	
+}
+}  
+</Source>
+</Rule>
+
+</sailpoint>

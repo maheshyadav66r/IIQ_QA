@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PowerBI Request List Rule" type="AllowedValues">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import sailpoint.object.Filter;
+import sailpoint.object.IdentityRequest;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.WorkflowSummary;
+import sailpoint.tools.GeneralException;
+
+import java.awt.*;
+import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+  String tskSuccess = "Failed";
+  Date todaydate = new Date();
+  SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh.mm aa");
+  SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+  String reportdate = formatter.format(todaydate);
+  String filepath = "E:\\PowerBiAccessReport\\PowerBiAccessReport-"+reportdate+".pdf";
+  File reportfile = new File(filepath);
+  if(!reportfile.exists())
+    reportfile.createNewFile();
+  FileOutputStream fos = new FileOutputStream(reportfile);
+  Date startdate=new SimpleDateFormat("M/dd/yy").parse("2/1/24");
+
+  try{
+    QueryOptions qo = new QueryOptions();
+    Filter filter = Filter.and(Filter.eq("IdentityRequest.type", "QuickLink Approval for Power BI Access"),Filter.ge("IdentityRequest.created",startdate));
+    qo.addFilter(filter);
+    qo.addOrdering("IdentityRequest.created", true);
+    List powerBIAccessRequestList = context.getObjects(IdentityRequest.class,qo);
+    Document document = new Document(PageSize.A4.rotate());
+    PdfWriter.getInstance(document, fos);
+    document.open();
+
+    Font headingFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
+    headingFont.setColor(new Color(0, 102, 204));
+    Paragraph heading = new Paragraph("Power BI Work Item Status Report", headingFont);
+    heading.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(heading);
+    document.add(Chunk.NEWLINE);
+    PdfPTable table = new PdfPTable(5);
+    Font theaderFont = FontFactory.getFont(FontFactory.HELVETICA, 10,Font.BOLD, Color.WHITE);
+    Font bodyFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.BLACK);
+    Font finishFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.GREEN);
+    Font pendingFont = FontFactory.getFont(FontFactory.HELVETICA, 9,Font.NORMAL, Color.RED);
+    PdfPCell requestcell = new PdfPCell(new Phrase("Request",theaderFont));
+    requestcell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(requestcell);
+    PdfPCell requestercell = new PdfPCell(new Phrase("Requester",theaderFont));
+    requestercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(requestercell);
+    PdfPCell approvercell = new PdfPCell(new Phrase("Approver",theaderFont));
+    approvercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(approvercell);
+    PdfPCell rdatecell = new PdfPCell(new Phrase("Requested Date",theaderFont));
+    rdatecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(rdatecell);
+    PdfPCell statecell = new PdfPCell(new Phrase("State",theaderFont));
+    statecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(statecell);
+    table.setHeaderRows(1);
+    for(IdentityRequest iRequest : powerBIAccessRequestList){
+      List approvalDetails = (List) iRequest.getAttributes().get("approvalSummaries");
+      String requester = (String) iRequest.getRequesterDisplayName();
+      for(WorkflowSummary.ApprovalSummary appSummary : approvalDetails){
+        if (appSummary != null) {
+          String completer = null;
+          Date requestedDate = null;
+          String state = null;
+          String strRequestedDate = null;
+          String request = appSummary.getRequest();
+          if(request.equalsIgnoreCase("Manager Approval Form - Power BI Access Request raised by "+requester)){
+            completer = appSummary.getCompleter();
+            requestedDate =  appSummary.getStartDate();
+            state = appSummary.getState().name();
+            table.addCell(new PdfPCell(new Paragraph(request,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(requester,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(completer,bodyFont)));
+            strRequestedDate = formatter.format(requestedDate);
+            table.addCell(new PdfPCell(new Paragraph(strRequestedDate,bodyFont)));
+            if(state.equalsIgnoreCase("Finished")){
+              table.addCell(new PdfPCell(new Paragraph(state,finishFont)));
+            }
+            else
+              table.addCell(new PdfPCell(new Paragraph(state,pendingFont)));
+          }
+          if(request.equalsIgnoreCase("Second Level Approval Form - Power BI Access Request raised by "+requester)){
+            completer = appSummary.getCompleter();
+            requestedDate =  appSummary.getStartDate();
+            state = appSummary.getState().name();
+            table.addCell(new PdfPCell(new Paragraph(request,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(requester,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(completer,bodyFont)));
+            strRequestedDate = formatter.format(requestedDate);
+            table.addCell(new PdfPCell(new Paragraph(strRequestedDate,bodyFont)));
+            if(state.equalsIgnoreCase("Finished")){
+              table.addCell(new PdfPCell(new Paragraph(state,finishFont)));
+            }
+            else
+              table.addCell(new PdfPCell(new Paragraph(state,pendingFont)));
+          }
+          if(request.equalsIgnoreCase("Third Level Approval Form - Power BI Access Request raised by "+requester)){
+            completer = appSummary.getCompleter();
+            requestedDate =  appSummary.getStartDate();
+            state = appSummary.getState().name();
+            table.addCell(new PdfPCell(new Paragraph(request,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(requester,bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(completer,bodyFont)));
+            strRequestedDate = formatter.format(requestedDate);
+            table.addCell(new PdfPCell(new Paragraph(strRequestedDate,bodyFont)));
+            if(state.equalsIgnoreCase("Finished")){
+              table.addCell(new PdfPCell(new Paragraph(state,finishFont)));
+            }
+            else
+              table.addCell(new PdfPCell(new Paragraph(state,pendingFont)));
+          }
+        }
+      }
+    }
+    document.add(table);
+    document.add(Chunk.NEWLINE);
+    Paragraph footer = new Paragraph("Power BI Work Item Status Report End", headingFont);
+    footer.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(footer);
+    table.flushContent();
+    document.close();
+    tskSuccess = "Success";
+  }catch (Exception e) {
+    throw new RuntimeException(e);
+	}  
+return tskSuccess;  
+</Source>
+</Rule>
+
+</sailpoint>

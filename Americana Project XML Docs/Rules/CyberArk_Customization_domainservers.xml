@@ -1,0 +1,325 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="CyberArk_Customization_domainservers" type="ResourceObjectCustomization">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+    Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import com.fasterxml.jackson.databind.ObjectMapper;
+  import sailpoint.object.Filter;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ResourceObject;
+  import java.util.*;
+  import java.util.ArrayList;
+  import java.util.List;
+  import net.minidev.json.parser.JSONParser;
+  import org.apache.commons.io.IOUtils;
+  import org.apache.http.HttpEntity;
+  import org.apache.http.HttpResponse;
+  import org.apache.http.client.methods.CloseableHttpResponse;
+  import org.apache.http.client.methods.HttpGet;
+  import org.apache.http.client.methods.HttpPost;
+  import org.apache.http.client.utils.URIBuilder;
+  import org.apache.http.entity.ContentType;
+  import org.apache.http.entity.StringEntity;
+  import org.apache.http.impl.client.CloseableHttpClient;
+  import org.apache.http.impl.client.HttpClientBuilder;
+  import org.apache.http.impl.client.HttpClients;
+  import org.apache.http.message.BasicHeader;
+  import org.json.JSONArray;
+  import org.json.JSONException;
+  import org.json.JSONObject;
+  import org.json.JSONTokener;
+  import sailpoint.tools.GeneralException;
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.URI;
+  import java.net.URISyntaxException;
+  import java.net.URLDecoder;
+  import java.nio.charset.StandardCharsets;
+  import sailpoint.object.Custom;
+     import sailpoint.tools.Util;
+  import org.apache.log4j.Logger;
+  import sailpoint.object.*;
+  Logger log=Logger.getLogger("cyberarkobj");
+  
+  
+  
+  
+  
+  
+  public String GetAuthenticationKey() throws IOException {
+    Custom logonKeyObj = context.getObjectByName(Custom.class,"CyberArk-Api-Credentials-Prod");
+    String apiKey = (String)logonKeyObj.get("apikey");
+    String apiValue = (String)logonKeyObj.get("apivalue");
+    String apiUrl = (String)logonKeyObj.get("logonAuthApi");
+    JSONObject userObject= new JSONObject();
+    userObject.put("username",apiKey);
+    //userObject.put("password","3yD7-p6GK6&lt;t");
+    userObject.put("password",apiValue );
+    //userObject.put("concurrentSession","True" );
+  
+    CloseableHttpClient client = HttpClients.createDefault();
+    HttpPost loginPost = new HttpPost(apiUrl);
+    loginPost.setEntity(new StringEntity(userObject.toString(), ContentType.APPLICATION_JSON));
+    loginPost.addHeader(new BasicHeader("cache-control", "no-cache"));
+    CloseableHttpResponse loginResponse = client.execute(loginPost);
+    InputStream inputStream = loginResponse.getEntity().getContent();
+    //log.error("Input Stream :"+inputStream);
+    String logonAuth = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+    log.error("LogonAuth :"+logonAuth);
+    return logonAuth;
+  }
+
+  public JSONObject GetApiResponseObject(String apiUrl) throws IOException, JSONException, URISyntaxException {
+    String sessionToken = GetAuthenticationKey();
+    sessionToken = sessionToken.substring(1, sessionToken.length() - 1);
+    CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+    URIBuilder uriBuilder = new URIBuilder(apiUrl);
+    URI uri = uriBuilder.build();
+    log.error("&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"+apiUrl);  
+    //HttpGet httpGet = new HttpGet(URLDecoder.decode(apiUrl, StandardCharsets.UTF_8.toString()));
+    HttpGet httpGet = new HttpGet(uri);
+    httpGet.setHeader("Authorization",sessionToken);
+    HttpResponse httpResponse = httpClient.execute(httpGet);
+    HttpEntity responseEntity = httpResponse.getEntity();
+    InputStream content = responseEntity.getContent();
+    log.error("Contect :"+content);
+    JSONParser jsonParser = new JSONParser();
+    JSONObject responseObject = new JSONObject(new JSONTokener(content));
+    return responseObject;
+  }
+
+  public List GetSafeNameList(String userName) throws GeneralException {
+    List safeNameList = new ArrayList();
+    String appName = "CyberArk PAM";
+    Filter filter = Filter.eq("application.name",appName);
+    QueryOptions query = new QueryOptions();
+    query.addFilter(filter);
+    List list = (List)context.getObjects(ManagedAttribute.class,query);
+   // System.out.println("List : "+list);
+    for(ManagedAttribute ma : list){
+     // System.out.println("ManagedAttribute: "+ma);
+      if(ma.getAttribute().equals("safeId")){
+        String memberOf = (String)ma.getAttribute("memberOf");
+        //System.out.println("memberOf: "+memberOf);
+        if(memberOf != null){
+          if (memberOf.toUpperCase().contains(userName.toUpperCase())) {
+            safeNameList.add((String)ma.getValue());
+          }
+        }			
+      }
+    }
+    log.error("SafeNameList : "+safeNameList);
+    return safeNameList;
+  }
+
+  if(object.getObjectType().equals("account")){
+    Custom apiUrlObj = context.getObjectByName(Custom.class,"CyberArk-Api-Store-Prod");   
+    String username = String.valueOf(object.getAttribute("username"));
+    String userId = String.valueOf(object.getAttribute("id"));
+    log.error("USERNAME:: "+username );
+    if (userId != null){
+      String apiUrl = (String)apiUrlObj.get("userDetailApi"); 
+      //String apiUrl = "https://pam.americana-food.com/PasswordVault/API/Users/" + userId;
+      JSONObject SafeResponseObject = GetApiResponseObject(apiUrl+userId);
+      log.error("Safe Response Object : "+SafeResponseObject);
+      log.error("Group Membership : " + SafeResponseObject.get("groupsMembership"));
+      JSONArray groupsArray = new JSONArray(SafeResponseObject.get("groupsMembership"));
+      List groupsIdList = new ArrayList();
+      if(groupsArray !=null){
+        for (int g = 0; g &lt; groupsArray.length(); g++) {
+          JSONObject groupJsonObject = groupsArray.getJSONObject(g);
+          String groupID = groupJsonObject.optString("groupName");
+          groupsIdList.add(groupID);
+        }
+      }
+      //String groupIDString = String.join(",",groupsIdList);
+      object.put("groupsMembership",groupsIdList);
+    }
+    if(username != null){
+      List userSafeList = GetSafeNameList(username);
+      List accountEntitlementList = new ArrayList();
+      List permissionList = new ArrayList();
+      for(Object safe : userSafeList){
+        String safeName = String.valueOf(safe);
+        String apiUrl = "https://pam.americana-food.com/PasswordVault/API/Accounts?filter=safeName%20eq%20"+safeName;
+        log.error("Safe URL:"+apiUrl);
+        JSONObject accountResponseObject = GetApiResponseObject(apiUrl);
+        log.error("Account Response Object:"+accountResponseObject);
+        JSONArray accountArray = accountResponseObject.getJSONArray("value");
+        log.error("Account Array:"+accountArray);
+        for (int a = 0; a &lt; accountArray.length(); a++){
+          JSONObject json = accountArray.getJSONObject(a);
+          log.error("JSON Object ::"+json);    
+          String name = (String)json.optString("name");
+String accountid = (String)json.optString("id");
+          String ipAddress = (String)json.optString("address");
+          String priviledgeId = (String)json.optString("userName");
+          String platformId = (String)json.optString("platformId");
+
+
+          JSONObject platformAccountObject = json.getJSONObject("platformAccountProperties");
+          log.error("platformAccountObject&gt;&gt;&gt;"+platformAccountObject);
+          if(platformAccountObject != null){
+            if(platformAccountObject.has("LogonDomain")){
+   String remoteMachinesAccess = (String)json.optString("remoteMachinesAccess");
+    String LogonDomain = (String)platformAccountObject.optString("LogonDomain"); 
+              LogonDomain=   LogonDomain.toLowerCase();
+              if(Util.isNotNullOrEmpty(remoteMachinesAccess)&amp;&amp;( LogonDomain.contains("americana.global")|| LogonDomain.equals("americana_ccoma") || LogonDomain.equals("alahliares.com.sa")) ){
+            
+              
+              log.error("remoteMachinesAccess&gt;&gt;&gt;"+remoteMachinesAccess);
+             JSONObject rmajson = new JSONObject(remoteMachinesAccess);
+                   log.error("rmajson&gt;&gt;&gt;"+rmajson);
+                if(rmajson.has("remoteMachines")){
+                  String servers = (String)rmajson.optString("remoteMachines");
+ log.error("servers parts" +servers);
+                  String[] parts = servers.split(";");
+                  for (String part : parts) {
+                  log.error("remoteMachines parts" +part);
+                    String accountEntitlement = "Privileged Account: "+priviledgeId+" || Platform: "+platformId+" || IP/Hostname: "+part+ " || AccountID: "+accountid ;
+   log.error("accountEntitlement" +accountEntitlement);
+                    accountEntitlementList.add(accountEntitlement);
+                  }
+                }
+              
+                }  
+              else if (!Util.isNotNullOrEmpty(remoteMachinesAccess)&amp;&amp;( LogonDomain.equals("americana.global")|| LogonDomain.equals("americana_ccoma") || LogonDomain.equals("alahliares.com.sa")))  { 
+              
+              
+              
+              String accountEntitlement = "Privileged Account: "+priviledgeId+" || Platform: "+platformId+" || IP/Hostname: all domain servers"+ " || AccountID: "+accountid  ;
+log.error("accountEntitlement inside logondomain if" +accountEntitlement);
+                    accountEntitlementList.add(accountEntitlement);
+              
+              
+              }
+              
+              else
+
+          {
+
+            String accountEntitlement = "Privileged Account: "+priviledgeId+" || Platform: "+platformId+" || IP/Hostname: "+ipAddress + " || AccountID: "+accountid  ;
+            accountEntitlementList.add(accountEntitlement);
+          }
+              
+              
+        
+          }
+          else
+
+          {
+
+            String accountEntitlement = "Privileged Account: "+priviledgeId+" || Platform: "+platformId+" || IP/Hostname: "+ipAddress +" || AccountID: "+accountid ;
+            accountEntitlementList.add(accountEntitlement);
+          }
+
+
+        }
+          
+        }
+        String api = "https://pam.americana-food.com/passwordvault/api/safes/"+safeName+"/members/"+username+"/";
+        JSONObject accountPermissionObject = GetApiResponseObject(api);
+        log.error("accountPermissionObject&gt;&gt;&gt;&gt;&gt;&gt;&gt; "+accountPermissionObject );
+        String permission = accountPermissionObject.optString("permissions");
+        log.error("Permission : "+permission);
+        Custom permissionObj = context.getObjectByName(Custom.class,"CyberArk Safe Permission");
+        if(permission != null &amp;&amp; permission != ""){
+          Map permissionMap = new ObjectMapper().readValue(permission, HashMap.class);
+          for (Map.Entry m : permissionMap.entrySet()) {
+            if (m.getValue().equals(true)) {
+              log.error("Permission m.getValue() : "+m.getValue());
+              log.error("Permission m.getKey() : "+m.getKey());
+              String p = (String)permissionObj.get((String) m.getKey());
+              log.error("Permission p before concatenating : "+p);
+              permissionList.add(safeName+"   ||   "+m.getKey());
+            }
+          }
+        }
+        log.error("PermissionList : "+permissionList);
+      }
+      //String accountEntitlementString= String.join(",",accountEntitlementList);
+      
+        log.error("accountEntitlementList : "+accountEntitlementList);
+      object.put("accountEntitlement",accountEntitlementList);
+      if(!permissionList.isEmpty()){
+        //String permissionString = String.join(",", permissionList);
+        //permissionString = username +" | "+"Account Permission" + " | "+permissionString;
+        //System.out.println("Permission String : "+permissionString);
+        object.put("accountPermission",permissionList);
+      }
+
+      //object.put("accountEntitlement",accountEntitlementString);
+    }
+  }
+  
+  if(object.getObjectType().equals("safe")){
+    String safeUrlId = String.valueOf(object.getAttribute("safeUrlId"));
+    String safeName = String.valueOf(object.getAttribute("safeName"));
+    if(safeUrlId !=null ){
+      String apiUrl = "https://pam.americana-food.com/PasswordVault/api/Safes/"+safeUrlId+"/Members/";
+      log.error("Safe Member Api URL::"+apiUrl);  
+      apiUrl = apiUrl.replaceAll(" ", "%20");
+      JSONObject SafeMemberResponseObject = GetApiResponseObject(apiUrl);
+     log.error("Safe Member Response Object:"+SafeMemberResponseObject);
+      log.error("Safe Members:" + SafeMemberResponseObject.get("value"));
+      JSONArray membersArray = new JSONArray(SafeMemberResponseObject.get("value"));
+      List safeMambers = new ArrayList();
+      if(membersArray !=null){
+        for (int m = 0; m &lt; membersArray.length(); m++) {
+          JSONObject memberJsonObject = membersArray.getJSONObject(m);
+          String memberName = memberJsonObject.optString("memberName");
+          safeMambers.add(memberName);
+        }
+      }
+      String safeMemberString = String.join(",",safeMambers);
+      object.put("memberOf",safeMemberString);
+    }
+  }
+  return object;</Source>
+</Rule>
+
+</sailpoint>

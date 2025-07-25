@@ -1,0 +1,324 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow libraries="Identity,IdentityRequest" name="Americana-Workflow-Identity Request Finalize" type="Subprocess">
+  <Variable name="project">
+    <Description>
+      ProvisioningProject which is just a compiled version of the ProvisioningPlan.
+      From the project the IdentityRequestItem model will be updated.
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityRequestId" output="true">
+    <Description>
+      The ID ot the identitytRequestId.
+
+      This step will update the identityRequest status and completion
+      status.
+    </Description>
+  </Variable>
+  <Variable input="true" name="approvalSet">
+    <Description>
+      This attributes is set during the "Build Approval Set" step,
+      which builds this list by going through the ProvisioningPlan
+      to build the line items that need to be approved,
+
+      This variable includes all ApprovalItems that are part of
+      the request process and is updated during the AfterScript
+      of the approval process by assimilating the decisions
+      and comments from the Approvals copy of the ApprovalItem.
+    </Description>
+  </Variable>
+  <Variable input="true" name="trace">
+    <Description>
+      Used for debugging this subprocess and when set to true trace
+      statements will be sent to stdout.
+    </Description>
+  </Variable>
+  <Variable input="true" name="ticketManagementApplication">
+    <Description>
+      Name of the application that can handle ticket requests.
+      When non-null the Manage Ticket Steps will be visited to open
+      tickets during the workflow lifecycle.
+    </Description>
+  </Variable>
+  <Variable input="true" name="ticketDataGenerationRule">
+    <Description>
+      A rule that builds up the ticketing provisioning plan based on the workflow
+      context.  This rule gets all of the arguments to this subprocess
+      plus the curreent workflow context.  The rule can return either a
+      ProvisioningPlan or a Map of name value pairs.
+
+      The rule name can be specified here on the subprocess or on the
+      ticketManagementApplication config under the same name as this
+      variable.
+    </Description>
+  </Variable>
+  <Variable name="autoVerifyIdentityRequest">
+    <Description>
+      Flag to indicate when finishing the request we should
+      automatically mark it verified. Currently used by
+      the change password workflow so we don't wait to
+      verify since passwords can't be verifed.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana-EmailTemplate-LCM User Confirmation Notification" name="confirmationTemplate" />
+  <Variable name="emailAddresses">
+    <Script>
+      <Source>
+        import java.util.List;
+        import java.util.ArrayList;
+
+        List toList = new ArrayList();
+        toList.add("vsivalingam@americana-food.com");
+        toList.add("sgnanear@americana-food.com");
+        toList.add("spanneerselvam@americana-food.com");
+        return toList;
+      </Source>
+    </Script>
+  </Variable>
+  <Variable input="true" name="workItemPriority">
+    <Description>
+      String version of WorkItem.level that was used
+      to set the priority of the IdentityRequest and
+      workitems.
+    </Description>
+  </Variable>
+  <Step icon="Start" name="Start" posX="15" posY="12">
+    <Transition to="Confirmation Notification" />
+  </Step>
+  <Step icon="Task" name="Confirmation Notification" posX="80" posY="12" resultVariable="notifyMap">
+    <Description>
+      Confirmation notification to user's and manager's upon the provisioning status
+      //Custom Step 
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.tools.Util;
+        import sailpoint.object.Identity;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningResult;
+        import sailpoint.object.ManagedAttribute;
+        import sailpoint.object.Filter;
+        import org.apache.commons.logging.LogFactory;
+        import org.apache.commons.logging.Log;
+        
+        Log log = LogFactory.getLog("americana.workflow.finalize");  
+
+        ArrayList accessList = new ArrayList();
+        String idName = null;
+        Map args = null;
+
+        if (project != null) {
+        ArrayList userList = new ArrayList();
+        log.debug("********** project : "+project.toXml());
+
+        List plans = project.getIntegrationPlans();
+        log.debug("********** plans : "+plans);
+
+        if (Util.nullSafeSize(plans) &gt; 0) {
+        for (int i=0;i&lt;plans.size();i++) {
+        ProvisioningPlan plan = plans.get(i);
+        if (plan != null) {
+        log.debug("********** plan : "+plan.toXml());
+
+        List accrReqs = plan.getAccountRequests();
+        if (Util.nullSafeSize(accrReqs) &gt; 0) {
+        for (int j=0;j&lt;accrReqs.size();j++) {
+        AccountRequest acr = accrReqs.get(j);
+        log.debug("********** acr : "+acr.toXml());
+
+        if (acr != null &amp;&amp; acr.getOp() != null &amp;&amp; (acr.getOp().toString().equalsIgnoreCase("Modify") ||  acr.getOp().toString().equalsIgnoreCase("Create")) &amp;&amp; (acr.get("operation") != null &amp;&amp; acr.get("operation").equalsIgnoreCase("Add") || acr.get("operation").equalsIgnoreCase("Remove") || acr.get("operation").equalsIgnoreCase("EntitlementAdd") || acr.get("operation").equalsIgnoreCase("EntitlementRemove"))) {
+        List attrReqs = acr.getAttributeRequests();
+        log.debug("********** attrReqs : "+attrReqs);
+
+        if (Util.nullSafeSize(attrReqs) &gt; 0) {
+        for (int k=0;k&lt;attrReqs.size();k++) {
+        AttributeRequest attrReq = attrReqs.get(k);
+        log.debug("********** attrReq : "+attrReq.toXml());
+
+        if (attrReq != null) {
+        ProvisioningResult result = attrReq.getResult();
+        if (result != null) {
+        log.debug("********** result : "+result.toXml());
+
+        String status = result.getStatus();
+        if (Util.isNotNullOrEmpty(status) &amp;&amp; status.equalsIgnoreCase("committed")) {
+        status = "Success";
+        } else {
+        status = "Failed";
+        }
+
+        String entitlementValue = attrReq.getDisplayValue();
+        if (Util.isNotNullOrEmpty(entitlementValue)) {
+        ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name",acr.getApplicationName()),Filter.eq("value",attrReq.getValue())));
+        if (ma != null) {
+        entitlementValue = ma.getDisplayName();
+        }
+        }
+        idName = project.getIdentity();
+        
+        if (Util.isNotNullOrEmpty(idName) &amp;&amp; Util.isNotNullOrEmpty(acr.getApplicationName()) &amp;&amp; Util.isNotNullOrEmpty(acr.get("operation")) &amp;&amp; Util.isNotNullOrEmpty(entitlementValue) &amp;&amp; Util.isNotNullOrEmpty(status)){
+
+        userList.add("Application : "+acr.getApplicationName());
+        userList.add("Native Identity : "+acr.getNativeIdentity());
+        userList.add("Operation : "+acr.get("operation"));
+        userList.add("Entitlement Value : "+entitlementValue);
+        userList.add("Status : "+status);
+        List errorList = result.getErrors();
+        if (Util.nullSafeSize(errorList) &gt; 0) {
+        userList.add("Error Messages : "+Util.listToCsv(errorList));
+        }
+        }
+        if (Util.nullSafeSize(userList) &gt; 0) {
+        accessList.addAll(userList);
+        userList = new ArrayList();
+        }
+
+        log.debug("********** accessList : "+accessList);
+
+        if (Util.isNotNullOrEmpty(status)) {
+        log.debug("********** STATUS : "+status);
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        }
+        if (Util.isNotNullOrEmpty(idName) &amp;&amp; (Util.nullSafeSize(accessList) &gt; 0)) {
+        args = new HashMap();
+        args.put("idName",idName);
+        args.put("launcher",launcher);
+        args.put("access",accessList);
+        }
+        log.debug("********** MAP : "+args);
+        workflow.put("notifyMap",args);
+
+        log.debug("********** NOTIFY MAP : "+wfcontext.getVariable("notifyMap"));
+        return args;
+      </Source>
+    </Script>
+    <Transition to="Send Confirmation Notification" when="notifyMap != null" />
+    <Transition to="Audit Completion" />
+  </Step>
+  <Step action="call:auditLCMCompletion" icon="Audit" name="Audit Completion" posX="115" posY="12">
+    <Arg name="approvalSet" value="ref:approvalSet" />
+    <Transition to="Complete Identity Request" />
+  </Step>
+  <Step action="call:completeIdentityRequest" icon="Task" name="Complete Identity Request" posX="261" posY="12" resultVariable="identityRequest">
+    <Arg name="project" value="ref:project" />
+    <Arg name="approvalSet" value="ref:approvalSet" />
+    <Arg name="autoVerify" value="$(autoVerifyIdentityRequest)" />
+    <Arg name="identityRequestId" value="ref:identityRequestId" />
+    <Transition to="Update Ticket On Complete" />
+  </Step>
+  <Step condition="script:(ticketManagementApplication != null)" icon="Task" name="Update Ticket On Complete" posX="443" posY="12">
+    <Arg name="action" value="complete" />
+    <Arg name="source" value="ref:source" />
+    <Arg name="workItemPriority" value="ref:workItemPriority" />
+    <Arg name="project" value="ref:project" />
+    <Arg name="ticketManagementApplication" value="ref:ticketManagementApplication" />
+    <Arg name="identityRequestId" value="ref:identityRequestId" />
+    <Arg name="ticketDataGenerationRule" value="" />
+    <Arg name="trace" value="ref:trace" />
+    <Description>
+      Call a subprocess to update the ticket in the ticketManagementApplication is non-null.
+
+      You can specify a specific 'ticketDataGenerationRule' here or you can also specify
+      it on the application.  It'll be read from the argument first and fall back to the '
+      application config.
+    </Description>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Manage Ticket" />
+    </WorkflowRef>
+    <Transition to="end" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Send Confirmation Notification" posX="351" posY="10">
+    <Arg name="template">
+      <Script>
+        <Source>
+          import org.apache.commons.logging.Log;
+          import org.apache.commons.logging.LogFactory;
+          Log logNotify = LogFactory.getLog("wrapper.framework.notifyAppTeamStep");
+          if ( logNotify.isTraceEnabled() )
+          logNotify.trace("+++template :"+wfcontext.getVariable("confirmationTemplate"));
+          return wfcontext.getVariable("confirmationTemplate");	
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="idName">
+      <Script>
+        <Source>
+          return wfcontext.getVariable("notifyMap").get("idName");
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="identityDisplayName">
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+
+          String identityDisplayName = "";
+          Identity identity = null;
+
+          String idName =  (String) wfcontext.getVariable("notifyMap").get("idName");
+          if (sailpoint.tools.Util.isNotNullOrEmpty(idName)) {
+          identity = context.getObjectByName(Identity.class,idName);
+          if (identity != null) {
+          identityDisplayName = identity.getDisplayName();
+          }
+          }
+          //Decaching
+          if (identity != null) {
+          context.decache(identity);
+          }
+          return identityDisplayName;
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="launcher">
+      <Script>
+        <Source>
+          return wfcontext.getVariable("notifyMap").get("launcher");
+
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="access">
+      <Script>
+        <Source>
+          return wfcontext.getVariable("notifyMap").get("access");
+
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="to">
+      <Script>
+        <Source>
+          import sailpoint.tools.Util;
+          import org.apache.commons.logging.Log;
+          import org.apache.commons.logging.LogFactory;
+
+          Log logNotify = LogFactory.getLog("wrapper.framework.notifyAppTeamStep");
+          if ( logNotify.isTraceEnabled() )
+          logNotify.trace("+++To :"+wfcontext.getVariable("emailAddresses"));
+          if( wfcontext.getVariable("emailAddresses") != null &amp;&amp; wfcontext.getVariable("emailAddresses") instanceof List )
+          return Util.listToCsv(wfcontext.getVariable("emailAddresses"));
+          else
+          return wfcontext.getVariable("emailAddresses");
+        </Source>
+      </Script>
+    </Arg>
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="601" posY="13" />
+</Workflow>
+
+</sailpoint>

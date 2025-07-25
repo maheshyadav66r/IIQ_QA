@@ -1,0 +1,420 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="CrunchTime_thirdlevelApproval" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Crunch Time Third Level Approval Form" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="Fetching User Detailes" name="Fetching User Detailes" type="datatable">
+    <Attributes>
+      <Map>
+        <entry key="readOnly" value="true" />
+      </Map>
+    </Attributes>
+    <Field displayName="First Name" name="requesterFirstName" />
+    <Field displayName="Last Name" name="requesterLastName" />
+    <Field displayName="Display Name" name="requesterName" />
+    <Field displayName="Email" name="requesterEmail" />
+  </Section>
+  <Section columns="2" label="User Group Selection" name="User Group Selection">
+    <Field dynamic="true" hidden="true" multi="true" name="hiddenField">
+      <Script>
+        <Source>
+          List duplicateList = form.getField("hiddenField").getValue();
+          List countryName = form.getField("countryName").getValue();
+          List conceptNameList = (List) form.getField("conceptName").getValue();
+          List locationNameList = (List) form.getField("locationName").getValue();
+          
+          
+          
+          if(null == countryName || countryName.isEmpty()){
+          	form.getField("conceptName").setValue(null);
+          	form.getField("locationName").setValue(null);
+          }else if(null == conceptNameList || conceptNameList.isEmpty()){
+          	form.getField("locationName").setValue(null);
+          }
+          
+        if(null != countryName @and  duplicateList != null @and countryName.size()&gt;0 @and duplicateList.size()&gt;0 @and  !(duplicateList.size() == countryName.size())){
+       
+          
+
+          List tempList = new ArrayList(duplicateList);
+
+
+          
+          tempList.removeAll(countryName);
+          
+          if(tempList.size() &gt; 0){
+
+         
+
+          List updatedF1Values = new ArrayList();
+          
+          if(null != conceptNameList @and conceptNameList.size() &gt; 0){
+              
+              for(String conceptNameValues : conceptNameList){
+                
+                if(conceptNameValues.contains("|")){
+                String conceptNameValue = conceptNameValues.split("\\|")[1].trim();
+                
+          
+                if(tempList.contains(conceptNameValue)){ 
+                  
+                  continue;
+                }
+          
+                 
+               	 updatedF1Values.add(conceptNameValues);
+              }
+               else{
+                 updatedF1Values.add(conceptNameValues);
+              }
+             }
+          
+          
+
+              form.getField("conceptName").setValue(updatedF1Values);
+          }
+
+        
+
+          List updatedF2Values = new ArrayList();
+          
+          if(null != locationNameList @and locationNameList.size() &gt; 0){
+            for(String locationNameValues : locationNameList){
+            
+              String locationNameValue = locationNameValues.split("\\|")[2].trim();
+              
+              if(tempList.contains(locationNameValue)) continue;
+              updatedF2Values.add(locationNameValues);
+            }
+            
+            form.getField("locationName").setValue(updatedF2Values);
+            }
+
+          }
+          
+          
+          
+          
+          }
+          
+        else if(null != conceptNameList @and null != locationNameList){
+          List conceptNameList1 = new ArrayList();
+           for(String conceptNameValues1 : conceptNameList){
+                
+                String conceptNameValue1 = conceptNameValues1.split("\\|")[0].trim();
+                
+          
+                if(conceptNameList1.contains(conceptNameValue1)){ 
+                  
+                  continue;
+                }
+          
+                 
+               	 conceptNameList1.add(conceptNameValue1);
+              }
+          
+          
+          if(null != conceptNameList1 @and conceptNameList1.size() &gt; 0){
+           List locationNameList1 = new ArrayList();
+          
+          
+          if(null != locationNameList @and locationNameList.size() &gt; 0){
+            for(String locationNameValues1 : locationNameList){
+            
+           if(locationNameValues1.contains("|")){
+              String locationNameValue1 = locationNameValues1.split("\\|")[1].trim();
+              
+              if(conceptNameList1.contains(locationNameValue1)) 
+              locationNameList1.add(locationNameValues1);
+            }
+            else{
+              locationNameList1.add(locationNameValues1);
+            }
+          }
+            
+            form.getField("locationName").setValue(locationNameList1);
+            }
+          
+          
+          
+          
+          }
+          }
+          field.setValue(countryName);
+          
+          
+          
+          return countryName;
+
+          
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="2" displayName="Country Name" helpKey="Select Country Name(s)" multi="true" name="countryName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            if(null != environment @and void != environment){
+              List ListofKeys = new ArrayList(environment.keySet());
+              ListofKeys.add("All");
+              Collections.sort(ListofKeys);
+              return ListofKeys;
+            }
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if(value != null @and value != void @and value.contains("All")){
+                    form.getField("countryName").setValue(new ArrayList(environment.keySet()));
+                  }
+                  return false;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Concept Name" helpKey="Select Concept Name(s)" multi="true" name="conceptName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            List conceptList = new ArrayList();
+            List listOfCountry = form.getField("countryName").getValue();
+            if(null != environment @and void != environment @and null != listOfCountry @and void != listOfCountry ){
+              for(String  country : listOfCountry){
+                if(environment.get(country)!=null){
+                  List countryValues =  environment.get(country).get(country);
+                  if(countryValues!=null){
+                    for(String countryValue : countryValues){
+                       conceptList.add(countryValue+"|"+country);
+                    }
+                  }
+                }
+              }
+              conceptList.add("All");
+            }
+            Collections.sort(conceptList);
+            return conceptList;
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if(value != null @and value != void @and value.contains("All")){
+                  List conceptList = new ArrayList();
+                  if(null != environment @and void != environment @and null != countryName @and void != countryName){
+                    for(String  country : countryName){
+                     if(environment.get(country)!=null){
+                       List countryValues =  environment.get(country).get(country);
+                       if(countryValues!=null){
+                         for(String countryValue : countryValues){
+                           conceptList.add(countryValue+"|"+country);
+                         }
+                       }
+                     }
+                   }
+                  }
+                  Collections.sort(conceptList);
+                  form.getField("conceptName").setValue(new ArrayList(conceptList));
+                  }
+                  return (countryName == void || countryName == null) ;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Location Name" helpKey="Select Location Name(s)" multi="true" name="locationName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            List locationList = new ArrayList();
+            List listOfConcept = form.getField("conceptName").getValue();
+            if(null != environment @and void != environment @and null != countryName @and void != countryName @and null != listOfConcept @and void != listOfConcept){
+              for(String  concept : listOfConcept){
+                 if(concept != null @and concept.contains("|")){
+                    String[] strArray = concept.split("\\|");
+                    List conceptValues =  environment.get(strArray[1]).get(strArray[0]);
+                    if(null != conceptValue){
+                      for(String conceptValue : conceptValues){
+                         locationList.add(conceptValue+"|"+concept);
+                      }
+                    }
+                 }
+              }
+              locationList.add("All");
+            }
+            Collections.sort(locationList);
+            return locationList;
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if(value != null @and value != void @and value.contains("All")){
+                    List locationList = new ArrayList();
+                    if(null != environment @and void != environment @and null != countryName @and void != countryName @and null != conceptName @and void != conceptName){
+                      for(String  concept : conceptName){
+                         if(concept != null){
+                           String[] strArray = concept.split("\\|");
+                           List conceptValues =  environment.get(strArray[1]).get(strArray[0]);
+                           if(null != conceptValue){
+                              for(String conceptValue : conceptValues){
+                                 locationList.add(conceptValue+"|"+concept);
+                              }
+                            }
+                          }
+                       }
+                    }
+                    Collections.sort(locationList);
+                    form.getField("locationName").setValue(locationList);
+                  }
+                  return (countryName == void || countryName == null || conceptName == void || conceptName == null) ;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field multi="true" name="MARKET_NAME" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if("Remove my existing access and add new access".equals(ModifyAccess) || "Only Add additional access".equals(ModifyAccess)){
+                   return false;
+                  }
+                  else{
+                  return true;
+                  }
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field displayName="Market Name" helpKey="Select Location Name(s)" multi="true" name="marketgroup" postBack="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            //List marketList = new ArrayList();
+             Set hset = new HashSet();
+            
+            
+            if(null != marketValue @and void != marketValue @and null !=  locationName @and void != locationName) {
+              for(String  location : locationName){
+                 
+                  //marketList.add(marketValue.get(location));
+                hset.add(marketValue.get(location));
+              }
+            }
+            return hset;
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                return (countryName == void || countryName == null || conceptName == void || conceptName == null || locationName == null || locationName == void) ;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section columns="2" name="User Group Selection">
+    <Field multi="true" name="USER_GROUP_NAME" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if("Remove my existing access and add new access".equals(ModifyAccess) || "Only Add additional access".equals(ModifyAccess)){
+                   return false;
+                  }
+                  else{
+                  return true;
+                  }
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Group Name" filterString="application.name == &quot;Crunch Time&quot; &amp;&amp; type == &quot;Group&quot;" helpKey="Select Group Name(s)" name="group" postBack="true" type="ManagedAttribute" />
+    <Field multi="true" name="HIERARCHY_TYPE(LOGICAL_NAME)" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if("Remove my existing access and add new access".equals(ModifyAccess) || "Only Add additional access".equals(ModifyAccess)){
+                   return false;
+                  }
+                  else{
+                  return true;
+                  }
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Hierarchy(Logical Name)" filterString="application.name == &quot;Crunch Time&quot; &amp;&amp; type == &quot;HIERARCHY_LOGICALNAME &quot;" helpKey="Hierarchy(Logical Name)(s)" multi="true" name="HierarchyLogicalName" postBack="true" type="ManagedAttribute" />
+    <Field columnSpan="1" displayName="Team Worx" name="teamworx" type="boolean" />
+    <Field columnSpan="1" displayType="combobox" name="language" type="String">
+      <AllowedValues>
+        <String>Russia</String>
+        <String>English</String>
+      </AllowedValues>
+    </Field>
+  </Section>
+  <Section label="Approval Status" name="Approval Status" type="datatable">
+    <Field helpKey="Please find Approval Status">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps-approvalStatus-FieldValue-DeptHead" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Button action="back" label="rejected" />
+  <Button action="next" label="approved" />
+</Form>
+
+</sailpoint>

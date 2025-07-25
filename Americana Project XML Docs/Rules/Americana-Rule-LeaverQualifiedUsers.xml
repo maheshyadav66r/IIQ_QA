@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-LeaverQualifiedUsers">
+  <Source>
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+import sailpoint.api.*;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.*;
+  import sailpoint.object.IdentityRequest;
+import sailpoint.api.SailPointContext;
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+
+  {
+    Logger logger = Logger.getLogger("Americana.Rule.LeaverQualifiedUsers");
+    logger.setLevel(Level.DEBUG);
+
+    logger.debug("Start Americana.Rule.LeaverQualifiedUsers");
+
+    List leaverQualifiedUsers = new ArrayList();
+    Iterator iterator = null;
+
+    Filter filter = Filter.eq("peopleGroup","RSC");
+    QueryOptions options = new QueryOptions();
+    options.addFilter(filter);
+
+    List l = context.getObjects(Identity.class,options);
+    //return iterator;
+    for(Identity identity:l ) {
+      //Identity identity = context.getObjectById(Identity.class,iterator.next());
+      boolean leaverTriggerFlg = false;
+
+      if (identity != null) {
+        logger.debug(" revokeUserAccess : "+identity.getAttribute("revokeUserAccess"));
+        logger.debug(" Status : "+identity.getAttribute("status"));
+
+        //immediate Termination
+        if( !("I".equalsIgnoreCase(identity.getAttribute("revokeUserAccess"))) &amp;&amp; "I".equalsIgnoreCase(identity.getAttribute("revokeUserAccess"))){
+          leaverTriggerFlg = true;
+        }
+        else if("Inactive".equalsIgnoreCase(identity.getAttribute("status")) &amp;&amp; null != identity.getAttribute("endDate")){
+
+          String strEndDate = (String) identity.getAttribute("endDate");
+          logger.debug(" strEndDate : "+strEndDate);
+          SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+          Date endDate = sf.parse(strEndDate);
+          logger.debug(" endDate : "+endDate);
+
+          //check for is user end date is after Go-live or not
+          Date goLiveDate = sf.parse("2023-08-31");
+          if (Util.isDateAfter(endDate,goLiveDate)) {
+
+            int diff = Util.getDaysDifference(new Date(), endDate);
+            logger.debug(" diff : "+diff);
+            if(diff &gt;= 0){
+              leaverTriggerFlg = true;
+            }
+          }
+        }
+      }
+      logger.debug(" leaverTriggerFlg : "+leaverTriggerFlg);
+      if(leaverTriggerFlg){
+        //check for already same event got trigged in the past or not
+        Filter typeF = Filter.eq("type", "Leaver");
+        Filter userF = Filter.eq("targetId", identity.getId());
+
+        //Date before3daysDate = Util.incrementDateByDays(new Date(), -3);
+        //Filter dateFilter = Filter.ge("created", before3daysDate);
+
+        List cmpStatus = new ArrayList(Arrays.asList(IdentityRequest.CompletionStatus.Pending, IdentityRequest.CompletionStatus.Success,IdentityRequest.CompletionStatus.Incomplete));
+        Filter cmpllF = Filter.in("completionStatus", cmpStatus);
+
+        QueryOptions op = new QueryOptions();
+        op.add(typeF);
+        op.add(userF);
+        op.add(cmpllF);
+        //op.add(dateFilter);
+
+        int  count = context.countObjects(IdentityRequest.class, op);
+        logger.debug(" count : "+count);
+        if(count &gt; 0){
+          leaverTriggerFlg = false;
+          logger.debug("Leaver event already processed/pending...!!");
+        }
+
+      }
+      if (leaverTriggerFlg) {
+        leaverQualifiedUsers.add(identity.getName());
+      }
+      context.decache(identity);
+    }
+    context.decache();
+    if (iterator != null) sailpoint.tools.Util.flushIterator(iterator);
+    Collections.sort(leaverQualifiedUsers);
+    return leaverQualifiedUsers;
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

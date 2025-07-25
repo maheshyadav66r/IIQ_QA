@@ -1,0 +1,487 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_LauncherRequest" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="Fetching User Details" name="Fetching User Details" type="datatable">
+    <Field displayName="First Name" name="requesterFirstName" readOnly="true" value="ref:firstName" />
+    <Field displayName="Last Name" name="requesterLastName" readOnly="true" value="ref:lastName" />
+    <Field displayName="Display Name" name="requesterName" readOnly="true" value="ref:launcher" />
+    <Field displayName="Email" name="requesterEmail" readOnly="true" value="ref:email" />
+  </Section>
+  <Section columns="2" label="User Group Selection" name="User Group Selection">
+    <Field dynamic="true" hidden="true" multi="true" name="hiddenField">
+      <Script>
+        <Source>
+          List duplicateList = form.getField("hiddenField").getValue();
+          List countryNameList = form.getField("countryName").getValue();
+          List brandNameList = (List) form.getField("brandName").getValue();
+		  String storeAccString = (String) form.getField("storeAccess").getValue();
+		  List storesAllList = (List) form.getField("storesAll").getValue();
+		  List storeNameList = (List) form.getField("storeName").getValue();
+          List fnlList = (List) form.getField("functionalAccess").getValue();
+/*
+          System.out.println("duplicateList : "+duplicateList);
+          System.out.println("countryNameList ## : "+countryNameList);
+          System.out.println("brandNameList ## : "+brandNameList);
+		  System.out.println("storeAccString ## :" + storeAccString);
+		  System.out.println("storesAllList ## : "+storesAllList);
+          System.out.println("storeNameList ## : "+storeNameList);
+          System.out.println("fnlList ## : "+fnlList);
+*/
+          if(null == countryNameList || countryNameList.isEmpty()){
+          form.getField("brandName").setValue(null);
+		  form.getField("storeAccess").setValue(null);
+		  form.getField("storesAll").setValue(null);
+          form.getField("storeName").setValue(null);
+          form.getField("functionalAccess").setValue(null);
+          }
+		  else if(null == brandNameList || brandNameList.isEmpty()){
+          form.getField("storeAccess").setValue(null);
+		  form.getField("storesAll").setValue(null);
+		  form.getField("storeName").setValue(null);
+          form.getField("functionalAccess").setValue(null);
+          }
+		  else if(null == storeAccString) {
+		    form.getField("storesAll").setValue(null);
+			form.getField("storeName").setValue(null);
+			form.getField("functionalAccess").setValue(null);
+		  }
+		  else if(null == storeNameList || storeNameList.isEmpty() || null == storesAllList || storesAllList.isEmpty()){
+		        form.getField("functionalAccess").setValue(null);
+		  }
+		  
+		  if(null != countryNameList @and  duplicateList != null @and countryNameList.size()&gt;0 @and duplicateList.size()&gt;0 @and  !(duplicateList.size() == countryNameList.size())){
+/*
+          System.out.println("Starting if duplicateList : "+duplicateList);//1,2
+          System.out.println("Starting if countryNameList : "+countryNameList);//2,3
+*/
+          List tempList = new ArrayList(duplicateList);
+
+
+       //   System.out.println("tempList before remove  : "+tempList);
+          tempList.removeAll(countryNameList);
+        //  System.out.println("tempList before if check   : "+tempList);
+          
+		  if(tempList.size() &gt; 0){
+          List updatedF1Values = new ArrayList();
+        //  System.out.println("brandNameList  ##: "+brandNameList);
+          if(null != brandNameList @and brandNameList.size() &gt; 0){
+        //  System.out.println("brandNameList  inside if  : "+brandNameList);
+          for(String brandNameValues : brandNameList){
+        //  System.out.println("brandNameValues inside for  : "+brandNameValues);
+          if(brandNameValues.contains("|")){
+          String brandNameValue = brandNameValues.split("\\|")[1].trim();
+        //  System.out.println("brandNameValue after split  : "+brandNameValue);
+
+          if(tempList.contains(brandNameValue)){ 
+/*          
+          System.out.println("brandNameList @and tempList if check1 : "+tempList);
+          System.out.println("brandNameList @and tempList if check2 : "+brandNameValue);
+*/          
+          continue;
+          }
+
+  //        System.out.println("else block value does not contain : "+brandNameValues);
+          updatedF1Values.add(brandNameValues);
+          }
+          else{
+          updatedF1Values.add(brandNameValues);
+          }
+          }
+
+  //        System.out.println("updatedF1Values for brand  ##: "+updatedF1Values);
+
+          form.getField("brandName").setValue(updatedF1Values);
+          }
+
+
+
+          List updatedF2Values = new ArrayList();
+/*          
+		  System.out.println("storesAllList : "+storesAllList);
+          System.out.println("storeNameList : "+storeNameList);
+*/		  
+          if (null == storesAllList @and null != storeNameList @and storeNameList.size() &gt; 0) {
+          for(String storeNameValues : storeNameList){
+   //       System.out.println("storeNameValues  inside for  : "+storeNameValues);
+          String storeNameValue = storeNameValues.split("\\|")[2].trim();
+    //      System.out.println("storeNameValue : "+storeNameValue);
+		  
+          if(tempList.contains(storeNameValue)) continue;
+          updatedF2Values.add(storeNameValues);
+          }
+    //      System.out.println("updatedF2Values for brand  ##: "+updatedF2Values);
+          form.getField("storeName").setValue(updatedF2Values);
+          }
+		  /*
+		  else if (null == storeNameList @and null != storesAllList @and storesAllList.size() &gt; 0) {
+          for(String storeNameValues : storesAllList){
+      //    System.out.println("storeNameValues  inside for  : "+storeNameValues);
+          String storeNameValue = storeNameValues.split("\\|")[2].trim();
+      //    System.out.println("storeNameValue : "+storeNameValue);
+          if(tempList.contains(storeNameValue)) continue;
+          updatedF2Values.add(storeNameValues);
+          }
+       //   System.out.println("updatedF2Values for brand  ##: "+updatedF2Values);
+          form.getField("storeName").setValue(updatedF2Values);
+          }
+		  */
+		  
+          }
+          form.getField("functionalAccess").setValue(fnlList);
+          }
+          else if(null != brandNameList @and (null != storeNameList || null != storesAllList)){
+          List brandNameList1 = new ArrayList();
+          for(String brandNameValues1 : brandNameList){
+      //    System.out.println("brandNameValues1  inside for  : "+brandNameValues1);
+          String brandNameValue1 = brandNameValues1.split("\\|")[0].trim();
+      //    System.out.println("brandNameValue1 after split  : "+brandNameValue1);
+
+          if(brandNameList1.contains(brandNameValue1)){ 
+/*          
+          System.out.println("brandNameList1 @and   tempList if check1 : "+tempList);
+          System.out.println("brandNameList1 @and   tempList if check2 : "+brandNameValue);
+*/          
+          continue;
+          }
+
+     //     System.out.println("else block value does not contain : "+brandNameValue1);
+          brandNameList1.add(brandNameValue1);
+          }
+
+      //    System.out.println("brandNameList1 : "+brandNameList1);
+          if(null != brandNameList1 @and brandNameList1.size() &gt; 0){
+          List storeNameList1 = new ArrayList();
+/*
+          System.out.println("storesAllList : "+storesAllList);
+		  System.out.println("storeNameList : "+storeNameList);
+*/		  
+          if(null == storesAllList @and null != storeNameList @and storeNameList.size() &gt; 0){
+          for(String storeNameValues1 : storeNameList){
+      //    System.out.println("storeNameValues1  inside for  : "+storeNameValues1);
+          if(storeNameValues1.contains("|")){
+          String storeNameValue1 = storeNameValues1.split("\\|")[1].trim();
+      //    System.out.println("storeNameValue1 : "+storeNameValue1);
+          if(brandNameList1.contains(storeNameValue1)) 
+          storeNameList1.add(storeNameValues1);
+          }
+          else{
+          storeNameList1.add(storeNameValues1);
+          }
+          }
+      //    System.out.println("storeNameList1 for brand  ##: "+storeNameList1);
+          form.getField("storeName").setValue(storeNameList1);
+          
+          }
+		  /*
+		  else if(null == storeNameList @and null != storesAllList @and storesAllList.size() &gt; 0){
+          for(String storeNameValues1 : storesAllList){
+          System.out.println("storeNameValues1  inside for  : "+storeNameValues1);
+          if(storeNameValues1.contains("|")){
+          String storeNameValue1 = storeNameValues1.split("\\|")[1].trim();
+          System.out.println("storeNameValue1 : "+storeNameValue1);
+          if(brandNameList1.contains(storeNameValue1)) 
+          storeNameList1.add(storeNameValues1);
+          }
+          else{
+          storeNameList1.add(storeNameValues1);
+          }
+          }
+          System.out.println("storeNameList1 for brand  ##: "+storeNameList1);
+          form.getField("storeName").setValue(storeNameList1);
+          
+          }
+		  */
+          }
+          form.getField("functionalAccess").setValue(fnlList);
+          }
+          field.setValue(countryNameList);
+
+
+      //    System.out.println("end of dupilcateFiled script: "+countryNameList);
+          return countryNameList;
+
+
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="2" displayName="Country Name" helpKey="Select Country name(s)" multi="true" name="countryName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            if(null != environment @and void != environment){
+            List countriesList = new ArrayList(environment.keySet());
+            countriesList.remove("Country");
+            countriesList.remove("Iran");
+           // countriesList.add("All");
+            Collections.sort(countriesList);
+            return countriesList;
+            }
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  /*
+                  if(value != null @and value != void @and value.contains("All")){
+                  List countriesList = new ArrayList(environment.keySet());
+                  countriesList.remove("Country");
+                  form.getField("countryName").setValue(countriesList);
+                  } 
+                  */
+                  return false;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Brand Name" helpKey="Select brand name(s)" multi="true" name="brandName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            List brandList = new ArrayList();
+            List listOfCountries = form.getField("countryName").getValue();
+         //   listOfCountries.add(form.getField("countryName").getValue());
+        //    System.out.println("listOfCountries is : " + listOfCountries);
+            if(null != environment @and void != environment @and null != listOfCountries @and void != listOfCountries ){
+            for(String  country : listOfCountries){
+        //    System.out.println("country is : " + country);
+            if(environment.get(country)!=null){
+            List brandValues =  environment.get(country).get("Brands");
+         //   System.out.println("brandValues is : " + brandValues);
+            if(brandValues!=null){
+            for(String brandValue : brandValues){
+            brandList.add(brandValue+" | "+country);
+            }
+            }
+            }
+            }
+        //    System.out.println("brandList before adding All is : " + brandList);
+            brandList.add("All");
+            }
+            Collections.sort(brandList);
+            return brandList;
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                //  System.out.println("Value : " + value);
+                  if(value != null @and value != void @and value.contains("All")){
+                  List brandList = new ArrayList();
+             //     System.out.println("countryName : " + countryName);
+                  if(null != environment @and void != environment @and null != countryName @and void != countryName){
+                  for(String  country : countryName){
+              //    System.out.println("In for loop of brandName hidden, country is : " + country);
+                  if(environment.get(country)!=null){
+                  System.out.println("In if(environment.get(country)!=null) ");
+                  List brandValues =  environment.get(country).get("Brands");
+             //     System.out.println("brandValues is : " + brandValues);
+                  if(brandValues!=null){
+                  for(String brandValue : brandValues){
+                  brandList.add(brandValue+" | "+country);
+             //     System.out.println("brandList is: " + brandList);
+                  }
+                  }
+                  }
+                  }
+                  }
+             //     System.out.println("brandList in hidden is: " + brandList);
+                  Collections.sort(brandList);
+                  form.getField("brandName").setValue(new ArrayList(brandList));
+                  //form.getField("brandName").setValue(brandList);
+                  }
+                  return (countryName == void || countryName == null) ;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Do you want access in ALL Stores in the above selected Countries and Brands ?" displayType="radio" name="storeAccess" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Yes</String>
+            <String>No, I want access in only a few Stores</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+             //     System.out.println("value in hidden storeAccess field is : " + value);
+                
+                  return (countryName == void || countryName == null || brandName == void || brandName == null) ;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="List of Stores" multi="true" name="storesAll" readOnly="true">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+				
+				if("Yes".equalsIgnoreCase(form.getField("storeAccess").getValue())) {
+                  List storeList = new ArrayList();
+                  if(null != storeValue @and void != storeValue @and null != countryName @and void != countryName @and null != brandName @and void != brandName @and null != storeAccess @and void != storeAccess){
+                  for(String  brand : brandName){
+            //      System.out.println("brand in hidden storesAll field is : " + brand);
+                  if(brand != null @and brand.contains("|")){
+                  String[] strArray = brand.split("\\|");
+                  List storesList =  storeValue.get(strArray[1].trim()).get(strArray[0].trim());
+           //     System.out.println("storesList in hidden storesAll field is : " + storesList);
+                  if(null != storesList){
+                  for(String store : storesList){
+                  storeList.add(store+" | "+brand);
+                  }
+                  }
+                  }
+                  }
+                  }
+            //      System.out.println("storeList after addition in hidden storesAll field is : " + storeList);
+                  Collections.sort(storeList);
+                  form.getField("storesAll").setValue(storeList);
+				  return storeList;
+                  }
+				  
+				  else {
+				  //form.getField("storesAll").setValue(null);
+				  return (countryName == void || countryName == null || brandName == void || brandName == null || storeAccess == void || storeAccess == null || !("Yes".equalsIgnoreCase(form.getField("storeAccess").getValue()))) ;
+				  }
+				  
+                
+                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Store Name" helpKey="Select Store(s)" multi="true" name="storeName" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+		    if (!("Yes".equalsIgnoreCase(form.getField("storeAccess").getValue()))) {
+            List storeList = new ArrayList();
+            List listOfBrands = form.getField("brandName").getValue();
+//			System.out.println("listOfBrands is : " + listOfBrands);
+            if(null != storeValue @and void != storeValue @and null != countryName @and void != countryName @and null != listOfBrands @and void != listOfBrands){
+              for(String  brand : listOfBrands){
+//			  System.out.println("brand is : " + brand);
+                 if(brand != null @and brand.contains("|")){
+                    String[] strArray = brand.split("\\|");
+			        List storesList =  storeValue.get(strArray[1].trim()).get(strArray[0].trim());
+//					System.out.println("storesList is : " + storesList);
+                    if(null != storesList){
+                      for(String store : storesList){
+                         storeList.add(store+" | "+brand);
+                      }
+                    }
+                 }
+              }
+			//  System.out.println("storeList before adding All is :" + storeList);
+            //  storeList.add("All");
+            }
+            Collections.sort(storeList);
+//			System.out.println("storeList after sort is : " + storeList);
+            return storeList;
+			}
+			/*
+			else {
+			form.getField("storeName").setValue(null);
+			return;
+			}
+			*/
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+      //            System.out.println("value in hidden storeName field is : " + value);
+                
+                  return (countryName == void || countryName == null || brandName == void || brandName == null || storeAccess == void || storeAccess == null || "Yes".equalsIgnoreCase(form.getField("storeAccess").getValue())) ;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="Functional Access Required" helpKey="Select the Functional Access required in the Store(s)" multi="true" name="functionalAccess" postBack="true" required="true">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            List fnlAccessList = new ArrayList();
+            if(null != countryName @and void != countryName @and null != brandName @and void != brandName @and null != storeAccess @and void != storeAccess){
+//			System.out.println("In functionalAccess field");
+            fnlAccessList.add("Sales");
+            fnlAccessList.add("P/L");
+            fnlAccessList.add("Marketing");
+            fnlAccessList.add("All");
+            }
+//			System.out.println("fnlAccessList in functionalAccess field is : " + fnlAccessList);
+            return fnlAccessList;		
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+    //              System.out.println("value in hidden functionalAccess field is : " + value);
+				          if(value != null @and value != void @and value.contains("All")){
+				          List fnlAccessList = new ArrayList();
+                  fnlAccessList.add("Sales");
+			            fnlAccessList.add("P/L");
+		              fnlAccessList.add("Marketing");
+		//			  System.out.println("fnlAccessList in HIDDEN functionalAccess field is : " + fnlAccessList);
+                  form.getField("functionalAccess").setValue(fnlAccessList);
+				          }
+						  
+                  return (countryName == void || countryName == null || brandName == void || brandName == null || storeAccess == void || storeAccess == null || (("Yes".equalsIgnoreCase(form.getField("storeAccess").getValue())) @and (storesAll == void || storesAll == null) @and storeName != null @and storeName != void) || (!("Yes".equalsIgnoreCase(form.getField("storeAccess").getValue())) @and (storeName == void || storeName == null)));
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" parameter="back" value="backAction" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

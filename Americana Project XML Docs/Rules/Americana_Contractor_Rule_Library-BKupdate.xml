@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Contractor_Rule_Library-BKupdate">
+  <Description>this rule library contains all required methods used to populate the values in table format to approval forms , basically to construct/manipulate the data as required to display in the tables of form</Description>
+  <Source>
+  
+   //adding to test,can remove the following
+    import org.apache.log4j.Logger;
+  //Logger log=Logger.getLogger("customRule4");
+   public static String getCSVFormat(String primaryApprover, String primaryApproverEmail, String secondaryApprover, String secondaryApproverEmail){
+     
+
+
+      
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+     
+        
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval(Manager Approval)"+","+  primaryApprover + "," + primaryApproverEmail + ","+ "Pending"+ "\n" +
+      "2nd Level Approval(Department Head Approval)"+","+  secondaryApprover + "," + secondaryApproverEmail + ","+ "Pending";
+                      
+     
+     
+     return csvData;
+     
+   }
+  
+   public static String getCSVFormatdeptHead(String primaryApprover, String primaryApproverEmail, String secondaryApprover, String secondaryApproverEmail){
+     
+
+
+       
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+     
+        
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval(Manager Approval)"+","+  primaryApprover + "," + primaryApproverEmail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval (Department Head Approval)"+","+  secondaryApprover + "," + secondaryApproverEmail + ","+ "Pending";
+                      
+     
+     
+     return csvData;
+     
+   }
+  
+ public static String getCSVFormatStoreFirstLevel(String Work_group, String WG, String wg_mail){
+     
+
+
+       
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+     
+        String data1="1st Level Approval(Work Group) "+"("+Work_group+")";
+        
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      data1+","+   WG + "," + wg_mail + ","+ "Pending"+ "\n" +
+      "2nd Level Approval(Department Head)"+","+  "Georgios Perdikouris" + "," + "gperdikouris@americana-food.com" + ","+ "Pending";
+                      
+                      
+     
+     
+     return csvData;
+     
+   }
+  
+  public static String getCSVFormatStoreSecondLevel(String Work_group, String WG, String wg_mail){
+     
+
+
+       
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+     
+        String data1="1st Level Approval(Work Group) "+"("+Work_group+")";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      data1+","+  WG + "," + wg_mail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval(Department Head)"+","+  "Georgios Perdikouris" + "," + "gperdikouris@americana-food.com" + ","+ "Pending";
+                      
+     
+     
+     return csvData;
+     
+   }
+  public static String getCSVFormatCrunchFirstLevel(String managerDisplayName, String managerEmail, String WG1, String WG2, String thirdlevelApprovalName, String thirdlevelApprovalEmail){
+     
+ import org.apache.log4j.Logger;
+
+          
+
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+       String WG="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+    
+    
+     log.error("WG :"+WG);
+        
+ /*  String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval"+","+   managerDisplayName + "," + managerEmail + ","+ "Pending"+ "\n" +
+      "2nd Level Approval"+","+  "Work Group" + "," + WG  + ","+ "Pending"+"\n"+
+      "3rd Level Approval"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";
+                      
+    */ 
+    
+     String WGname="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+     String WGemail="njillani@americana-food.com/fsiddique@americana-food.com/mlali@americana-food.com";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval(Manager Aprroval)"+","+   managerDisplayName + "," + managerEmail + ","+ "Pending"+ "\n" +
+      "2nd Level Approval(Work Group)"+","+  WGname + "," +WGemail + ","+ "Pending"+"\n"+
+      "3rd Level Approval(Deapartment Head)"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";
+     
+     return csvData;
+     
+   }
+  
+  public static String getCSVFormatCrunchSecondLevel(String managerDisplayName, String managerEmail, String WG1, String WG2, String thirdlevelApprovalName, String thirdlevelApprovalEmail){
+     
+
+
+       
+  String WGname="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+     String WGemail="njillani@americana-food.com/fsiddique@americana-food.com/mlali@americana-food.com";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval(Manager Approval)"+","+   managerDisplayName + "," + managerEmail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval(Work Group)"+","+  WGname + "," +WGemail + ","+ "Pending"+"\n"+
+      "3rd Level Approval(Deapartment Head)"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";
+     
+    
+    
+       /* String WG="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval"+","+   managerDisplayName + "," + managerEmail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval"+","+  "Work Group" + "," + WG  + ","+ "Pending"+"\n"+
+      "3rd Level Approval"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";*/
+    
+    
+    /* un comment if i find a way to seggregate displayname and email
+     String WGname="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+     String WGemail="njillani@americana-food.com/fsiddique@americana-food.com/mlali@americana-food.com";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval"+","+   managerDisplayName + "," + managerEmail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval"+","+  WGname + "," +WGemail + ","+ "Pending"+"\n"+
+      "3rd Level Approval"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";
+    
+    */
+     
+     return csvData;
+     
+   }
+  
+  
+  public static String getCSVFormatCrunchThirdLevel(String managerDisplayName, String managerEmail, String WG1, String WG2, String thirdlevelApprovalName, String thirdlevelApprovalEmail){
+     
+
+
+      
+  // String csvData =  "Primary Approver,Primary Approver Email,Secondary Approver,Secondary Approver Email, Approval Status\n" +
+                      //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "Pending"+ "\n" +
+    //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail +","+ "deleteThisTestingNow"+ "\n" +
+                       //  primaryApprover + "," + primaryApproverEmail + "," + secondaryApprover + "," + secondaryApproverEmail+"," +"Pending";
+     
+     
+        
+ 
+        //String WG=WG1+"\\"+WG2;
+    
+    
+   String WGname="Nauman Jillani/Fathima Siddique/Mohamed Ajmal Liyakath Ali";
+     String WGemail="njillani@americana-food.com/fsiddique@americana-food.com/mlali@americana-food.com";
+   String csvData =  "Approval Level,Approver Name,Approver Email,Approval Status\n" +
+                      "1st Level Approval(Manager Approval)"+","+   managerDisplayName + "," + managerEmail + ","+ "Approved"+ "\n" +
+      "2nd Level Approval(Work Group Approval))"+","+  WGname + "," +WGemail + ","+ "Approved"+"\n"+
+      "3rd Level Approval(Deapartment Head)"+","+  thirdlevelApprovalName + "," + thirdlevelApprovalEmail + ","+ "Pending";
+     return csvData;
+     
+   }
+  
+  
+  
+  
+  
+  
+  
+  
+  </Source>
+</Rule>
+
+</sailpoint>

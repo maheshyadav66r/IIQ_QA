@@ -1,0 +1,184 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_TEST_LOGGER">
+  <Source>
+  
+ /* eg:1
+ import org.apache.log4j.Logger;
+  import sailpoint.object.*;
+  Logger log=Logger.getLogger("customRule4");
+  Identity id = context.getObjectByName(Identity.class,"sakfc12853id");
+  
+ List links= id.getLinks();
+  
+  
+  for(Link link: links)
+  {
+    if(link.getApplicationName().equalsIgnoreCase("Azure AD"))
+       
+       {
+         return link.getAttribute("lastSignInDateTime");
+         
+       }
+  }
+  
+  
+  
+  log.error("Printing");
+  
+  */
+  
+  
+  /*eg 2:*/
+    import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+  
+  
+  
+  String pss=context.decrypt("1:ACP:8YhbiVjULKOMoJCksx50KUAeveMwG7z+KbPfRwFiFN5N+c7Ye3DJW6RBrfuJS/hg");
+  return pss;
+  
+  
+  
+ // List ids=context.getObjects(Identity.class);
+  Identity id=context.getObjectByName(Identity.class, "Nirmal Chitlangi(Paramount)");
+  List al=new ArrayList();
+  
+  //for(Identity id:ids){
+    
+    if(id.getAttribute("isContractors")!=null){
+  if(id.getAttribute("isContractors").equalsIgnorecase("YES"))
+  {
+  al.add(id.getName());
+   return al;
+    
+  }
+      
+      
+       if (!al.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\isContractors.csv", true);
+        for (String info : al) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    } 
+      
+      
+  }
+      // }
+  
+  
+  
+  
+  
+  
+  
+  
+  //  Identity essie = context.getObjectByName(Identity.class,"28061")
+ /* reqId=context.getObjectByName(Identity.class, "28061");
+  log.error("reqId :"+reqId);
+        if(reqId!=null){
+        // log.eror("req id not null");
+        
+        log.error("reqId :"+reqId);
+       
+        managerId=reqId.getManager();
+  if(managerId!=null){
+    log.error("managerId "+managerId);
+        strManager=managerId.getName();
+        log.error("strManager is:::"+strManager);
+       log.error("primaryApprover : "+strManager);
+        log.error("primaryApproverName:"+managerId.getDisplayName());
+    return strManager;
+        }
+        }*/
+  
+  //to test crunch time workgroup user
+  
+  
+  /* import sailpoint.object.Identity;
+
+
+        Identity id1= context.getObjectByName(Identity.class,"njillani");
+        
+        if(null != id1@and id1.getDisplayName() != null){
+       // wfcontext.setVariable("WorkGroupmember1",id1.getDisplayName());
+      //  return id1.getDisplayName();
+
+        }
+       
+     
+      
+       
+
+        Identity id2= context.getObjectByName(Identity.class,"fsiddique");
+        
+        if(null != id2@and id2.getDisplayName() != null){
+       // wfcontext.setVariable("WorkGroupmember2",id2.getDisplayName());
+        //return id2.getDisplayName();
+
+        }
+          
+ 
+
+        Identity id3= context.getObjectByName(Identity.class,"40448");
+        
+        if(null != id3@and id3.getDisplayName() != null){
+       // wfcontext.setVariable("WorkGroupmember2",id3.getDisplayName());
+        return id3.getDisplayName();
+
+        }
+
+  
+  */
+  
+   /*
+        {
+        String managerDisplayName  = "";
+           String launcher  = "28061";
+        if (launcher != null) {
+        Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getDisplayName() != null) {
+        managerDisplayName  = launchObject.getManager().getDisplayName();
+        context.decache(launchObject);
+        }
+        }
+        return managerDisplayName  ;
+        }
+
+*/
+  
+  /*String pss=context.decrypt("1:ACP:NgqQqwTSudpwapgSy6f4xdF1UigLcTB58l6b5uT8A8VC1qCUAKX4k/k7X9rwuIAEhVTQjuJi9mYQZSrss+AsOg==");
+  return pss;*/
+  
+  </Source>
+</Rule>
+
+</sailpoint>

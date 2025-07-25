@@ -1,0 +1,459 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Custom">
+  <Attributes>
+    <Map>
+      <entry key="36980">
+        <value>
+          <List>
+            <String>21002-UNUSED</String>
+            <String>21004-UNUSED</String>
+            <String>21700-KRISPY KREME SALES OFFICE UAE</String>
+            <String>21701-KRISPY KREME CITY C. DUBAI</String>
+            <String>21702-KRISPY KREME AL BUHIRA</String>
+            <String>21703-KRISPY KREME DFC</String>
+            <String>21704-Krispy Kreme Dubai Media City</String>
+            <String>21705-KRISPY KREME JBR</String>
+            <String>21706-Krispy Kreme Corniche Ajman</String>
+            <String>21707-Krispy Kreme Al Khalidya Mall</String>
+            <String>21708-KRISPY KREME BEACH PARK PLAZA</String>
+            <String>21709-KRISPY KREME SHARJAH CITY CENT</String>
+            <String>21710-KRISPY KREME DUBAI AIRPORT- T3</String>
+            <String>21711-Krispy Kreme South Ridge</String>
+            <String>21712-KRISPY KREME MALL OF EMIRATES</String>
+            <String>21713-KRISPY KREME ENOC AL-WASL</String>
+            <String>21714-KRISPY KREME IBN BATTUTA MALL</String>
+            <String>21715-KRISPY KREME ENOC DXB/SHARJAH</String>
+            <String>21716-KRISPY KREME ENOC ABU HAIL</String>
+            <String>21717-KRISPY KREME ENOC CRICKET SHJ</String>
+            <String>21718-KRISPY KREME KNOWLEDGE VILLAGE</String>
+            <String>21719-KRISPY KREME AL-TAAWAN</String>
+            <String>21720-KRISPY KREME DEIRA</String>
+            <String>21721-KRISPY KREME AL-QUASIS</String>
+            <String>21723-KRISPY KREME DUBAI MALL -OLD</String>
+            <String>21724-KRISPY KREME ARABIAN PLAZA</String>
+            <String>21725-KRISPY KREME AL BAWADI MALL</String>
+            <String>21726-KRISPY KREME OASIS CENTER</String>
+            <String>21732-KRISPY KREME AL KHOBISY</String>
+            <String>21733-0</String>
+            <String>21735-KRISPY KREME MIRDIFF CITY CENT</String>
+            <String>21736-Krispy Kreme Corniche AUH</String>
+            <String>21737-Krispy Kreme Century Mall</String>
+            <String>21738-Krispy Kreme Al-Wasl (Co-Op)</String>
+            <String>21739-KRISPY KREME AL-AWIR (CO-OP)</String>
+            <String>21740-Krispy Kreme Drive Thru</String>
+            <String>21741-Krispy Kreme Sharjah Aquarium</String>
+            <String>21742-KRISPY KREME MEGA MALL</String>
+            <String>21743-KRISPY KREME SAHARA MALL</String>
+            <String>21744-KRISPY KREME AL BAWADI KIOSK</String>
+            <String>21745-KRISPY KREME JUMIERAH COOP</String>
+            <String>21746-KRISPY KREME GHURAIR</String>
+            <String>21747-KRISPY KREME SAFEER FUJAIRAH</String>
+            <String>21748-KRISPY KREME AL AIN MALL</String>
+            <String>21749-KRISPY KREME Ajman Union COOP</String>
+            <String>21750-KRISPY KREME DFC (KIOSK)</String>
+            <String>21751-Krispy Kreme khalifa City</String>
+            <String>21752-Krispy Kreme Al Hamra Mall</String>
+            <String>21753-Krispy Kreme Al Manar Mall</String>
+            <String>21754-KRISPY KREME AMERICANA SHARJAH</String>
+            <String>21755-KRISPY KREME AL SAFEER  RAK</String>
+            <String>21756-Krispy Kreme Fujairah (Kiosk)</String>
+            <String>21757-Krispy Kreme Qusais Union COOP</String>
+            <String>21758-Krispy kreme Meadows</String>
+            <String>21761-KRISPY KREME HAMRIA COOP</String>
+            <String>21762-Krispy Kreme Wehda Mall</String>
+            <String>21763-Krispy Kreme Mushrif  Mall</String>
+            <String>21764-Krispy Kreme Al Qarayen</String>
+            <String>21767-Krispy Kreme TASJEEL FRESH</String>
+            <String>21768-KRISPY KREME TIME SQUARE KIOSK</String>
+            <String>21769-KRISPY KREME JBR BEACH - OLD</String>
+            <String>21770-KRISPY KREME AIRPORT 2</String>
+            <String>21771-KRISPY KREME MADINA MALL</String>
+            <String>21772-Krispy Kreme SAFEER AL NAHDA</String>
+            <String>21773-Krispy Kreme Century Fujirah</String>
+            <String>21774-Krispy Kreme Souk Extra Al Ain</String>
+            <String>21780-KRISPY KREME DFC CARREFOUR</String>
+            <String>21781-Krispy Kreme Al Riqqa</String>
+            <String>21783-KRISPY KREME DXB TERMINAL 1</String>
+            <String>21784-Krispy Kreme Khobisi - Kiosk</String>
+            <String>21785-KRISPY KREME BANIYAS METRO</String>
+            <String>21786-KRISPY KREME AL MUBAZARA KIOSK</String>
+            <String>21787-KRISPY KREME BARSHA MALL</String>
+            <String>21788-KRISPY KREME THE MARKET MALL</String>
+            <String>21789-Krispy Kreme Manar Mall</String>
+            <String>21790-Krispy Kreme Hamra Mall</String>
+            <String>21791-KRISPY KREME MEAISEM CITY CENT</String>
+            <String>21792-KRISPY KREME BURJUMAN MALL</String>
+            <String>21793-Krispy Kreme JURF MALL</String>
+            <String>21794-KRISPY KREME DFC - NEW</String>
+            <String>21795-Krispy Kreme Sharjah Airport</String>
+            <String>21796-KRISPY KREME DUBAI MALL</String>
+            <String>21797-KRISPY KREME SOUQ EXTRA</String>
+            <String>21798-Krispy Kreme HAMDAN</String>
+            <String>21799-KRISPY KREME UMM SOUQIM</String>
+            <String>21800-Krispy Kreme Umm Al Quwain</String>
+            <String>21801-Krispy Kreme Yas Mall</String>
+            <String>21802-Krispy Kreme Al Darari</String>
+            <String>21803-KRISPY KREME DUBAI MALL-ZABEEL</String>
+            <String>21804-KRISPY KREME DUBAI MALL FASHIO</String>
+            <String>21805-KRISPY KREME AL REEF MALL</String>
+            <String>21806-KRISPY KREME AL KARAMA MOHEBI </String>
+            <String>21807-KRISPY KREME FIRST AVENUE MALL</String>
+            <String>21808-KRISPY KREME AL WASL CO-OP NEW</String>
+            <String>21809-Krispy Kreme Sharjah City Cent</String>
+            <String>21811-Krispy Kreme Al Wahda Mall</String>
+            <String>21812-KRISPY KREME INTERNATIONAL CIT</String>
+            <String>21813-KRISPY KREME SARAB MALL</String>
+            <String>21815-Krispy Kreme Zahia City Center</String>
+            <String>21816-KRISPY KREME CITY CENTER SHAND</String>
+            <String>21817-KRISPY KREME MATAJER JURAINAH</String>
+            <String>21818-KRISPY KREME ABU DHABI MALL</String>
+            <String>21819-KRISPY KREME AJMAN CORNICHE RE</String>
+            <String>21820-KRISPY KREME KHOBAISSY AL AIN </String>
+            <String>21821-KRISPY KREME ENOC 1086 MEADOWS</String>
+            <String>21901-KRISPY KREME G.V (LAKE)</String>
+            <String>21902-Krispy Kreme Fujairah Festival</String>
+            <String>21903-KRISPY KREME INDIAN VILLAGE</String>
+            <String>21904-Krispy Kreme Umm Al Quain</String>
+            <String>21905-KRISPY KREME ABU DHABI MALL</String>
+            <String>21906-KRISPY KREME ARABIAN CENTER</String>
+            <String>21907-KRISPY KREME NESHAMA TOWN SQUA</String>
+            <String>21909-Krispy Kreme Kidzania AD</String>
+            <String>21910-KRISPY KREME SOUTH MALL</String>
+            <String>21911-KRISPY KREME KIOSK 1 DUBAI</String>
+            <String>21912-KRISPY KREME KIOSK 2 DUBAI</String>
+            <String>21913-Krispy Kreme Kiosk 3 Abu Dhabi</String>
+            <String>21914-Krispy Kreme Kiosk 5 Abu Dhabi</String>
+            <String>21915-KRISPY KREME AL JIMI MALL</String>
+            <String>21916-KRISPY KREME UAE LAST EXIT KRI</String>
+            <String>21917-KRISPY KREME UAE-S&amp;P- KRISPY K</String>
+            <String>21918-KRISPY KREME UAE-S&amp;P- KRISPY K</String>
+            <String>21919-KRISPY KREME KIOSK 4 DUBAI</String>
+            <String>21920-KRISPY KREME-AL ZAHIA CITY CEN</String>
+            <String>21921-KRISPY KREME DUBAILAND SKYCOUR</String>
+            <String>21922-KRISPY KREME ENOC 09</String>
+            <String>21923-KRISPY KREME ENOC 1008 SZR JEB</String>
+            <String>21924-KRISPY KREME ENOC AL WASL</String>
+            <String>21925-KRISPY KREME JUMEIRAH BEACH RE</String>
+            <String>21926-KRISPY KREME KITE BEACH</String>
+            <String>21927-KRISPY KREME BAY AVENUE PH CAR</String>
+            <String>21928-KRISPY KREME DIFC</String>
+            <String>21929-KRISPY KREME FUJAIRAH RELOCATI</String>
+            <String>21930-KRISPY KREME REEM ISLAND TRUCK</String>
+            <String>21931-KRISPY KREME KALBA</String>
+            <String>21932-KRISPY KREME DEERFIELDS MALL</String>
+            <String>21933-KRISPY KREME VILLANOVA</String>
+            <String>21934-KRISPY KREME DEIRA CITY CENTER</String>
+            <String>21935-KRISPY KREME UAE DUMMY 5</String>
+            <String>21936-KRISPY KREME EPPCO 401</String>
+            <String>21937-KRISPY KREME ENOC 1401</String>
+            <String>21938-KRISPY KREME ENOC 1036</String>
+            <String>21939-KRISPY KREME ENOC 1061</String>
+            <String>21940-KRISPY KREME AL DARARI CATERIN</String>
+            <String>21941-KRISPY KREME KHALIDIYA CATERIN</String>
+            <String>21946-Krispy Kreme Emarat Abu Khadra</String>
+            <String>21947-KRISPY KREME JBR BEACH</String>
+            <String>21948-Krispy Kreme Airport Road</String>
+            <String>21949-KRISPY KREME SHEIKH ZAYED ROAD</String>
+            <String>21950-KRISPY KREME GOLDEN MILE</String>
+            <String>21951-KRISPY KREME SOUK MARFA DEIRA</String>
+            <String>21952-KRISPY KREME BARSHA SOUTH MALL</String>
+            <String>21953-KRISPY KREME SPRINGS SOUK</String>
+            <String>21954-KRISPY KREME AL REEF ABU DHABI</String>
+            <String>21955-KRISPY KREME DUBAI HILLS MALL</String>
+            <String>21956-KRISPY KREME AL REEF VILLAGE-F</String>
+            <String>21957-KRISPY KREME ENOC 1124</String>
+            <String>21958-KRISPY KREME BUSINESS BAY</String>
+            <String>21959-KRISPY KREME LIVING LEGENDS</String>
+            <String>21960-KRISPY KREME ASWAAQ NAD ALSHEB</String>
+            <String>21961-KRISPY KREME ASWAAQ MIZHAR</String>
+            <String>21962-KRISPY KREME MUDON</String>
+            <String>21963-KRISPY KREME DUBAI LAND RESI C</String>
+            <String>21964-KRISPY KREME ENOC 1025</String>
+            <String>21965-KRISPY KREME MIRACLE GARDEN CA</String>
+            <String>21966-KRISPY KREME TOURIST CLUB</String>
+            <String>21967-KRISPY KREME JUMEIRAH CO-OP RE</String>
+            <String>21968-TO BE USED LATER</String>
+            <String>21969-KRISPY KREME ENOC 1608 AL TWAR</String>
+            <String>21970-KRISPY KREME RIYAD CITY COURTY</String>
+            <String>21971-KRISPY KREME UMM AL QUWAIN COO</String>
+            <String>21972-KRISPY KREME MIRDIF AVENUE</String>
+            <String>21973-KRISPY KREME GARDEN PLAZA</String>
+            <String>21975-KRISPY KREME IBN BATTUTA MALL </String>
+            <String>21976-KRISPY KREME TOURIST CLUB MALL</String>
+            <String>21977-KRISPY KREME CORNICHE AUH</String>
+            <String>21978-KRISPY KREME SAQR PARK</String>
+            <String>21979-KRISPY KREME CIRCLE MALL</String>
+            <String>21980-KRISPY KREME GREENS MARKET DIP</String>
+            <String>21981-KRISPY KREME ARABIAN RANCHES</String>
+            <String>21982-KRISPY KREME SEEF MALL ABU DHA</String>
+            <String>21983-KRISPY KREME NAD AL HAMAR CO O</String>
+            <String>21984-KRISPY KREME KHALIFA AL AIN</String>
+            <String>21985-KRISPY KREME MAJAZ WATERFRONT</String>
+            <String>21986-KRISPY KREME AL WARQA CITY MAL</String>
+            <String>21987-KRISPY KREME BUHAIRA RELOCATIO</String>
+            <String>21988-KRISPY KREME AL FALAH MALL</String>
+            <String>21989-KRISPY KREME MAKANI SHAMKHA</String>
+            <String>21990-KRISPY KREME DUBAI AIRPORT T2</String>
+            <String>21991-KRISPY KREME REEM MALL ABU DHA</String>
+            <String>21992-KRISPY KREME MBZ</String>
+            <String>21993-KRISPY KREME MAKANI ZAKHER</String>
+            <String>21994-KRISPY KREME JUMEIRAH PARK PAV</String>
+            <String>21995-KRISPY KREME AJMAN CITY CENTRE</String>
+            <String>21996-KRISPY KREME MUSHRIF MALL</String>
+            <String>21997-KRISPY KREME FUJAIRAH CITY CEN</String>
+            <String>21998-KRISPY KREME MARINA MALL ABU D</String>
+            <String>21999-KRISPY KREME MALL OF EMIRATES </String>
+            <String>22003-UNUSED</String>
+            <String>22004-UNUSED</String>
+            <String>22005-UNUSED</String>
+            <String>22600-BASKIN ROBBINS PWC - AMERICAN </String>
+            <String>22700-BASKIN ROBBINS SALES OFFICE</String>
+            <String>22702-BASKIN ROBBINS SALMIA 1</String>
+            <String>22703-BASKIN ROBBINS SALMIYA</String>
+            <String>22705-BASKIN ROBBINS SEASIDE</String>
+            <String>22706-BASKIN ROBBINS FASHIONWAY</String>
+            <String>22707-BASKIN ROBBINS EL SHAAB</String>
+            <String>22708-BASKIN ROBBINS MARINA</String>
+            <String>22709-BASKIN ROBBINS MARINA VALENCIA</String>
+            <String>22710-BASKIN ROBBINS FASHION WAY PAN</String>
+            <String>22711-BASKIN ROBBINS AL-MOHALLAB</String>
+            <String>22712-BASKIN ROBBINS SOUK EL SALMIYA</String>
+            <String>22714-BASKIN ROBBINS RAWDA</String>
+            <String>22717-BASKIN ROBBINS AL REHAB &amp; ASHBELIA CO-OP</String>
+            <String>22721-BASKIN ROBBINS AL-MUTTANA</String>
+            <String>22723-BASKIN ROBBINS AL BAIRAK MALL</String>
+            <String>22724-BASKIN ROBBINS BUS STATION</String>
+            <String>22725-BASKIN ROBBINS AL JAHRA - INDU</String>
+            <String>22726-BASKIN ROBBINS MARINA MALL</String>
+            <String>22728-BASKIN ROBBINS LOLO CENTER</String>
+            <String>22729-BASKIN ROBBINS EL YARMOUK</String>
+            <String>22730-BASKIN ROBBINS KHALDIA</String>
+            <String>22731-BASKIN ROBBINS KHALDIA UNIVERSITY SCIENCE</String>
+            <String>22732-BASKIN ROBBINS SOCIAL SCIENCE UNIVERSITY.</String>
+            <String>22733-BASKIN ROBBINS ADEYLIA</String>
+            <String>22734-BASKIN ROBBINS KHALDIA UNIVERSITY BOYS</String>
+            <String>22735-BASKIN ROBBINS KHALDIA UNIVERSITY GIRLS</String>
+            <String>22736-BASKIN ROBBINS DAIYA</String>
+            <String>22737-BASKIN ROBBINS KEIFAN UNIVERSITY GIRLS</String>
+            <String>22738-BASKIN ROBBINS ALDASMA</String>
+            <String>22739-BASKIN ROBBINS SHAMIYA</String>
+            <String>22740-BASKIN ROBBINS EL NOZHA</String>
+            <String>22741-BASKIN ROBBINS KEIFAN</String>
+            <String>22742-BASKIN ROBBINS EL-MANSORIYA</String>
+            <String>22743-BASKIN ROBBINS SHUWAIKH UNIVERSITY GIRLS</String>
+            <String>22744-BASKIN ROBBINS 360 MALL</String>
+            <String>22745-BASKIN ROBBINS JLEEB EL SHOYOU</String>
+            <String>22746-BASKIN ROBBINS AL AHMADI</String>
+            <String>22747-BASKIN ROBBINS OM EL HAIMAN</String>
+            <String>22748-BASKIN ROBBINS JABASKIN ROBBINSIYA MEDICAL COLLEGE</String>
+            <String>22749-BASKIN ROBBINS QADSIYA</String>
+            <String>22750-BASKIN ROBBINS JABRIYA</String>
+            <String>22751-BASKIN ROBBINS SURRA</String>
+            <String>22752-BASKIN ROBBINS ALJAHRA</String>
+            <String>22753-BASKIN ROBBINS SOUTH SURRA</String>
+            <String>22754-BASKIN ROBBINS GAHRA</String>
+            <String>22758-BASKIN ROBBINS ALDOHA</String>
+            <String>22759-BASKIN ROBBINS CAMP UDAIRI</String>
+            <String>22760-BASKIN ROBBINS AIRPORT</String>
+            <String>22761-BASKIN ROBBINS SAAD EL ABDULLA</String>
+            <String>22762-BASKIN ROBBINS FARWANIYA</String>
+            <String>22763-BASKIN ROBBINS AVENUE MALL</String>
+            <String>22764-BASKIN ROBBINS AVENUES 2</String>
+            <String>22765-BASKIN ROBBINS FARWANIYA 2</String>
+            <String>22767-BASKIN ROBBINS MISHREF 1</String>
+            <String>22768-BASKIN ROBBINS MISHREF 2</String>
+            <String>22769-BASKIN ROBBINS BAYAN 1</String>
+            <String>22770-BASKIN ROBBINS AL-RUMAITHYA</String>
+            <String>22771-BASKIN ROBBINS SALWA</String>
+            <String>22772-BASKIN ROBBINS BAYAN 2</String>
+            <String>22773-BASKIN ROBBINS REQAA</String>
+            <String>22775-BASKIN ROBBINS FAHAHEEL</String>
+            <String>22778-BASKIN ROBBINS AL- FINTAS</String>
+            <String>22779-BASKIN ROBBINS ALYIA &amp; GHALYIA</String>
+            <String>22781-BASKIN ROBBINS CAMP KNB</String>
+            <String>22782-BASKIN ROBBINS NAVY BASE 2</String>
+            <String>22783-BASKIN ROBBINS SABAH AL ? SALAM</String>
+            <String>22785-BASKIN ROBBINS QURAIN 1</String>
+            <String>22786-BASKIN ROBBINS QURAIN 2</String>
+            <String>22787-BASKIN ROBBINS AL-QREEN 3</String>
+            <String>22788-BASKIN ROBBINS CAMP ARIFJAN 1</String>
+            <String>22789-BASKIN ROBBINS CAMP ARIFJAN 2</String>
+            <String>22790-BASKIN ROBBINS ENTERTAINMENT C</String>
+            <String>22793-BASKIN ROBBINS FAHD EL AHMED</String>
+            <String>22794-BASKIN ROBBINS 360 MALL 2</String>
+            <String>22797-BASKIN ROBBINS CAMP VIRGINIA</String>
+            <String>22798-BASKIN ROBBINS CAMP COMMANDO</String>
+            <String>22799-BASKIN ROBBINS VICTORIA CAR</String>
+            <String>22800-BASKIN ROBBINS THE GATE MALL</String>
+            <String>22801-BASKIN ROBBINS BLOCK 10 SALMIY</String>
+            <String>22803-BASKIN ROBBINS AL JAHRAA HIGHW</String>
+            <String>22804-BASKIN ROBBINS KHIRAN OUTLET</String>
+            <String>22806-BASKIN ROBBINS AMMAN ST.</String>
+            <String>22808-BASKIN ROBBINS AL SHUHADA</String>
+            <String>22811-BASKIN ROBBINS SABAH AL AHMED </String>
+            <String>22812-BASKIN ROBBINS KHITAN</String>
+            <String>22813-BASKIN ROBBINS AL DAJEEJ</String>
+            <String>22814-BASKIN ROBBINS AL QURAIN MARKE</String>
+            <String>22815-BASKIN ROBBINS JABRIYA COOP</String>
+            <String>22816-BASKIN ROBBINS AL SALAM MALL</String>
+            <String>22817-BASKIN ROBBINS ALDAYIA NEW</String>
+            <String>22818-BASKIN ROBBINS KOUT MALL</String>
+            <String>22819-BASKIN ROBBINS CARREFOUR AVENU</String>
+            <String>22820-BASKIN ROBBINS SEASIDE FOOD HU</String>
+            <String>22821-Baskin Robbins Sulaibikhat</String>
+            <String>22822-BASKIN ROBBINS MISHRIF CO-OP</String>
+            <String>22823-BASKIN ROBBINS SALWA COOP RELO</String>
+            <String>22824-BASKIN ROBBINS NATIONAL GUARD</String>
+            <String>22825-BASKIN ROBBINS DIVONNEE</String>
+            <String>22826-BASKIN ROBBINS ASWAQ AL QURAIN</String>
+            <String>22827-BASKIN ROBBINS SABAH AL SALEM </String>
+            <String>22828-BASKIN ROBBINS LULU OTHMAN STR</String>
+            <String>22829-BASKIN ROBBINS JLEEB EL SHOYOU</String>
+            <String>22830-BASKIN ROBBINS FIRDOUS COOP BL</String>
+            <String>22831-BASKIN ROBBINS SHAMIYA RELOCAT</String>
+            <String>22832-BASKIN ROBBINS KUWAIT KIOSK - </String>
+            <String>22833-BASKIN ROBBINS KUWAIT IL - 1</String>
+            <String>22834-BASKIN ROBBINS KUWAIT KIOSK - </String>
+            <String>22835-BASKIN ROBBINS KUWAIT IL - 2</String>
+            <String>22836-BASKIN ROBBINS KUWAIT KIOSK - </String>
+            <String>22837-BASKIN ROBBINS KUWAIT IL - 3</String>
+            <String>22838-BASKIN ROBBINS KUWAIT IL - 4</String>
+            <String>19196-KRISPY KREME SALWA COOP</String>
+            <String>19700-Krispy Kreme Sales Office</String>
+            <String>19701-Krispy Kreme Salmiya Co-Op.</String>
+            <String>19702-Krispy Kreme Al Salmiya Geant</String>
+            <String>19703-KRISPY KREME THE CORNER</String>
+            <String>19704-Krispy Kreme FASHIONWAY</String>
+            <String>19707-Krispy Kreme El Shaab Co.</String>
+            <String>19708-Krispy Kreme Marina Mall</String>
+            <String>19709-Krispy Kreme Marina Mall 2</String>
+            <String>19712-Krispy Kreme Souk El Salmiya</String>
+            <String>19715-Krispy Kreme Discovery Mall</String>
+            <String>19717-Krispy Kreme El Rehab</String>
+            <String>19718-KRISPY KREME QORTOBA</String>
+            <String>19719-Krispy Kreme Souk Shark</String>
+            <String>19728-KRISPY KREME LOLO MARKET</String>
+            <String>19729-Krispy Kreme El Yarmouk</String>
+            <String>19730-Krispy Kreme El Khaldiya</String>
+            <String>19731-Krispy Kreme Khalidiya Univers</String>
+            <String>19732-Krispy Kreme Nozha Co-op</String>
+            <String>19736-Krispy Kreme El Daiya</String>
+            <String>19737-KRISPY KREME UNIV. KIFAN</String>
+            <String>19738-KRISPY KREME EL DASMA CO-OP</String>
+            <String>19740-Krispy Kreme Kifan</String>
+            <String>19741-Krispy Kreme El Shamiya</String>
+            <String>19742-Krispy Kreme Geant Mall 360</String>
+            <String>19743-Krispy Kreme Shwuaikh Universi</String>
+            <String>19744-KRISPY KREME MALL 360</String>
+            <String>19745-KRISPY KREME JLEEB EL SHOYOUKH</String>
+            <String>19747-Krispy Kreme Om El Himan</String>
+            <String>19748-KRISPY KREME UNIV. JABRIYA</String>
+            <String>19749-Krispy Kreme Geant JLEEB</String>
+            <String>19750-Krispy Kreme jabryia</String>
+            <String>19751-KRISPY KREME AL ZAHRAA</String>
+            <String>19754-Krispy Kreme El Gahraa (Carffo</String>
+            <String>19755-Krispy Kreme Al Soulibkhat Gea</String>
+            <String>19760-KRISPY KREME AIR PORT</String>
+            <String>19761-Krispy Kreme Al Farwaniya Gean</String>
+            <String>19762-KRISPY KREME CARFOUEOR</String>
+            <String>19763-Krispy Kreme Avenue Mall</String>
+            <String>19767-Krispy Kreme Salwa Co-op</String>
+            <String>19768-KRISPY KREME MISHRIF CO-OP</String>
+            <String>19775-Krispy Kreme El Fahaheel</String>
+            <String>19776-KRISPY KREME EL QOUET</String>
+            <String>19779-Krispy Kreme Alyia &amp; Ghalyia</String>
+            <String>19788-Krispy Kreme Van-El Adamiy</String>
+            <String>19789-KRISPY KREME VAN-US ARMY</String>
+            <String>19794-KRISPY KREME BENEDER BEACH</String>
+            <String>19800-KRISPY KREME SABAH AL AHMED CO</String>
+            <String>19801-Krispy Kreme Seaside Tower</String>
+            <String>19808-Krispy Kreme Al Shuhada</String>
+            <String>19809-KRISPY KREME THE GATE MALL</String>
+            <String>19812-Krispy Kreme Khaitan</String>
+            <String>19815-Krispy Kreme Discovery Mall 2</String>
+            <String>19820-Krispy Kreme Seaside Food Hub</String>
+            <String>19821-KRISPY KREME INDUSTRIAL JAHRA</String>
+            <String>19863-KRISPY KREME CARREFOUR AVENUES</String>
+            <String>19864-Krispy Kreme Fahd Elhamad</String>
+            <String>19865-Krispy Kreme Khaitan</String>
+            <String>19866-Krispy Kreme Dajej</String>
+            <String>19867-Krispy Kreme Fahahel</String>
+            <String>19868-Krispy Kreme Sabah Salem</String>
+            <String>19869-KRISPY KREME AL JAHRA SULTAN CENTER</String>
+            <String>19870-KRISPY KREME MANGAF SULTAN CEN</String>
+            <String>19871-KRISPY KREME DASMA CITY CENTER</String>
+            <String>19872-KRISPY KREME JAHRA CARVE OUT</String>
+            <String>19873-KRISPY KREME SULAIBIKHAT</String>
+            <String>19874-KRISPY KREME ASWAQ AL QURAIN</String>
+            <String>19875-KRISPY KREME FAHAHEEL</String>
+            <String>19876-KRISPY KREME KHIRAN SQUARE MAL</String>
+            <String>19877-KRISPY KREME DIVONEE</String>
+            <String>19878-KRISPY KREME NATIONAL GUARD</String>
+            <String>19879-KRISPY KREME KHIRAN OUTLET</String>
+            <String>19880-TO BE USED LATER</String>
+            <String>19881-KRISPY KREME ARDIYA HERAFI</String>
+            <String>19882-KRISPY KREME SABAH AL SALEM BL</String>
+            <String>19883-KRISPY KREME KOUT MALL</String>
+            <String>19884-KRISPY KREME SHAMIYA RELOCATIO</String>
+            <String>19885-KRISPY KREME JABER AL AHMAD CO</String>
+            <String>19886-KRISPY KREME KUWAIT IL - 1</String>
+            <String>21701-KRISPY KREME - VILLAGIO</String>
+            <String>21702-KRISPY KREME - ALWAAB</String>
+            <String>21703-KRISPY KREME -SAFARAT -CLOSED</String>
+            <String>21704-KRISPY KREME - DOHA -CLOSED</String>
+            <String>21705-KRISPY KREME-ABUHAMOR -CLOSED</String>
+            <String>21706-KRISPY KREME -ALKHOUR -CLOSED</String>
+            <String>21707-KRISPY KREME-LANDMARK -CLOSED</String>
+            <String>21708-KRISPY KREME -CITY CENTER - C</String>
+            <String>21709-KRISPY KREME - ALMANA TOWER</String>
+            <String>21710-KRISPY KREME-Mall of Qatar</String>
+            <String>21711-KRISPY KREME - ALMEERA MANSOUR</String>
+            <String>21712-KRISPY KREME -MESAMER</String>
+            <String>21713-KRISPY KREME - AIRPORT</String>
+            <String>21714-KRISPY KREME-VILLAGGIO-RE</String>
+            <String>21715-KRISPY KREME - SALWA</String>
+            <String>21716-KRISPY KREME-GULF MALL</String>
+            <String>21717-KRISPY KREME-DOHA FESTIVAL</String>
+            <String>21718-KRISPY KREME-LANDMARK</String>
+            <String>21719-KRISPY KREME AL NASER</String>
+            <String>21720-KRISPY KREME HARDEE'S AIRPORT</String>
+            <String>21721-Krispy Kreme Lulu Barwa</String>
+            <String>21722-Krispy Kreme SEFARAT</String>
+            <String>21723-Krispy Kreme HARDEE'S ALKHOUR</String>
+            <String>21724-Krispy Kreme JERYAN NEJAIMA</String>
+            <String>21725-Krispy Kreme HAZAM AL MARKHIYA</String>
+            <String>21726-Krispy Kreme CITY CENTER</String>
+            <String>21727-Krispy Kreme Gold Plaza</String>
+            <String>21728-KRISPY KREME CARVE OUT KFC CEN</String>
+            <String>21729-KRISPY KREME AL MEERA HAZM AL </String>
+            <String>21730-KRISPY KREME DUHAIL</String>
+            <String>21731-KRISPY KREME AZIZIA</String>
+            <String>21732-KRISPY KREME AL MONTAZAH</String>
+            <String>21733-KRISPY KREME UMM SLAL MOHAMED</String>
+            <String>21734-KRISPY KREME THE PEARL QATAR</String>
+            <String>21735-KRISPY KREME SOUK WAKIR</String>
+            <String>21736-KRISPY KREME MEERA LUSAIL</String>
+            <String>21737-KRISPY KREME AL JANOUB SQUARE</String>
+            <String>21738-KRISPY KREME LULU EZDAN</String>
+            <String>21739-KRISPY KREME GHARAFFAH</String>
+            <String>21740-KRISPY KREME PLACE VENDOME MAL</String>
+            <String>21741-KRISPY KREME LULU ABU SIDRA MA</String>
+            <String>21742-KRISPY KREME DOHA EXPO 2023</String>
+            <String>21900-KRISPY KREME VILLAGIO COMMISAR</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="hradwan">
+        <value>
+          <List>
+            <String>12509-KFC SHEEBEN AL KOM | KFC | Egypt</String>
+          </List>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

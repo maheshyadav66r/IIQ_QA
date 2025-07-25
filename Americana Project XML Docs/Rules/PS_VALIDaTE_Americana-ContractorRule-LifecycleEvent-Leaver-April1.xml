@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_VALIDaTE_Americana-ContractorRule-LifecycleEvent-Leaver-April1">
+  <Source>
+  
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+  import sailpoint.object.*;
+
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Logger;
+  Logger log=Logger.getLogger("customRule4");
+
+
+  boolean leaverTriggerFlg = false;
+//Filter f = Filter.eq("application.name","AD Contractors");
+
+  QueryOptions qo= new QueryOptions();
+ // qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+String info;
+String idname;
+ String country;
+String linkstatus;
+String endDate;
+String ContractorCreation;
+Boolean disabled;
+  String IIQDisabled;
+  String Type;
+  String status;
+ String isContractor;
+List al=new ArrayList();
+
+
+for(Identity newIdentity :ids)
+{
+
+if(null != newIdentity){
+ // if(newIdentity.getName().equalsIgnoreCase("rbernert")){
+//fetches exact leaver
+ //if( null != newIdentity.getAttribute("endDate")&amp;&amp;!newIdentity.getAttribute("endDate").equalsIgnoreCase("never")&amp;&amp;null != newIdentity.getAttribute("isContractor")&amp;&amp;newIdentity.getAttribute("isContractor").equalsIgnoreCase("YES")){
+
+   //fetches all leavers present and past
+   if( null != newIdentity.getAttribute("endDate")&amp;&amp;!newIdentity.getAttribute("endDate").equalsIgnoreCase("never")){
+  Application appObj = context.getObjectByName(Application.class, "AD Contractors");
+    log.error("appObj "+appObj);
+ IdentityService isr = new IdentityService(context);
+            List links = isr.getLinks(newIdentity, appObj);
+			//countLinks(Identity identity, Application application)
+      
+            if(Util.nullSafeSize(links) &gt; 0){
+               Link adLink = links.get(0);
+
+             log.debug("testing isr");
+                  linkstatus ="inactive"; 
+  boolean disabled=adLink.isDisabled();
+  if(!disabled)
+   
+ {
+   
+   
+   linkstatus ="active";  
+     
+			
+		
+
+			  
+			  
+			  }
+			  
+			  
+			  
+			  
+			  
+   
+      
+      idname=newIdentity.getName();
+ContractorCreation =(String) newIdentity.getAttribute("ContractorCreation");
+              isContractor =(String) newIdentity.getAttribute("isContractor");
+      String strEndDate = (String) newIdentity.getAttribute("endDate");
+       status=(String) newIdentity.getAttribute("status");
+              country=(String) newIdentity.getAttribute("country");
+      Type=(String) newIdentity.getAttribute("type");
+     log.error("end date of contractor is:::"+strEndDate);
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+ 
+        Date endDate = sf.parse(strEndDate);
+        log.error("formatting string to date: " + endDate);
+        
+        Date goLiveDate = sf.parse("2022-12-23");
+       log.error("goLiveDate: " + goLiveDate);
+       
+  
+   
+        if (endDate.after(goLiveDate)) {
+            Date currentDate = new Date();
+            if (endDate.compareTo(currentDate) &lt; 0||endDate.compareTo(currentDate) == 0) {
+              log.error("hi"); // logic to print identity name, end date, link status active , attribute valuecontractor creation true
+			  info=idname+","+strEndDate+","+ContractorCreation+","+linkstatus+","+Type+","+status+","+isContractor+","+country;
+                        leaverTriggerFlg = true;
+						
+						al.add(info);
+            }
+        }
+		
+		
+		
+    
+     
+  }
+}
+}
+}
+  
+  
+
+
+
+ if (!al.isEmpty()&amp;&amp; al.size()&gt;0) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\22mayleaverList-1.csv", true);
+        for (String info : al) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+  
+  
+</Source>
+</Rule>
+
+</sailpoint>

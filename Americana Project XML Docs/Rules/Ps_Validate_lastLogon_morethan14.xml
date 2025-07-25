@@ -1,0 +1,323 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_Validate_lastLogon_morethan14">
+  <Source>
+  import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+    
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+  import java.util.*;
+
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.ResourceObject;
+import sailpoint.tools.Util;
+  import sailpoint.object.*;
+  import java.io.FileWriter;
+
+
+import sailpoint.tools.Util.ParseException;
+  import org.apache.log4j.Logger;
+  Logger log=Logger.getLogger("customRule4");   
+try {
+
+log.info("step1");	
+List al=new ArrayList();
+  
+ 
+ 
+/* Filter f = Filter.eq("correlated",true);
+ Filter f2= Filter.eq("status","ACTIVE");
+ 
+ Filter f5 = Filter.eq("ADstatus","ADactive");
+  Filter fil=Filter.and(f,f5);
+  
+  Filter andFilter = Filter.and(f,f2);
+    
+  //Filter thefilter = Filter.and(andFilter,f3); 
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(andFilter);*/
+  List bl=new ArrayList();
+  String ADstatus;
+  Filter f = Filter.eq("correlated", true);
+  bl.add(f);
+Filter f2 = Filter.eq("status", "ACTIVE");
+  bl.add(f2);
+Filter f5 = Filter.eq("ADstatus", "ADactive");
+ // bl.add(f5);
+
+// Create an "and" filter combining f and f2
+Filter andFilter = Filter.and(bl);
+
+// Add f5 to the existing "and" filter
+//Filter finalFilter = Filter.and(andFilter, f5);
+log.info("Cube Query Filter: " + andFilter.toString());
+
+  
+  
+ 
+  
+QueryOptions qo = new QueryOptions();
+qo.addFilter(andFilter);
+  
+  
+				List cubes = context.getObjects(Identity.class);
+  
+  //the list contains ad disabled identitties too, gte a way how to include only enabled ids
+  
+// List cubes=context.getObjects(Identity.class);
+  
+  //try to put a condition to iterate on status ACTIVE users
+  log.info(cubes.size());
+  log.info(cubes);
+				if (cubes != null &amp;&amp; cubes.size() &gt; 0) {
+       
+          int numid=cubes.size();
+					for (Object obj1 : cubes) {
+           
+            
+						Identity id= (Identity)obj1;
+
+if (id!=null){
+  //String ADstatus=(String)id.getAttribute("ADstatus");
+  String email=(String)id.getAttribute("email");
+  
+  //adding following lines to get AD status
+  
+  
+  
+ List links=id.getLinks(); 
+ for(Link link:links)
+ {
+if( link.getApplicationName().equalsIgnoreCase("Active Directory")||link.getApplicationName().equalsIgnoreCase("AD Contratctor")){
+
+  
+//if(link.getAttribute("IIQDisabled")!=null &amp;&amp; link.getAttribute("IIQDisabled"))
+  
+if(!link.isDisabled()) 
+{
+
+//  String myString = String.valueOf(link.getAttribute("IIQDisabled"));
+//  if(myString!=null)
+ // {
+ /* ADstatus="ADInactive";  
+  //}
+}
+  else
+  {
+    ADstatus="ADactive";
+  }
+*/
+
+// }
+ 
+// }
+  
+  
+ //if(ADstatus!=null &amp;&amp; ADstatus.equalsIgnoreCase("ADactive")){
+  log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ADstatus);
+	String name=(String)id.getName();
+  log.info("id is "+id.getName());
+ 
+ // boolean isValid =false;
+    String ADlastLogon=(String)id.getAttribute("ADlastLogon");
+	
+String ADlastLogonTimestamp=(String)id.getAttribute("ADlastLogonTimestamp");
+String Azurelastsignin=(String)id.getAttribute("Azurelastsignin");
+Date date1;
+  Date date2;
+  Date date3;
+  Date latestDate;
+   Date thelatestDate;
+  Date date ;
+  List dateList = new ArrayList(); 
+int daysDifference;
+  if(ADlastLogon!=null&amp;&amp;!ADlastLogon.isEmpty() &amp;&amp; !ADlastLogon.equals("0") ) { 
+
+
+
+log.error("last log on is not null ");
+   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  Date date1 = dateFormat.parse(ADlastLogon);
+   dateList.add(date1);
+}
+ if(ADlastLogonTimestamp!=null&amp;&amp;!ADlastLogonTimestamp.isEmpty() &amp;&amp; !ADlastLogonTimestamp.equals("0") )
+  {
+    log.error("last log time stamp on is not null ");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  Date date2 = dateFormat.parse(ADlastLogonTimestamp);
+     dateList.add(date2);
+  }
+  
+ if(Azurelastsignin!=null&amp;&amp;!Azurelastsignin.isEmpty() &amp;&amp; !Azurelastsignin.equals("0") ){
+		log.error("azure sign in is not null ");       
+      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  Date date3 = dateFormat.parse(Azurelastsignin);
+     dateList.add(date3);
+  }
+		        // Create a List of Dates
+  
+		       // List dateList = List.of(date1, date2, date3);
+
+		        // Compare dates and find the latest one
+		      //  Date latestDate = findLatestDate(dateList);
+  
+  if(dateList!=null &amp;&amp; dateList.size()  &gt; 0)
+  {
+  
+   Date latestDate = null;
+          log.info("finding latest date");
+
+		        for (Date date : dateList) {
+		            if (date != null &amp;&amp; (latestDate == null || date.after(latestDate))) {
+		                latestDate = date;
+		            }
+		        }
+          log.info("latest date is "+latestDate);	
+			//	return latestDate;
+ thelatestDate=latestDate;
+  
+  }
+  
+
+		        // Print the latest date
+		        log.info("Latest Date: " + thelatestDate);
+		     // Compare theLatest with today's date
+  
+  if(thelatestDate!=null)
+  {
+  log.info("the latest date is not null,, now calulating difference in dates");
+    
+    date=new Date();
+    
+   long differenceMillis = date.getTime() - thelatestDate.getTime();
+	        daysDifference= (int) (differenceMillis / (1000 * 60 * 60 * 24));
+		       
+		        
+		        
+		        if(daysDifference &gt; 14) {
+		        	try {
+                log.info("differnc in days is more than 14");
+					FileWriter writer=new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\testLastLogon1.txt",true);
+		        		//FileWriter writer=new FileWriter("C:\\Users\\Public\\test\\test.txt",true);	
+		        		writer.write("the identity "+id.getName()+ " is not loged in for "+daysDifference + " days and email is :::"+ id.getAttribute("email"));
+		        		  
+		        		  writer.write("\n");
+		        		  
+		        		    
+		        		  
+		        		  writer.close(); 
+		        							
+		        	
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
+		        }
+	
+		       log.info("Days difference: " + daysDifference);
+		    }
+}
+
+		  
+          }	        
+			
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            	
+				/* private static int calculateDaysDifference(Date latestDate, Date date) {
+		// TODO Auto-generated method stub
+		//return 0;
+           log.info("calculation differnce");
+		 long differenceMillis = date.getTime() - latestDate.getTime();
+	        return (int) (differenceMillis / (1000 * 60 * 60 * 24));
+	}*/
+
+
+
+
+			/*	private static Date parseDate(String dateString) {
+		        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		        dateFormat.setLenient(false);
+
+		        try {
+		            try {
+						return dateFormat.parse(dateString);
+					} catch (java.text.ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        } catch (ParseException e) {
+		            e.printStackTrace();
+		            // Handle the parsing exception as needed
+		            return null;
+		        }
+				return null;
+		    }*/
+				
+		       
+
+		 /*   private static Date findLatestDate(List dates) {
+		       Date latestDate = null;
+          log.info("finding latest date");
+
+		        for (Date date : dates) {
+		            if (date != null &amp;&amp; (latestDate == null || date.after(latestDate))) {
+		                latestDate = date;
+		            }
+		        }
+          log.info("latest date is "+latestDate);	
+				return latestDate;
+
+		       // alatestDate= latestDate;
+				
+				
+				//compare latest date with today date and return number of days difference
+				
+		 
+			
+	
+}*/
+            
+            
+            
+					}
+				}
+  
+  
+  
+}
+        }
+}
+  
+
+
+catch (Exception e)
+{
+System.out.println(e);	
+}
+	
+  </Source>
+</Rule>
+
+</sailpoint>

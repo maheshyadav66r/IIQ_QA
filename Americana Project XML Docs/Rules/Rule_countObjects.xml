@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Rule_countObjects">
+  <Source>
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Application;
+  import sailpoint.api.IdentityService;
+
+  import sailpoint.tools.Util;
+
+  QueryOptions qo=new QueryOptions();
+  // String sql="sql:SELECT EXTRACTVALUE(attributes
+  // qo.setQuery(sqlQuery);(inactive == false // peopleGroup == "Store Level" // links.application.name i== "Oracle Fusion HCM")
+  qo.addFilter(Filter.and(Filter.eq("links.application.name","Oracle Fusion HCM"),Filter.eq("peopleGroup","Store Level")));
+HashSet hashSet=new HashSet();
+  Iterator iterator= context.search(Identity.class,qo);
+  Application application=context.getObjectByName(Application.class,"Oracle Fusion HCM");
+  IdentityService identityService=new IdentityService(context);
+  while(iterator != null &amp;&amp; iterator != void &amp;&amp; iterator.hasNext()){
+
+    Identity identity =iterator.next();
+    List list=identityService.getLinks(identity,application);
+
+    Object object= list.get(0).getAttribute("IIQDisabled");
+
+    if(object==false || object==null)
+     hashSet.add(identity.getName()); 
+
+    context.decache(identity);
+  }
+  context.decache(application);
+  Util.flushIterator(iterator);
+  
+  return hashSet.size();
+
+
+  </Source>
+</Rule>
+
+</sailpoint>

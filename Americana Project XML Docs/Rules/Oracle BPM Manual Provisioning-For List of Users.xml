@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Oracle BPM Manual Provisioning-For List of Users">
+  <Source>
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.api.Provisioner;
+
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Rule;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.Workflow;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import sailpoint.object.ResourceObject;
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailFileAttachment;
+  import java.io.File;
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Identity;
+  import java.util.List;
+
+  Log log = LogFactory.getLog("americana.ruleLibrary.Attribute");
+  log.trace("***RUNNING Americana-RuleLibrary-Attribute***");
+  //return context.decrypt("1:ACP:5FbA9TcHnFj5NB/uiH5MaSEZgGVLWysXcfcTkEVW7P0=");
+  
+  	
+  
+  Custom customObject = context.getObjectByName(Custom.class,"Americana-BPM Custom-Attributes");
+  if(null != customObject){
+    ProvisioningPlan plan = null;
+  	List storesList = customObject.getList("storesList");	
+    if(null != storesList @and storesList.size() &gt; 0){
+      int count = 0;
+      for(String identityName : storesList){
+        count++;
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+  log.trace("********Entered Test Provision Rule : "+identityName);
+  			if (Util.isNotNullOrEmpty(identityName)) {
+    			Identity identity = context.getObjectByName(Identity.class,identityName);
+    			if (identity == null) {
+      			log.error("Identity not found in the system :"+identityName);
+      			return plan;
+    			}
+    			plan = new ProvisioningPlan();
+    			plan.setIdentity(identity);
+    
+    			AccountRequest acctReqOracle = new AccountRequest();
+    			acctReqOracle.setOperation(AccountRequest.Operation.Modify);
+    			acctReqOracle.setApplication("Oracle BPM IDCS");
+    			String nativeIdentity = "";
+    			List linksList = identity.getLinks();
+    			if(null != linksList @and linksList.size() &gt; 0){
+      			for(Link link : linksList){
+        			if(null != link @and "Oracle BPM IDCS".equalsIgnoreCase(link.getApplicationName())){
+        				nativeIdentity = link.getNativeIdentity();
+        			}
+      			}
+    			}	
+    
+    			List groupsList = new ArrayList();
+ 						groupsList.add("e8ac0096886c426aafeb0b5d883d37d9");
+    				groupsList.add("0d324cd1a8814a3fbbdfbd470f4744ec");
+    				groupsList.add("f29919add332463d8785f1b887643719");
+
+    				acctReqOracle.setNativeIdentity(nativeIdentity);
+    				acctReqOracle.add(new AttributeRequest("Group",ProvisioningPlan.Operation.Add,groupsList));
+    
+    				plan.add(acctReqOracle);
+    				Provisioner pro = new Provisioner(context);
+  				  //pro.setNoCreateTemplates(true);
+	    			//return pro.compile(plan);
+    			  pro.execute(plan);
+  			}
+        }
+       
+      }
+    
+    }
+  }
+
+  
+  </Source>
+</Rule>
+
+</sailpoint>

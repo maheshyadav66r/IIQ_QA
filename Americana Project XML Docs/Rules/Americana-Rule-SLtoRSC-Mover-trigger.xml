@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-SLtoRSC-Mover-trigger" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean" />
+  <Source>boolean result = false;
+  
+  if(previousIdentity != null &amp;&amp; newIdentity != null){
+  
+  String oldPeopleGroup = previousIdentity.getAttribute("peopleGroup");
+  
+  String newPeopleGroup = newIdentity.getAttribute("peopleGroup");
+  
+  if (oldPeopleGroup != null &amp;&amp; newPeopleGroup != null &amp;&amp; newPeopleGroup.contains("RSC") &amp;&amp; oldPeopleGroup.contains("Store Level") )
+    result = true;
+  }
+    return result;</Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="ManageEngine-PreIterate-Rule" type="PreIterate">
+  <Description>This rule is called before the connector processes the data in a file.</Description>
+  <Signature returnType="void">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application being iterated.
+        </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+          Schema representing the data being iterated.
+        </Description>
+      </Argument>
+      <Argument name="stats">
+        <Description>
+          A map passed by the connector of the stats for the file about to be iterated.
+          Contains keys:
+            fileName : (String) filename of the file about to be processed
+            absolutePath : (String) absolute filename
+            length : (Long) length in bytes
+            lastModified : (Long) last time the file was updated Java GMT
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>import java.util.*;
+  import java.text.*;
+  import java.nio.charset.StandardCharsets;
+  import java.nio.file.Paths;
+  import java.nio.file.Files;
+  import sailpoint.tools.Util;
+  import java.util.stream.*;
+
+  List&lt;String&gt; rolesList = new ArrayList();
+  Set&lt;String&gt; uniqueRolesSet = new HashSet();
+
+  String fileName = application.getAttributes().get("file");
+
+  List lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
+
+  if(schema.getObjectType().equalsIgnoreCase("assignedRoles")){    
+    if (null != lines &amp;&amp; !lines.isEmpty()) {
+      for(int i=5; i&lt; lines.size(); i++){
+        String[] values = parseCSVLine(lines.get(i));
+        if (values.length &gt; 1) {
+          rolesList.add(values[2].trim());
+        }
+      }
+    }
+
+    //Removing Duplicates in List
+    for (String roles : rolesList) {
+      String[] rolesArray = roles.split(",");
+      for (String role : rolesArray) {
+        uniqueRolesSet.add(role.trim());
+      }
+    }
+    StringBuilder assignedRolesSB = new StringBuilder("\n\n\n\n\n");
+    for(String assignedRolesValue :uniqueRolesSet){
+      assignedRolesSB.append(assignedRolesValue).append("\n");
+    }
+    return  new ByteArrayInputStream(assignedRolesSB.toString().getBytes());
+  }
+ /* else if(schema.getObjectType().equalsIgnoreCase("siteAssociation")){    
+    if (null != lines &amp;&amp; !lines.isEmpty()) {
+      for(int i=5; i&lt; lines.size(); i++){
+        String[] values = parseCSVLine(lines.get(i));
+        if (values.length &gt; 1) {
+          rolesList.add(values[3].trim());
+        }
+      }
+    }
+
+    //Removing Duplicates in List
+    for (String roles : rolesList) {
+      String[] rolesArray = roles.split(",");
+      for (String role : rolesArray) {
+        uniqueRolesSet.add(role.trim());
+      }
+    }
+    StringBuilder siteAssociationSB = new StringBuilder("\n\n\n\n\n");
+    for(String siteAssociationValue :uniqueRolesSet){
+      siteAssociationSB.append(siteAssociationValue).append("\n");
+    }
+    return  new ByteArrayInputStream(siteAssociationSB.toString().getBytes());
+  }
+  else if(schema.getObjectType().equalsIgnoreCase("groupAssociation")){    
+    if (null != lines &amp;&amp; !lines.isEmpty()) {
+      for(int i=5; i&lt; lines.size(); i++){
+        String[] values = parseCSVLine(lines.get(i));
+        if (values.length &gt; 1) {
+          rolesList.add(values[4].trim());
+        }
+      }
+    }
+    //Removing Duplicates in List
+    for (String roles : rolesList) {
+      String[] rolesArray = roles.split(",");
+      for (String role : rolesArray) {
+        uniqueRolesSet.add(role.trim());
+      }
+    }    
+    StringBuilder groupAssociationSB = new StringBuilder("\n\n\n\n\n");
+    for(String groupAssociationValue :uniqueRolesSet){
+      groupAssociationSB.append(groupAssociationValue).append("\n");
+    }
+    return  new ByteArrayInputStream(groupAssociationSB.toString().getBytes());
+  }*/
+
+  private static String[] parseCSVLine(String line) {
+    List&lt;String&gt; values = new ArrayList();
+    StringBuilder current = new StringBuilder();
+    boolean inQuotes = false;
+
+    for (char ch : line.toCharArray()) {
+      if (ch == '"') {
+        inQuotes = !inQuotes;
+      } else if (ch == ',' &amp;&amp; !inQuotes) {
+        values.add(current.toString().trim());
+        current.setLength(0);
+      } else {
+        current.append(ch);
+      }
+    }
+    values.add(current.toString().trim());
+    return values.toArray(new String[0]);
+  }</Source>
+</Rule>
+
+</sailpoint>

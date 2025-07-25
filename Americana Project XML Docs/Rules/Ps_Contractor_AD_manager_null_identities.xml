@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_Contractor_AD_manager_null_identities">
+  <Description>
+    This rule is used to find identities where manager value is null in the Contrctor AD . extract report with application name + name o fuser
+  </Description>
+  <Source>
+           
+  
+  
+  
+  
+  import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.Util;
+import sailpoint.object.*;
+  import java.text.SimpleDateFormat;
+
+try {
+    List identitiesWithoutManager = new ArrayList();
+     List bl=new ArrayList();
+  
+  String identityName;
+ 
+  
+Filter f2 = Filter.eq("links.application.name", "AD Contractors");
+ 
+
+ // bl.add(f5);
+
+// Create an "and" filter combining f and f2
+
+  
+    //Filter filter = Filter.eq("correlated", true).and(Filter.eq("links.application.name", "AD Contractors"));
+   QueryOptions qo = new QueryOptions();
+qo.addFilter(f2);
+
+    List identities = context.getObjects(Identity.class, qo);
+
+    for (Identity identity : identities) {
+         identityName = identity.getName();
+        String manager = (String) identity.getAttribute("manager");
+      
+    
+     
+      if(manager==null || manager.isEmpty()){
+    
+//identitiesWithContractorAD.add(endDate);
+        String laccountExpires = null;
+       String disabled = "false";
+     String distinguishName=null;
+
+        for (Link link : identity.getLinks()) {
+            if (link.getApplicationName().equalsIgnoreCase("Active Directory")) {
+             //   laccountExpires = link.getAttribute("accountExpires");
+              distinguishName=link.getAttribute("distinguishedName");
+              
+              
+            // if( link.getAttribute("IIQDisabled").equalsIgnoreCase("true"))
+              if( link.isDisabled())
+             {
+               disabled="true";
+               log.error("disabled");
+             }
+              
+              log.error("not disabled ");
+                break;
+            }
+        }
+
+      
+      
+       
+      
+      
+       
+    }
+    
+
+  
+
+    if (!identitiesWithoutManager.isEmpty()) 
+      
+      
+      
+      	{
+				
+ FileWriter writer=new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\file.txt",true);
+   
+    
+   
+   
+  		writer.write(identityName);
+  
+  writer.write("\n");
+  
+    
+
+  writer.close(); 
+				
+				}
+  
+  
+
+    System.out.println("End");
+
+}
+}
+  catch (Exception e) {
+    e.printStackTrace();
+}
+
+  
+  
+  
+  
+  
+
+       
+</Source>
+</Rule>
+
+</sailpoint>

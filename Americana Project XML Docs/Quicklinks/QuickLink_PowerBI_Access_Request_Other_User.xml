@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Tasks" messageKey="PowerBI Access Request For Other User" name="QuickLink_PowerBI_Access_Request_Other_User">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="Test_PowerBI_Workflow_Modified" />
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Admins" />
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>
+
+</sailpoint>

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana-CountryCodes-Mobile">
+  <Attributes>
+    <Map>
+      <entry key="+20 0" value="+20" />
+      <entry key="+212 0" value="+212" />
+      <entry key="+7 0" value="+7" />
+      <entry key="+91 0" value="+91" />
+      <entry key="+961 0" value="+961" />
+      <entry key="+962 0" value="+962" />
+      <entry key="+964 0" value="+964" />
+      <entry key="+965 0" value="+965" />
+      <entry key="+966 0" value="+966" />
+      <entry key="+968 0" value="+968" />
+      <entry key="+971 0" value="+971" />
+      <entry key="+973 0" value="+973" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

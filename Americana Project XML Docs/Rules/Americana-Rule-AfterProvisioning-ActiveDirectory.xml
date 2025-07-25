@@ -1,0 +1,254 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-AfterProvisioning-ActiveDirectory" type="AfterProvisioning">
+  <Description>An IdentityIQ server-side rule that is executed after the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan AFTER it has been sent out to the specific applications. This rule will be called for any application found in a plan that also has a configured 'afterProvisioningRule'
+    configured.</Description>
+  <Source>
+  import sailpoint.object.Identity;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.connector.ConnectorClassLoader;
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.ProvisioningProject;
+  import sailpoint.api.IdentityService;
+  import sailpoint.object.Application;
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger log = Logger.getLogger("rule.americana.AfterProvisioning");
+  String ruleName = "Americana-Rule-AfterProvisioning-ActiveDirectory";
+  Identity identity=null;
+  String identityName=null;
+  ClassLoader currentCl = Thread.currentThread().getContextClassLoader();
+  ClassLoader bakcedUpCl = null;
+  if(currentCl instanceof ConnectorClassLoader){
+    bakcedUpCl = currentCl;
+    Thread.currentThread().setContextClassLoader(currentCl.getParent());
+  }
+
+  List ccList = new ArrayList(Arrays.asList("mhelnagar@americana-food.com", "sgnanear@americana-food.com","skurian@americana-food.com","aiftikhar@americana-food.com","sbabikian@americana-food.com","shsyed@americana-food.com"));
+  if(plan != null &amp;&amp; plan.get("requester") != null){
+    String launcher=(String)plan.get("requester");
+
+
+    if(launcher != null &amp;&amp; launcher != void){
+      Identity identityObject=context.getObjectByName(Identity.class,launcher);
+      if(identityObject != null){
+        String email=identityObject.getEmail();
+        if( email != null) ccList.add(email);
+        if(identityObject.getManager() != null) {
+          String managerEmail=identityObject.getManager().getEmail();
+          if( managerEmail != null) ccList.add(managerEmail);
+        }
+      }
+      if(identityObject != null) context.decache(identityObject);
+    }
+  }
+  public void sendigEmail(Identity identityObject,EmailTemplate emailTemplate,String status,String mail){
+
+    String  displayName=(String)  identityObject.getAttribute("displayName");
+    String  employeeNumber=(String) identityObject.getAttribute("employeeNumber");
+    String  PositionName=(String) identityObject.getAttribute("PositionName");
+    String  department=(String) identityObject.getAttribute("department");
+    String  startDate=(String) identityObject.getAttribute("startDate");
+    String  endDate=(String) identityObject.getAttribute("endDate");
+
+    String  manager;
+    if(identityObject.getManager() != null &amp;&amp; identityObject.getManager().getDisplayName() != null){
+      manager=(String) identityObject.getManager().getDisplayName();
+    }
+
+    EmailOptions emailOptions = new EmailOptions();
+
+    Map args = new HashMap();
+    args.put("identityName",displayName);
+    args.put("item",status);
+    args.put("displayName",displayName);
+    args.put("employeeNumber",employeeNumber);
+    args.put("PositionName",PositionName);
+    args.put("department",department);
+    args.put("startDate",startDate);
+    args.put("endDate",endDate);
+    args.put("email",mail);
+    args.put("manager",manager);
+
+    emailOptions.setVariables(args);
+    emailOptions.setTo("servicedesk@americana-food.com");
+    emailOptions.setCc("skurian@americana-food.com");
+
+    context.sendEmailNotification(emailTemplate,emailOptions);
+
+  }
+
+  EmailOptions eo = new EmailOptions();
+  EmailTemplate et = context.getObjectByName(EmailTemplate.class,"Americana-EmailTemplate-UserCredentialsNotification");
+  if(log.isDebugEnabled()) log.debug("***RUNNING RULE [ " + ruleName +" ] ");
+  if (plan != null) {
+    List accReqs=plan.getAccountRequests();
+    identity = plan.getIdentity();
+    if ( identity == null) {
+      identityName = plan.getNativeIdentity();
+      identity = context.getObjectByName(Identity.class,identityName);
+    }
+    if(Util.nullSafeSize(accReqs)&gt;0) {
+      for(ProvisioningPlan.AccountRequest accReq:accReqs) { 
+        if(ProvisioningPlan.AccountRequest.Operation.Modify.equals(accReq.getOperation())){
+          List attrReqs=accReq.getAttributeRequests();
+          log.error("account request for creation");
+          System.out.println(" attrReqs ::: "+attrReqs);
+          // String password="";
+          // String username="";
+          for(ProvisioningPlan.AttributeRequest attrReq:attrReqs){
+            log.error("inside for loop");
+            if(attrReq.getName().equals("password")) {
+              log.error("inside if loop");
+              password=attrReq.getValue();
+              provPlan = new ProvisioningPlan();                  
+              AccountRequest accRequest = new AccountRequest();
+              accRequest.setNativeIdentity(accReq.getNativeIdentity());
+              accRequest.add(new AttributeRequest("pwdLastSet", ProvisioningPlan.Operation.Set,"true"));
+              log.error("setting account request pswdlastset");
+              accRequest.setApplication("Active Directory");
+
+              //   accRequest.setNativeIdentity(identityName);
+              provPlan.add(accRequest);
+              provPlan.setIdentity(identity);
+              log.error("plan is"+provPlan.toXml());
+
+              Provisioner prov=new Provisioner(context);
+              prov.setNoLocking(true);
+              prov.setOptimisticProvisioning(true);
+              ProvisioningProject project = prov.compile(provPlan);
+              //prov.execute(provPlan);
+
+            }
+          }
+        }
+        if(ProvisioningPlan.AccountRequest.Operation.Create.equals(accReq.getOperation())){
+          List attrReqs=accReq.getAttributeRequests();
+          String password="";
+          String username="";
+          String mail="";
+          for(ProvisioningPlan.AttributeRequest attrReq:attrReqs){
+            if(attrReq.getName().equals("password")) password=attrReq.getValue();
+            if(attrReq.getName().equals("sAMAccountName")) username=attrReq.getValue();
+            if(attrReq.getName().equals("mail")) mail=attrReq.getValue();
+          }
+          identity = plan.getIdentity();
+          if ( identity == null) {
+            identityName = plan.getNativeIdentity();
+            identity = context.getObjectByName(Identity.class,identityName);
+          }
+          ProvisioningResult result = plan.getResult();
+          if (result == null) {
+            result = accReq.getResult();
+          }
+          if (result != null) {
+            List errors = result.getErrors();
+            if (identity != null &amp;&amp; (errors == null || (errors != null &amp;&amp; errors.size() == 0))) {
+              String country = identity.getAttribute("country");
+              if(country != null &amp;&amp; country.equalsIgnoreCase("AE")){
+                ccList.add("sbabikian@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("QA")){
+                ccList.add("nsalah@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("KW")){
+                ccList.add("maabuelezz@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("OM")){
+                ccList.add("eyousef@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("LB")){
+                ccList.add("hsulaiman@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("SA")){
+                ccList.add("melbehery@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("KZ")){
+                ccList.add("gmakhsut@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("IQ")){
+                ccList.add("mkhair@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("EG")){
+                ccList.add("mabdelsamee@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("JO")){
+                ccList.add("gmohammad@americana-food.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("MA")){
+                ccList.add("y.charradou@globalycmaroc.com");
+              }else if(country != null &amp;&amp; country.equalsIgnoreCase("BH")){
+                ccList.add("melbehery@americana-food.com");
+              }
+              if (identity.getManager() != null &amp;&amp; Util.isNotNullOrEmpty(identity.getManager().getAttribute("email"))) {
+                String mail = identity.getManager().getAttribute("email");
+                if (Util.isNotNullOrEmpty(mail)) {
+                  eo.setTo(mail);
+                  eo.setCc(Util.listToCsv(ccList));
+                  Map args = new HashMap();
+                  args.put("application",application.getName());
+                  args.put("idname",identity.getDisplayName());
+                  args.put("username",username);  
+                  args.put("password",password);
+                  eo.setVariables(args);
+                  context.sendEmailNotification(et,eo);
+                }
+              } else {
+                eo.setTo(ccList);
+                eo.setCc(Util.listToCsv(ccList));
+                Map args = new HashMap();
+                args.put("application",application.getName());
+                args.put("idname",identity.getDisplayName());
+                args.put("username",username);  
+                args.put("password",password);
+                eo.setVariables(args);
+                context.sendEmailNotification(et,eo);
+              }
+              EmailTemplate emailTem = context.getObjectByName(EmailTemplate.class,"EmailTemplate-Joiner Employee");
+
+              if( null != identity &amp;&amp; null != emailTem){
+                sendigEmail(identity, emailTem,"Access Provisioning",mail);
+
+              }
+            }
+          }
+        }
+        if(ProvisioningPlan.AccountRequest.Operation.Disable.equals(accReq.getOperation())){
+
+          EmailTemplate emailTem = context.getObjectByName(EmailTemplate.class,"EmailTemplate-Leaver Employee");
+
+          if( null != identity &amp;&amp; null != emailTem){
+            sendigEmail(identity, emailTem,"Access Deprovisioning",identity.getEmail());
+
+          }
+          EmailTemplate emailTemp = context.getObjectByName(EmailTemplate.class,"EmailTemplate-Leaver Employee-Open");
+
+          if( null != identity &amp;&amp; null != emailTemp){
+            IdentityService identityService=new IdentityService(context);
+            Application app=context.getObjectByName(Application.class,"ManageEngine");
+
+            List apps=new ArrayList();
+            apps.add(app);
+            List groupList=identity.getExceptions(apps);
+            List entGroupList;
+            if(null != groupList &amp;&amp; groupList.size()&gt;0 &amp;&amp; null != groupList.get(0) &amp;&amp; null !=  groupList.get(0).getAttributes() &amp;&amp; null !=  groupList.get(0).getAttributes().get("Assigned Roles")){
+              entGroupList= groupList.get(0).getAttributes().get("Assigned Roles");
+            }
+            if( identityService.getLinks(identity,app)!=null &amp;&amp; identityService.getLinks(identity,app).size()&gt;0 &amp;&amp; entGroupList != null  &amp;&amp; ( entGroupList.contains("Managers") || entGroupList.contains("SDAdmin") || entGroupList.contains("Technician") || entGroupList.contains("SDReport") || entGroupList.contains("Management") || entGroupList.contains("SDChangeManager") || entGroupList.contains("SDSubscriptionInCharge") )){
+
+              sendigEmail(identity, emailTemp,"Access Deprovisioning",identity.getEmail());
+
+              context.decache(app);
+            }
+
+
+          }
+        }
+      }
+    }
+  }
+  if(bakcedUpCl != null){
+    Thread.currentThread().setContextClassLoader(bakcedUpCl);
+  }</Source>
+</Rule>
+
+</sailpoint>

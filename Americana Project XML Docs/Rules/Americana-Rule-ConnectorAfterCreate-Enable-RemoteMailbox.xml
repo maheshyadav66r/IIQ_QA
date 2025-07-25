@@ -1,0 +1,172 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Accesswarden-Rule-ConnectorAfterCreate-Enable-RemoteMailbox" type="ConnectorAfterCreate">
+  <Attributes>
+    <Map>
+      <entry key="ObjectOrientedScript" value="true" />
+      <entry key="disabled" value="false" />
+      <entry key="extension" value=".ps1" />
+      <entry key="program" value="powershell.exe" />
+      <entry key="timeout" value="5000" />
+    </Map>
+  </Attributes>
+  <Description>
+    An IdentityIQ Server-Side rule that is executed AFTER the connector's provisioning method is called. 
+    This rule is called after accounts have been created on the underlying AD domain.
+  </Description>
+  <Signature>
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application object that references this before/after script.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>
+
+  function out-errorLog($level, $msg) {
+    $outFile = "C:\ExchangeLogs\AfterCreateLogs\afterCreateLog.log"
+      $now = get-date -Format "MM.dd.yyyy HH:mm:ss"
+      Out-File $outFile -InputObject "$now : $level : $msg" -Append
+  }
+  out-errorLog "INFO" "----------------------------------------------------------------------------------------------------------------------------------------------"
+    out-errorLog "INFO" "Start Accesswarden-Rule-ConnectorAfterCreateTest"
+    # Refer to SailPoint class library Requires PowerShell v2 installed on the system.
+    # Refer to SailPoint class library. Requires PowerShell v2 installed on the system.
+    Add-type -path Utils.dll
+
+    # Add-type -path C:\IQService\Utils.dll
+    # Read the environment variables
+    $sReader = New-Object System.IO.StringReader([System.String]$env:Request);
+
+    $sResult = New-Object System.IO.StringReader([System.String]$env:Result);
+
+  # Form the xml reader objects
+    $xmlReader = [System.xml.XmlTextReader]([sailpoint.utils.xml.XmlUtil]::getReader($sReader));
+
+  $xmlReader_Result = [System.xml.XmlTextReader]([sailpoint.utils.xml.XmlUtil]::getReader($sResult));
+
+  # Create SailPoint objects
+    $requestObject = New-Object Sailpoint.Utils.objects.AccountRequest($xmlReader);
+  $resultObject = New-Object Sailpoint.Utils.objects.ServiceResult($xmlReader_Result);
+
+
+  $resultErrorCount = $resultObject.Errors.count
+
+    out-errorLog "INFO" "Error Count :: $resultErrorCount"
+
+    if($resultObject.Errors.count -eq 0){
+
+    foreach ($attribute in $requestObject.AttributeRequests){
+
+      if($attribute.Name -eq "sAMAccountName"){
+       $samAccountName = $attribute.value
+         #out-errorLog "INFO" "Request Object Attribute - samaccountName :: $samAccountName"
+      }
+
+    }
+  }
+
+    out-errorLog "INFO" "samAccountName  $samAccountName" 
+
+
+    Try {
+      
+      
+      #Encoded password of 1st domain setting object
+			#$encoded = [sailpoint.Utils.tools.Util]::encode($pwd)
+      #$encoded = 'xoAo5M8hWXpqmbkG+IlpJw=='
+      #out-errorLog "INFO" "encoded -- $encoded"
+			#Decoded password of 1st domain setting object
+			#$pwdText = [sailpoint.Utils.tools.Util]::decode($encoded)
+      
+      $pwdText = "P*Cg!t98]QY['%81"
+      $username = 'Accesswarden\ams.ae.iam'
+      $servername = 'aedxbsrvexch01'
+      $serverFQN = 'aedxbsrvexch01.Accesswarden.global'
+      $azureDomain = '@Accesswardenfood.onmicrosoft.com'
+
+
+      out-errorLog "INFO" "Trying exchange server"
+
+      $IsOnline = Test-Connection -ComputerName $servername -BufferSize 16 -Count 1 -Quiet
+      out-errorLog "INFO" "is server online::::::::::::::::::::: $IsOnline "
+
+      if ($IsOnline -eq $true){
+      Function Login {
+           
+        #$secpasswd = ConvertTo-SecureString $secString -Force
+          
+          $secpasswd = ConvertTo-SecureString $pwdText -AsPlainText -Force
+          
+          $credObject = New-Object System.Management.Automation.PSCredential($username, $secpasswd)
+          out-errorLog "INFO" "credObject  --  $credObject"
+          
+          $uri = "http://"+$serverFQN+"/PowerShell/"
+          $session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $uri -Credential $credObject -Authentication Kerberos #-ErrorAction Stop
+          
+          Import-PSSession $session -AllowClobber -DisableNameChecking	
+          $session
+      }
+
+      $session = Login
+        out-errorLog "INFO" "session : $session"
+
+
+        out-errorLog "INFO" "Run Enable Mailbox"
+        
+        out-errorLog "INFO" "Enable-RemoteMailbox -identity $samAccountName -RemoteRoutingAddress $samAccountName$azureDomain"
+
+        Enable-RemoteMailbox -identity $samAccountName -RemoteRoutingAddress $samAccountName$azureDomain 
+        
+
+        out-errorLog "INFO" "Now Sleep for 10s"
+
+        Start-Sleep -s 10
+
+        out-errorLog "INFO" "End Sleep"
+        
+        $mailbox = Get-RemoteMailbox -Identity $samAccountName
+
+       out-errorLog "INFO" "Result is : $mailbox"
+        
+        out-errorLog "INFO" "cmdlets execution completed"
+
+        Remove-PSSession -ID $session.ID
+        $scriptExecuted=$true
+    }
+    else{
+      out-errorLog "ERROR" "Cannot connect to server :"
+    }
+    if($scriptExecuted){
+      out-errorLog "INFO" "Mailbox script execution completed for ::: $samAccountName"
+    }
+
+  }catch {
+    out-errorLog "INFO" "Cannot create mailbox features for user: $samAccountName $_.Exception.Message"
+  }
+
+  out-errorLog "INFO" "End Accesswarden-Rule-ConnectorAfterCreateTest"   
+    out-errorLog "INFO" "----------------------------------------------------------------------------------------------------------------------------------------------"
+
+    </Source>
+</Rule>
+
+</sailpoint>

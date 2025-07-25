@@ -1,0 +1,241 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_RunRule_sendEmail_AccountExpires_rule-v1">
+  <Description>rule is used to send email reminders 5||15||30 days before accountExpiry , so that contractors can extend their endDate by quicklink </Description>
+  <Source>
+  
+  import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+
+Logger log=Logger.getLogger("customRule4");
+
+  
+  
+  
+
+  
+  
+  
+  
+  
+ Filter f = Filter.eq("correlated",true);
+
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+  for(Identity id :ids)
+  {
+    
+    
+     String idName=id.getName();
+    
+  
+    //if(idName.equalsIgnoreCase("Nirmal Chitlangi(Paramount)")){
+   if(id!=null){
+   
+      
+       // Identity id=context.getObjectByName(Identity.class,idName);
+
+    List links=id.getLinks();
+    
+    for(Link link:links)
+      
+    {
+      
+      
+      
+    if(link.getApplicationName().equalsIgnoreCase("AD Contractors") || link.getApplicationName().equalsIgnoreCase("Active Directory"))
+    {
+      
+      
+      
+       boolean disabled=link.isDisabled();
+
+      String status=String.valueOf(disabled);
+
+        
+
+   if(!disabled)
+
+   
+
+   {
+     
+     
+    
+    String accountExpires=id.getAttribute("accountExpires");
+      log.error("on demand......accountExpires :"+accountExpires);
+    String firstName=id.getAttribute("firstname");
+        String lastname=id.getAttribute("lastname");
+        
+        Identity manager=id.getManager();
+      	log.error("manager :"+manager);
+      String  managerEmail="";
+      if(manager!=null){
+         managerEmail=manager.getAttribute("email");
+      }
+     
+	log.error("managerEmail :"+managerEmail);
+		String accountName=id.getAttribute("adLogOnName");
+        	String idemail=id.getAttribute("email");
+      log.error("idemail "+idemail);
+    
+ 
+
+if(accountExpires!=null)
+{
+
+      // List links=newIdentity.getLinks();
+
+
+  if( !accountExpires.equalsIgnoreCase("never") &amp;&amp; !accountExpires.isEmpty() ){
+
+
+
+ //String dateString = "07/01/2024 12:00:00 AM";
+  
+     
+     
+       
+
+ //String dateString = "07/01/2024 12:00:00 AM";
+  Date currentDate=new Date();
+    SimpleDateFormat dateFormat;
+   //  log.info("currentDate "+currentDate);
+       /***********************************************SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");*********************************/
+    /********************************changing to yyyy-MM-dd format, after endDate and accountExpires mapping, leaver trigger was failing as endDate is yyyy-MM-dd format***************************/
+    if(link.getApplicationName().equalsIgnoreCase("AD Contractors")){
+    	dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    }
+    else if(link.getApplicationName().equalsIgnoreCase("Active Directory"))
+    {
+      dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+    }
+        Date expirydate = dateFormat.parse(accountExpires);
+    // log.info("expirydate "+expirydate);
+    	Long accountexpiry = expirydate.getTime();
+    log.info("accountexpiry "+accountexpiry);
+    Long current=currentDate.getTime();
+     // log.info("accountexpiry "+accpountexpiry);
+	  diffInDays = (int) ((accountexpiry-current) / (1000*60*60*24)) ;	
+	 log.info("diffInDays "+diffInDays);
+   // return diffIndays;
+   
+           EmailOptions eobj1 = new EmailOptions();
+        
+        if(idemail!=null)
+        {
+        eobj1.setTo(idemail);
+        eobj1.setCc(managerEmail);
+        }
+    
+    else
+    {
+     eobj1.setTo(managerEmail);
+        // eobj1.setCc(managerEmail);  
+      
+    }
+     
+         //log.error("on demand......accountExpires************************************* :"+accountExpires);
+        //eobj1.setVariable("AccountExpiry",accountExpires); 
+    
+    
+  // eobj1.setVariable("AccountExpiry" , "hi");
+       // eobj1.setVariable("accountName",accountExpires);
+    eobj1.setVariable("accountName",accountName);
+    eobj1.setVariable("endDate",accountExpires);
+        eobj1.setVariable("firstName",firstName); 
+        eobj1.setVariable("lastname",lastname);
+   // eobj1.setVariable("AccountExpiry",lastname);
+      
+
+
+	 if(diffInDays==29){
+    log.error("inside workflow difference in days is 30");
+            EmailTemplate etem = context.getObjectByName(EmailTemplate.class,"AccountExpiry test Templet 30-v1");
+        context.sendEmailNotification(etem,eobj1);
+  
+	
+        
+    }
+	if(diffInDays==14)
+{
+ log.error("inside workflow difference in days is 15");
+         EmailTemplate etem1 = context.getObjectByName(EmailTemplate.class,"AccountExpiry test Templet 15-v1");
+        context.sendEmailNotification(etem1,eobj1);
+
+}	
+        
+        if(diffInDays==4)
+{
+ log.error("inside workflow difference in days is 5");
+         EmailTemplate etem2 = context.getObjectByName(EmailTemplate.class,"AccountExpiry test Templet 5-v1");
+        context.sendEmailNotification(etem2,eobj1);
+
+}	
+}
+
+		
+
+
+
+
+     
+    }
+	
+    }
+      
+      
+     /* if(link.getApplicationName().equalsIgnoreCase("Active Directory")){
+        
+        
+       log.error(" write a logic for full time employee , as we cannot user contractor end date extension") ;
+        
+        
+        
+      }*/
+      
+    }
+     
+      
+      ///add logic for AD
+      //SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+      
+      
+    }
+}
+    }
+  
+
+</Source>
+</Rule>
+
+</sailpoint>

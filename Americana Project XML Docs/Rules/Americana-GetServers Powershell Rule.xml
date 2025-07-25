@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-GetServers Powershell Rule" type="ConnectorAfterCreate">
+  <Attributes>
+    <Map>
+      <entry key="ObjectOrientedScript" value="true" />
+      <entry key="disabled" value="false" />
+      <entry key="extension" value=".ps1" />
+      <entry key="program" value="powershell.exe" />
+      <entry key="timeout" value="120" />
+    </Map>
+  </Attributes>
+  <Description>  
+  This example is for IQService Script.    
+  </Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="email">
+        <Description>
+            Email address to call powershell script 
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="response">
+        <Description>
+            Response of the Powershell script.
+          </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+Add-type -path "C:\Program Files\IQService\Utils.dll";
+
+# Read the environment variables
+$sReader = New-Object System.IO.StringReader([System.String]$env:Request);
+   
+$xmlReader = [System.xml.XmlTextReader]([sailpoint.Utils.xml.XmlUtil]::getReader($sReader)); 
+$requestObject = New-Object Sailpoint.Utils.objects.AccountRequest($xmlReader);
+$resultObject = New-Object Sailpoint.Utils.objects.ServiceResult;
+
+#Check if the request was processed successfully
+foreach ($attribute in $requestObject.AttributeRequests){
+	if($attribute.Name -eq "regionsList"){
+	$regionsList = 	$attribute.Value;
+		$result=C:\Scripts\charlietest.ps1 $attribute.Value
+	}
+  
+  if($attribute.Name -eq "regionKeys"){
+	$regionKeys = 	$attribute.Value;
+		$result=C:\Scripts\charlietest.ps1 $attribute.Value
+	}
+}
+
+  try{
+ 	  
+"Result IS $result $args" | Out-File -filepath C:\Scripts\homedirresult.txt
+    
+    
+  $myScriptOutput = Get-ADComputer -Filter {((OperatingSystem -like "*windows*server*") -or  (OperatingSystem -like "*windows*virtual*")) -and (Enabled -eq "True")} -Properties name,  DNSHostName, OperatingSystem, ipv4Address, distinguishedName -SearchBase "DC=Americana,DC=global" |Select Name, DNSHostName, OperatingSystem, ipv4Address, DistinguishedName
+	$myScriptOutput | Out-File -Append -filepath C:\Scripts\result.txt
+"Result IS $result $args" | Out-File -filepath C:\Scripts\homedirresult.txt
+
+  
+  
+	$newhashtable = @{}
+	$myScriptOutput.GetEnumerator() | ForEach-Object {
+  		$newhashtable[$_.Name] = $_.DistinguishedName
+  }
+    
+  $resultObject.Attributes["serverValues"] = $newhashtable;
+  $resultObject.Messages.add("Success!");
+  
+  "Result Object $resultObject" | Out-File -Append -filepath C:\Scripts\result.txt
+
+  }catch{
+    [System.Collections.ArrayList]$messagesList = @()
+  $messagesList.Add("An error occured");
+	$messagesList.Add($myScriptOutput);
+	"ResultObject is $resultObject" | Out-File -Append -filepath C:\Scripts\result.txt
+	$resultObject.Errors = $messagesList
+	$resultObject.toxml() | Out-File -Append -filepath C:\Scripts\result.txt
+  }finally{
+$env:Result = $resultObject.toxml();
+$resultObject.toxml()|out-file $args[0];
+    
+  }
+
+    
+	
+
+  
+  
+
+  
+  
+
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_misMatchEndDate_ContractorAD">
+  <Description>
+    This rule is used to find unmatched end date and account expiry date in the Contrctor AD
+  </Description>
+  <Source>
+           
+  
+  
+  
+  
+  import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.Util;
+import sailpoint.object.*;
+  import java.text.SimpleDateFormat;
+
+try {
+    List identitiesWithContractorAD = new ArrayList();
+     List bl=new ArrayList();
+ 
+  Filter f = Filter.eq("correlated", true);
+  bl.add(f);
+Filter f2 = Filter.eq("links.application.name", "AD Contractors");
+  bl.add(f2);
+
+ // bl.add(f5);
+
+// Create an "and" filter combining f and f2
+Filter andFilter = Filter.and(bl);
+  
+  
+    //Filter filter = Filter.eq("correlated", true).and(Filter.eq("links.application.name", "AD Contractors"));
+   QueryOptions qo = new QueryOptions();
+qo.addFilter(andFilter);
+
+    List identities = context.getObjects(Identity.class, qo);
+
+    for (Identity identity : identities) {
+        String identityName = identity.getName();
+        String endDate = (String) identity.getAttribute("endDate");
+      String flag = (String) identity.getAttribute("status");
+      String ImmediateJoiner =(String) identity.getAttribute("ImmediateJoiner");
+      String ContractorCreation =(String) identity.getAttribute("ContractorCreation");
+      
+      if(endDate!=null){
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+       SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        endDate = outputDateFormat.format(inputDateFormat.parse(endDate));
+      }
+//identitiesWithContractorAD.add(endDate);
+        String accountExpires = null;
+       String disabled = "false";
+     String distinguishName=null;
+
+        for (Link link : identity.getLinks()) {
+            if (link.getApplicationName().equalsIgnoreCase("AD Contractors")) {
+                accountExpires = link.getAttribute("accountExpires");
+              distinguishName=link.getAttribute("distinguishedName");
+              
+              
+            // if( link.getAttribute("IIQDisabled").equalsIgnoreCase("true"))
+              if( link.isDisabled())
+             {
+               disabled="true";
+               log.error("disabled");
+             }
+              
+              log.error("not disabled ");
+                break;
+            }
+        }
+
+        if (accountExpires != null) {
+            // Parse account expiry date
+          
+          
+          if(!accountExpires.equalsIgnoreCase("never")){
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a z");
+            Date expiryDate = inputDateFormat.parse(accountExpires);
+
+            // Format expiry date to MM/dd/yyyy format
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            accountExpires = outputDateFormat.format(expiryDate);
+          }
+          
+          else
+          {
+            accountExpires="never";
+          }
+          
+          
+          
+         // if (endDate != null &amp;&amp; accountExpires != null &amp;&amp; accountExpires.equalsIgnoreCase("never")) {
+          
+         if(!accountExpires.equals(endDate))
+         {
+           // String info = "The identity " + identityName + " has endDate: " + endDate + " and accountExpiry: " + accountExpires;
+           String info=identityName+","+endDate+","+accountExpires+","+flag+","+ImmediateJoiner+","+disabled+","+"\""+distinguishName+"\"";
+            identitiesWithContractorAD.add(info);
+        }
+        }
+    }
+
+    if (!identitiesWithContractorAD.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\endDateMisMatch.csv", true);
+        for (String info : identitiesWithContractorAD) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+
+    System.out.println("End");
+
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+  
+  
+  
+  
+  
+
+       
+</Source>
+</Rule>
+
+</sailpoint>

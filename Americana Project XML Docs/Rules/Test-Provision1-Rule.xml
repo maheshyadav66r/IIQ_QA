@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-Provision1-Rule">
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="TestRule-accountexpires" />
+  </ReferencedRules>
+  <Source>
+   import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.*;
+  import java.lang.String;
+  import sailpoint.api.Provisioner;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningProject;
+  import sailpoint.api.PasswordGenerator;
+  import sailpoint.object.PasswordPolicy;
+  import sailpoint.tools.Util;
+  String idendDate=null;
+  String accountExpDate=null;
+  Identity ide = context.getObjectByName(Identity.class, "ameissa");
+//  idendDate=ide.getAttribute("endDate");
+ // String accountExpDate=getAcccountExpiresValue(idendDate);
+  if(ide!=null){
+
+    ProvisioningPlan plan = new ProvisioningPlan();
+    plan.setIdentity(ide);
+
+    AccountRequest acr = new AccountRequest();
+    acr.setApplication("Active Directory");
+    acr.setOperation(AccountRequest.Operation.Disable);
+    
+        			//			acr.setNativeIdentity("cf07e4e6-8c50-445d-9523-42e07efb2995");
+        				 	
+    
+    String idendDate=ide.getAttribute("endDate");
+    
+   /* List links = ide.getLinks();
+    if(null != links){
+      for(Link link : links){
+      	List plans = link.getAttribute("assignedPlans");
+        acr.add(new AttributeRequest("assignedPlans",ProvisioningPlan.Operation.Remove,plans));
+      }
+    }*/
+    
+    
+        
+        						
+   // acr.setNativeIdentity("CN=ams.iq.kapqrytt,OU=Service Accounts,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global");
+    /*
+  List azureLicenseList = new ArrayList();
+    
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 07699545-9485-468e-95b6-2fca3738be01");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 0898bdbb-73b0-471a-81e5-20f1fe4dd66e");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 0feaeb32-d00e-4d66-bd5a-43b5b83db82c");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 199a5c09-e0ca-4e37-8f7c-b05d533e1ea2");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 28b0fa46-c39a-4188-89e2-58e979a6b014");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 2f442157-a11c-46b9-ae5b-6e39ff4e5849");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 33c4f319-9bdd-48d6-9c4d-410b750a4a5a");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 34c0d7a0-a70f-4668-9238-47f9fc208882");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 3fb82609-8c27-4f7b-bd51-30634711ee67");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 41fcdd7d-4733-4863-9cf4-c65b83ce2df4");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 43de0ff5-c92c-492b-9116-175376d08c38");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 46129a58-a698-46f0-aa5b-17f6586297d9");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 4828c8ec-dc2e-4779-b502-87ac9ce28ab7");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 4a51bca5-1eff-43f5-878c-177680f191af");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 4de31727-a228-4ec3-a5bf-8e45b5ca48cc");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 5136a095-5cf0-4aff-bec3-e84448b38ea5");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 531ee2f8-b1cb-453b-9c21-d2180d014ca5");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 57ff2da0-773e-42df-b2af-ffb7a2317929");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 5dbe027f-2339-4123-9542-606e4d348a72");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 617b097b-4b93-4ede-83de-5f075bb5fb2f");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 65cc641f-cccd-4643-97e0-a17e3045e541");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 6c6042f5-6f01-4d67-b8c1-eb99d36eed3e");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 6db1f1db-2b46-403f-be40-e39395f08dbb");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 6dc145d6-95dd-4191-b9c3-185575ee6f6b");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 70d33638-9c74-4d01-bfd3-562de28bd4ba");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 7547a3fe-08ee-4ccb-b430-5077c5041653");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 8c098270-9dd4-4350-9b30-ba4703f3b36b");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 8c7d2df8-86f0-4902-b2ed-a0458298f3b3");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 8e0c0a52-6a6c-4d40-8370-dd62790dcd70");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 9c0dab89-a30c-4117-86e7-97bda240acd2");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : 9f431833-0334-42de-a7dc-70aa40db46db");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : a23b959c-7ce8-4e57-9140-b90eb88a9e97");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : a413a9ff-720c-4822-98ef-2f37c2a21f4c");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : a6520331-d7d4-4276-95f5-15c0933bc757");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : afa73018-811e-46e9-988f-f75d2b1b8430");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : b1188c4c-1b36-4018-b48b-ee07604f6feb");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : b21a6b06-1988-436e-a07b-51ec6d9f52ad");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : b737dad2-2f6c-4c65-90e3-ca563267e8b9");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : b76fb638-6ba6-402a-b9f9-83d28acb3d86");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : bea4c11e-220a-4e6d-8eb8-8ea15d019f90");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : bf28f719-7844-4079-9c78-c1307898e192");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : c4801e8a-cb58-4c35-aca6-f2dcc106f287");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : cd31b152-6326-4d1b-ae1b-997b625182e6");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : ded3d325-1bdc-453e-8432-5bac26d7a014");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : e26c2fcc-ab91-4a61-b35c-03cdc8dddf66");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : e95bec33-7c88-4a70-8e19-b10bd9d0c014");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : efb0351d-3b08-4503-993d-383af8de41e3");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : efb87545-963c-4e0d-99df-69c6916d9eb0");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : 14ab5db5-e6c4-4b20-b4bc-13e36fd2227f");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : 2e2ddb96-6af9-4b1d-a3f0-d6ecfd22edb2");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : 41781fb2-bc02-4b7c-bd55-b576c07bb09d");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : 8a256a2b-b617-496d-b51b-e76466e88db0");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : bea4c11e-220a-4e6d-8eb8-8ea15d019f90");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : c1ec4a95-1f05-45b3-a911-aa3fa01094f5");
+azureLicenseList.add("b05e124f-c7cc-45a0-a6aa-8cf78c946968 : f6de4823-28fa-440b-b886-4783fa86ddba");
+azureLicenseList.add("26d45bd9-adf1-46cd-a9e1-51e9a5524128 : e212cbc7-0961-4c40-9825-01117710dcb1");
+    
+
+
+acr.add(new AttributeRequest("assignedPlans", ProvisioningPlan.Operation.Remove, azureLicenseList));
+
+*/
+    
+   // acr.add(new AttributeRequest("mail", ProvisioningPlan.Operation.Set, ide.getName()+"@americana-food.com"));
+   // acr.add(new AttributeRequest("userPrincipalName", ProvisioningPlan.Operation.Set, ide.getName()+"@americana-food.com"));
+    
+    
+    
+    
+
+
+
+
+
+
+
+    plan.add(acr);
+    log.error("plan is:"+plan.toXml());
+return plan.toXml();
+    log.error("end of the plan");
+    Provisioner prov=new Provisioner(context);
+    prov.setNoLocking(true);
+    prov.setOptimisticProvisioning(true);
+    //ProvisioningProject project = prov.compile(plan);
+    //prov.execute(plan);
+  }
+
+
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-Provision_CrunchTime">
+  <Source>
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.api.Provisioner;
+
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Rule;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.Workflow;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import sailpoint.object.ResourceObject;
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailFileAttachment;
+  import java.io.File;
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+
+
+
+  String identityName = "admmohamed14";
+
+  ProvisioningPlan plan = null;
+
+  if (Util.isNotNullOrEmpty(identityName)) {
+    Identity identity = context.getObjectByName(Identity.class,identityName);
+    if (identity == null) {
+      log.error("Identity not found in the system :"+identityName);
+      return plan;
+    }
+    plan = new ProvisioningPlan();
+    plan.setIdentity(identity);
+    AccountRequest acctReq = new AccountRequest();
+    acctReq.setOperation(AccountRequest.Operation.Create);
+    acctReq.setApplication("Crunch Time");
+    acctReq.setNativeIdentity("admmohamed14@americana-food.com");
+    acctReq.add(new AttributeRequest("DisplayName",ProvisioningPlan.Operation.Add,"ADMMOHAMED14"));
+    acctReq.add(new AttributeRequest("TEAMWORX_FLAG",ProvisioningPlan.Operation.Add,"N"));
+    acctReq.add(new AttributeRequest("MARKET_NAME",ProvisioningPlan.Operation.Add,"EGP"));
+    List conceptList = new ArrayList();
+    conceptList.add("16");
+    
+
+    acctReq.add(new AttributeRequest("CONCEPT_CODE",ProvisioningPlan.Operation.Add,conceptList));
+    List locationList = new ArrayList();
+    locationList.add("E14908");
+    locationList.add("E14907");
+    locationList.add("E14797");
+    locationList.add("E14712");
+    locationList.add("E14910");
+    locationList.add("E14932");
+    locationList.add("E14803");
+    locationList.add("E14913");
+    locationList.add("E14815");
+    
+    acctReq.add(new AttributeRequest("LOCATION_CODE",ProvisioningPlan.Operation.Add,locationList));
+    acctReq.add(new AttributeRequest("USER_GROUP_NAME",ProvisioningPlan.Operation.Add,"Ops - Area Manager"));
+    acctReq.add(new AttributeRequest("HIERARCHY_TYPE(LOGICAL_NAME)",ProvisioningPlan.Operation.Add,"Americana(PH Egypt Area Manager 5)"));
+
+    plan.add(acctReq);
+
+
+
+
+
+
+
+
+    Provisioner pro = new Provisioner(context);
+    //pro.setNoCreateTemplates(true);
+    //return pro.compile(plan);
+    return pro.execute(plan);
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

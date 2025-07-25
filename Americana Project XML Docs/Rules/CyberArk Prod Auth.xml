@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="CyberArk Prod Auth" type="WebServiceBeforeOperationRule">
+  <Description>The Web Services connector will call this rule before performing ANY defined operation. This rule can be used to add/update values in the endpoint object before performing the operation and/or add persistent values to the application's data.
+(See information about what to return for more information)</Description>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>The application associated with the operation being processed.</Description>
+      </Argument>
+      <Argument name="requestEndPoint">
+        <Description>The current request information containing the header, body, context url, method type, response attribute map, 
+                and response code. This object can be modified directly and returned by the rule to update the endpoint information that is
+                used by the current operation.
+                </Description>
+      </Argument>
+      <Argument name="oldResponseMap">
+        <Description>Earlier response object </Description>
+      </Argument>
+      <Argument name="restClient">
+        <Description>REST Client Object</Description>
+      </Argument>
+      <Argument name="provisioningPlan">
+        <Description>A ProvisioningPlan object containing the payload of the http request. A provisioning plan has an account request which defines the operation to be performed on the account.
+                 An account request can contain multiple attribute requests and each attribute request represents an operation on a single account attribute.
+                </Description>
+      </Argument>
+      <Argument name="partition">
+        <Description>If applicable, a Partition object with the current aggregation's partitioning information.
+                </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="Map">
+        <Description>An updated or unmodified 'requestEndPoint' object. If application object modifications are desired, create a map containing keys 'updatedEndPoint' and 'connectorStateMap' and use it as the return value;
+                Within the new map, the 'updatedEndPoint' can be set to an updated or unmodified 'requestEndPoint' object. The 'connectorStateMap' will be saved as persistent values in the application definition.
+                </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import connector.common.Util;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import sailpoint.tools.GeneralException;
+import sailpoint.object.Custom;
+import org.json.JSONObject;
+
+public String GetAuthenticationKey() throws IOException {
+        
+        Custom logonKeyObj = context.getObjectByName(Custom.class,"CyberArk-Api-Credentials-Prod");
+		String apiKey = (String)logonKeyObj.get("apikey");
+		String apiValue = (String)logonKeyObj.get("apivalue");
+		String apiUrl = (String)logonKeyObj.get("logonAuthApi");
+		JSONObject userObject= new JSONObject();
+		userObject.put("username",apiKey);
+		userObject.put("password","3yD7-p6GK6&lt;t");
+               //userObject.put("password",apiValue );
+        CloseableHttpClient client = HttpClients.createDefault();
+        HttpPost loginPost = new HttpPost(apiUrl);
+        loginPost.setEntity(new StringEntity(userObject.toString(), ContentType.APPLICATION_JSON));
+        loginPost.addHeader(new BasicHeader("cache-control", "no-cache"));
+        CloseableHttpResponse loginResponse = client.execute(loginPost);
+        InputStream inputStream = loginResponse.getEntity().getContent();
+        System.out.println("Input Stream :"+inputStream);
+        String logonAuth = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+        System.out.println("LogonAuth :"+logonAuth);
+        return logonAuth;
+    }
+
+if(requestEndPoint != null) {
+        String operation = (String) requestEndPoint.getOperationType();
+        System.out.println("operation :"+operation);
+        Map requestBody = requestEndPoint.getBody();
+        if(operation.equalsIgnoreCase("Test Connection")) {
+            String contextUrl = requestEndPoint.getContextUrl();
+            String fullUrl= "https://pam.americana-food.com/PasswordVault" + contextUrl;
+            requestEndPoint.setBody(requestBody);
+            requestEndPoint.setFullUrl(fullUrl);
+        }
+
+if(operation.equalsIgnoreCase("Account Aggregation") || operation.equalsIgnoreCase("Group Aggregation") || operation.equalsIgnoreCase("Get Object") || operation.equalsIgnoreCase("Get Object-Group") || operation.equalsIgnoreCase("Group Aggregation-safe")  || operation.equalsIgnoreCase("Group Object-safe")){
+            String sessionToken = GetAuthenticationKey();
+
+sessionToken = sessionToken.substring(1, sessionToken.length() - 1);
+            System.out.println("Seesion Token :"+sessionToken);
+            if (Util.isNotNullOrEmpty(sessionToken)){
+                requestEndPoint.addHeader("Authorization", sessionToken);
+                String contextUrl = requestEndPoint.getContextUrl();
+                String fullUrl = "https://pam.americana-food.com/PasswordVault"+ contextUrl;
+                System.out.println("FUll Url :"+fullUrl); 
+                requestEndPoint.setFullUrl(fullUrl);
+            }
+            else {
+                throw new GeneralException("Unable to get a session token");
+            }
+        }
+    }
+
+
+return requestEndPoint;</Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="AD_Correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="hcmUserName" value="mail" />
+    <Filter operation="EQ" property="hcmUserName" value="userPrincipalName" />
+    <Filter operation="EQ" property="employeeNumber" value="employeeNumber" />
+    <Filter operation="EQ" property="name" value="sAMAccountName" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

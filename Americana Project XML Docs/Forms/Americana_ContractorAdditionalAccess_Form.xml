@@ -1,0 +1,464 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_ContractorAdditionalAccess_Form" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Additional Access Request form" />
+    </Map>
+  </Attributes>
+  <Section>
+    <Field columnSpan="2" displayName="Select User" displayType="comboBox" filterString="(links.application.name == &quot;AD Contractors&quot;)" name="user" postBack="true" required="true" type="sailpoint.object.Identity" />
+    <Field columnSpan="1" displayName="sAMAccountName" dynamic="true" name="sAMAccountName" readOnly="true" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.api.Provisioner;
+          import sailpoint.connector.Connector; 
+          import sailpoint.api.ObjectUtil;
+          import org.apache.log4j.Logger;
+          import sailpoint.object.Link;
+
+          List links = null;
+          String sName =null;
+
+          String name=null;
+          Identity identity=null;
+          Logger  logger = Logger.getLogger("com.CustomLogs");
+
+          try{
+
+          logger.debug(" - Start");
+          if(null != username){
+
+          name = form.getField("user").getValue();
+          log.error("name is"+name);
+          identity = context.getObjectByName(Identity.class,name);
+          if(identity!= null){
+          log.error("inside if");
+
+          links = identity.getLinks();
+          if(links != null &amp;&amp; links.size()&gt; 0) {
+
+          for(Link link : links) {
+
+          String applicationName = link.getApplicationName();
+          if(applicationName != null &amp;&amp;(applicationName.equalsIgnoreCase("AD Contractors")||applicationName.equalsIgnoreCase("Active Directory"))){
+          log.error("inside ad loop");
+          sName = (String)link.getAttribute("sAMAccountName");
+          log.error("sam accoiunt name is"+sName);
+          //  return sName;
+          break;
+          }
+          }
+          return sName;
+          }        	        
+          }
+
+          } 
+          return sName;
+          }catch(Exception e){
+
+          logger.error("Exception= "+e.printStackTrace());          
+          throw e;
+          }
+          //  return "c.samaccountname";
+
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="2" label="User Details" type="text">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="First name" dynamic="true" name="firstname" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getFirstname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last name" dynamic="true" name="lastname" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getLastname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Job Title" dynamic="true" name="jobTitle" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("jobTitle");	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department" dynamic="true" name="department" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("department");
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Manager" displayType="combobox" dynamic="true" name="manager" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	Identity managerObj = identityObj.getManager();
+          	if(null != managerObj){
+          		return managerObj.getDisplayName();
+          	}
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="2" label="Options to select access">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="VPN Access" displayType="radio" dynamic="true" name="vpn" postBack="true" type="boolean">
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          String userId = form.getField("user").getValue();
+          // String vpnvalue = form.getField("vpn").getValue().toString();
+
+          boolean vpnlicense=(form.getField("vpn").getValue()==null) ? false: form.getField("vpn").getValue();
+
+          log.error("printing licenses:::"+vpnlicense);
+          String strVpn=(vpnlicense)? "VPN":"";
+          if(strVpn!=null &amp;&amp; strVpn.equalsIgnoreCase("VPN")){
+          log.error("inside validation vpn access"+userId);
+          Identity id=context.getObjectByName(Identity.class,userId);
+          log.error("inside validation vpn access"+id);
+          if(id !=null &amp;&amp; id.getAttribute("ContractorLicense")!=null &amp;&amp; id.getAttribute("ContractorLicense").contains("VPN")){
+          log.error("inside validation vpn access if loop");
+          return "User already has VPN access !!";
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Email Access" displayType="radio" name="email" type="boolean">
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          String userId = form.getField("user").getValue();
+          boolean emaillicense=(form.getField("email").getValue()==null) ? false: form.getField("email").getValue();
+
+          log.error("printing emaillicense:::"+emaillicense);
+          String strEmail=(emaillicense)? "Email":"";
+          if(strEmail!=null &amp;&amp; strEmail.equalsIgnoreCase("Email")){
+          log.error("inside validation email access"+userId);
+          Identity id=context.getObjectByName(Identity.class,userId);
+          log.error("inside validation email access"+id);
+          if(id !=null &amp;&amp; id.getAttribute("ContractorLicense")!=null &amp;&amp; id.getAttribute("ContractorLicense").contains("Email")){
+          log.error("inside validation email access if loop");
+          return "User already has email access !!";
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Onsite Access Required" displayType="radio" name="wifiaccess" type="boolean">
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          String userId = form.getField("user").getValue();
+          boolean wifiAccess=(form.getField("wifiaccess").getValue()==null) ? false: form.getField("wifiaccess").getValue();
+
+          log.error("printing wifiaccess:::"+wifiAccess);
+          String strWifi=(wifiAccess)? "Wifi":"";
+          if(strWifi!=null &amp;&amp; strWifi.equalsIgnoreCase("Wifi")){
+          log.error("inside validation strWifi access"+userId);
+          Identity id=context.getObjectByName(Identity.class,userId);
+          log.error("inside validation email access"+id);
+          if(id !=null &amp;&amp; id.getAttribute("wifiaccess")!=null &amp;&amp; id.getAttribute("wifiaccess").equalsIgnoreCase("True")){
+          log.error("inside validation email access if loop");
+          return "User already has wifi access !!";
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Laptop" displayType="radio" name="laptop" type="boolean">
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          String userId = form.getField("user").getValue();
+          boolean laptoplicense=(form.getField("laptop").getValue()==null) ? false: form.getField("laptop").getValue();
+
+          log.error("printing laptoplicense:::"+laptoplicense);
+          String strLaptop=(laptoplicense)? "Laptop":"";
+          if(strLaptop!=null &amp;&amp; strLaptop.equalsIgnoreCase("Laptop")){
+          log.error("inside validation laptopvalue access"+userId);
+          Identity id=context.getObjectByName(Identity.class,userId);
+          log.error("inside validation laptopvalue access"+id);
+          if(id !=null &amp;&amp; id.getAttribute("ContractorLicense")!=null &amp;&amp; id.getAttribute("ContractorLicense").contains("Laptop")){
+          log.error("inside validation laptoplicense access if loop");
+          return "User already has laptopvalue access !!";
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="VPN Access" dynamic="true" hidden="true" name="vpntest" postBack="true" type="string">
+      <Script>
+        <Source>
+
+          log.error("vpn test value from form11111::"+form.getField("vpn").getValue());
+          // boolean vpnlicense=(form.getField("vpn").getValue()!=null)? true:false;
+          // log.error("inside vpn servers:::::"+vpnlicense);
+          String strVpn=null;
+          if(form.getField("vpn").getValue()!=null){
+
+          strVpn=form.getField("vpn").getValue().toString();
+          }
+          log.error("vpntest is:::"+strVpn);
+          return strVpn;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="VpnServers" displayType="comboBox" dynamic="true" multi="true" name="vpnServer" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List; 
+            import sailpoint.object.Identity;
+            import sailpoint.object.Custom;
+            List vpnList=new ArrayList();
+            String strreg=null;
+            String userId = form.getField("user").getValue();
+            Identity id = context.getObjectByName(Identity.class,userId);
+            try{
+            if(id!=null){
+
+            strreg = "Server-"+id.getAttribute("country");
+
+            log.error("region is"+strreg);
+            Custom vpnser=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+            if(vpnser != null &amp;&amp; strreg!=null){
+						/* Adding as a part of the vpn server changes */
+            Map countryMap = vpnser.get("CountryNames");
+            if(null != countryMap @and countryMap.size() &gt; 0){
+			String userCountry = id.getAttribute("country");
+            if(null != userCountry @and !"".equalsIgnoreCase(userCountry)){
+            
+            	String countryName = countryMap.get(userCountry);
+            	if(null != countryName @and !"".equalsIgnoreCase(countryName)){
+            		if(countryName.equalsIgnoreCase("United Arab Emirates")){
+            			countryName = "UAE";
+            		}
+            		vpnList = vpnser.get("Server-"+countryName);
+            	}
+            }
+            	
+            }
+            
+            } 
+
+
+            return vpnList;
+            }
+            }catch(Exception e){
+
+            throw e;
+            } 
+
+
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+
+                  String strVpntest=form.getField("vpntest").getValue();
+                  if(strVpntest==null || (strVpntest!=null &amp;&amp; strVpntest.equalsIgnoreCase("false"))){
+                  log.error("inside if loop hidden"+strVpntest);
+                  return true;
+                  }
+                  if(strVpntest!=null){
+                  log.error("strVpn is:::"+strVpntest);
+                  if(strVpntest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" required="true" type="string">
+      <AllowedValues>
+        <String>Requesting additional access for the existing contractor</String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" helpKey="Please enter a business justification ensuring that it's no less than 50 characters" name="otherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          System.out.println("Value "+value);
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="next" label="OK" />
+  <Button action="back" label="nav_cancel" />
+</Form>
+
+</sailpoint>

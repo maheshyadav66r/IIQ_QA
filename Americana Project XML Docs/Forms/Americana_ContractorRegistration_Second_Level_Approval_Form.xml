@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_ContractorRegistration_Second_Level_Approval_Form" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Contractor User Registration Second Level Approval Form" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="User Details">
+    <Field columnSpan="1" displayName="Select the appropriate user details" helpKey="For Contractor creation select respective vendor details , for Interim select Interim and for generic User select General Use" name="vendor" required="true" type="string" />
+    <Field columnSpan="1" displayName="Name of the User(as per the passport)" name="username" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="DisplayName of the User" helpKey="Display name will be generated from sailpoint" name="displayName" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="Department" name="department" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="Cost Center" name="costcenter" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="Position" name="position" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="Region" name="region" readOnly="true" type="string" />
+    <Field columnSpan="1" displayName="Office Location" name="officelocation" readOnly="true" type="string" />
+    <Field columnSpan="1" displayName="Mobile Number" name="number" readOnly="true" type="string" />
+    <Field columnSpan="1" displayName="Joining Date" displayOnly="true" name="jdate" readOnly="true" required="true" type="string" />
+    <Field columnSpan="1" displayName="End Date" name="cedate" readOnly="true" type="string" />
+    <Field columnSpan="1" displayName="Start Date" name="csdate" readOnly="true" type="string" />
+    <Field columnSpan="1" displayName="Reports to" name="manager" readOnly="true" type="string" />
+  </Section>
+  <Section columns="2" label="selected access">
+    <Field columnSpan="1" displayName="AD Account" displayType="radio" name="ad" readOnly="true" required="true" type="boolean" />
+    <Field columnSpan="1" displayName="VPN Access" displayType="radio" name="vpn" readOnly="true" type="boolean" />
+    <Field columnSpan="1" displayName="Email Access" displayType="radio" name="email" readOnly="true" type="boolean" />
+    <Field columnSpan="1" displayName="Laptop" displayType="radio" name="laptop" readOnly="true" type="boolean" />
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Immediate Joiner" displayType="radio" name="immediateJoiner" readOnly="true" type="boolean" />
+    <Field columnSpan="1" displayName="Onsite Access Required" displayType="radio" name="wifiaccess" readOnly="true" type="boolean" />
+    <Field columnSpan="1" displayName="VpnServers" displayType="comboBox" multi="true" name="vpnServer" readOnly="true" type="string" />
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" readOnly="true" required="true" type="string">
+      <AllowedValues>
+        <String>Onboarding a new contractor for the project </String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" name="otherJustificationReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Section label="Attachment Details" name="attachment section" type="datatable">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+              if(null != fileParameters @and void != fileParameters){
+              return false;
+              }
+              
+              return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="subtitle" value="Below are the attachment details submitted by the requestor" />
+      </Map>
+    </Attributes>
+    <Field helpKey="Please click on the link to check the approval document">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-ContractorForms-DynamicTable-FieldValue" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Section label="Approval Status" name="Approval Status" type="datatable">
+    <Field helpKey="Please find Approval Status">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps-approvalStatus-FieldValue-DeptHead" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Button action="next" label="Approve" value="Approve" />
+  <Button action="back" label="Reject" value="Reject" />
+  <Button action="cancel" label="nav_cancel" />
+</Form>
+
+</sailpoint>

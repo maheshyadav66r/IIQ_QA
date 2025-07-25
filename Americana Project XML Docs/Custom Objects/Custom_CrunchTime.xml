@@ -1,0 +1,3143 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Custom_CrunchTime">
+  <Attributes>
+    <Map>
+      <entry key="Bahrain">
+        <value>
+          <Map>
+            <entry key="Bahrain">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>T.G.I FRIDAYS</String>
+                  <String>Pizza Hut</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>B14713 - HRD AL JUFFIER</String>
+                  <String>B14716 - HRD CITY CENTER</String>
+                  <String>B14703 - HRD HOORA</String>
+                  <String>B14718 - HRD MUHARRAQ</String>
+                  <String>B14711 - HRD ADLIYA</String>
+                  <String>B14709 - HRD HAMMAD</String>
+                  <String>B14719 - HRD RAMLI MALL</String>
+                  <String>B14717 - HRD ARAD</String>
+                  <String>B14702 - HRD ISA TOWN</String>
+                  <String>B14721 - HRD LULU BUKAWARA</String>
+                  <String>B14723 - HRD SUKHAIR</String>
+                  <String>B14724 - HRD AVENUE</String>
+                  <String>B14708 - HRD BAH UNIVERSITY 2</String>
+                  <String>B14705 - HRD RIFFA</String>
+                  <String>B14704 - HRD SEEF MALL</String>
+                  <String>B14714 - HRD AL BUDAIYA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>B12703 - KFC BUDAIYA</String>
+                  <String>B12702 - KFC MUHARRAQ</String>
+                  <String>B12740 - KFC - MARASI AL BAHRAIN</String>
+                  <String>B12739 - KFC LULU AL HIDD</String>
+                  <String>B12732 - KFC AVENUE</String>
+                  <String>B12738 - KFC ADLIYA RELOCATION</String>
+                  <String>B12737 - KFC JANABIYAH</String>
+                  <String>B12704 - KFC MANAMA</String>
+                  <String>B12707 - KFC HAMAD TWON</String>
+                  <String>B12728 - KFC SAKHAIR</String>
+                  <String>B12726 - KFC SAAR</String>
+                  <String>B12725 - KFC HIDD</String>
+                  <String>B12724 - KFC RAMLI MALL</String>
+                  <String>B12720 - KFC SITRA MALL</String>
+                  <String>B12729 - KFC JUFFAIR MALL</String>
+                  <String>B12718 - KFC JUFFAIR</String>
+                  <String>B12714 - KFC RIFFA #2</String>
+                  <String>B12717 - KFC BO KOWARA</String>
+                  <String>B12713 - KFC SEEF MALL #2</String>
+                  <String>B12711 - KFC SEEF MALL #1</String>
+                  <String>B12723 - KFC CITY CENTER MALL</String>
+                  <String>B12709 - KFC ISA TWON</String>
+                  <String>B12727 - KFC SEEF AL MUHARRAQ</String>
+                  <String>B12708 - KFC ARAD</String>
+                  <String>B12721 - KFC HAMMAD 2</String>
+                  <String>B12706 - KFC HOORA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>B21713 - KKD LULU BUKWARA</String>
+                  <String>B21704 - KKD BUDAIYA</String>
+                  <String>B21714 - KKD LULU GALLERIA</String>
+                  <String>B21723 - KKD BAHRAIN CATERING</String>
+                  <String>B21719 - KKD RAMLI MALL</String>
+                  <String>B21724 - KKD AL RIFFA CARVE OUT</String>
+                  <String>B21722 - KKD ARAD</String>
+                  <String>B21705 - KKD JUFFAIR</String>
+                  <String>B21718 - KKD CITY CENTER 2</String>
+                  <String>B21721 - KKD SAYAH SQUARE</String>
+                  <String>B21717 - KKD TUBLI</String>
+                  <String>B21715 - KKD SUKHAIR</String>
+                  <String>B21725 - KKD ISSA TOWN CURVE OUT</String>
+                  <String>B21727 - KKD MARASI AL BAHRAIN</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>B16725 - PH AL SAYAH SQUARE</String>
+                  <String>B16726 - PH THE GROVE BUDAIYA</String>
+                  <String>B16727 - PH AL NAJMA PLAZA</String>
+                  <String>B16707 - PH CITY CENTRE</String>
+                  <String>B16721 - PH AVENUE</String>
+                  <String>B16722 - PH SUKHAIR</String>
+                  <String>B16728 - PH TUBLI</String>
+                  <String>B16724 - PH AMWAJ</String>
+                  <String>B16708 - PH SEEF MALL</String>
+                  <String>B16723 - PH MAF CITY CENTER</String>
+                  <String>B16709 - PH AL ZINJ</String>
+                  <String>B16711 - PH ISA TOWN</String>
+                  <String>B16712 - PH SANAD</String>
+                  <String>B16717 - PH BUKWARA</String>
+                  <String>B16713 - PH ARAD</String>
+                  <String>B16718 - PH SEEF AL MUHARRAQ</String>
+                  <String>B16714 - PH BUDAIYA</String>
+                  <String>B16716 - PH RAMLI MALL</String>
+                  <String>B16702 - PH AL JUFAIR</String>
+                  <String>B16703 - PH AL HOORA</String>
+                  <String>B16705 - PH AL MUHARRAQ</String>
+                  <String>B16706 - PH HAMMAD</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>B18707 - TGIF MARASI AL BAHRAIN</String>
+                  <String>B18703 - TGIF JUFFAIR</String>
+                  <String>B18702 - TGIF CITY CENTER</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Egypt">
+        <value>
+          <Map>
+            <entry key="Chicken Tikka">
+              <value>
+                <List>
+                  <String>E13702 - TIKKA EL HIGAZ</String>
+                  <String>E13733 - TIKKA EL SHAMS</String>
+                  <String>E13701 - TIKKA EL MOHANDSEEN</String>
+                  <String>E13704 - TIKKA EL HARAM</String>
+                  <String>E13706 - TIKKA FINI</String>
+                  <String>E13726 - TIKKA MARSA MATROH</String>
+                  <String>E13738 - TIKKA PLAZA NEW CAIRO</String>
+                  <String>E13735 - TIKKA PLAZA ZAYED</String>
+                  <String>E13744 - TIKKA 6 OCTOBER 2</String>
+                  <String>E13779 - TIKKA LAURENT</String>
+                  <String>E13782 - TIKKA GREEN PLAZA</String>
+                  <String>E13707 - TIKKA EL MANSOURA</String>
+                  <String>E13773 - TIKKA DIPLO 2</String>
+                  <String>E13775 - TIKKA MARINA2</String>
+                  <String>E13705 - TIKKA EL AKAD</String>
+                  <String>E13709 - TIKKA EL NAHAS</String>
+                  <String>E13712 - TIKKA EL BAKRI</String>
+                  <String>E13719 - TIKKA MAADI 2</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Costa Coffee">
+              <value>
+                <List>
+                  <String>E60838 - COSTA MADINATY SOUTH</String>
+                  <String>E60850 - COSTA DYAR MALL</String>
+                  <String>E60851 - COSTA UPTOWN CAIRO PLAZA</String>
+                  <String>E60852 - COSTA GOLDEN SQUARE</String>
+                  <String>E60856 - COSTA ARABELLA PLAZA</String>
+                  <String>E60854 - COSTA CITY CENTER ALMAZA</String>
+                  <String>E60721 - COSTA MOSADAK</String>
+                  <String>E60729 - COSTA ZAMALEK CLUB</String>
+                  <String>E60833 - COSTA DREAMLAND</String>
+                  <String>E60867 - COSTA AMWAG BEACH</String>
+                  <String>E60723 - COSTA EL REHAB</String>
+                  <String>E60732 - COSTA AL-ABOUR</String>
+                  <String>E60804 - COSTA FESTIVAL CITY MALL 2</String>
+                  <String>E60841 - COSTA MIVIDA CONTAINER</String>
+                  <String>E60842 - COSTA EMAAR SQUARE - UPTOWN</String>
+                  <String>E60847 - COSTA TERRACE MALL</String>
+                  <String>E60844 - COSTA OLA YASMIN</String>
+                  <String>E60752 - COSTA HURGHADA</String>
+                  <String>E60711 - COSTA DANDI MALL</String>
+                  <String>E60748 - COSTA PRIMA VISTA</String>
+                  <String>E60749 - COSTA AMERICANA PLAZA ZAYED</String>
+                  <String>E60800 - COSTA AMERICANA PLAZA NEW CAI</String>
+                  <String>E60807 - COSTA SODIC</String>
+                  <String>E60826 - COSTA ELGIZERA PLAZA</String>
+                  <String>E60839 - COSTA PALM STRIP</String>
+                  <String>E60848 - COSTA THE GATE</String>
+                  <String>E60760 - COSTA CARREFOUR ALX</String>
+                  <String>E60763 - COSTA SAN STEPHANO</String>
+                  <String>E60764 - COSTA STANLY</String>
+                  <String>E60772 - COSTA GREEN PLAZA</String>
+                  <String>E60780 - COSTA FOUAD ST. ALEX</String>
+                  <String>E60837 - COSTA COFFEE ELMANDARA</String>
+                  <String>E60840 - COSTA GLEEM</String>
+                  <String>E60843 - COSTA SMOUHA SOLIK</String>
+                  <String>E60824 - COSTA MANSOURA</String>
+                  <String>E60765 - COSTA MARINA GATE #4</String>
+                  <String>E60768 - COSTA MARINA #5</String>
+                  <String>E60774 - COSTA AMWAJ-NORTH COAST</String>
+                  <String>E60776 - COSTA PORTO MARINA MALL</String>
+                  <String>E60779 - COSTA TELAL VILLAGE- NC</String>
+                  <String>E60782 - COSTA MARASSI - NORTH COAST</String>
+                  <String>E60787 - COSTA MARASSI BEACH</String>
+                  <String>E60788 - COSTA ALALAMIN HOTEL</String>
+                  <String>E60701 - COSTA HELIOPOLES #1</String>
+                  <String>E60703 - COSTA CITY STARS SECOND F</String>
+                  <String>E60704 - COSTA EL MAADI</String>
+                  <String>E60706 - COSTA CITY STARS ENT F LEVEL</String>
+                  <String>E60709 - COSTA COFFEE MAADI #2 STREET</String>
+                  <String>E60713 - COSTA EL ZAMALEK</String>
+                  <String>E60714 - COSTA NASR CITY A&amp;W</String>
+                  <String>E60753 - COSTA HASSAN EL MAAMON</String>
+                  <String>E60818 - COSTA SHERIF ST. DOWN TOWN</String>
+                  <String>E60823 - COSTA EL HIGAZ</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Egypt">
+              <value>
+                <List>
+                  <String>Chicken Tikka</String>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                  <String>T.G.I FRIDAYS</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>E50811 - HRD CHILL OUT REHAB</String>
+                  <String>E50713 - HRD EL HARAM</String>
+                  <String>E50701 - HRD EL MOHANDSEEN</String>
+                  <String>E50812 - HRD WATANIA DREAM WAHAT</String>
+                  <String>E50750 - HRD EL HARAM 2</String>
+                  <String>E50710 - HRD MUSADAK</String>
+                  <String>E50810 - HRD AVENUE EL REHAB</String>
+                  <String>E50729 - HRD MARSA MATROH</String>
+                  <String>E50809 - HRD AMWAJ</String>
+                  <String>E50821 - HRD WATANYA MOSTAFA KAMEL</String>
+                  <String>E50813 - HRD DIYAR MALL CONTAINER</String>
+                  <String>E50715 - HRD CARREFOUR (CAIRO)</String>
+                  <String>E50749 - HRD CAIRO FESTIVAL CITY MALL</String>
+                  <String>E50756 - HRD MADINATY</String>
+                  <String>E50748 - HRD AMERICANA PLAZA NEW CAIRO</String>
+                  <String>E50706 - HRD DANDY MALL (H.W)</String>
+                  <String>E50741 - HRD MALL OF ARABIA</String>
+                  <String>E50747 - HRD AMERICANA PLAZA ZAYED</String>
+                  <String>E50758 - HRD MALL OF EGYPT</String>
+                  <String>E50760 - HRD PRIMA VESTA</String>
+                  <String>E50782 - HRD ROUSHDY</String>
+                  <String>E50784 - HRD GREEN PLAZA</String>
+                  <String>E50780 - HRD CAREFOUR ALEX.</String>
+                  <String>E50783 - HRD SAN STEFANO</String>
+                  <String>E50781 - HRD DIPLOMASEEN 2</String>
+                  <String>E50790 - HRD SIDI ABDELRAHMAN</String>
+                  <String>E50791 - HRD MARASI</String>
+                  <String>E50786 - HRD MARINA GATE 4</String>
+                  <String>E50712 - HRD MARGHANY</String>
+                  <String>E50722 - HRD EL SHAMS (A.BADAWY ST.)</String>
+                  <String>E50807 - HRD ALMAZA CITY CENTER</String>
+                  <String>E50718 - HRD BATTRAWE ST.</String>
+                  <String>E50744 - HRD SILVER STAR  MALL</String>
+                  <String>E50705 - HRD TAHRIR</String>
+                  <String>E50709 - HRD CITY CENTER</String>
+                  <String>E50802 - HRD CITY STARS 8TH FLOOR</String>
+                  <String>E50738 - HRD  EL TAYARAN ST.</String>
+                  <String>E50707 - HRD EL BAKRY</String>
+                  <String>E50702 - HRD ZAMALEK</String>
+                  <String>E50704 - HRD MAADI(EL NASR ST.)</String>
+                  <String>E50726 - HRD EL MAADI CLUB</String>
+                  <String>E50751 - HRD LEBANON SQ</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>E12703 - KFC SHOUBRA</String>
+                  <String>E12704 - KFC EL MAADI NEW</String>
+                  <String>E12709 - KFC EL MAADI</String>
+                  <String>E12710 - KFC EL MERGHANY</String>
+                  <String>E12711 - KFC EL BAKRY</String>
+                  <String>E12715 - KFC THARWAT</String>
+                  <String>E12716 - KFC EL NAHAS</String>
+                  <String>E12717 - KFC EL HIGAZ</String>
+                  <String>E12722 - KFC NASR CITY</String>
+                  <String>E12723 - KFC EL THAWRAH</String>
+                  <String>E12726 - KFC EL SHAMS</String>
+                  <String>E12728 - KFC EL TAYARAN</String>
+                  <String>E12763 - KFC EL NOZHA</String>
+                  <String>E12767 - KFC EL ABASSIA</String>
+                  <String>E12770 - KFC EL ZAMALEK</String>
+                  <String>E12779 - KFC EL MOBTADYN</String>
+                  <String>E12780 - KFC EL ZAIYTON</String>
+                  <String>E12787 - KFC  SAFIR SQ.</String>
+                  <String>E12789 - KFC EL TAHRIR  NEW</String>
+                  <String>E12794 - KFC MISR &amp; SOUDAN</String>
+                  <String>E12611 - KFC GOLDEN SQUARE</String>
+                  <String>E12995 - KFC MAZAR MALL</String>
+                  <String>E12996 - KFC WATANEYA BELLAGIO</String>
+                  <String>E12701 - KFC EL MOHANDESEEN</String>
+                  <String>E12706 - KFC EL HARAM</String>
+                  <String>E12707 - KFC EL MANIAL</String>
+                  <String>E12712 - KFC EL HARM NEW</String>
+                  <String>E12719 - KFC MOHY EL DIN</String>
+                  <String>E12721 - KFC EL GIZA</String>
+                  <String>E12727 - KFC LEBANON SQ.</String>
+                  <String>E12729 - KFC FINI</String>
+                  <String>E12777 - KFC  SPHINX</String>
+                  <String>E12730 - KFC WATANYA DREAM (WAHAT ROAD)</String>
+                  <String>E12800 - KFC ALEX H.W.</String>
+                  <String>E12807 - KFC FAISAL</String>
+                  <String>E12829 - KFC IMBABA</String>
+                  <String>E12832 - KFC EL SUDAN ST.</String>
+                  <String>E12847 - KFC FAISEL 2</String>
+                  <String>E12928 - KFC EL LIBINI EL HARAM</String>
+                  <String>E12931 - KFC EL WEHDA -EMBABA</String>
+                  <String>E12944 - KFC FAISAL (3)</String>
+                  <String>E12713 - KFC MALL OF TANTA</String>
+                  <String>E12980 - KFC CITY CENTER ALMAZA</String>
+                  <String>E12990 - KFC REHAB AVENUE</String>
+                  <String>E12797 - KFC RAS EL BAR</String>
+                  <String>E12804 - KFC EL MENIA</String>
+                  <String>E12808 - KFC ASUOT</String>
+                  <String>E12956 - KFC ASSIUT (2)</String>
+                  <String>E12809 - KFC LUXOR</String>
+                  <String>E12984 - KFC LUXOR 2</String>
+                  <String>E12817 - KFC SOHAG</String>
+                  <String>E12819 - KFC EL MOKATTAM</String>
+                  <String>E12824 - KFC MARSA MATROOH</String>
+                  <String>E12841 - KFC EL KHALFAWY</String>
+                  <String>E12933 - KFC SHOUBRA EL KHAIMA</String>
+                  <String>E12941 - KFC EL TERAA EL BOLAKIA</String>
+                  <String>E12951 - KFC MOSTORD</String>
+                  <String>E12846 - KFC ASWAN</String>
+                  <String>E12854 - KFC EL SUEZ</String>
+                  <String>E12857 - KFC BENHA</String>
+                  <String>E12874 - KFC TOUKH</String>
+                  <String>E12863 - KFC EL FAYOM</String>
+                  <String>E12864 - KFC DAMIETTA</String>
+                  <String>E12942 - KFC DAMIETTA 2</String>
+                  <String>E12915 - KFC GAMASA</String>
+                  <String>E12867 - KFC PORTO SOKHNA</String>
+                  <String>E12868 - KFC BANY SWEIF</String>
+                  <String>E12873 - KFC DAMANHOUR</String>
+                  <String>E12876 - KFC KAFR EL SHEIKH</String>
+                  <String>E12912 - KFC QENA</String>
+                  <String>E12926 - KFC DESOUK</String>
+                  <String>E12930 - KFC MEET GHAMER</String>
+                  <String>E12999 - KFC WATANIA EL MOSHEER ROAD</String>
+                  <String>E12503 - KFC MADINATY OPEN AIR MALL</String>
+                  <String>E12718 - KFC CHILLOUT OBOUR</String>
+                  <String>E12766 - KFC HURGHADA</String>
+                  <String>E12825 - KFC HURGADA 2</String>
+                  <String>E12938 - KFC SENZO MALL - HURGHADA</String>
+                  <String>E12769 - KFC TANTA</String>
+                  <String>E12953 - KFC TANTA (3)</String>
+                  <String>E12967 - KFC EL OROUBA MALL - TANTA</String>
+                  <String>E12961 - KFC HADAYEK AL AHRAM</String>
+                  <String>E12771 - KFC 6 TH OF OCT # 1</String>
+                  <String>E12778 - KFC 6 TH OF OCT # 2</String>
+                  <String>E12823 - KFC HYPER1</String>
+                  <String>E12837 - KFC GAMGOM</String>
+                  <String>E12838 - KFC CITY STARS 6TH OCT</String>
+                  <String>E12853 - KFC MALL OF ARABIA</String>
+                  <String>E12870 - KFC AMERICANA PLAZA ZAYED</String>
+                  <String>E12871 - KFC TOTAL EL SHEIKH ZAYED</String>
+                  <String>E12965 - KFC MALL OF EGYPT</String>
+                  <String>E12992 - KFC CHILL OUT 26 JULY CORRIDOR</String>
+                  <String>E12772 - KFC PORT SAID</String>
+                  <String>E12845 - KFC PORT SAEID 2.</String>
+                  <String>E12917 - KFC PORT SAID (3)</String>
+                  <String>E12955 - KFC POR FOUAD</String>
+                  <String>E12940 - KFC MOBIL MISR ISMAILIA ROAD</String>
+                  <String>E12954 - KFC ISMAILIA (3)</String>
+                  <String>E12773 - KFC EL ISMALIA</String>
+                  <String>E12776 - KFC SHARM EL SHEIKH</String>
+                  <String>E12840 - KFC NABAK</String>
+                  <String>E12782 - KFC EL MAHALA</String>
+                  <String>E12786 - KFC EL ZAGAZIG</String>
+                  <String>E12948 - KFC EL ZAGAZIG (2)</String>
+                  <String>E12791 - KFC EL AIN EL SOKHNA (THE REST</String>
+                  <String>E12894 - KFC EL HANOFEIL</String>
+                  <String>E12895 - KFC ROYAL PLAZA MALL-ALEX</String>
+                  <String>E12896 - KFC LOURAN</String>
+                  <String>E12897 - KFC EL SEOUF - ALEX</String>
+                  <String>E12760 - KFC EL MANSOURA</String>
+                  <String>E12858 - KFC EL MANSOURA 2</String>
+                  <String>E12958 - KFC EL MANSOURA (3)</String>
+                  <String>E12765 - KFC MARINA SHANZILIZE</String>
+                  <String>E12768 - KFC EL DEPL . #3</String>
+                  <String>E12775 - KFC EL DEPL .</String>
+                  <String>E12883 - KFC DIAMOND BEACH</String>
+                  <String>E12888 - KFC MARAQIA</String>
+                  <String>E12898 - KFC MARASSI - NORTH COAST</String>
+                  <String>E12968 - KFC MARINA GATE (4) NEW</String>
+                  <String>E12969 - KFC STELLA</String>
+                  <String>E12978 - KFC AMWAJ</String>
+                  <String>E12601 - KFC WATANYA HUB 50</String>
+                  <String>E12507 - KFC MOKATTAM STREET 9</String>
+                  <String>E12608 - KFC OLA ARABELLA NEW CAIRO</String>
+                  <String>E12622 - KFC CHILLOUT SHOROUK</String>
+                  <String>E12734 - KFC MOBIL NORTH 90</String>
+                  <String>E12997 - KFC WATANEYA WAHA</String>
+                  <String>E12502 - KFC MOBIL CFC</String>
+                  <String>E12509 - KFC SHEEBEN AL KOM</String>
+                  <String>E12735 - KFC ROUSHDI</String>
+                  <String>E12739 - KFC EL RAML</String>
+                  <String>E12746 - KFC DOWN TOWN / ALX.</String>
+                  <String>E12747 - KFC SEMOHA</String>
+                  <String>E12750 - KFC CARFOUR ALX.</String>
+                  <String>E12774 - KFC EL MIAMI</String>
+                  <String>E12881 - KFC SAN STEPHANO</String>
+                  <String>E12885 - KFC PALM BEACH</String>
+                  <String>E12886 - KFC MIAMI 2</String>
+                  <String>E12887 - KFC  GREEN PLAZA</String>
+                  <String>E12891 - KFC EL AGAMI</String>
+                  <String>E12893 - KFC EL IBRAHIMIA</String>
+                  <String>E12831 - KFC HASSAN EL MAAMON</String>
+                  <String>E12833 - KFC SHERATON</String>
+                  <String>E12834 - KFC ABD EL AZIZ</String>
+                  <String>E12835 - KFC AIN SHAMES</String>
+                  <String>E12836 - KFC KASR EL KOBA</String>
+                  <String>E12855 - KFC EL GOMHORIA</String>
+                  <String>E12856 - KFC EL HAY EL ASHER</String>
+                  <String>E12861 - KFC SILVER STAR MALL</String>
+                  <String>E12866 - KFC ZHRAA EL MAADI</String>
+                  <String>E12939 - KFC EL MAADI 3</String>
+                  <String>E12943 - KFC GENENA MALL</String>
+                  <String>E12945 - KFC TALAAT HARAB (2)</String>
+                  <String>E12946 - KFC MEGA BITE MALL</String>
+                  <String>E12963 - KFC TIBA MALL</String>
+                  <String>E12976 - KFC CITY STARS 3</String>
+                  <String>E12986 - KFC CITY STARS4</String>
+                  <String>E12991 - KFC CHILL OUT EL NAKHEL</String>
+                  <String>E12500 - KFC WATANEYA QORONFIL</String>
+                  <String>E12504 - KFC DOWNTOWN TALAAT AL HARB</String>
+                  <String>E12994 - KFC CHILL OUT REHAB</String>
+                  <String>E12605 - KFC OLA GARDENIA NEW CAIRO</String>
+                  <String>E12814 - KFC QATTAMIA</String>
+                  <String>E12822 - KFC FUTURE MALL</String>
+                  <String>E12826 - KFC EL REHAB</String>
+                  <String>E12848 - KFC GOLF CITY MALL EL OBOUR</String>
+                  <String>E12852 - KFC EL SHROUK</String>
+                  <String>E12877 - KFC AMERICANA PLAZA NEW CAIRO</String>
+                  <String>E12932 - KFC CAIRO FESTIVAL CITY MALL</String>
+                  <String>E12952 - KFC EL OBOUR (2)</String>
+                  <String>E12962 - KFC TWIN PLAZA</String>
+                  <String>E12714 - KFC 10 TH OF RAMADAN</String>
+                  <String>E12993 - KFC MADINATY SOUTH PARK</String>
+                  <String>E12803 - KFC CITY CENTER</String>
+                  <String>E12805 - KFC GESR EL SUES</String>
+                  <String>E12810 - KFC ROXI  ( DELCO )</String>
+                  <String>E12821 - KFC HELWAN</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>E21703 - KKD MOHANDESEEN</String>
+                  <String>E21736 - KKD CITY STARS</String>
+                  <String>E21738 - KRISPY KREME CHILLOUT OBOUR</String>
+                  <String>E21729 - KKD SWELL LAKE</String>
+                  <String>E21730 - KKD GREEN PLAZA</String>
+                  <String>E21732 - KKD SMOUHA SOLIK ALEX</String>
+                  <String>E21733 - KKD MHATET RMAL OPPO</String>
+                  <String>E21735 - KKD GLEEM BAY</String>
+                  <String>E21734 - KKD MARASSI NORTH COAST</String>
+                  <String>E21705 - KKD AMERICANA ZAYED</String>
+                  <String>E21724 - KKD WATANYA MOSTAFA KAMEL</String>
+                  <String>E21714 - KKD TALAAT HARB</String>
+                  <String>E21726 - KKD TOTAL KATAMEYA</String>
+                  <String>E21740 - KKD CITY CENTER MAKRAM EBAID</String>
+                  <String>E21737 - KKD ZAMALEK</String>
+                  <String>E21739 - KKD HUB 50 MAADI</String>
+                  <String>E21725 - KKD TUCANO MALL</String>
+                  <String>E21710 - KKD OLA SWAN LAKE</String>
+                  <String>E21712 - KKD OLA GARDENIA</String>
+                  <String>E21719 - KKD AM PLAZA NEW CAIRO</String>
+                  <String>E21718 - KKD WATANYA BELAGIO</String>
+                  <String>E21715 - KKD MOBIL EL NARJES</String>
+                  <String>E21716 - KKD MIVIDA LAKE DISTRICT</String>
+                  <String>E21723 - KKD MALL OF ARABIA</String>
+                  <String>E21727 - KKD CHILLOUT AL SHEROUK</String>
+                  <String>E21731 - KKD MOSADDAK</String>
+                  <String>E21720 - KKD THE YARD PLAZA</String>
+                  <String>E21709 - KKD MALL OF EGYPT</String>
+                  <String>E21713 - KKD MOBIL CFC</String>
+                  <String>E21728 - KKD PLAZA ESPANA ZAYED</String>
+                  <String>E21717 - KKD SAFEER SQUARE</String>
+                  <String>E21706 - KKD MOBILE NORTH 90</String>
+                  <String>E21701 - KKD KATAMEYA DOWNTOWN MALL</String>
+                  <String>E21702 - KKD ARABELLA</String>
+                  <String>E21704 - KKD MAADI NASR ST</String>
+                  <String>E21721 - KKD WATANEYA BELLAGIO</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>E14887 - PH MARASSI - NORTH COAS</String>
+                  <String>E14890 - PH AMWAJ</String>
+                  <String>E14897 - PH STELLA VILLAGE</String>
+                  <String>E14712 - PH HURGHADA</String>
+                  <String>E14931 - PH TUCANO MALL</String>
+                  <String>E14933 - PH MOKATTAM 2</String>
+                  <String>E14935 - PH HUB 50 MAADI</String>
+                  <String>E14731 - PH ROUSHDI</String>
+                  <String>E14738 - PH CORNISH ALX.</String>
+                  <String>E14760 - PH EL EQBAL</String>
+                  <String>E14762 - PH CARREFOUR ALX.</String>
+                  <String>E14880 - PH SAN STEPHANO</String>
+                  <String>E14881 - PH DIAMOND</String>
+                  <String>E14883 - PH GREEN PLAZA</String>
+                  <String>E14886 - PH STREET 45-MIAMI</String>
+                  <String>E14917 - PH MADINATY OAM</String>
+                  <String>E14923 - PH TIVOLI PALZA</String>
+                  <String>E14932 - PH WATANEYA BELLAGIO</String>
+                  <String>E14915 - PH OLA DEPLO NEW CAIRO</String>
+                  <String>E14930 - PH DOWNTOWN TALAAT AL HARB</String>
+                  <String>E14925 - PH WATANEYA WAHA</String>
+                  <String>E14934 - PH AL SHEROUK 2</String>
+                  <String>E14728 - PH 10TH OF RAMADAN</String>
+                  <String>E14786 - PH QATTAMIA</String>
+                  <String>E14797 - PH FUTURE MALL</String>
+                  <String>E14803 - PH EL REHAB</String>
+                  <String>E14809 - PH EL OBOUR</String>
+                  <String>E14815 - PH TOTAL EL QATTAMIA</String>
+                  <String>E14817 - PH R.R AMERICANA PLAZA</String>
+                  <String>E14820 - PH DELCO AMERICANA PLAZ</String>
+                  <String>E14821 - PH CAIRO FESTIVAL CITY</String>
+                  <String>E14835 - PH MADINATY CITY</String>
+                  <String>E14840 - PH TWIN PLAZA</String>
+                  <String>E14910 - PH MIVIDA</String>
+                  <String>E14911 - PH PALM STRIP</String>
+                  <String>E14920 - PH THE GATE</String>
+                  <String>E14909 - PH CHILL OUT -ELNAKHEEL</String>
+                  <String>E14913 - PH DAYER MALL NEW CAIRO</String>
+                  <String>E14927 - PH SHERATON</String>
+                  <String>E14916 - PH GOLDEN SQUARE</String>
+                  <String>E14718 - PH SPHINX</String>
+                  <String>E14720 - PH LEBANON SQ.</String>
+                  <String>E14743 - PH EL MOHANDESEEN</String>
+                  <String>E14906 - PH SODIC</String>
+                  <String>E14702 - PH EL AHRAM</String>
+                  <String>E14703 - PH EL MESSAHA</String>
+                  <String>E14704 - PH EL MAADI</String>
+                  <String>E14708 - PH EL ZAMALEK</String>
+                  <String>E14709 - PH EL TAHRIR</String>
+                  <String>E14711 - PH EL AKAD</String>
+                  <String>E14713 - PH EL SHAMS</String>
+                  <String>E14715 - PH EL MAADI NEW</String>
+                  <String>E14716 - PH EL NOZHA</String>
+                  <String>E14719 - PH CITY CENTER</String>
+                  <String>E14721 - PH EL NAHAS</String>
+                  <String>E14723 - PH EL ABASSIA</String>
+                  <String>E14740 - PH MERRYLAND</String>
+                  <String>E14741 - PH SAFIR SQ.</String>
+                  <String>E14783 - PH NASR CITY DELCO</String>
+                  <String>E14829 - PH AIN SHAMS</String>
+                  <String>E14839 - PH ARKIDIA MALL</String>
+                  <String>E14894 - PH HELWAN AGR. ROAD</String>
+                  <String>E14896 - PH ZAHRAA EL MAADI</String>
+                  <String>E14898 - PH SIFARAT - NASR CITY</String>
+                  <String>E14904 - PH CITY CENTER ALMAZA</String>
+                  <String>E14907 - PH AVENUE EL-REHAB</String>
+                  <String>E14787 - PH EL MOKKATTAM</String>
+                  <String>E14799 - PH  MARSA MATROOH</String>
+                  <String>E14785 - PH SHOUBRA</String>
+                  <String>E14823 - PH EL SUEZ DELCO</String>
+                  <String>E14919 - PH TERRACE MALL</String>
+                  <String>E14701 - PH MESADEK</String>
+                  <String>E14705 - PH EL AHRAM ( H.D. )</String>
+                  <String>E14707 - PH EL HARAM</String>
+                  <String>E14710 - PH EL GIZA</String>
+                  <String>E14717 - PH EL HARAM NEW</String>
+                  <String>E14908 - PH CENZO HURGHADA</String>
+                  <String>E14724 - PH TANTA</String>
+                  <String>E14842 - PH EL OROUBA MALL - TAN</String>
+                  <String>E14729 - PH 6TH OCTOBER</String>
+                  <String>E14811 - PH MALL OF ARABIA</String>
+                  <String>E14816 - PH AMERICANA PLAZA ZAYE</String>
+                  <String>E14819 - PH AMERICANA PLAZA ZAYE</String>
+                  <String>E14834 - PH DANDY MALL</String>
+                  <String>E14838 - PH MALL OF EGYPT</String>
+                  <String>E14900 - PH HADAYEK ELAHRAM</String>
+                  <String>E14726 - PH PORT SAID</String>
+                  <String>E14725 - PH EL ISMALIA</String>
+                  <String>E14727 - PH SHARM EL SHEIKH</String>
+                  <String>E14781 - PH EL AIN EL SOKHNA (TH</String>
+                  <String>E14841 - PH RAS EL BAR</String>
+                  <String>E14928 -  PH GLEEM</String>
+                  <String>E14912 - PH SMOUHA SOLIK</String>
+                  <String>E14722 - PH EL MANSOURA</String>
+                  <String>E14844 - PH EL MANSOURA (2)</String>
+                  <String>E14730 - PH EL DEPL.</String>
+                  <String>E14765 - PH MARINA SHANZILIZE</String>
+                  <String>E14768 - PH DEPL. 3</String>
+                  <String>E14882 - PH MARINA (2)</String>
+                  <String>E14885 - PH SEDY KREER - NORTH C</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>E18716 - TGIF CAIRO FESTIVAL</String>
+                  <String>E18707 - TGIF CITY STARS</String>
+                  <String>E18719 - TGIF MALL OF EGYPT</String>
+                  <String>E18714 - TGIF ZAYED AMERICANA PLAZA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Wimpy">
+              <value>
+                <List>
+                  <String>E11724 - WIMPY GOLDEN SQUARE</String>
+                  <String>E11718 - WIMPY MOBIL NORTH 90</String>
+                  <String>E11715 - WIMPY EL AKAAD</String>
+                  <String>E11714 - WIMPY MARASI</String>
+                  <String>E11713 - WIMPY MOHANDSEEN</String>
+                  <String>E11733 - WIMPY OLA GARDENIA</String>
+                  <String>E11730 - WIMPY OLA ARABELLA</String>
+                  <String>E11796 - WIMPY MAADI HUB 50</String>
+                  <String>E11736 - WIMPY MADINATY OPEN AIR MALL</String>
+                  <String>E11721 - WIMPY MIVIDA ADAPTIVE</String>
+                  <String>E11797 - WIMPY CHILLOUT SHERATON</String>
+                  <String>E11722 - WIMPY MOBIL CFC</String>
+                  <String>E11719 - WIMPY TALAAT HARB</String>
+                  <String>E11726 - WIMPY AM PLAZA NEW CAIRO</String>
+                  <String>E11739 - WIMPY AMERICANA PLAZA ZAYED</String>
+                  <String>E11717 - WIMPY WATANEYA BELLAGIO</String>
+                  <String>E11716 - WIMPY EL MAADI</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Iraq">
+        <value>
+          <Map>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>G14708 - HRD BAGHDAD MALL RELOCATION</String>
+                  <String>G14710 - HARDEES PALMS OF BAGHDAD</String>
+                  <String>G14709 - HARDEES IRAQ MALL BAGHDAD</String>
+                  <String>G14711 - HARDEES ZAYOUNA</String>
+                  <String>G14704 - HRD DREAM CITY MALL</String>
+                  <String>G14707 - HRD MANSOUR MALL</String>
+                  <String>G14703 - HRD JADRIA</String>
+                  <String>G14701 - HRD MANSOUR MALL</String>
+                  <String>G14702 - HRD BAGHDAD  MALL</String>
+                  <String>I14701 - HRD GOULAN</String>
+                  <String>I14708 - HRD FAMILY DAHOUK</String>
+                  <String>I14714 - HARDEES IRAQ IL - 2</String>
+                  <String>I14713 - HARDEES 100 METRI</String>
+                  <String>I14704 - HRD FAMILY MALL</String>
+                  <String>I14705 - HRD MAJIDI MALL</String>
+                  <String>I14711 - HRD SHER KOYA FS</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Iraq">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Pizza Hut</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>G12703 - KFC 62 STREET BAGHDAD</String>
+                  <String>G12711 - KFC IRAQ MALL BAGHDAD</String>
+                  <String>G12713 - KFC ZAYOUNA</String>
+                  <String>G12706 - KFC MANSOUR MALL</String>
+                  <String>G12702 - KFC PALESTINE STREET</String>
+                  <String>G12712 - KFC PALMS OF BAGHDAD</String>
+                  <String>G12705 - KFC HAY AL JAMAA</String>
+                  <String>G12710 - KFC BAGHDAD IL - 1</String>
+                  <String>G12708 - KFC ADHAMIYA ASMAI STREET</String>
+                  <String>G12701 - KFC JADRIYAH</String>
+                  <String>I12708 - KFC FAMILY DAHOUK</String>
+                  <String>I12707 - KFC ROYAL MALL</String>
+                  <String>I12713 - KFC GRAND MAJIDI MALL</String>
+                  <String>I12709 - KFC SHER 2 MASEIF SALAH AL DE</String>
+                  <String>I12701 - KFC 100 METRI</String>
+                  <String>I12705 - KFC MEGA MALL</String>
+                  <String>I12704 - KFC SHER 1</String>
+                  <String>I12703 - KFC MAJIDI MALL</String>
+                  <String>I12702 - KFC FAMILY MALL</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>G16703 - PH IL 3</String>
+                  <String>G16701 - PH JADRIYAH</String>
+                  <String>G16702 - PH 62 STREET BAGHDAD</String>
+                  <String>G16706 - PIZZA HUT ADHAMIYA ASMAI STREET</String>
+                  <String>I16702 - PH DREAM CITY</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Jordan">
+        <value>
+          <Map>
+            <entry key="Costa Coffee">
+              <value>
+                <List>
+                  <String>J21709 - COSTA DABOUK</String>
+                  <String>J21715 - COSTA CAFE PRINCE RASHED</String>
+                  <String>J21702 - COSTA CAFE CITY MALL</String>
+                  <String>J21721 - COSTA COFFEE UNIVERSITY</String>
+                  <String>J21717 - COSTA COFE BOULEVARD ABDALI</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>J14702 - HRD AL MADINA</String>
+                  <String>J14705 - HRD CITY MALL</String>
+                  <String>J14715 - HRD SHAFA BADRAN</String>
+                  <String>J14714 - HRD ABDALI</String>
+                  <String>J14709 - HRD MAKKA MALL - 2</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Jordan">
+              <value>
+                <List>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>J12727 - KFC ABO NOSIR</String>
+                  <String>J12729 - KFC GALARIA MALL</String>
+                  <String>J12722 - KFC AQABA</String>
+                  <String>J12733 - KFC MARG AL HAMAM</String>
+                  <String>J12734 - KFC AL YASMIN</String>
+                  <String>J12736 - KFC AL HASHMI</String>
+                  <String>J12737 - KFC GULF</String>
+                  <String>J12738 - KFC ABDALI MALL</String>
+                  <String>J12739 - KFC ZOHOUR RELOCATION</String>
+                  <String>J12752 - KFC UNIVERSITY RELOCATION</String>
+                  <String>J12726 - KFC AL HORYA</String>
+                  <String>J12724 - KFC TAJ MALL</String>
+                  <String>J12723 - KFC TABARBOUR</String>
+                  <String>J12713 - KFC CITY MALL</String>
+                  <String>J12712 - KFC SWEIFIA II</String>
+                  <String>J12711 - KFC KHALDA</String>
+                  <String>J12709 - KFC EL HUSSAIN</String>
+                  <String>J12707 - KFC AL MADINA</String>
+                  <String>J12706 - KFC MAKKA MALL</String>
+                  <String>J12705 - KFC SWEIFIAH</String>
+                  <String>J12703 - KFC SAFEWAY</String>
+                  <String>J12701 - KFC SHEMESANI</String>
+                  <String>J12730 - KFC ISTQLAL MALL</String>
+                  <String>J12732 - KFC CITY CENTER IRBID</String>
+                  <String>J12715 - KFC IRBID</String>
+                  <String>J12719 - KFC NEW ZARQA - 2</String>
+                  <String>J12710 - KFC AL- ZARQA</String>
+                  <String>J12753 - KFC SALT</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>J19722 - KKD UNIVERSITY</String>
+                  <String>J19720 - KKD CITY MALL</String>
+                  <String>J19701 - KKD KHALDA</String>
+                  <String>J19702 - KKD ABDOUN</String>
+                  <String>J19703 - KKD THE BOULEVARD</String>
+                  <String>J19704 - KKD SWEFIAH VILLAGE</String>
+                  <String>J19719 - KKD SALT</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>J16704 - PH AL AQABA</String>
+                  <String>J16706 - PH AL ZARQA</String>
+                  <String>J16718 - PH IRBID 2 DELCO</String>
+                  <String>J16721 - PH IRBID - NEW LOCATION</String>
+                  <String>J16740 - PH HORRIA</String>
+                  <String>J16742 - PH MARKA</String>
+                  <String>J16701 - PH SHEMSSANI</String>
+                  <String>J16705 - PH AL GARDENS</String>
+                  <String>J16707 - PH UNIVERSITY</String>
+                  <String>J16711 - PH AL JUBIHA</String>
+                  <String>J16713 - PH CITY MALL</String>
+                  <String>J16717 - PH ABO NOSIR</String>
+                  <String>J16723 - PH MARG AL HAMAM</String>
+                  <String>J16724 - PH AL YASMIN</String>
+                  <String>J16725 - PH KHALDA</String>
+                  <String>J16726 - PH AL-ZOHOUR</String>
+                  <String>J16731 - PH SWEIFIAH 2 NEW</String>
+                  <String>J16732 - PH 7TH CIRCEL</String>
+                  <String>J16735 - PH TABRBOUR</String>
+                  <String>J16739 - PH SALT</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Kazakhstan">
+        <value>
+          <Map>
+            <entry key="Costa Coffee">
+              <value>
+                <List>
+                  <String>Z18739 - COSTA ASIA PARK MALL</String>
+                  <String>Z18702 - COSTA MEGA ASTANA</String>
+                  <String>Z18731 - COSTA COFFEE VILLA</String>
+                  <String>Z18719 - COSTA FORUM MALL</String>
+                  <String>Z18709 - COSTA MEGA PARK</String>
+                  <String>Z18706 - COSTA DOSTYK PLAZA</String>
+                  <String>Z18701 - COSTA MEGA ALMAY</String>
+                  <String>Z18742 - COSTA ALMATY AIRPORT</String>
+                  <String>Z18729 - COSTA APORT KULDZHA</String>
+                  <String>Z18740 - COSTA YES APART HOTEL</String>
+                  <String>Z18705 - COSTA RESPBLIKA</String>
+                  <String>Z18703 - COSTA KERUEN</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>Z14718 - HRD EXPO MALL</String>
+                  <String>Z14730 - HRD SAURAN</String>
+                  <String>Z14704 - HRD KERUEN</String>
+                  <String>Z14711 - HRD MANASA</String>
+                  <String>Z14709 - HRD RESPUBLIKA</String>
+                  <String>Z14708 - HRD MEGA ASTANA</String>
+                  <String>Z14707 - HRD KHAN SHAYTR</String>
+                  <String>Z14705 - HRD AJIB</String>
+                  <String>Z14735 - HRD SEIFULLINA</String>
+                  <String>Z14740 - HRD INFINITY MALL ATYRAU</String>
+                  <String>Z14741 - HARDEES MEGA MALL SHYMKENT</String>
+                  <String>Z14724 - HRD APORT KULDZA</String>
+                  <String>Z14731 - HRD SINOOIL</String>
+                  <String>Z14717 - HRD FORUM MALL</String>
+                  <String>Z14715 - HRD MOSCOW MALL</String>
+                  <String>Z14712 - HRD MEGA PARK</String>
+                  <String>Z14710 - HRD DOSTYK PLAZA</String>
+                  <String>Z14703 - HRD GOOGLA</String>
+                  <String>Z14701 - HRD MEGA ALMATY</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>Z12779 - KFC MART</String>
+                  <String>Z12795 - KFC GLOBUS</String>
+                  <String>Z12798 - KFC COMPASS</String>
+                  <String>Z12799 - KFC SARYARKA ALMATY</String>
+                  <String>Z12800 - KFC MASATO</String>
+                  <String>Z12801 - KFC AKSAI</String>
+                  <String>Z12813 - KFC RP DOSTYK</String>
+                  <String>Z12811 - KFC APORT KULDZHA</String>
+                  <String>Z12808 - KFC COMPASS BISHKEK HIGHWAY</String>
+                  <String>Z12815 - KFC INFINITY MALL</String>
+                  <String>Z12816 - KFC APORT MIAMI</String>
+                  <String>Z12715 - KFC CITY MALL KARAGANDA</String>
+                  <String>Z12731 - KFC FLAG KARAGANDA</String>
+                  <String>Z12736 - KFC BATYR MALL</String>
+                  <String>Z12772 - KFC KUTUZOVA PAVLODAR</String>
+                  <String>Z12740 - KFC AKTAU</String>
+                  <String>Z12754 - KFC AK KALA MALL</String>
+                  <String>Z12763 - KFC SHUM MALL - AKTAU</String>
+                  <String>Z12806 - KFC NASIKHA ATYRAU</String>
+                  <String>Z12741 - KFC ATRAU</String>
+                  <String>Z12747 - KFC CENTRAL STADIUM - AKOTOBE</String>
+                  <String>Z12753 - KFC KERUEN CITY MALL - AKTOBE</String>
+                  <String>Z12748 - KFC SHYMKENT PLAZA</String>
+                  <String>Z12760 - KFC LEMON</String>
+                  <String>Z12777 - KFC SEVER - SHYMKENT CITY</String>
+                  <String>Z12824 - KFC MEGA MALL SHYMKENT</String>
+                  <String>Z12750 - KFC ALEM PLAZA</String>
+                  <String>Z12757 - KFC NEFTEK</String>
+                  <String>Z12751 - KFC UST KAMENOGORSK</String>
+                  <String>Z12778 - KFC ATAMEKEN</String>
+                  <String>Z12780 - KFC TARAZ</String>
+                  <String>Z12784 - KFC MAXI MALL OSKEMEN</String>
+                  <String>Z12786 - KFC MART KOSTANAY CITY</String>
+                  <String>Z12787 - KFC KOSCHI</String>
+                  <String>Z12790 - KFC KASKELEN</String>
+                  <String>Z12791 - KFC KYZYLORDA</String>
+                  <String>Z12809 - KFC DOSTYK MALL PETROPAVLOVSK</String>
+                  <String>Z12810 - KFC TEMIRTAU</String>
+                  <String>Z12807 - KFC SPUTNIK MALL</String>
+                  <String>Z12804 - KFC GRES</String>
+                  <String>Z12703 - KFC MEGA ALMATY</String>
+                  <String>Z12704 - KFC DOMILLION</String>
+                  <String>Z12709 - KFC MAXIMA</String>
+                  <String>Z12711 - KFC ADK</String>
+                  <String>Z12712 - KFC GOOGLA</String>
+                  <String>Z12713 - KFC APORT</String>
+                  <String>Z12714 - KFC ESSENTAI MALL</String>
+                  <String>Z12716 - KFC MEREY</String>
+                  <String>Z12722 - KFC DOSTIK PLAZA</String>
+                  <String>Z12725 - KFC MEGA PARK</String>
+                  <String>Z12729 - KFC TOLE BI</String>
+                  <String>Z12730 - KFC MOSCOW MALL</String>
+                  <String>Z12732 - KFC ADEM</String>
+                  <String>Z12734 - KFC ATAKENT</String>
+                  <String>Z12743 - KFC BALUAN SHOLAK</String>
+                  <String>Z12746 - KFC FORUM MALL</String>
+                  <String>Z12756 - KFC SILKWAY CITY</String>
+                  <String>Z12758 - KFC VAZ</String>
+                  <String>Z12761 - KFC KULAGER</String>
+                  <String>Z12768 - KFC KAZGU ALMATY</String>
+                  <String>Z12770 - KFC AINABULAK</String>
+                  <String>Z12773 - KFC TSUM</String>
+                  <String>Z12774 - KFC ASIA PARK ALMATY</String>
+                  <String>Z12775 - KFC MAGNUM - RELOCATION</String>
+                  <String>Z12776 - KFC MALIKA</String>
+                  <String>Z12702 - KFC MEGA ASTANA</String>
+                  <String>Z12706 - KFC MANASA</String>
+                  <String>Z12708 - KFC KHAN SHATOUR</String>
+                  <String>Z12710 - KFC KERUEN</String>
+                  <String>Z12720 - KFC RESPBLIKA</String>
+                  <String>Z12723 - KFC BOGEMBAY</String>
+                  <String>Z12724 - KFC MECHTA</String>
+                  <String>Z12726 - KFC OASIS</String>
+                  <String>Z12728 - KFC GREEN</String>
+                  <String>Z12733 - KFC ASIA PARK</String>
+                  <String>Z12737 - KFC SARAYARKA</String>
+                  <String>Z12738 - KFC GOLDEN KEY</String>
+                  <String>Z12745 - KFC MEGA EXPO</String>
+                  <String>Z12755 - KFC LITE ASTRAHANKA</String>
+                  <String>Z12796 - KFC MAGNUM EDIL</String>
+                  <String>Z12783 - KFC MAXI MALL EKIBASTUZ</String>
+                  <String>Z12803 - KFC VSTRECHA</String>
+                  <String>Z12814 - KFC SYGANAK</String>
+                  <String>Z12782 - KFC NOMAD NEW</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Kazakhstan">
+              <value>
+                <List>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>Z21705 - KKD APORT KULDZA</String>
+                  <String>Z21703 - KKD MAGNUM GAGARINA</String>
+                  <String>Z21704 - KKD MOSCOW MALL</String>
+                  <String>Z21706 - KKD GRAND PARK MALL</String>
+                  <String>Z21708 - KRISPY KREME - BALUAN SHOLAK</String>
+                  <String>Z21700 -  KKD KAZAKHSTAN IL WITH FACTORY</String>
+                  <String>Z21712 - KKD MASATO</String>
+                  <String>Z21707 - KKD DOSTYK RP</String>
+                  <String>Z21701 - KKD MAGNUM MEREY</String>
+                  <String>Z21702 - KRISPY KREME KAZAKHSTAN IL 2</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>Z16714 - PIZZA HUT - BALUAN SHOLAK</String>
+                  <String>Z16711 - PH MEGAPARK ALMATY</String>
+                  <String>Z16708 - PH TSUM ALMATY</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Kuwait">
+        <value>
+          <Map>
+            <entry key="BASKIN ROBBINS">
+              <value>
+                <List>
+                  <String>W22706 - BR FASHIONWAY</String>
+                  <String>W22831 - BR SHAMIYA RELOCATION</String>
+                  <String>W22710 - BR FASHION WAY PANORAMA</String>
+                  <String>W22726 - BR MARINA MALL</String>
+                  <String>W22753 - BR SOUTH SURRA</String>
+                  <String>W22769 - BR BAYAN 1</String>
+                  <String>W22770 - BR AL-RUMAITHYA</String>
+                  <String>W22818 - BR KOUT MALL</String>
+                  <String>W22779 - BR ALYIA &amp; GHALYIA TOWERS</String>
+                  <String>W22804 - BR KHIRAN OUTLET</String>
+                  <String>W22800 - BR THE GATE MALL</String>
+                  <String>W22793 - BR FAHD EL AHMED</String>
+                  <String>W22723 - BR AL BAIRAK MALL</String>
+                  <String>W22747 - BR OM EL HAIMAN</String>
+                  <String>W22773 - BR REQAA</String>
+                  <String>W22775 - BR FAHAHEEL</String>
+                  <String>W22778 - BR AL- FINTAS</String>
+                  <String>W22801 - BR BLOCK 10 SALMIYA</String>
+                  <String>W22806 - BR AMMAN ST.</String>
+                  <String>W22822 - BR MISHRIF CO-OP</String>
+                  <String>W22823 - BR SALWA COOP RELOCATION</String>
+                  <String>W22815 - BR JABRIYA COOP</String>
+                  <String>W22811 - BR SABAH AL AHMED COOP</String>
+                  <String>W22812 - BR KHITAN</String>
+                  <String>W22813 - BR AL DAJEEJ</String>
+                  <String>W22728 - BR LOLO CENTER</String>
+                  <String>W22745 - BR JLEEB EL SHOYOUKH</String>
+                  <String>W22760 - BR AIRPORT</String>
+                  <String>W22762 - BR FARWANIYA</String>
+                  <String>W22764 - BR AVENUES 2</String>
+                  <String>W22714 - BR RAWDA</String>
+                  <String>W22729 - BR EL YARMOUK</String>
+                  <String>W22730 - BR KHALDIA</String>
+                  <String>W22733 - BR ADEYLIA</String>
+                  <String>W22741 - BR KEIFAN</String>
+                  <String>W22749 - BR QADSIYA</String>
+                  <String>W22826 - BR ASWAQ AL QURAIN</String>
+                  <String>W22785 - BR QURAIN 1</String>
+                  <String>W22786 - BR QURAIN 2</String>
+                  <String>W22787 - BR AL-QREEN 3</String>
+                  <String>W22833 - BASKIN ROBBINS KUWAIT IL - 1</String>
+                  <String>W22832 - BR FORDHA CO</String>
+                  <String>W22725 - BR AL JAHRA - INDUSTRAIL</String>
+                  <String>W22828 - BR LULU OTHMAN STREEET</String>
+                  <String>W22817 - BR ALDAYIA NEW</String>
+                  <String>W22820 - BR SEASIDE FOOD HUB</String>
+                  <String>W22821 - BR SULAIBIKHAT</String>
+                  <String>W22824 - BR NATIONAL GUARD</String>
+                  <String>W22825 - BR DIVONNEE</String>
+                  <String>W22709 - BR MARINA VALENCIA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Chicken Tikka">
+              <value>
+                <List>
+                  <String>W13701 - TIKKA BAHR</String>
+                  <String>W13710 - TIKKA HAWALLY</String>
+                  <String>W13712 - TIKKA SOUQ SALMIYA</String>
+                  <String>W13769 - TIKKA BAYAN</String>
+                  <String>W13761 - TIKKA FARWANIYA</String>
+                  <String>W13787 - TIKKA QURAIN</String>
+                  <String>W13804 - TIKKA - FORDHA CO</String>
+                  <String>W13731 - TIKKA ADILIYA</String>
+                  <String>W13713 - TIKKA FAHAHEEL DK</String>
+                  <String>W13801 - TIKKA SEA SIDE FOOD HUB</String>
+                  <String>W13714 - TIKKA JAHRA DARK KITCHEN</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>W14845 - HRD SALWA BLOCK 5</String>
+                  <String>W14848 - HRD QURAIN MARKETS</String>
+                  <String>W14766 - HRD AL JAHRA - MUBAREK MA</String>
+                  <String>W14841 - HRD SABAH AL AHMED</String>
+                  <String>W14846 - HRD KHIRAN HYBRID OUTLET</String>
+                  <String>W14741 - HRD ALSHAMIYA</String>
+                  <String>W14710 - HRD HAWALY</String>
+                  <String>W14847 - HRD RIGAI COURTHOUSE</String>
+                  <String>W14777 - HRD ALZAHR</String>
+                  <String>W14778 - HRD ALFINTAS</String>
+                  <String>W14783 - HRD S.ALSALEM</String>
+                  <String>W14784 - HRD AL RABIYA</String>
+                  <String>W14789 - HRD ALFARDOOS</String>
+                  <String>W14793 - HRD FAHD EL AHMED</String>
+                  <String>W14796 - HRD AL MANGAF</String>
+                  <String>W14756 - HRD AL SHOWAIKH</String>
+                  <String>W14802 - HRD ADAN</String>
+                  <String>W14785 - HRD AL QUREEN</String>
+                  <String>W14842 - HRD AMGHARA</String>
+                  <String>W14798 - HRD JAHRA 3</String>
+                  <String>W14750 - HRD ALJABRIYA</String>
+                  <String>W14818 - HRD ALDAYIA NEW</String>
+                  <String>W14816 - HRD VILLAGE</String>
+                  <String>W14761 - HRD AL FARWANIYA</String>
+                  <String>W14762 - HRD AIRPORT</String>
+                  <String>W14820 - HRD SEASIDE FOOD HUB</String>
+                  <String>W14775 - HRD ALFAHAHEEL</String>
+                  <String>W14730 - HRD AL KHALDIYA</String>
+                  <String>W14779 - HRD S.AL-NASER</String>
+                  <String>W14787 - HRD AL QUREEN 2</String>
+                  <String>W14758 - HRD EL NAHDA</String>
+                  <String>W14754 - HRD ALJAHRA</String>
+                  <String>W14814 - HRD SABAH EL AHMED - KHAI</String>
+                  <String>W14742 - HRD EL-MANSORIYA</String>
+                  <String>W14774 - HRD ALSBAHIYA</String>
+                  <String>W14765 - HRD SALAYIL ELJAHRA</String>
+                  <String>W14759 - HRD GABER EL AHME</String>
+                  <String>W14705 - HRD ALBEDAA</String>
+                  <String>W14813 - HRD AL DAJEEJ</String>
+                  <String>W14719 - HRD SOUQ SHARQ</String>
+                  <String>W14827 - HRD AUGIELA 2</String>
+                  <String>W14725 - HRD INDUSTRIAL AL GAHRA</String>
+                  <String>W14731 - HRD AUDILIYA</String>
+                  <String>W14746 - HRD AL AHMADI</String>
+                  <String>W14747 - HRD OM EL HIMAN</String>
+                  <String>W14751 - HRD S.SOURA</String>
+                  <String>W14838 - HRD KABAD</String>
+                  <String>W14763 - HRD AVENUE MALL</String>
+                  <String>W14770 - HRD ARDIYA</String>
+                  <String>W14771 - HRD NEW MISHREF</String>
+                  <String>W14851 - HARDEES KOUT MALL</String>
+                  <String>W14807 - HRD POLYVARD MALL</String>
+                  <String>W14708 - HRD MARINA</String>
+                  <String>W14815 - HRD MUGHIRA</String>
+                  <String>W14704 - HRD F_WAY</String>
+                  <String>W14808 - HRD AL SHUHADA</String>
+                  <String>W14821 - HRD SALIBYIA</String>
+                  <String>W14732 - HRD SULAIBIKHAT</String>
+                  <String>W14812 - HRD KHITAN</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>W12811 - KFC SULIBIYA</String>
+                  <String>W12812 - KFC KHITAN 2</String>
+                  <String>W12757 - KFC KHITAN</String>
+                  <String>W12813 - KFC AL JAHRA 3</String>
+                  <String>W12766 - KFC AL JAHRA - MUBAREK MALL</String>
+                  <String>W12822 - KFC AL KOUT MALL</String>
+                  <String>W12837 - KFC SABAH AL AHMAD 2</String>
+                  <String>W12740 - KFC KIFAN</String>
+                  <String>W12741 - KFC EL SHAMIYA</String>
+                  <String>W12744 - KFC MALL 360</String>
+                  <String>W12810 - KFC HAWALLY 2</String>
+                  <String>W12710 - KFC HAWALLY</String>
+                  <String>W12842 - KFC - KHIRAN OUTLET</String>
+                  <String>W12830 - KFC HAWALLY 3</String>
+                  <String>W12772 - KFC ANDALOUS</String>
+                  <String>W12773 - KFC ALREQA</String>
+                  <String>W12775 - KFC FAHAHEEL</String>
+                  <String>W12776 - KFC ABO HELIFA</String>
+                  <String>W12777 - KFC ALZAHR</String>
+                  <String>W12778 - KFC AL MAHBOOLA</String>
+                  <String>W12783 - KFC S.ALSALEM</String>
+                  <String>W12784 - KFC ALRABIYA</String>
+                  <String>W12785 - KFC QUREEN</String>
+                  <String>W12787 - KFC MUBAREK EL-KABER (QURAIN</String>
+                  <String>W12789 - KFC ALFARDOUS</String>
+                  <String>W12793 - KFC FAHD ALAHMAD</String>
+                  <String>W12796 - KFC AL MANGAF</String>
+                  <String>W12840 - KFC MANGAF 2</String>
+                  <String>W12798 - KFC SAAD ALABDULLAH</String>
+                  <String>W12799 - KFC EL SHOWIKH 2</String>
+                  <String>W12802 - KFC ADAN</String>
+                  <String>W12815 - KFC JABRIYA NEW</String>
+                  <String>W12750 - KFC JABRIYA</String>
+                  <String>W12817 - KFC ALDAYIA NEW</String>
+                  <String>W12820 - KFC VILLAGE</String>
+                  <String>W12821 - KFC AVENUES 2</String>
+                  <String>W12761 - KFC FARWANIYA</String>
+                  <String>W12762 - KFC AIRPORT</String>
+                  <String>W12765 - KFC EL FARWANIYA 2</String>
+                  <String>W12828 - KFC AL RIGAI</String>
+                  <String>W12841 - KFC SQUARE PARK</String>
+                  <String>W12847 - KFC JELEEB AL SHUYOUKH CO-OP</String>
+                  <String>W12827 - KFC AUGILA 2</String>
+                  <String>W12843 - KFC SABAH AL SALEM 2</String>
+                  <String>W12760 - KFC EL DAJEJ</String>
+                  <String>W12707 - KFC ALSHAAB</String>
+                  <String>W12713 - KFC ALRWDA</String>
+                  <String>W12719 - KFC SOUQ SHARQ</String>
+                  <String>W12722 - KFC  NEW FAHD ALSALEM</String>
+                  <String>W12723 - KFC AL BAIRAK MALL</String>
+                  <String>W12725 - KFC INDUSTRIAL AL GAHRA</String>
+                  <String>W12731 - KFC AUDILIYA</String>
+                  <String>W12745 - KFC JLEEB AL SHOYOUKH</String>
+                  <String>W12746 - KFC AL AHMADI</String>
+                  <String>W12747 - KFC OM EL HIMAN</String>
+                  <String>W12751 - KFC S.SOURA</String>
+                  <String>W12752 - KFC AL-JAHRA 2</String>
+                  <String>W12755 - KFC SOLIBIKHAT</String>
+                  <String>W12758 - KFC KABED</String>
+                  <String>W12763 - KFC AVENUE MALL</String>
+                  <String>W12767 - KFC SALWA</String>
+                  <String>W12769 - KFC BAYAN</String>
+                  <String>W12770 - KFC ARDIYA</String>
+                  <String>W12771 - KFC MISHREF</String>
+                  <String>W12844 - KFC ASWAQ AL QURAIN</String>
+                  <String>W12848 - KFC SALMIYA OLD SOUK</String>
+                  <String>W12806 - KFC AMMAN ST.</String>
+                  <String>W12807 - KFC POLYVARD MALL</String>
+                  <String>W12701 - KFC  SALMIYA</String>
+                  <String>W12704 - KFC F_WAY</String>
+                  <String>W12708 - KFC MARINA</String>
+                  <String>W12712 - KFC SOUK EL SALMIYA</String>
+                  <String>W12801 - KFC BLOCK 10_SALMIYA</String>
+                  <String>W12808 - KFC AL SHUHADA</String>
+                  <String>W12839 - KFC SULAIBIKHAT 3</String>
+                  <String>W12836 - KFC SEASIDE FOOD HUB</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>W19878 - KKD NATIONAL GUARD</String>
+                  <String>W19885 - KKD JABER AL AHMAD COOP BLOCK 5</String>
+                  <String>W19877 - KKD DIVONNEE</String>
+                  <String>W19801 - KKD SEASID TOWER</String>
+                  <String>W19876 - KKD KHIRAN SQUARE MALL</String>
+                  <String>W19820 - KKD SEASIDE FOOD HUB</String>
+                  <String>W19196 - KKD SALWA COOP RELOCATION</String>
+                  <String>W19821 - KKD INDUSTRIAL JAHRA</String>
+                  <String>W19709 - KKD MARINA MALL 2</String>
+                  <String>W19708 - KKD MARINA MALL</String>
+                  <String>W19704 - KKD FASHIONWAY</String>
+                  <String>W19873 - KKD SULAIBIKHAT</String>
+                  <String>W19866 - KKD DAJEJ</String>
+                  <String>W19874 - KKD ASWAQ AL QURAIN</String>
+                  <String>W19809 - KKD THE GATE MALL</String>
+                  <String>W19884 - KKD SHAMIYA RELOCATION</String>
+                  <String>W19872 - KKD JAHRA CARVE OUT</String>
+                  <String>W19800 - KKD SABAH AL AHMED COOP</String>
+                  <String>W19881 - KKD ARDIYA HERAFI</String>
+                  <String>W19700 - KKD SALES OFFICE</String>
+                  <String>W19736 - KKD EL DAIYA</String>
+                  <String>W19750 - KKD JABRYIA</String>
+                  <String>W19870 - KKD MANGAF SULTAN CENTER</String>
+                  <String>W19879 - KKD KUWAITIL 1</String>
+                  <String>W19779 - KKD ALYIA &amp; GHALYIA</String>
+                  <String>W19883 - KKD KOUT MALL</String>
+                  <String>W19875 - KKD FAHAHEEL</String>
+                  <String>W19863 - KKD CARREFOUR AVENUES MALL</String>
+                  <String>W19729 - KKD EL YARMOUK</String>
+                  <String>W19740 - KKD KIFAN</String>
+                  <String>W19751 - KKD AL ZAHRAA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Kuwait">
+              <value>
+                <List>
+                  <String>BASKIN ROBBINS</String>
+                  <String>Chicken Tikka</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>T.G.I FRIDAYS</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>W18744 - TGIF MALL 360</String>
+                  <String>W18705 - TGIF EL BEDAA</String>
+                  <String>W18708 - TGIF MARINA MALL</String>
+                  <String>W18750 - TGIF JABRIYA</String>
+                  <String>W18703 - TGIF THE LAKE MALL</String>
+                  <String>W18776 - TGIF ABU HALIFA</String>
+                  <String>W18809 - TGIF GATE MALL</String>
+                  <String>W18822 - TGIF AL KOUT MALL</String>
+                  <String>W18763 - TGIF AVENUE MALL</String>
+                  <String>W18801 - TGIF SEA SIDE 2</String>
+                  <String>W18754 - TGIF AL JAHRA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Wimpy">
+              <value>
+                <List>
+                  <String>W11829 - WIMPY SQUARE PARK</String>
+                  <String>W11741 - WIMPY AL SHAMIYA</String>
+                  <String>W11822 - WIMPY SALWA DARK KITCHEN</String>
+                  <String>W11828 - WIMPY NATIONAL GUARD</String>
+                  <String>W11838 - WIMPY KUWAIT IL - 3</String>
+                  <String>W11831- WIMPY JAHRA DK</String>
+                  <String>W11837 - WIMPY KUWAIT IL - 2</String>
+                  <String>W11704 - WIMPY FASHIONWAY</String>
+                  <String>W11754 - WIMPY JABRIYA CARVE OUT</String>
+                  <String>W11830 - WIMPY ABU HALIFA</String>
+                  <String>W11833 - WIMPY AVENUES MALL</String>
+                  <String>W11823 - WIMPY QURAIN DARK KITCHEN</String>
+                  <String>W11825 - WIMPY SEA SIDE FOOD HUB</String>
+                  <String>W11732 - WIMPY ALNOZHA</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Lebanon">
+        <value>
+          <Map>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>L12731 - KFC CITY CENTER</String>
+                  <String>L12710 - KFC KHALDEH</String>
+                  <String>L12740 - KFC HALAT (JBEIL)</String>
+                  <String>L12712 - KFC JAL EL DIB</String>
+                  <String>L12729 - KFC CITY MALL</String>
+                  <String>L12703 - KFC ALAY</String>
+                  <String>L12706 - KFC TRIPOLI</String>
+                  <String>L12737 - KFC MAZBOUD (CHHIM)</String>
+                  <String>L12708 - KFC SAIDA</String>
+                  <String>L12716 - KFC SAIDA NEW</String>
+                  <String>L12709 - KFC SOUR</String>
+                  <String>L12717 - KFC NABATIEH</String>
+                  <String>L12720 - KFC CHTOURA</String>
+                  <String>L12749 - KFC HAZMIEH 2</String>
+                  <String>L12733 - KFC BLISS</String>
+                  <String>L12721 - KFC ASHRAFIEH</String>
+                  <String>L12701 - KFC RAOUSHE</String>
+                  <String>L12702 - KFC JOUNIEH</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Lebanon">
+              <value>
+                <List>
+                  <String>KFC</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Morocco">
+        <value>
+          <Map>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>M12761 - KFC ALMAZAR MARRAKECH</String>
+                  <String>M12702 - KFC MOHAMED V</String>
+                  <String>M12705 - KFC ANFA</String>
+                  <String>M12706 - KFC GHANDI</String>
+                  <String>M12710 - KFC 2 MARS</String>
+                  <String>M12713 - KFC MOROCCO MALL</String>
+                  <String>M12715 - KFC MAARIF</String>
+                  <String>M12716 - KFC ANFA PALACE</String>
+                  <String>M12745 - KFC SID MAAROUF</String>
+                  <String>M12758 - KFC BO VILLAGE</String>
+                  <String>M12742 - KFC DERB GHALLAF CASABLANCA</String>
+                  <String>M12735 - KFC JADIDA</String>
+                  <String>M12737 - KFC DAR BOUAZZA CASABLANCA</String>
+                  <String>M12748 - KFC BELVEDERE</String>
+                  <String>M12738 - KFC HAY HASSANI</String>
+                  <String>M12752 - KFC AERIA MALL CASABLANCA</String>
+                  <String>M12753 - KFC ARRIBAT CENTRAL MALL</String>
+                  <String>M12754 - KFC AZBAN CASABLANCA</String>
+                  <String>M12755 - KFC - POLO CASABLANCA</String>
+                  <String>M12746 - KFC TADDART</String>
+                  <String>M12747 - KFC MARJANE BOUSKOURA</String>
+                  <String>M12744 - KFC PETROMIN GHAN</String>
+                  <String>M12764 - KFC - OULFA CASABLANCA</String>
+                  <String>M12765 - KFC - IMOUZZER ROAD FEZ</String>
+                  <String>M12708 - KFC AGDAL</String>
+                  <String>M12712 - KFC MARJAN REBAT</String>
+                  <String>M12736 - KFC BAB EL HAD RABAT</String>
+                  <String>M12760 - KFC SELA PARK TAMARA</String>
+                  <String>M12709 - KFC GUELIZ</String>
+                  <String>M12711 - KFC AL FANA</String>
+                  <String>M12741 - KFC MOR LA GARE RELOCATION IL</String>
+                  <String>M12717 - KFC TANGER</String>
+                  <String>M12718 - KFC TANJER CITY CENTER</String>
+                  <String>M12719 - KFC AGADIR</String>
+                  <String>M12723 - KFC MEKNES</String>
+                  <String>M12729 - KFC KENITRA</String>
+                  <String>M12701 - KFC AIN DIAB</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Morocco">
+              <value>
+                <List>
+                  <String>KFC</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Oman">
+        <value>
+          <Map>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>O14702 - HRD AL KHUWAIR</String>
+                  <String>O14708 - HRD AL GHOBRA</String>
+                  <String>O14713 - HRD SOHAR</String>
+                  <String>O14720 - HRD SHATE AL QURUM</String>
+                  <String>O14711 - HRD AL AMIRAT</String>
+                  <String>O14703 - HRD CITY CENTER</String>
+                  <String>O14707 - HRD AL WITTEYA</String>
+                  <String>O14712 - HRD MUBILLA</String>
+                  <String>O14716 - HRD AL MUALLEH</String>
+                  <String>O14715 - HRD WAVE</String>
+                  <String>O14718 - HRD MALL OF MUSCAT</String>
+                  <String>O14709 - HRD SALLAH  GARDEN MALL</String>
+                  <String>O14714 - HRD NIZWA GRAND MALL</String>
+                  <String>O14705 - HRD AL KHOUD</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>O12740 - KFC SAHAM</String>
+                  <String>O12761 - KFC SHELL IBRI</String>
+                  <String>O12760 - KFC JIFFNAIN</String>
+                  <String>O12766 - KFC MALL OF OMAN</String>
+                  <String>O12743 - KFC KHABURA</String>
+                  <String>O12759 - KFC MAABILAH 2 FREEWAY</String>
+                  <String>O12907 - KFC OMAN OIL TAREEF SOHAR</String>
+                  <String>O12904 - KFC JALAN</String>
+                  <String>O12768 - KFC OMAN OIL SEEB</String>
+                  <String>O12906 - KFC MUBILA GATEWAY</String>
+                  <String>O12758 - KFC AL HAIL</String>
+                  <String>O12908 - KFC AL MAHA ANSAB</String>
+                  <String>O12713 - KFC SHATE AL QURUM</String>
+                  <String>O12767 - KFC AL MEERA AMERAT</String>
+                  <String>O12704 - KFC AL KHUWAR</String>
+                  <String>O12708 - KFC AIRPORT</String>
+                  <String>O12710 - KFC AL UZIBA</String>
+                  <String>O12711 - KFC CITY PLAZA</String>
+                  <String>O12717 - KFC AL AMRAT</String>
+                  <String>O12719 - KFC LULU DARSEET</String>
+                  <String>O12721 - KFC AL KHUWAIR 33</String>
+                  <String>O12723 - KFC CITY CENTER EL QURUM</String>
+                  <String>O12726 - KFC AL QURAM2</String>
+                  <String>O12727 - KFC GRAND MALE</String>
+                  <String>O12729 - KFC NOV18TH</String>
+                  <String>O12736 - KFC AVENUES MALL</String>
+                  <String>O12741 - KFC HURMEZ</String>
+                  <String>O12705 - KFC AL KHOUD</String>
+                  <String>O12714 - KFC OMABELLA</String>
+                  <String>O12722 - KFC ALMAUALEIH</String>
+                  <String>O12731 - KFC CITY CENTER - NEW</String>
+                  <String>O12739 - KFC WAVE</String>
+                  <String>O12745 - KFC MALL OF MUSCAT</String>
+                  <String>O12706 - KFC SALALAH</String>
+                  <String>O12730 - KFC SALLAH GARDEN MALL</String>
+                  <String>O12765 - KFC BOULEVARD SAADA SALALAH</String>
+                  <String>O12707 - KFC SOHAR</String>
+                  <String>O12733 - KFC SOHAR CITY CENTER</String>
+                  <String>O12746 - KFC MUSANA</String>
+                  <String>O12716 - KFC WEDAM</String>
+                  <String>O12720 - KFC AL-FALAG</String>
+                  <String>O12718 - KFC BARAKA</String>
+                  <String>O12750 - KFC OMAN OIL RUSTAQ</String>
+                  <String>O12724 - KFC LULU NEZWA</String>
+                  <String>O12738 - KFC NIZWA GRAND MALL</String>
+                  <String>O12728 - KFC LULU BURAMI</String>
+                  <String>O12732 - KFC  RUWI - NEW</String>
+                  <String>O12735 - KFC EL WADI EL KIBEER</String>
+                  <String>O12742 - KFC MUTTRAH</String>
+                  <String>O12737 - KFC SUR</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Oman">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Qatar">
+        <value>
+          <Map>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>Q14744 - HRD AL JANOUB SQUARE</String>
+                  <String>Q14737 - HRD BARAWA VILLAGE WAKRA</String>
+                  <String>Q14743 - HRD UMM SLAL MOHAMED</String>
+                  <String>Q14741 - HRD WOQOOD RAWDHAT EGDAIM</String>
+                  <String>Q14716 - HRD WAKRA</String>
+                  <String>Q14731 - HRD EZDAN MALL WAKRAH</String>
+                  <String>Q14719 - HRD AL KHOUR</String>
+                  <String>Q14711 - HRD AL RAYYAN</String>
+                  <String>Q14712 - HRD SALWA</String>
+                  <String>Q14720 - HRD ABOU HAMOUR</String>
+                  <String>Q14715 - HRD VILLAGIO</String>
+                  <String>Q14721 - HRD MAZZER</String>
+                  <String>Q14703 - HRD AL ALI</String>
+                  <String>Q14717 - HRD KHARTIAT</String>
+                  <String>Q14722 - HRD ALGHARAFA</String>
+                  <String>Q14710 - HRD RE_AIR PORT</String>
+                  <String>Q14725 - HRD AL DUHAIL</String>
+                  <String>Q14728 - HRD TWAR MALL</String>
+                  <String>Q14733 - HRD DOHA FESTIVAL</String>
+                  <String>Q14736 - HRD GULF MALL</String>
+                  <String>Q14734 - HRD SEFARAT</String>
+                  <String>Q14714 - HRD WEST BAY</String>
+                  <String>Q14709 - HRD CITY CENTER (2)</String>
+                  <String>Q14740 - HRD FOX HILLS</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>Q12752 - KFC MEERA - JERIYAN</String>
+                  <String>Q12758 - KFC TWAR MALL</String>
+                  <String>Q12765 - KFC LULU HELAL</String>
+                  <String>Q12759 - KFC CITY CENTER 1 REL</String>
+                  <String>Q12774 - KFC GOLD PLAZA</String>
+                  <String>Q12762 - KFC AL WAQRAA BARWA VILLAGIE</String>
+                  <String>Q12764 - KFC WADI AL BANAT</String>
+                  <String>Q12766 - KFC CENTRAL MARKET PS WOQOD</String>
+                  <String>Q12768 - KFC AL-NASER - RELOCATION</String>
+                  <String>Q12769 - KFC SEFARAT</String>
+                  <String>Q12770 - KFC SHAHANIYA</String>
+                  <String>Q12763 - KFC IZGHAWA</String>
+                  <String>Q12775 - KFC WOQOD AIN KHALID</String>
+                  <String>Q12771 - KFC WAJBA</String>
+                  <String>Q12776 - KFC QATARADAPTIVE</String>
+                  <String>Q12780 - KFC - UMM SLAL MOHAMED</String>
+                  <String>Q12786 - KFC WOQOD GHARAFFT AL RAYAN</String>
+                  <String>Q12777 - KFC AZIZIA</String>
+                  <String>Q12772 - KFC WOQOD HILAL EXTENSION</String>
+                  <String>Q12773 - KFC MEERA JERIAN JUNAIHAT</String>
+                  <String>Q12787 - KFC AL JANOUB SQUARE</String>
+                  <String>Q12781 - KFC LULU ABU SIDRA</String>
+                  <String>Q12783 - KFC UDEID AIR FORCE BASE</String>
+                  <String>Q12778 - KFC WOQOOD LUSAIL WATERFRONT</String>
+                  <String>Q12784 - KFC AL MEERA QUTAIFIYA</String>
+                  <String>Q12779 - KFC AL KHEESA</String>
+                  <String>Q12789 - KFC DOHA FESTIVAL CITY 2</String>
+                  <String>Q12788 - KFC PALACE VANDOM MALL</String>
+                  <String>Q12711 - KFC WAKRAH</String>
+                  <String>Q12741 - KFC AL-WAKIR</String>
+                  <String>Q12723 - KFC RE_AL KHOUR</String>
+                  <String>Q12738 - KFC LULU ALKHOUR</String>
+                  <String>Q12724 - KFC MESSAIED</String>
+                  <String>Q12735 - KFC ABUHAMOR</String>
+                  <String>Q12712 - KFC SALWA</String>
+                  <String>Q12717 - KFC HYATT PLAZA</String>
+                  <String>Q12753 - KFC QATAR MALL</String>
+                  <String>Q12747 - KFC LULU BARWIA</String>
+                  <String>Q12718 - KFC  KHARTIAT</String>
+                  <String>Q12704 - KFC AL ALI</String>
+                  <String>Q12737 - KFC ALGHRAFA</String>
+                  <String>Q12728 - KFC VILLAGIO</String>
+                  <String>Q12743 - KFC GULF MALL</String>
+                  <String>Q12744 - KFC ZERO ONE MALL</String>
+                  <String>Q12748 - KFC ALMANA PETROL STATION</String>
+                  <String>Q12750 - KFC MEERA-AL MURAIKH</String>
+                  <String>Q12751 - KFC EZDAN MALL-WAKRAH</String>
+                  <String>Q12754 - KFC WOQOD PETROL STATION-RA</String>
+                  <String>Q12761 - KFC MAZZER - RE</String>
+                  <String>Q12734 - KFC INDUSTRIAL</String>
+                  <String>Q12715 - KFC CITY CENTER 2</String>
+                  <String>Q12729 - KFC RE_WESTBAY</String>
+                  <String>Q12713 - KFC TOWN CENTER</String>
+                  <String>Q12730 - KFC RE_ALDOHA</String>
+                  <String>Q12755 - KFC QATAR FESTIVAL CITY</String>
+                  <String>Q12705 - KFC CENTER</String>
+                  <String>Q12702 - KFC SADD</String>
+                  <String>Q12708 - KFC MESIELA</String>
+                  <String>Q12703 - KFC AIR PORT</String>
+                  <String>Q12716 - KFC LANDMARK</String>
+                  <String>Q12727 - KFC MONTAZAH - RE</String>
+                  <String>Q12740 - KFC AL-HELAL</String>
+                  <String>Q12757 - KFC LULU MESSALAH</String>
+                  <String>Q12745 - KFC AL DUHAIL</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>Q21726 - KKD CITY CENTER</String>
+                  <String>Q21719 - KKD AL-NASR</String>
+                  <String>Q21724 - KKD JERYAN NEJAIMA</String>
+                  <String>Q21727 - KKD GOLD PLAZA</String>
+                  <String>Q21734 - KKD THE PEARL QATAR</String>
+                  <String>Q21731 - KKD AZIZIA</String>
+                  <String>Q21732 - KKD AL MONTAZAH</String>
+                  <String>Q21737 - KKD AL JANOUB SQUARE</String>
+                  <String>Q21733 - KKD UMM SLAL MOHAMED</String>
+                  <String>Q21738 - KKD LULU EZDAN</String>
+                  <String>Q21721 - KKD LULU BARWA</String>
+                  <String>Q21725 - KKD HAZAM AL MARKHIYA</String>
+                  <String>Q21736 - KKD AL MEERA LUSAIL</String>
+                  <String>Q21739 - KKD GHARAFFAH</String>
+                  <String>Q21741 - KKD LULU ABU SIDRA MALL</String>
+                  <String>Q21701 - KKD VILLAGIO</String>
+                  <String>Q21710 - KKD MALL OF QATAR</String>
+                  <String>Q21717 - KKD DOHA FESTIVAL</String>
+                  <String>Q21718 - KKD LANDMARK</String>
+                  <String>Q21900 - KKD VILLAGIO COMMISARY CATERING</String>
+                  <String>Q21722 - KKD SEFARAT</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Qatar">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>T.G.I FRIDAYS</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>Q18701 - TGIF LANDMARK</String>
+                  <String>Q18702 - TGIF VILLAGIO</String>
+                  <String>Q18707 - TGIF - DOHA FESTIVAL CITY</String>
+                  <String>Q18703 - TGIF SAFARAT</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Saudi Arabia">
+        <value>
+          <Map>
+            <entry key="Chicken Tikka">
+              <value>
+                <List>
+                  <String>K13102 - TIKKA SYNERGY DAMMAM ROAD</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>K14409 - HRD ST 91</String>
+                  <String>K14416 - HRD AL KHARIGEYA</String>
+                  <String>K14420 - HRD AL OTHAIM MALL-DAMMAM</String>
+                  <String>K14407 - HRD NAFF</String>
+                  <String>K14435 - HRD TELAL AL DOHA-AL DAHRA</String>
+                  <String>K14419 - HRD ALMUBARAZ EHSA</String>
+                  <String>K14415 - HRD AL OTHAIM MALL EHSA</String>
+                  <String>K14434 - HRD RING ROAD -AL HASA</String>
+                  <String>K14408 - HRD UNIVERSITY</String>
+                  <String>K14425 - HRD AL SULAIMANIAH-EHSA</String>
+                  <String>K14417 - HRD SEHAT</String>
+                  <String>K14422 - HRD RAS TANURA</String>
+                  <String>K14418 - HRD HAFAR AL BATIN</String>
+                  <String>K14438 - HRD KING FAISAL - HAFAR AL</String>
+                  <String>K14448 - HARDEES AL KHAFJI</String>
+                  <String>K14426 - HRD AL SAFA RAKA</String>
+                  <String>K14410 - HRD DHAHRAN MALL GEANT</String>
+                  <String>K14447 - HRD AMANA</String>
+                  <String>K14406 - HRD ALCORNICH</String>
+                  <String>K14403 - HRD ALRASHID</String>
+                  <String>K14412 - HRD  ALRAKAH</String>
+                  <String>K14414 - HRD VENECIA MALL</String>
+                  <String>K14424 - HRD ALGESR-AZEZIAH DISTRI</String>
+                  <String>K14446 - HRD PRINCE TURKI STREET</String>
+                  <String>K14452 - HRD ARAMCO ABDULLAH ROAD</String>
+                  <String>K14411 - HRD JUBAIL INDUSTRIAL</String>
+                  <String>K14430 - HRD AL FANATEER-AL JUBIL</String>
+                  <String>K14402 - HRD ALJUBAIL</String>
+                  <String>K14433 - HRD AL JUBAIL AL BALAD 2</String>
+                  <String>K14421 - HRD 42'S ST (ANDLUS MALL)</String>
+                  <String>K14432 - HRD ABQEQ AL HASA</String>
+                  <String>K14405 - HRD ALAWAL</String>
+                  <String>K14404 - HRD ALDAMMAM</String>
+                  <String>K14437 - HRD ABO BAKER SADDIQ - DAM</String>
+                  <String>K14431 - HRD KING SAUD</String>
+                  <String>K14429 - HRD AL FAISALIAH</String>
+                  <String>K14747 - HRD KING FAHD - TABUK</String>
+                  <String>K14734 - HRD UNIVERISTY</String>
+                  <String>K14704 - HRD ALSHARAFIA</String>
+                  <String>K14781 - HRD DARB AL NASSEM</String>
+                  <String>K14784 - HRD AL HARAMEEN ROAD</String>
+                  <String>K14782 - HRD THIRD RING ROAD MAKKAH</String>
+                  <String>K14902 - HRD MOBILE KITCHEN</String>
+                  <String>K14754 - HRD AL HAWYA</String>
+                  <String>K14736 - HRD AL SHEFA</String>
+                  <String>K14776 - HRD AL JAL KING KHALED TAIF</String>
+                  <String>K14727 - HRD OBHR</String>
+                  <String>K14752 - HRD  MANDREN AVENIO</String>
+                  <String>K14774 - HRD YAQUOT</String>
+                  <String>K14777 - HRD HIRA NEW</String>
+                  <String>K14725 - HRD ARAB MALL</String>
+                  <String>K14706 - HRD ALSTEEN</String>
+                  <String>K14712 - HRD GEAN AZIZ MALL</String>
+                  <String>K14764 - HRD TABOUK PARK MALL</String>
+                  <String>K14721 - HRD RED SEA MALL</String>
+                  <String>K14759 - HRD AL SALAM MALL</String>
+                  <String>K14732 - HRD NEW ALTAHLIA</String>
+                  <String>K14729 - HRD HEREA 3</String>
+                  <String>K14737 - HRD SOLIMANIA 2</String>
+                  <String>K14741 - HRD AL SAMER</String>
+                  <String>K14728 - HRD KING ROAD</String>
+                  <String>K14702 - HRD NEW ANDALOS</String>
+                  <String>K14720 - HRD EL RABWA</String>
+                  <String>K14719 - HRD EL AMER SULTAN</String>
+                  <String>K14749 - HRD WAZERIA</String>
+                  <String>K14705 - HRD SARI</String>
+                  <String>K14778 - HRD AL AJAWEED JEDDAH</String>
+                  <String>K14750 - HRD  YANBO AL SINAIYAH</String>
+                  <String>K14726 - HRD YANBOA</String>
+                  <String>K14786 - HRD PRINCE MEHTIB AL MARWA RELO</String>
+                  <String>K14765 - HRD HARAM - NEW</String>
+                  <String>K14763 - HRD AL KAAKIA 2</String>
+                  <String>K14740 - HRD GABAL OMAR</String>
+                  <String>K14717 - HRD ABRAJ ALBAIT</String>
+                  <String>K14755 - HRD AL TANEEM</String>
+                  <String>K14718 - HRD AL KAAKIA</String>
+                  <String>K14761 - HRD AL AWAALY</String>
+                  <String>K14779 - HRD KING FAISAL AL SHARAIYE</String>
+                  <String>K14780 - HARDEES DARB AL TANIEM MAKKAH</String>
+                  <String>K14709 - HRD ALHZAM</String>
+                  <String>K14731 - HRD GAMAA AL MADINA</String>
+                  <String>K14722 - HRD EL RASHED</String>
+                  <String>K14723 - HRD EL ALIA</String>
+                  <String>K14768 - HRD MANAKHA</String>
+                  <String>K14708 - HRD SOLTANA</String>
+                  <String>K14762 - HRD AL MAMSHA</String>
+                  <String>K14710 - HRD TEBA</String>
+                  <String>K14745 - HRD AL AMIR MOHAMED</String>
+                  <String>K14772 - HRD TABUK UNIVERSITY</String>
+                  <String>K14724 - HRD AL MROG TABUK</String>
+                  <String>K14148 - HRD SAKAKA</String>
+                  <String>K14180 - HARDEES AL BUKAYRIYAH AL QASSIM</String>
+                  <String>K14164 - HRD SYNERGY DAMMAM ROAD</String>
+                  <String>K14176 - HRD AL MAHADIYAH</String>
+                  <String>K14198 - HRD REMAL ALI AL BAJDI STREET</String>
+                  <String>K14203 - HRD AL JUDAIDA ROAD - ARAR</String>
+                  <String>K14179 - HRD J OIL KING ABDULLAH ROAD</String>
+                  <String>K14124 - HRD - E LQASEEM</String>
+                  <String>K14126 - HRD ELQASSIM 2</String>
+                  <String>K14137 - HRD OTHEM MALL HAIL</String>
+                  <String>K14132 - HRD HAIL 2</String>
+                  <String>K14121 - HRD ONEZA</String>
+                  <String>K14118 - HRD ALKHALEJ</String>
+                  <String>K14127 - HRD AL-DAMMAM ROAD</String>
+                  <String>K14138 - HRD EL KHARG 2</String>
+                  <String>K14111 - HRD EL SEWEDY</String>
+                  <String>K14133 - HRD KING FAHD ST</String>
+                  <String>K14114 - HRD EL SALAM MALL</String>
+                  <String>K14125 - HRD - ELNOZHAA</String>
+                  <String>K14157 - HRD MUNISIYAH RIYADH</String>
+                  <String>K14158 - HRD ANAS BIN MALIK</String>
+                  <String>K14174 - HRD ABU BAKR SIDDIQ AL ARED</String>
+                  <String>K14177 - HRD AL MUZAHIMIYAH</String>
+                  <String>K14144 - HRD IMAM SAUD 2</String>
+                  <String>K14119 - HRD HAIL</String>
+                  <String>K14143 - HRD AL- DAR ALBEDA</String>
+                  <String>K14130 - HRD ELRABEA</String>
+                  <String>K14129 - HRD ALSAHAFA</String>
+                  <String>K14161 - HRD SOLAIMANIA RIYADH</String>
+                  <String>K14172 - HRD ANAS BIN MALIK NARJIS</String>
+                  <String>K14112 - HRD EL OLYA</String>
+                  <String>K14107 - HRD EL RAOABY</String>
+                  <String>K14102 - HRD EL SITTEN</String>
+                  <String>K14115 - HRD AL-MASEEF</String>
+                  <String>K14169 - HRD NADA IBN OTHMAN</String>
+                  <String>K14170 - HRD HASSAN BIN THABIT</String>
+                  <String>K14165 - HRD JANADRIYYAH</String>
+                  <String>K14178 - HRD AL DIRAB AL HAZIM</String>
+                  <String>K14131 - HRD OTHMAN EBN AFAN</String>
+                  <String>K14163 - HRD SHEIKH JABER ROAD</String>
+                  <String>K14173 - HRD WADI LABAN</String>
+                  <String>K14901 - HRD FOOD TRUCK 1</String>
+                  <String>K14104 - HRD EL BADIA</String>
+                  <String>K14122 - HRD GALERYA</String>
+                  <String>K14120 - HRD ALKHARJ</String>
+                  <String>K14109 - HRD EL DAIRY</String>
+                  <String>K14108 - HRD EL NASEM</String>
+                  <String>K14162 - HRD HAIL KING ABDUL AZIZ</String>
+                  <String>K14196 - HRD ISHBILIA KING ABDULLAH ROAD</String>
+                  <String>K14128 - HRD AL-EMAM SUD</String>
+                  <String>K14103 - HRD EUROMARCHE</String>
+                  <String>K14139 - HRD RAHAB</String>
+                  <String>K14141 - HRD OTHIM MALL NAZEEM</String>
+                  <String>K14142 - HRD AL- KHAIR ROAD</String>
+                  <String>K14159 - HRD DIRIYA</String>
+                  <String>K14136 - HRD ALSHEFA</String>
+                  <String>K14106 - HRD EL HAMRA</String>
+                  <String>K14140 - HRD NJM ELDEN ROAD</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>K12481 - KFC Al AMANAH AIRPORT ROAD</String>
+                  <String>K12479 - KFC DHAHRAN JUBAIL HIGHWAY</String>
+                  <String>K12489 - KFC TAMIMI QAIRAWAN</String>
+                  <String>K12404 - KFC NAFF</String>
+                  <String>K12467 - KFC TELAL AL DOHA AL DAHRAN</String>
+                  <String>K12407 - KFC QATTIF</String>
+                  <String>K12426 - KFC AL OTHAIM MALL EHSA</String>
+                  <String>K12438 - KFC  AL NOZHAH</String>
+                  <String>K12412 - KFC UNIVERSITY</String>
+                  <String>K12428 - KFC AL-SULIMANIA EHSA</String>
+                  <String>K12443 - KFC AL SHEHABIA</String>
+                  <String>K12465 - KFC RING ROAD -AL HASA</String>
+                  <String>K12422 - KFC SAFWA</String>
+                  <String>K12431 - KFC AL_KAFJE</String>
+                  <String>K12454 - KFC NA'REYA</String>
+                  <String>K12432 - KFC  SEHAT</String>
+                  <String>K12434 - KFC  AL GAFR</String>
+                  <String>K12452 - KFC TANURA-ALKHOZAIM</String>
+                  <String>K12490 - KFC AL AWAL 2 DAMMAM</String>
+                  <String>K12411 - KFC ALCORNICH</String>
+                  <String>K12413 - KFC THOQBA</String>
+                  <String>K12417 - KFC DHAHRAN MALL GEANT EASTERN</String>
+                  <String>K12429 - KFC GREEN BELT</String>
+                  <String>K12451 - KFC AL-SAFA RAKA</String>
+                  <String>K12460 - KFC EL RAKA -EL KATHERY MALL</String>
+                  <String>K12401 - KFC ALKHOBAR</String>
+                  <String>K12405 - KFC RASHID</String>
+                  <String>K12462 - KFC AL HOQEEL HALF MOON</String>
+                  <String>K12445 - KFC AL GESR-AZEZIAH DISTRICT</String>
+                  <String>K12487 - KFC OLAYA KHOBAR</String>
+                  <String>K12499 - KFC MUBARAZ AL KHOBAR</String>
+                  <String>K12491 - KFC OKTEN AL FURSAN</String>
+                  <String>K12485 - KFC DABBAB DAMMAM</String>
+                  <String>K12480 - KFC PRINCE TURKI ST</String>
+                  <String>K12415 - KFC JUBAIL INDUSTRIAL</String>
+                  <String>K12436 - KFC AL FAYAHAA</String>
+                  <String>K12448 - KFC AL KHONAINY-JUBAIL HIGH RR</String>
+                  <String>K12455 - KFC ABO HADREA</String>
+                  <String>K12402 - KFC JUBAIL</String>
+                  <String>K12463 - KFC AL JUBAIL AL BALAD 2</String>
+                  <String>K12459 - KFC LULU MARKET AL JUBAIL</String>
+                  <String>K12410 - KFC AL AWAL</String>
+                  <String>K12414 - KFC ST 91</String>
+                  <String>K12420 - KFC ABQEEQ</String>
+                  <String>K12421 - KFC MARINA MALL</String>
+                  <String>K12427 - KFC AL_KHAREGEYAH</String>
+                  <String>K12435 - KFC  42'S  ST</String>
+                  <String>K12439 - KFC AL OTHAIM MALL-DAMMAM</String>
+                  <String>K12441 - KFC AL FAISALAIAH</String>
+                  <String>K12442 - KFC AL MUBARAKIAH</String>
+                  <String>K12444 - KFC INDUST. AREA-DAMMAM</String>
+                  <String>K12457 - KFC KING SAUD DAMAM</String>
+                  <String>K12403 - KFC DAMMAM</String>
+                  <String>K12433 - KFC DAREEN MALL</String>
+                  <String>K12461 - KFC ABO BAKR AL SEDIK DAMMAM</String>
+                  <String>K12472 - KFC FUEL GAS STATION</String>
+                  <String>K12758 - KFC SOLIMANIA 2</String>
+                  <String>K12760 - KFC EL HAMDANIH</String>
+                  <String>K12766 - KFC OBHOR</String>
+                  <String>K12772 - KFC WAZERIA</String>
+                  <String>K12773 - KFC AL ARBEEN</String>
+                  <String>K12774 - KFC MANDREN AVENIO</String>
+                  <String>K12779 - KFC HERAA 1</String>
+                  <String>K12785 - KFC AL SALAM MALL</String>
+                  <String>K12788 - KFC AL REHAILY</String>
+                  <String>K12792 - KFC OM AL KORA JEDDAH</String>
+                  <String>K12801 - KFC TABOK PARK</String>
+                  <String>K12809 - KFC NEW RED SEA MALL</String>
+                  <String>K12732 - KFC EL AMER SULTAN</String>
+                  <String>K12831 - KFC HIRA NEW</String>
+                  <String>K12840 - KFC DARB AL NASSEM</String>
+                  <String>K12805 - KFC MANAKHA</String>
+                  <String>K12829 - KFC AL WAHA AL SAMER STREET</String>
+                  <String>K12832 - KFC WOROOD GAS STATION</String>
+                  <String>K12824 - KFC OLAYA STATION OBHUR</String>
+                  <String>K12818 - KFC YAQOUT</String>
+                  <String>K12853 - KFC AL MAHALA ABHA</String>
+                  <String>K12847 - KFC VILLAGE MALL JEDDAH</String>
+                  <String>K12815 - KFC HAMADANIYYAH</String>
+                  <String>K12834 - KFC PRINCE METIB</String>
+                  <String>K12843 - KFC ASFAN ROAD JEDDAH</String>
+                  <String>K12703 - KFC MADINA ROADS</String>
+                  <String>K12706 - KFC SARI</String>
+                  <String>K12707 - KFC ALSTEEN</String>
+                  <String>K12709 - KFC ALSAMER</String>
+                  <String>K12720 - KFC GAMAA PLAZA</String>
+                  <String>K12721 - KFC GEAN AZIZ MALL</String>
+                  <String>K12724 - KFC SOLIMANIA</String>
+                  <String>K12725 - KFC HARAA-2</String>
+                  <String>K12730 - KFC ALRABWA</String>
+                  <String>K12736 - KFC RAWDA</String>
+                  <String>K12737 - KFC ARAB MALL</String>
+                  <String>K12740 - KFC KING ROAD</String>
+                  <String>K12741 - KFC AL AMIR FWAZ</String>
+                  <String>K12745 - KFC NEW  ALTAHLIA</String>
+                  <String>K12746 - KFC PHILISTEN</String>
+                  <String>K12747 - KFC EL BATARGY</String>
+                  <String>K12748 - KFC NEW UNIVERISTY</String>
+                  <String>K12753 - KFC ALSAMER 2</String>
+                  <String>K12756 - KFC MAGED 2</String>
+                  <String>K12757 - KFC AL SHEFA</String>
+                  <String>K12778 - KFC AL HAWYA</String>
+                  <String>K12819 - KFC AL JAL KING KHALED TAIF</String>
+                  <String>K12839 - KFC AL SEEL TAIF</String>
+                  <String>K12849 - KFC HALAKAH TAIF</String>
+                  <String>K12716 - KFC ALMADINA ALMONAWARA</String>
+                  <String>K12823 - KFC KAUST</String>
+                  <String>K12833 - KFC TABOUK BOULEVARD</String>
+                  <String>K12820 - KFC ALJAWEED SANABEL</String>
+                  <String>K12821 - KFC AHMED AL ATTAS ZAHRA</String>
+                  <String>K12835 - KFC QURAISH STREET JEDDAH</String>
+                  <String>K12836 - KFC KING KHALID ROAD MADINAH</String>
+                  <String>K12844 - KFC AL HARAMEEN ROAD</String>
+                  <String>K12825 - KFC AL DREES NEOM</String>
+                  <String>K12752 - KFC AMER FAHD YANBOA</String>
+                  <String>K12771 - KFC YANBO AL SINAIYAH</String>
+                  <String>K12780 - KFC DANA MALL</String>
+                  <String>K12768 - KFC RABEGH</String>
+                  <String>K12852 - KFC ANDALUS MALL</String>
+                  <String>K12711 - KFC UM_ALKORA</String>
+                  <String>K12712 - KFC ALHARAM</String>
+                  <String>K12727 - KFC ABRAJ ALBAIT</String>
+                  <String>K12731 - KFC ALSHRAYEA</String>
+                  <String>K12738 - KFC TANEEM</String>
+                  <String>K12750 - KFC  NWE ALAZEZIA</String>
+                  <String>K12751 - KFC AL KAAKIA</String>
+                  <String>K12762 - KFC GABAL OMAR</String>
+                  <String>K12765 - KFC AL AWALY</String>
+                  <String>K12789 - KFC AL ZAIDY</String>
+                  <String>K12787 - KFC AL KAAKIA 2</String>
+                  <String>K12837 - KFC KING FAISAL AL SHARAIYE</String>
+                  <String>K12822 - KFC TAIBAH GAS STATION</String>
+                  <String>K12826 - KFC NASEEM MAKKAH</String>
+                  <String>K12851 - KFC ABRAJ MAKKAH</String>
+                  <String>K12715 - KFC ALTAIF</String>
+                  <String>K12728 - KFC ALTAIF 2</String>
+                  <String>K12761 - KFC ABHA</String>
+                  <String>K12723 - KFC RASHID MALL ABHA</String>
+                  <String>K12749 - KFC ASDAF MALL KHAMIS MUSHIT</String>
+                  <String>K12764 - KFC GEZAN</String>
+                  <String>K12777 - KFC BESHA</String>
+                  <String>K12804 - KFC HIJRA ROAD MADINA</String>
+                  <String>K12806 - KFC BATHA QURAISH MAKKAH</String>
+                  <String>K12830 - KFC AL TAYSEER JEDDAH</String>
+                  <String>K12838 - KFC DARB AL TANIEM MAKKAH</String>
+                  <String>K12856 - KFC 2ND RING ROAD MADINAH</String>
+                  <String>K12848 - KFC 3RD RING ROAD MAKKAH</String>
+                  <String>K12717 - KFC SOLTANA</String>
+                  <String>K12718 - KFC ALHZAM</String>
+                  <String>K12734 - KFC EL RASHED MALL</String>
+                  <String>K12735 - KFC ALALIA</String>
+                  <String>K12743 - KFC GAMAA AL MADINA</String>
+                  <String>K12744 - KFC AL NOR</String>
+                  <String>K12767 - KFC AL AMIR MOHAMED</String>
+                  <String>K12791 - KFC AL MAMSHA</String>
+                  <String>K12850 - KFC AZEZIA MADINA</String>
+                  <String>K12719 - KFC TABUK</String>
+                  <String>K12769 - KFC KING FAHD - TABUK</String>
+                  <String>K12812 - KFC TABUK UNIVERSITY</String>
+                  <String>K12175 - KFC DERAB</String>
+                  <String>K12177 - KFC OTHIEM MALL RABWAH</String>
+                  <String>K12179 - KFC KHARG 2</String>
+                  <String>K12180 - KFC ELRABEA</String>
+                  <String>K12250 - KFC AL MAHDYAH AREA</String>
+                  <String>K12249 - KFC REMAL ALI AL BAJDI STREET</String>
+                  <String>K12233 - KFC MUNISIYAH RIYADH</String>
+                  <String>K12224 - KFC ANAS BIN MALIK</String>
+                  <String>K12237 - KFC SHEIKH JABER RD ALMAIZILAH</String>
+                  <String>K12254 - KFC AL KHARJ PRINCE SULTAN ROAD</String>
+                  <String>K12253 - KFC MARINA SQUARE EXIT 14</String>
+                  <String>K12241 - KFC ABU BAKER ROAD AL NARJESS</String>
+                  <String>K12247 - KFC KING ABDULLA AZIZ ROAD</String>
+                  <String>K12248 - KFC AL QASR MALL</String>
+                  <String>K12205 - KFC ARAR</String>
+                  <String>K12209 - KFC NEW ALHAYAH MALL</String>
+                  <String>K12210 - KFC RIYADH PARK</String>
+                  <String>K12225 - KFC HAIL 1 RELOCATION</String>
+                  <String>K12215 - KFC IMAM SAUD 2</String>
+                  <String>K12229 - KFC SOUTH RING ROAD RIYADH</String>
+                  <String>K12214 - KFC ATYAF MALL</String>
+                  <String>K12183 - KFC SAKAKH</String>
+                  <String>K12262 - KFC KING KHALED ROAD SAKAKA</String>
+                  <String>K12226 - KFC AL JUDAIDA ROAD - ARAR</String>
+                  <String>K12257 - KFC PRINCE SAUD BIN</String>
+                  <String>K12260 - KFC AL BUKAYRIYAH AL QASSIM</String>
+                  <String>K12235 - KFC TAKHASSOUSSI RD ALMOHAMADIA</String>
+                  <String>K12111 - KFC EL QASSIM</String>
+                  <String>K12151 - KFC EL QASEEM 2</String>
+                  <String>K12162 - KFC BURIDAH</String>
+                  <String>K12145 - KFC HAIL 2</String>
+                  <String>K12184 - KFC HAIL 3</String>
+                  <String>K12190 - KFC OTHEM MALL HAIL</String>
+                  <String>K12252 - KFC HAIL BEIRUT STREET</String>
+                  <String>K12245 - KFC AL MUZAHMIYA</String>
+                  <String>K12115 - KFC ONAIZA</String>
+                  <String>K12146 - KFC ALRASS</String>
+                  <String>K12176 - KFC MAGMAH</String>
+                  <String>K12178 - KFC SHAQRAA</String>
+                  <String>K12181 - KFC ELZOLFY</String>
+                  <String>K12182 - KFC AL DAWADMY</String>
+                  <String>K12423 - KFC HAFAR AL BATIN</String>
+                  <String>K12437 - KFC  60'S  ST</String>
+                  <String>K12446 - KFC KING FAISAL-HAFR ELBATEN</String>
+                  <String>K12478 - KFC MAKAN MALL RELOCATION</String>
+                  <String>K12244 - KFC RIYADH JEDDAH HIGHWAY TWEEQ</String>
+                  <String>K12236 - KFC JANADRIYYAH</String>
+                  <String>K12232 - KFC ISHBILIA KING ABDULLAH ROAD</String>
+                  <String>K12251 - KFC BOULEVARD RIYADH CITY</String>
+                  <String>K12219 - KFC  SYNERGY DAMMAM ROAD</String>
+                  <String>K12217 - KFC YARMOUK</String>
+                  <String>K12216 - KFC TAKHASUSSI</String>
+                  <String>K12228 - KFC SOLAIMANIA REPLACEMENT</String>
+                  <String>K12240 - KFC NADA OTHMAN IBN AFAN</String>
+                  <String>K12238 - KFC AL HAMRA 2</String>
+                  <String>K12191 - KFC NIGM ELDIN</String>
+                  <String>K12192 - KFC TAEF STREET</String>
+                  <String>K12193 - KFC RAHAB</String>
+                  <String>K12196 - KFC ARAFAAT ROAD</String>
+                  <String>K12197 - KFC ANAS IBN MALEK ROAD</String>
+                  <String>K12198 - KFC HASSAN BIN HUSSIN</String>
+                  <String>K12195 - KFC AL- KHAIR ROAD</String>
+                  <String>K12106 - KFC ELNASIM</String>
+                  <String>K12234 - KFC TAM STATION KING ABDULLAH</String>
+                  <String>K12101 - KFC SITTEN</String>
+                  <String>K12102 - KFC  EL WASHM</String>
+                  <String>K12104 - KFC YUROMARCHE</String>
+                  <String>K12107 - KFC ELSHIMASY</String>
+                  <String>K12108 - KFC EL MANFOUHA</String>
+                  <String>K12109 - KFC EL MASIEF</String>
+                  <String>K12110 - KFC EL SHIFA</String>
+                  <String>K12112 - KFC AZIZIA</String>
+                  <String>K12113 - KFC EL BADIA</String>
+                  <String>K12116 - KFC EL HAMRA</String>
+                  <String>K12117 - KFC  ALRAWABY</String>
+                  <String>K12118 - KFC EL SEWEDY</String>
+                  <String>K12120 - KFC ABDULAH</String>
+                  <String>K12121 - KFC EL DAIRY</String>
+                  <String>K12122 - KFC EL KHAZAN</String>
+                  <String>K12123 - KFC EL RABWA</String>
+                  <String>K12125 - KFC NEW OALYA</String>
+                  <String>K12129 - KFC EL OREGA</String>
+                  <String>K12131 - KFC EL DABAB</String>
+                  <String>K12132 - KFC EL KHALEG</String>
+                  <String>K12136 - KFC HAMZAH</String>
+                  <String>K12137 - KFC ALRAWDAH</String>
+                  <String>K12138 - KFC ELKHARJ</String>
+                  <String>K12139 - KFC HASAN BN THABET</String>
+                  <String>K12141 - KFC AL-SHIFA (2)</String>
+                  <String>K12142 - KFC AL-JAMAA</String>
+                  <String>K12143 - KFC AL SAHAFA</String>
+                  <String>K12147 - KFC ELNASR</String>
+                  <String>K12148 - KFC GALEARYA MALL</String>
+                  <String>K12149 - KFC ELSYNAYA</String>
+                  <String>K12150 - KFC EL DEARAYA</String>
+                  <String>K12152 - KFC EL SOLAY</String>
+                  <String>K12153 - KFC ELNOZHAA</String>
+                  <String>K12154 - KFC MAKKA ROAD</String>
+                  <String>K12155 - KFC ELSAHAFA2</String>
+                  <String>K12156 - KFC AL-DAMMAM ROAD</String>
+                  <String>K12157 - KFC AL-EMAM SAUD</String>
+                  <String>K12158 - KFC AL NAZEEM</String>
+                  <String>K12159 - KFC LULU MALL</String>
+                  <String>K12160 - KFC AL NAKHIL ARIA</String>
+                  <String>K12161 - KFC AL-FAROQ</String>
+                  <String>K12163 - KFC ELDAR ELBIDAA</String>
+                  <String>K12164 - KFC SHIFA 3</String>
+                  <String>K12165 - KFC NEW MAMLAKAH</String>
+                  <String>K12166 - KFC AL WEZARAT</String>
+                  <String>K12167 - KFC GHOBAIRAH</String>
+                  <String>K12168 - KFC OM EL-HAMAM</String>
+                  <String>K12169 - KFC AIR PORT ROAD</String>
+                  <String>K12170 - KFC ONIZAH 2</String>
+                  <String>K12171 - KFC ALSALAM ARIA</String>
+                  <String>K12172 - KFC DAHIAT LABAN</String>
+                  <String>K12173 - KFC OTHIEM MALL KHURES</String>
+                  <String>K12174 - KFC DAMMAM ROAD 2</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>K19468 - KKD LULU AL EHSA</String>
+                  <String>K19502 - KKD ADNOC DHAHRAN ROAD</String>
+                  <String>K19421 - KKD DHAHRAN MALL</String>
+                  <String>K19435 - KKD LULU MARKET KHOBAR</String>
+                  <String>K19452 - KKD PANDA HYPERMARKET AL GESR</String>
+                  <String>K19458 - KKD AL TAMIMI AL AKRABIA</String>
+                  <String>K19401 - KKD GIANT STORES ALRAKAH</String>
+                  <String>K19403 - KKD ALRASHED FRESH</String>
+                  <String>K19404 - KKD AL-KHOBAR</String>
+                  <String>K19410 - KKD HYPER PANDA</String>
+                  <String>K19479 - KKD HASSA CATERING</String>
+                  <String>K19487 - KKD TAMIMI DOHA WALK</String>
+                  <String>K19496 - KKD DABBAB DAMMAM</String>
+                  <String>K19497 - KKD OKTEN GAS STATION DAMMAM</String>
+                  <String>K19495 - KKD OLAYA KHOBAR</String>
+                  <String>K19483 - KKD UAD STREET QATIF</String>
+                  <String>K19480 - KKD ARAMCO DHAHRAN</String>
+                  <String>K19489 - KKD KING FAHAD UNIVERSITY</String>
+                  <String>K19494 - KKD AL SALAM PLAZA</String>
+                  <String>K19438 - KKD AL JUBAIL</String>
+                  <String>K19439 - KKD AL JUBAIL INDUSTRIAL</String>
+                  <String>K19442 - KKD ABO HADREA</String>
+                  <String>K19455 - KKD AL JUBAIL AL BALAD 2</String>
+                  <String>K19427 - KKD ALFAYSALIA</String>
+                  <String>K19432 - KKD DAREEN MALL</String>
+                  <String>K19447 - KKD IBN KHALDOON 2</String>
+                  <String>K19454 - KKD ABQEQ AL HASA</String>
+                  <String>K19459 - KKD AIRPORT ARRIVAL NEW</String>
+                  <String>K19462 - KKD FUELS GAS STATION</String>
+                  <String>K19469 - KKD NEW OTHEIM MALL DAMMAM</String>
+                  <String>K19405 - KKD AL-KHARGYAH</String>
+                  <String>K19408 - KKD AL_AWAL ST.</String>
+                  <String>K19478 - KKD KHOBAR CATERING</String>
+                  <String>K19488 - KKD AL AMANAH AIRPORT ROAD</String>
+                  <String>K19473 - KKD ABDULRAHMAN IBN AWF</String>
+                  <String>K19476 - KKD CARVE OUT HARDEE'S TANURA</String>
+                  <String>K19406 - KKD AL-DOHA</String>
+                  <String>K19424 - KKD ALQATIF CITY MALL</String>
+                  <String>K19426 - KKD AL MAZAYA MARKET</String>
+                  <String>K19412 - KKD AL-OTHAIM EHSA</String>
+                  <String>K19425 - KKD AL NOZHA EHSA</String>
+                  <String>K19433 - KKD AL MUBARAZ EHSA</String>
+                  <String>K19461 - KKD ALHASSA HOSPITAL</String>
+                  <String>K19440 - KKD AL FAWARES EHSA</String>
+                  <String>K19411 - KKD UNIVERSITY</String>
+                  <String>K19446 - KKD SAFWA</String>
+                  <String>K19413 - KKD SEHAT</String>
+                  <String>K19437 - KKD AL GAFR EHSA</String>
+                  <String>K19420 - KKD RAS TANOURA</String>
+                  <String>K19757 - KKD RING ROAD ABHA</String>
+                  <String>K19744 - KKD GEZAN</String>
+                  <String>K19753 - KKD SAUDIA AIRLINES</String>
+                  <String>K19779 - KKD HAMDANIYAH</String>
+                  <String>K19782 -  KKD REEM PARK KHAMIS MUSHAIT</String>
+                  <String>K19785 - KKD MADINA CATERING</String>
+                  <String>K19802 - KKD MUHAMADIYAH BOULEVARD</String>
+                  <String>K19803 - KKD HEZAM MADINAH</String>
+                  <String>K19822 - KKD AZEZIA MADINA</String>
+                  <String>K19815 - KKD OLAYA ROAD FACTORY STORE</String>
+                  <String>K19813 - KKD TABOUK BOULEVARD</String>
+                  <String>K19793 - KKD YAQUOT</String>
+                  <String>K19823 - KKD THE VILLAGE MALL</String>
+                  <String>K19817 - KKD AL HARAMEEN ROAD</String>
+                  <String>K19781 - KKD AHMED AL ATTAS ZAHRA</String>
+                  <String>K19810 - KKD HIRA NEW</String>
+                  <String>K19773 - KKD AZIZIA SQUARE</String>
+                  <String>K19804 - KKD SAUDI GERMAN HOSPITAL</String>
+                  <String>K19825 - KKD ANDALUS MALL</String>
+                  <String>K19759 - KKD REHAILY</String>
+                  <String>K19703 - KKD SARY GATE</String>
+                  <String>K19705 - KKD EL SERAFY MALL</String>
+                  <String>K19711 - KKD GAMAA</String>
+                  <String>K19712 - KKD AMIR SULTAN</String>
+                  <String>K19719 - KKD ARAFAT</String>
+                  <String>K19720 - KKD KING ROAD</String>
+                  <String>K19723 - KKD ABDALLAH</String>
+                  <String>K19724 - KKD KORNESH AL HAMRA</String>
+                  <String>K19725 - KKD TAHLIA NEW</String>
+                  <String>K19727 - KKD AL SAMER</String>
+                  <String>K19729 - KKD RABWA</String>
+                  <String>K19732 - KKD AMIR FAWAZ</String>
+                  <String>K19733 - KKD SOLIMANIA 2</String>
+                  <String>K19738 - KKD OBHOR</String>
+                  <String>K19739 - KKD WAZERIA</String>
+                  <String>K19740 - KKD DWAR AL HANDSA</String>
+                  <String>K19743 - KKD MANDREN AVENIO</String>
+                  <String>K19747 - KKD FLAMENGO MALL</String>
+                  <String>K19751 - KKD AL SALAM MALL</String>
+                  <String>K19755 - KKD OM AL QARA JEDDAH</String>
+                  <String>K19783 - KKD JEDDAH CATERING</String>
+                  <String>K19786 - KKD GEZAN CATERING</String>
+                  <String>K19796 - KKD ALSHARYA GAS STATION TAIF</String>
+                  <String>K19250 - KKD SHEHAR PARK FACTORY</String>
+                  <String>K19824 - KKD AL SEEL AL KABEER</String>
+                  <String>K19799 - KKD AL JAL KING KHALED TAIF</String>
+                  <String>K19820 - KKD TAIF AIRPORT</String>
+                  <String>K19768 - KKD MANAKHA</String>
+                  <String>K19707 - KKD GAMAA MADINA</String>
+                  <String>K19737 - KKD AL AMIR MOHAMED</String>
+                  <String>K19769 - KKD DAKHEEL PLAZA NEW</String>
+                  <String>K19809 - KKD EL ZAHER MAKKAH</String>
+                  <String>K19794 - KKD ALJAWEED SANABEL</String>
+                  <String>K19801 - KKD AL WAHA AL SAMER STREET</String>
+                  <String>K19797 - KKD JEDDAH CORNICHE</String>
+                  <String>K19818 - KKD DARB AL NASSEM</String>
+                  <String>K19805 - KKD TAIF AIRPORT ROAD</String>
+                  <String>K19812 - KKD PRINCE METIB</String>
+                  <String>K19811 - KKD AL MARWA PLAZA</String>
+                  <String>K19816 - KKD QURAISH STREET JEDDAH</String>
+                  <String>K19827 - KKD TABUK PARK MALL</String>
+                  <String>K19826 - KKD TABUK AIRPORT</String>
+                  <String>K19731 - KKD AL KAAKIA</String>
+                  <String>K19749 - KKD ABRAJ AL BAIT</String>
+                  <String>K19754 - KKD AL AWAALY</String>
+                  <String>K19784 - KKD MECCA CATERING</String>
+                  <String>K19792 - KKD NASEEM MAKKAH</String>
+                  <String>K19821 - KKD JABEL OMAR MAKKAH</String>
+                  <String>K19791 - KKD TAIBAH GAS STATION</String>
+                  <String>K19742 - KKD AL HAWYA</String>
+                  <String>K19181 - KKD ABU BAKER SIDDIQ RD MASIAF</String>
+                  <String>K19197 - KKD SOLIMANAIA RIYADH</String>
+                  <String>K19163 - KKD TAMIMI KING FAHAD ROAD</String>
+                  <String>K19218 - KKD ANDALUSIA PLAZA</String>
+                  <String>K19216 - KKD BOULEVARD RIYADH CITY</String>
+                  <String>K19207 - KKD AL FAYHA</String>
+                  <String>K19210 - KKD SAUD BIN FAISAL ROAD SAHAFA</String>
+                  <String>K19204 - KKD AL WUSTA ONAIZA</String>
+                  <String>K19212 - KKD ANAS BIN MALEK - NARJIS</String>
+                  <String>K19167 - KKD SYNERGY DAMMAM ROAD</String>
+                  <String>K19215 - KKD DERAB ROAD AL HAZM</String>
+                  <String>K19139 - KKD ELKHARJ</String>
+                  <String>K19144 - KKD ELKHARG 2</String>
+                  <String>K19145 - KKD NAGM ELDEN ROAD</String>
+                  <String>K19146 - KKD KHAIR ROAD</String>
+                  <String>K19147 - KKD DAR BAIDAA</String>
+                  <String>K19152 - KKD QURTOBA CENTER</String>
+                  <String>K19153 - KKD AL RIYADH PARK</String>
+                  <String>K19154 - KKD ATYAF MALL</String>
+                  <String>K19158 - KKD RABIEA SQUARE</String>
+                  <String>K19162 - KKD BURAIDAH</String>
+                  <String>K19103 - KKD KARFOURE</String>
+                  <String>K19104 - KKD GHARNATA MOOL</String>
+                  <String>K19105 - KKD EL SITTEEN</String>
+                  <String>K19171 - KKD GALERIA NEW</String>
+                  <String>K19109 - KKD OTHEM MAL KHORAS</String>
+                  <String>K19112 - KKD ELNASEEM</String>
+                  <String>K19114 - KKD BADIAA</String>
+                  <String>K19115 - KKD AL-SHEMICY</String>
+                  <String>K19116 - KKD BANDAR</String>
+                  <String>K19117 - KKD RABWAH</String>
+                  <String>K19119 - KKD ALHAMRA</String>
+                  <String>K19120 - KKD AL-SOLAY</String>
+                  <String>K19123 - KKD MAKKA ROAD</String>
+                  <String>K19124 - KKD ALMAMLAKA</String>
+                  <String>K19125 - KKD EXITE-15</String>
+                  <String>K19127 - KKD AL-DAMMAM ROAD</String>
+                  <String>K19129 - KKD AL-SAHAFA</String>
+                  <String>K19130 - KKD AL-EMAM SAUD</String>
+                  <String>K19132 - KKD ALRABEA</String>
+                  <String>K19133 - KKD ALSAAHAFA 2</String>
+                  <String>K19134 - KKD LULU MARKET</String>
+                  <String>K19136 - KKD DAMMAM ROAD 2</String>
+                  <String>K19137 - KKD LULU MALL 2</String>
+                  <String>K19190 - KKD RYADH CATERING</String>
+                  <String>K19174 - KKD HAIL KING ABDULAZIZ RD</String>
+                  <String>K19164 - KKD TAMIMI DABAB</String>
+                  <String>K19189 - KKD TAM STATION KING ABDULLAH</String>
+                  <String>K19213 - KKD TAKHASOSY MUHAMADIA RIYADH</String>
+                  <String>K19194 - KKD PRINCE SATTAM UNIVERSITY</String>
+                  <String>K19205 - KKD OTHAIM MALL RABWA RELO</String>
+                  <String>K19143 - KKD OTHEM MALL HAIL</String>
+                  <String>K19135 - KKD HAIL</String>
+                  <String>K19141 - KKD ZOLFY ROD</String>
+                  <String>K19202 - KKD DAIRY SOUTH RING ROAD</String>
+                  <String>K19199 - KKD SAHABA ROAD YARMOUK</String>
+                  <String>K19196 - KKD ISHBILIA RIYADH</String>
+                  <String>K19208 - KKD INDUSTRIAL CITY</String>
+                  <String>K19193 - KKD JANADRIYYAH</String>
+                  <String>K19178 - KKD DAIRY SOUTH RING ROAD</String>
+                  <String>K19219 - KKD EUROMARCHE</String>
+                  <String>K19214 - KKD RIYADH JEDDAH HIGHWAY TWEEQ</String>
+                  <String>K19176 - KKD MUNISIYAH RIYADH</String>
+                  <String>K19203 - KKD WADI LABAN</String>
+                  <String>K19211 - KKD DIRAB ROAD AL SHIFA</String>
+                  <String>K19168 - KKD ORUBA SQUARE</String>
+                  <String>K19201 - KKD HASSAN BIN THABIT</String>
+                  <String>K19198 - KKD CARVE-OUT KFC AL OLAYA</String>
+                  <String>K19179 - KKD ALRABWAH</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Peets Coffee">
+              <value>
+                <List>
+                  <String>K35108 - PEETS KSA DT</String>
+                  <String>K35110 - PEETS GRANADA MALL</String>
+                  <String>K35109 - PEETS TAAWUN SQUARE</String>
+                  <String>K35107 - PEETS MUNISIYAH</String>
+                  <String>K35112 - PEETS EUROMACHE</String>
+                  <String>K35106 - PEETS SHEIKH JABER ROAD</String>
+                  <String>K35113 - PEETS TAKHASSOUSSI RD ALMOHAMAD</String>
+                  <String>K35114 - PEETS RIYADH PARK MALL</String>
+                  <String>K35111 - PEETS THE ZONE</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>K16415 - PH GARDEN PLAZA MUBARAZ</String>
+                  <String>K16413 - PH GOLDEN BELT TAMIMI</String>
+                  <String>K16402 - PH NADA DAMMAM</String>
+                  <String>K16401 - PH AZIZIA KHOBAR</String>
+                  <String>K16408 - PH SYNERGY DAMMAM</String>
+                  <String>K16417 - PH TAMIMI MURAKABAT</String>
+                  <String>K16414 - PH FANAR RAKKAH AL KHOBAR</String>
+                  <String>K16409 - PH W BOULEVARD</String>
+                  <String>K16416 - PH MUBARAZ AL KHOBAR</String>
+                  <String>K16425 - PH OLAYA CENTER KHOBAR</String>
+                  <String>K16406 - PH CENTRO JUBAIL</String>
+                  <String>K16418 - PH GAMEA ROAD EHSA</String>
+                  <String>K16419 - PIZZA HUT AL KHAFJI</String>
+                  <String>K16410 - PH SALAM PLAZA JUBAIL</String>
+                  <String>K16404 - PH AZIZIA DAMMAM</String>
+                  <String>K16405 - PH NOUR DAMMAM</String>
+                  <String>K16411 - PH ATYAF AVENUE</String>
+                  <String>K16403 - PH MANAR DAMMAM</String>
+                  <String>K16741 - PH KHAMIS BOULEVARD ABHA</String>
+                  <String>K16718 - PH TAIBA MADINAH</String>
+                  <String>K16707 - PH TIRA MALL TAIF</String>
+                  <String>K16708 - PH THE PARK TAIF</String>
+                  <String>K16715 - PH AL BALAD YANBU</String>
+                  <String>K16703 - PH AL ZAHER MAKKAH</String>
+                  <String>K16709 - PH JABEL OMER MAKKAH</String>
+                  <String>K16704 - PH AL SHAWGYIA MAKKAH</String>
+                  <String>K16701 - PH AWALI MAKKAH</String>
+                  <String>K16720 - PH ABRAJ AL MAKAH</String>
+                  <String>K16706 - PH AL SHARIYE MAKKAH</String>
+                  <String>K16702 - PH ABRAJ ALBAIT MAKKAH</String>
+                  <String>K16738 - PH TABOUK BOULEVARD</String>
+                  <String>K16740 - PH OLAYA STREET TABOUK</String>
+                  <String>K16717 - PH AL MAMSHA</String>
+                  <String>K16711 - PH HARAM MANAKHA</String>
+                  <String>K16712 - PH SULTANA MADINA</String>
+                  <String>K16713 - PH PRINCE MOHAMED MADINA</String>
+                  <String>K16714 - PH AZEZIA MADINA</String>
+                  <String>K16705 - PH SHEHAR TAIF</String>
+                  <String>K16103 - PH AL HAMRA CO</String>
+                  <String>K16148 - PH OREKA BOULEVARD AL QASSIM</String>
+                  <String>K16144 - PH CENTRO NARJES ABU BAKER</String>
+                  <String>K16146 - PH AL JAZEERA MKT SULAYMANIYAH</String>
+                  <String>K16112 - PH AL MALGA ANAS BIN MALIK</String>
+                  <String>K16149 - PH AL AWAL PLAZA</String>
+                  <String>K16116 - PH NOZHA</String>
+                  <String>K16135 - PH REMAL WALK</String>
+                  <String>K16136 - PH AL AQIQ PLAZA</String>
+                  <String>K16130 - PH GRANADA PLAZA</String>
+                  <String>K16143 - PH KHURAIS SQUARE</String>
+                  <String>K16128 - PH BADIA PLAZA</String>
+                  <String>K16113 - PH QURTUBA</String>
+                  <String>K16141 - PH BOULEVARD RIYADH CITY</String>
+                  <String>K16102 - PH KING ABDULLAH RD KING FAHAD</String>
+                  <String>K16104 - PH OLAYA</String>
+                  <String>K16105 - PH BADEA CO</String>
+                  <String>K16101 - PH SYNERGY DAMMAM ROAD</String>
+                  <String>K16106 - PH THE SPOT RAKKAH</String>
+                  <String>K16110 - PH YASMIN</String>
+                  <String>K16111 - PH MALQA</String>
+                  <String>K16108 - PH MUNISIYA</String>
+                  <String>K16107 - PH MALAZ</String>
+                  <String>K16109 - PH KAYAN SQUARE NARJIS</String>
+                  <String>K16118 - PH SHIFA</String>
+                  <String>K16129 - PH MURSALAT</String>
+                  <String>K16124 - PH EUROMARCHE</String>
+                  <String>K16114 - PH LABAN PLAZA</String>
+                  <String>K16132 - PH SAADAH WALK</String>
+                  <String>K16140 - PH CENTRO PLAZA AL KHARJ</String>
+                  <String>K16120 - PH QAIRAWAN GATE</String>
+                  <String>K16121 - PH IRQA PLAZA</String>
+                  <String>K16123 - PH SETEEN</String>
+                  <String>K16125 - PH ANDALUSIAN PLAZA</String>
+                  <String>K16127 - PH GHOROOB PLAZA TWEEQ</String>
+                  <String>K16115 - PH TALDAH CENTRE AZIZIA</String>
+                  <String>K16150 - PH SAAD SQUARE HITTEEN</String>
+                  <String>K16139 - PH DOVE PLAZA UM AL HAMAM</String>
+                  <String>K16169 - PH KING FAHAD ROAD AL KHARJ</String>
+                  <String>K16170 - PH BEIRUT PLAZA HAIL</String>
+                  <String>K16122 - PH SAHELIA PLAZA HAIL</String>
+                  <String>K16147 - PH RAWDAH PLAZA AL RASS</String>
+                  <String>K16145 - PH SAHAFA PLAZA</String>
+                  <String>K16117 - PH NAKHEEL PLAZA</String>
+                  <String>K16137 - PH AL RABIA PLAZA</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Saudi Arabia">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                  <String>T.G.I FRIDAYS</String>
+                  <String>Chicken Tikka</String>
+                  <String>Peets Coffee</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>K18407 - TGIF MUBARAZ EHSA</String>
+                  <String>K18402 - TGIF AL DAMMAM</String>
+                  <String>K18408 - TGIF SYNERGY DAMMAM</String>
+                  <String>K18404 - TGIF AL JUBAIL INDUS</String>
+                  <String>K18405 - TGIF HAFAR ELBATIN</String>
+                  <String>K18701 - TGIF ANDALUS-JEDDAH</String>
+                  <String>K18702 - TGIF PRINCE SULTAN</String>
+                  <String>K18707 - TGIF YANBOA AL SENAEYA</String>
+                  <String>K18709 - TGIF RED SEA MALL</String>
+                  <String>K18105 - TGIF BURIDA</String>
+                  <String>K18109 - TGIF SYNERGY DAMMAM ROAD</String>
+                  <String>K18101 - TGIF EUROMARCHE</String>
+                  <String>K18107 - TGIF AL-KHARJ</String>
+                  <String>K18103 - TGIF ALRABEA</String>
+                  <String>K18104 - TGIF OTHEM RABOWAH</String>
+                  <String>K18102 - TGIF ALHAMRA</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="United Arab Emirates">
+        <value>
+          <Map>
+            <entry key="Chicken Tikka">
+              <value>
+                <List>
+                  <String>U13708 - TIKKA DUBAI-SHARJAH</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Hardees">
+              <value>
+                <List>
+                  <String>U14945 - HRD SKY COURT</String>
+                  <String>U14937 - HRD BUSINESS BAY</String>
+                  <String>U14836 - HRD ENOC SHAWAMEKH</String>
+                  <String>U14956 - HRD AKOYA OXYGEN</String>
+                  <String>U14928 - HRD ENOC JAFZA</String>
+                  <String>U14925 - HRD BASMA</String>
+                  <String>U14760 - HRD JLT</String>
+                  <String>U14789 - HRD KNOWLEDGE VILLAGE</String>
+                  <String>U14781 - HRD MOTOR CITY</String>
+                  <String>U14727 - HRD MERCATO</String>
+                  <String>U14906 - HRD MIRACLE GARDEN KIOSK</String>
+                  <String>U14716 - HRD AL KOSIS</String>
+                  <String>U14768 - HRD GRAND LUBE</String>
+                  <String>U14804 - HRD AL HAMRIYA</String>
+                  <String>U14769 - HRD ENOC KHAWANEEJ</String>
+                  <String>U14718 - HRD RIQQA</String>
+                  <String>U14803 - HRD AL KHALEEJ CENTER</String>
+                  <String>U14796 - HRD SHEIKH ZAYED ROAD</String>
+                  <String>U14749 - HRD AL RASHIDEYA - ENOC</String>
+                  <String>U14773 - HRD AL RASHIDIYA</String>
+                  <String>U14800 - HRD DUBAI FESTIV.CITY(NEW)</String>
+                  <String>U14751 - HRD MIRDIFF CITY CENTER</String>
+                  <String>U14737 - HRD CITY CENTER DUBAI</String>
+                  <String>U14795 - HRD ENOC AL KHAIL RD</String>
+                  <String>U14822 - HRD WARQAA</String>
+                  <String>U14826 - HRD ARABIAN CENTER</String>
+                  <String>U14909 - HRD IBN BATTUTA MALL</String>
+                  <String>U14830 - HRD FESTIVAL PLAZA</String>
+                  <String>U14911 - HRD NESHAMA TOWN SQUARE</String>
+                  <String>U14938 - HRD ADNOC AL AWEER</String>
+                  <String>U14930 - HRD EMARAT MUWAFJAH</String>
+                  <String>U14913 - HRD DUBAI MARINA MALL</String>
+                  <String>U14810 - HRD DUBAI MALL FC</String>
+                  <String>U14742 - HRD BARSHA GRAND LUBE</String>
+                  <String>U14767 - HRD ENOC AL BARSHA</String>
+                  <String>U14715 - HRD JUMEIRA BEACH</String>
+                  <String>U14730 - HRD MALL OF THE EMIRATES</String>
+                  <String>U14833 - HARDEES - AL MUROOR</String>
+                  <String>U14943 - HRD AIRPORT ROAD</String>
+                  <String>U14961 - HARDEES UAE IL - 1</String>
+                  <String>U14964 - HARDEES ADNOC 309 MAQAM AL AIN</String>
+                  <String>U14776 - HRD AL SHAHAMA</String>
+                  <String>U14801 - HRD KHALIFA (B) CITY</String>
+                  <String>U14814 - HRD ABU DHABI UNIVERSITY</String>
+                  <String>U14818 - HRD NAKHEEL ADNOC MOTOR</String>
+                  <String>U14908 - HRD CITY CENTER MASDAR</String>
+                  <String>U14819 - HRD DALMA MALL</String>
+                  <String>U14793 - HRD SALAMAT</String>
+                  <String>U14805 - HRD MAKANI ZAKHER</String>
+                  <String>U14713 - HRD TOURISTIC</String>
+                  <String>U14721 - HRD WORLD TRADE CENTER</String>
+                  <String>U14732 - HRD KHALIDIYAH MALL</String>
+                  <String>U14736 - HRD ALWEHDA MALL ABUDHABI</String>
+                  <String>U14757 - HRD MUSHRIF MALL</String>
+                  <String>U14807 - HRD YAS MALL</String>
+                  <String>U14812 - HRD HEMDAN (NEW)</String>
+                  <String>U14745 - HRD BANI YAS</String>
+                  <String>U14752 - HRD KHALIFA CITY</String>
+                  <String>U14758 - HRD MUSAAFAH</String>
+                  <String>U14959 - HRD ADNOC AMRA</String>
+                  <String>U14771 - HRD BAWABAT NORTH ADNOC</String>
+                  <String>U14806 - HRD MANAR MALL RELOCATION</String>
+                  <String>U14949 - HARDEES KHUZAM</String>
+                  <String>U14834 - HARDEES - RAKEZ</String>
+                  <String>U14829 - HRD UMM AL QUWAIN</String>
+                  <String>U14954 - HRD EMARAT AL SALAMAH</String>
+                  <String>U14778 - HRD FUJAIRAH MUNICIPALITY</String>
+                  <String>U14958 - HRD RUGAYLAT ROAD FUJAIRAH</String>
+                  <String>U14705 - HRD AL AIN</String>
+                  <String>U14724 - HRD AL-AIN MALL</String>
+                  <String>U14741 - HRD AL-KHOBEISY AL-AIN</String>
+                  <String>U14746 - HRD AL BAWADI MALLL</String>
+                  <String>U14764 - HRD ZAKHER-AL AIN</String>
+                  <String>U14957 - HRD EMARAT SIYOUH 8</String>
+                  <String>U14831 - HRD ENOC 1117 AL QARAYEN</String>
+                  <String>U14922 - HRD KHORFAKAN RELOCATION</String>
+                  <String>U14838 - HARDEES - KALBA</String>
+                  <String>U14828 - HRD CITY LIFE TALLAH MALL</String>
+                  <String>U14743 - HRD EMIRATES ROAD</String>
+                  <String>U14790 - HRD JURF MALL AJMAN</String>
+                  <String>U14775 - HRD GRAND LUBE AJMAN</String>
+                  <String>U14811 - HRD CITY CEN. AJMAN RELOC</String>
+                  <String>U14825 - HRD AJMAN CORNICHE RELOCATION</String>
+                  <String>U14936 - HRD THE MALL AJMAN</String>
+                  <String>U14934 - HRD SAFFIA</String>
+                  <String>U14839 - HRD SILICON OASIS</String>
+                  <String>U14840 - HARDEES BARSHA LAND</String>
+                  <String>U14754 - HRD QARAEN-SHJ COOP</String>
+                  <String>U14770 - HRD AL ZAHRA MALL SHJ.</String>
+                  <String>U14765 - HRD SAMNAN - ADNOC</String>
+                  <String>U14726 - HRD AL-BUHAIRA</String>
+                  <String>U14714 - HRD DASMAN</String>
+                  <String>U14744 - HRD SHARJAH CITY CENTER</String>
+                  <String>U14802 - HRD SAHARA MALL</String>
+                  <String>U14709 - HRD DUBAI-SHARJAH</String>
+                  <String>U14797 - HRD ADNOC  SHJ CORNICHE</String>
+                  <String>U14821 - HRD MOWAILAH - SHJ</String>
+                  <String>U14931 - HRD EMARAT RAHMANIYA</String>
+                  <String>U14832 - HRD ENOC 1635 KHAWANEEJ</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="KFC">
+              <value>
+                <List>
+                  <String>U12144 - KFC MBZ</String>
+                  <String>U12122 - KFC - WATHBA MALL</String>
+                  <String>U12127 - KFC SARAB MALL</String>
+                  <String>U12138 - KFC - AL JIMI MALL</String>
+                  <String>U12121 - KFC RIYAD CITY COURTYARD</String>
+                  <String>U12143 - KFC GALLERIA AL MARYAH</String>
+                  <String>U12156 - KFC - YAS ISLAND DT</String>
+                  <String>U12953 - KFC MASDAR CITY CENTER</String>
+                  <String>U12880 - KFC MARINA MALL</String>
+                  <String>U12940 - KFC AL MARIYAH CENTRAL</String>
+                  <String>U12112 - KFC AFCOOP MAQTA</String>
+                  <String>U12113 - KFC AL SHAMKHA MALL NEW</String>
+                  <String>U12999 - KFC ABU DHABI AIRPORT ROAD</String>
+                  <String>U12129 - KFC MAKANI MALL KHALIFA CITY</String>
+                  <String>U12134 - KFC AL FALAH MALL</String>
+                  <String>U12141 - KFC - WEST YAS PLAZA</String>
+                  <String>U12864 - KFC AL YAHR AL AIN</String>
+                  <String>U12964 - KFC QATTARA CARAVAN</String>
+                  <String>U12131 - KFC AL AIN CO OP AQABIYA</String>
+                  <String>U12865 - KFC AL  SHAHAMA</String>
+                  <String>U12868 - KFC AL RUWAIS MALL</String>
+                  <String>U12878 - KFC SHAMKHA MALL</String>
+                  <String>U12888 - KFC ADNOC MOHAMED BIN ZAYED</String>
+                  <String>U12890 - KFC WORLD TRADE CENTER</String>
+                  <String>U12892 - KFC KHALIFA (B) CITY</String>
+                  <String>U12913 - KFC CENTRAL MALL (AUH)</String>
+                  <String>U12780 - KFC KHALIFA CITY ( A ) - ADNOC</String>
+                  <String>U12815 - KFC MADINAT ZAYED</String>
+                  <String>U12839 - KFC AL HAFFAR-ADNOC</String>
+                  <String>U12757 - KFC ABU DHABI MALL</String>
+                  <String>U12821 - KFC BEDAA ZAYED</String>
+                  <String>U12713 - KFC HAMDAN</String>
+                  <String>U12715 - KFC AIRPORT GARDEN</String>
+                  <String>U12730 - KFC BANI YAS</String>
+                  <String>U12735 - KFC AL MOSAFAH 2</String>
+                  <String>U12736 - KFC AD- AL AIN MAFRAQ</String>
+                  <String>U12746 - KFC AL KHALIDIA</String>
+                  <String>U12756 - KFC TOURISTIC</String>
+                  <String>U12773 - KFC KHALIDYA MALL</String>
+                  <String>U12783 - KFC AL-WEHDA MALL ABU DHABI</String>
+                  <String>U12785 - KFC AL- MOUROR ( RELOCATION )</String>
+                  <String>U12816 - KFC DALMA MALL</String>
+                  <String>U12818 - KFC BAWABAT AL SHARQ</String>
+                  <String>U12819 - KFC MUSHRIF MALL</String>
+                  <String>U12828 - KFC DEERFIELD ABU DHABI</String>
+                  <String>U12852 - KFC YAS MALL - AD</String>
+                  <String>U12853 - KFC ADNOC MEARAD (AUH)</String>
+                  <String>U12856 - KFC ADNOC AL QARAEEN ALAISH</String>
+                  <String>U12857 - KFC ADNOC AL MUSSAFAH</String>
+                  <String>U12960 - KFC REEF AUH</String>
+                  <String>U12107 - KFC ADNOC JURF AJMAN</String>
+                  <String>U12887 - KFC ADNOC  EMIRATES CLUB</String>
+                  <String>U12912 - KFC MONTASER STREET</String>
+                  <String>U12914 - KFC MANAR MALL (RELOCATION)</String>
+                  <String>U12733 - KFC RAS KHEMA</String>
+                  <String>U12834 - KFC LULU RAK</String>
+                  <String>U12148 - KFC LAGOON STOP MINA AL ARAB</String>
+                  <String>U12114 - KFC TASJEEL VILLAGE RAK</String>
+                  <String>U12142 - KFC - RAKEZ</String>
+                  <String>U12931 - KFC NEW MALL LULU (UAQ)</String>
+                  <String>U12732 - KFC OM ALQUEEN</String>
+                  <String>U12123 - KFC EMARAT SALAMAH</String>
+                  <String>U12832 - KFC DIBBA</String>
+                  <String>U12734 - KFC FUJERAH</String>
+                  <String>U12778 - KFC KALBAA</String>
+                  <String>U12817 - KFC CENTURY MALL - FUJEIRAH</String>
+                  <String>U12823 - KFC ENOC FUJIRAH</String>
+                  <String>U12831 - KFC  LULU FUJERAH</String>
+                  <String>U12836 - KFC CITY CENTER FUJERAH</String>
+                  <String>U12139 - KFC - EMARAT DIBBA AL RAS</String>
+                  <String>U12125 - KFC SOUQ EXTRA FUJAIRAH</String>
+                  <String>U12883 - KFC HILI MALL</String>
+                  <String>U12905 - KFC MAKANAI ZAKHER</String>
+                  <String>U12820 - KFC FOAA LULU</String>
+                  <String>U12707 - KFC AL JIMI</String>
+                  <String>U12716 - KFC AL AIN_2 KHALIFA</String>
+                  <String>U12758 - KFC AL-AIN MALL</String>
+                  <String>U12768 - KFC EL MUQAM</String>
+                  <String>U12793 - KFC  AL-KHOBEISY AL-AIN</String>
+                  <String>U12808 - KFC AL BAWADI MALL</String>
+                  <String>U12826 - KFC ZAKHER</String>
+                  <String>U12830 - KFC KUWAITAT</String>
+                  <String>U12859 - KFC ADNOC BATHA HAYER (AL AIN)</String>
+                  <String>U12950 - KFC MATAJER MUSALLAH (SHARJAH)</String>
+                  <String>U12955 - KFC MOWELLAH</String>
+                  <String>U12149 - KFC EMARAT AL JADAH</String>
+                  <String>U12133 - KFC - RAHMANIYA ENOC 1130</String>
+                  <String>U12117 - KFC ADNOC MUWAILAH COMMERCIAL</String>
+                  <String>U12790 - KFC - EMARAT SIYOUH 4</String>
+                  <String>U12118 - KFC ENOC 1127</String>
+                  <String>U12137 - KFC EMARAT AL SUYOH 10</String>
+                  <String>U12146 - KFC - EMARAT AL ZUBARAH</String>
+                  <String>U12151 - KFC EMARAT SOUR KALBA</String>
+                  <String>U12889 - KFC AL HUMAIDIYA</String>
+                  <String>U12911 - KFC KENZ AL HAMIDYA</String>
+                  <String>U12920 - KFC CITY CENTER AJMAN</String>
+                  <String>U12936 - KFC CITY LIFE AL TALLAH - AJMAN</String>
+                  <String>U12777 - KFC AJMAN ROAD ( RELOCATION )</String>
+                  <String>U12800 - KFC EMIRATES ROAD AJMAN</String>
+                  <String>U12942 - KFC THE MALL AJMAN</String>
+                  <String>U12947 - KFC AJMAN CORNICHE RELOCATION</String>
+                  <String>U12150 - KFC EMARAT AL MAZRAH AJMAN</String>
+                  <String>U12155 - KFC BARSHA LAND</String>
+                  <String>U12886 - KFC ADNOC AL ZAID</String>
+                  <String>U12710 - KFC DUBAI-SHARJAH</String>
+                  <String>U12709 - KFC AL WAHDA</String>
+                  <String>U12737 - KFC KUWAIT ST.</String>
+                  <String>U12740 - KFC WASET</String>
+                  <String>U12745 - KFC AL OROUBA</String>
+                  <String>U12752 - KFC SHARJAH CITY CENTER</String>
+                  <String>U12755 - KFC AL-BUHAIRA</String>
+                  <String>U12761 - KFC MEGA MALL</String>
+                  <String>U12779 - KFC HELWAN</String>
+                  <String>U12791 - KFC INDUSTRIAL AREA 12</String>
+                  <String>U12804 - KFC AL-TAAWON</String>
+                  <String>U12833 - KFC KHORFAKAN</String>
+                  <String>U12841 - KFC AL SUWAIHAT-SHARJAH</String>
+                  <String>U12842 - KFC MATAGER SHARJAH</String>
+                  <String>U12850 - KFC ADNOC KALBA MELIEHA-TAIBA</String>
+                  <String>U12767 - KFC SAHARA MALL</String>
+                  <String>U12939 - KFC OASIS MALL - SHARJAH</String>
+                  <String>U12980 - KFC AL HOUSHI SHARJAH</String>
+                  <String>U12986 - KFC EMARAT SAJA</String>
+                  <String>U12106 - KFC EMARAT WOSTA</String>
+                  <String>U12998 - KFC ZAHIA CITY CENTRE</String>
+                  <String>U12962 - KFC ENOC 1603 AL WARSAN 4</String>
+                  <String>U12708 - KFC EMARAT NAWAR</String>
+                  <String>U12132 - KFC ADNOC MIRDIFF</String>
+                  <String>U12961 - KFC ENOC 1602 AL AWIR FIRST</String>
+                  <String>U12714 - KFC - B1 MALL BARSHA</String>
+                  <String>U12990 - KFC ADNOC AL QUOZ</String>
+                  <String>U12119 - KFC JUMEIRAH PARK PAVILION</String>
+                  <String>U12130 - KFC NAD AL HAMAR CO OP</String>
+                  <String>U12103 - KFC AKOYA OXYGEN FOOD TRUCK</String>
+                  <String>U12958 - KFC NASHAMA</String>
+                  <String>U12959 - KFC FESITVAL PLAZA</String>
+                  <String>U12102 - KFC ENOC 1008</String>
+                  <String>U12140 - KFC ADNOC AL KHAWANEEJ</String>
+                  <String>U12126 - KFC SALAH EL DIN RELOCATION</String>
+                  <String>U12145 - KFC BAY SQUARE</String>
+                  <String>U12992 - KFC EMARAT BIG HEART</String>
+                  <String>U12957 - KFC DRAGON MART 1</String>
+                  <String>U12116 - KFC DUBAI LAND SKY COURT</String>
+                  <String>U12128 - KFC ARABIAN RANCHES</String>
+                  <String>U12136 - KFC DUBAI MARINA WALK</String>
+                  <String>U12110 - KFC CIRCLE MALL</String>
+                  <String>U12935 - KFC DUBAI HILLS MALL</String>
+                  <String>U12966 - KFC LAST EXIT</String>
+                  <String>U12991 - KFC EMARAT AL TALLAH AJMAN</String>
+                  <String>U12994 - KFC EMARAT KHALEDIYAH SHARJAH</String>
+                  <String>U12109 - KFC ENOC 09 WASL</String>
+                  <String>U12993 - KFC EMARAT GHAFAT UAQ</String>
+                  <String>U12705 - KFC AL JUMIRAH</String>
+                  <String>U12712 - KFC AL FIHIDI</String>
+                  <String>U12717 - KFC AL RIQA</String>
+                  <String>U12723 - KFC AL HAMRIAH</String>
+                  <String>U12724 - KFC AL GABEL ALI</String>
+                  <String>U12738 - KFC DUBAI-ABUDHABI</String>
+                  <String>U12739 - KFC CITY CENTER</String>
+                  <String>U12741 - KFC AL RASHEDIAH</String>
+                  <String>U12748 - KFC UM SUQEM</String>
+                  <String>U12749 - KFC KORNISH</String>
+                  <String>U12750 - KFC ABDUL NASSER NEW</String>
+                  <String>U12763 - KFC MERCATO</String>
+                  <String>U12764 - KFC KNOWLEDGE VILLAGE</String>
+                  <String>U12765 - KFC IBN BATTUTA MALL</String>
+                  <String>U12769 - KFC EMIRATES MALL FC</String>
+                  <String>U12770 - KFC MALL OF THE EMIRATES CARRE</String>
+                  <String>U12772 - KFC GREENS COMMUNITY</String>
+                  <String>U12774 - KFC JUMIRA BEACH RESIDENCE</String>
+                  <String>U12775 - KFC UPTOWN MIRDIFF</String>
+                  <String>U12784 - KFC AL-KHALEEJ CENTER</String>
+                  <String>U12786 - KFC OUTLET MALL</String>
+                  <String>U12801 - KFC DUBAI MALL</String>
+                  <String>U12803 - KFC ARABIAN PLAZA</String>
+                  <String>U12806 - KFC CENTURY MALL</String>
+                  <String>U12812 - KFC MIRDIFF CITY CENTER FD140</String>
+                  <String>U12813 - KFC MIRDIFF CITY CENTER FD111</String>
+                  <String>U12814 - KFC AL QUSAIS (ENOC)</String>
+                  <String>U12822 - KFC JAFZA JABAL ALI</String>
+                  <String>U12825 - KFC MOTOR CITY</String>
+                  <String>U12840 - KFC JLT</String>
+                  <String>U12843 - KFC ENOC AL BARSHA SOUTH</String>
+                  <String>U12844 - KFC ENOC BAY PASS</String>
+                  <String>U12845 - KFC ENOC AL BARSHA NORTH</String>
+                  <String>U12846 - KFC GRAND LUBE - AL QUSAIS</String>
+                  <String>U12848 - KFC ENOC KHAWANEEJ</String>
+                  <String>U12849 - KFC AL GHURAIR MALL</String>
+                  <String>U12937 - KFC CARREFOUR AL GHUBAIBA</String>
+                  <String>U12945 - KFC ADNOC MUHAISSNA - DUBAI</String>
+                  <String>U12916 - KFC WARQAA</String>
+                  <String>U12951 - KFC DUBAI CREEK HARBOUR</String>
+                  <String>U12952 - KFC PALM MALL</String>
+                  <String>U12949 - KFC ENOC/EPCO 6001 TWAR QUSAIS</String>
+                  <String>U12941 - KFC REMRAAM</String>
+                  <String>U12866 - KFC DUBAI AIRPORT T2</String>
+                  <String>U12867 - KFC RASHIDIYA MARKET</String>
+                  <String>U12870 - KFC DXB TERMINAL 1</String>
+                  <String>U12874 - KFC AL MADINA MALL</String>
+                  <String>U12884 - KFC BURJUMAN MALL</String>
+                  <String>U12909 - KFC AL KARAMA - MOHEBI</String>
+                  <String>U12891 - KFC DUBAI FESTIVAL CITY (NEW)</String>
+                  <String>U12893 - KFC INTERNATIONAL CITY</String>
+                  <String>U12894 - KFC SOUQ EXTRA SILICON OASIS</String>
+                  <String>U12897 - KFC IBN BATUTA METRO LINK</String>
+                  <String>U12898 - KFC AL KHAIL GATE</String>
+                  <String>U12904 - KFC THE POINTE</String>
+                  <String>U12907 - KFC BUSINESS BAY AVENUE</String>
+                  <String>U12908 - KFC SPINNEYS KARAMA</String>
+                  <String>U12910 - KFC AL REEF MALL</String>
+                  <String>U12915 - KFC QUSAIS NEW</String>
+                  <String>U12918 - KFC DUBAI MALL-FASHION AVENUE</String>
+                  <String>U12923 - KFC BARSHA MALL</String>
+                  <String>U12928 - KFC DUBAI MARINA</String>
+                  <String>U12934 - KFC DIP ENOC 1042</String>
+                  <String>U12789 - KFC SHEIKH ZAID ROAD (2)</String>
+                  <String>U12796 - KFC SILICON OASIS (ENOC)</String>
+                  <String>U12805 - KFC AL-BARSHA</String>
+                  <String>U12809 - KFC OASIS MALL</String>
+                  <String>U12824 - KFC DUBAI AL AIN ABU KHADRA</String>
+                  <String>U12927 - KFC ENOC JUMEIRAH VILLAGE JVC</String>
+                  <String>U12946 - KFC ADNOC DIP</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Krispy Kreme">
+              <value>
+                <List>
+                  <String>U21780 - KKD DFC CARREFOUR</String>
+                  <String>U21783 - KKD DXB TERMINAL 1</String>
+                  <String>U21712 - KKD MALL OF EMIRATES</String>
+                  <String>U21714 - KKD IBN BATTUTA MALL</String>
+                  <String>U21726 - KKD OASIS CENTER</String>
+                  <String>U21735 - KKD MIRDIFF CITY CENT</String>
+                  <String>U21737 - KKD CENTURY MALL</String>
+                  <String>U21745 - KKD JUMIERAH COOP</String>
+                  <String>U21746 - KKD GHURAIR</String>
+                  <String>U21981 - KKD ARABIAN RANCHES</String>
+                  <String>U21975 - KKD IBN BATTUTA MALL RELOC</String>
+                  <String>U21958 - KKD BUSINESS BAY</String>
+                  <String>U21921 - KKD DUBAILAND SKYCOURT</String>
+                  <String>U21947 - KKD JBR BEACH</String>
+                  <String>U21938 - KKD ENOC 1036</String>
+                  <String>U21953 - KKD SPRINGS SOUK</String>
+                  <String>U21926 - KKD KITE BEACH</String>
+                  <String>U21787 - KKD BARSHA MALL</String>
+                  <String>U21792 - KKD BURJUMAN MALL</String>
+                  <String>U21794 - KKD DFC - NEW</String>
+                  <String>U21796 - KKD DUBAI MALL</String>
+                  <String>U21797 - KKD SOUQ EXTRA</String>
+                  <String>U21799 - KKD  UMM SOUQIM</String>
+                  <String>U21804 - KKD DUBAI MALL FASHION AVENUE</String>
+                  <String>U21806 - KKD AL KARAMA MOHEBI BUILDING</String>
+                  <String>U21807 - KKD FIRST AVENUE MALL</String>
+                  <String>U21808 - KKD AL WASL CO-OP NEW</String>
+                  <String>U21812 - KKD INTERNATIONAL CITY MALL</String>
+                  <String>U21821 - KKD ENOC 1086 MEADOWS</String>
+                  <String>U21906 - KKD ARABIAN CENTER</String>
+                  <String>U21907 - KKD NESHAMA TOWN SQUARE</String>
+                  <String>U21992 - KKD MBZ</String>
+                  <String>U21948 - KKD AIRPORT ROAD</String>
+                  <String>U21982 - KKD SEEF MALL ABU DHABI</String>
+                  <String>U21915 - KRISPY KREME - AL JIMMI MALL</String>
+                  <String>U21989 - KKD MAKANI SHAMKHA</String>
+                  <String>U21946 - KKD EMARAT ABU KHADRA</String>
+                  <String>U21954 - KKD AL REEF ABU DHABI</String>
+                  <String>U21932 - KKD DEERFIELDS MALL</String>
+                  <String>U21998 - KKD MARINA MALL ABU DHABI</String>
+                  <String>U21798 - KKD HAMDAN</String>
+                  <String>U21801 - KKD YAS MALL</String>
+                  <String>U21811 - KKD AL WAHDA MALL</String>
+                  <String>U21818 - KKD ABU DHABI MALL</String>
+                  <String>U21751 - KKD KHALIFA CITY</String>
+                  <String>U21707 - KKD AL KHALIDYA MALL</String>
+                  <String>U21941 - KKD KHALIDIYA CATERING</String>
+                  <String>U21977 - KKD ABU DHABI CORNICHE</String>
+                  <String>U21988 - KKD AL FALAH MALL</String>
+                  <String>U21996 - KKD MUSHRIF MALL</String>
+                  <String>U21813 - KKD SARAB MALL</String>
+                  <String>U21784 - KKD KHOBISI - KIOSK</String>
+                  <String>U21984 - KKD KHALIFA AL AIN</String>
+                  <String>U21993 - KKD MAKANI ZAKHER</String>
+                  <String>U21995 - KKD AJMAN CITY CENTRE</String>
+                  <String>U21790 - KKD HAMRA MALL</String>
+                  <String>U21755 - KKD AL SAFEER  RAK</String>
+                  <String>U21800 - KKD UMM AL QUWAIN</String>
+                  <String>U21971 - KKD UMM AL QUWAIN COOP</String>
+                  <String>U21756 - KKD FUJAIRAH (KIOSK)</String>
+                  <String>U21997 - KKD FUJAIRAH CITY CENTRE</String>
+                  <String>U21754 - KKD SHARJAH BUILDING</String>
+                  <String>U21740 - KKD DRIVE THRU</String>
+                  <String>U21743 - KKD SAHARA MALL</String>
+                  <String>U21940 - KKD AL DARARI CATERING</String>
+                  <String>U21920 - KKD AL ZAHIA CITY CENTER SHJ</String>
+                  <String>U21957 - KKD ENOC 1124</String>
+                  <String>U21961 - KKD ASWAAQ MIZHAR</String>
+                  <String>U21931 - KKD KALBA</String>
+                  <String>U21985 - KKD MAJAZ WATERFRONT</String>
+                  <String>U21819 - KKD AJMAN CORNICHE RELOCATION</String>
+                  <String>U21793 - KKD JURF MALL</String>
+                  <String>U21933 - KRISPY KREME - VILLANOVA</String>
+                  <String>U21934 - KKD DEIRA CITY CENTER</String>
+                  <String>U21999 - KKD MALL OF EMIRATES KIOSK</String>
+                  <String>U21795 - KKD SHARJAH AIRPORT</String>
+                  <String>U21802 - KKD AL DARARI</String>
+                  <String>U21809 - KKD SHARJAH CITY CENT</String>
+                  <String>U21817 - KKD MATAJER JURAINAH</String>
+                  <String>U21962 - KKD MUDON</String>
+                  <String>U21964 - KKD ENOC 1025</String>
+                  <String>U21952 - KKD BARSHA SOUTH MALL</String>
+                  <String>U21969 - KKD ENOC 1608 AL TWAR</String>
+                  <String>U21970 - KKD RIYAD CITY COURTYARD</String>
+                  <String>U21928 - KKD DIFC</String>
+                  <String>U21980 - KKD GREENS MARKET DIP</String>
+                  <String>U21994 - KKD JUMEIRAH PARK PAVILLION</String>
+                  <String>U21990 - KRISPY KREME - DUBAI AIRPORT T2</String>
+                  <String>U21972 - KKD MIRDIF AVENUE</String>
+                  <String>U21986 - KKD AL WARQA CITY MALL</String>
+                  <String>U21983 - KKD NAD AL HAMAR CO OP</String>
+                  <String>U21950 - KKD GOLDEN MILE</String>
+                  <String>U21959 - KKD LIVING LEGENDS</String>
+                  <String>U21768 - KKD TIME SQUARE KIOSK</String>
+                  <String>U21771 - KKD MADINA MALL</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Peets Coffee">
+              <value>
+                <List>
+                  <String>U35112 - PEETS COFFEE - ISLE BEACH TOWER</String>
+                  <String>U35123 - PEETS COFFEE UAE IL - 8</String>
+                  <String>U35113 - PEETS MILLENNIUM GRAND PLAZA</String>
+                  <String>U35103 - PEETS DUBAI MARINA MALL</String>
+                  <String>U35105 - PEETS COFFEE - BARSHA LAND</String>
+                  <String>U35107 - PEETS ARABIAN RANCHES 3</String>
+                  <String>U35100 - PEETS CITY WALK</String>
+                  <String>U35110 - PEETS JUMEIRAH BEACH RESIDENCE</String>
+                  <String>U35101 - PEETS FASHION AVENUE DUBAI MALL</String>
+                  <String>U35102 - PEETS DUBAI MALL LOWER GROUND</String>
+                  <String>U35104 - PEETS DUBAI HILLS MALL</String>
+                  <String>U35108 - PEETS YAS ISLAND DT</String>
+                  <String>U35109 - PEETS AL JIMI MALL</String>
+                  <String>U35122 - PEETS COFFEE UAE IL - 7</String>
+                  <String>U35114 - PEETS COFFEE - DUBAI MALL KK CO</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Pizza Hut">
+              <value>
+                <List>
+                  <String>U16826 - PH ENOC AL KHAIL RD</String>
+                  <String>U16712 - PH AL KARAMAH</String>
+                  <String>U16726 - PH DUBAI - ABU DAHBI</String>
+                  <String>U16733 - PH MERCATO</String>
+                  <String>U16736 - PH UPTOWN MIRDIFF</String>
+                  <String>U16737 - PH EL-CORNISH</String>
+                  <String>U16740 - PH CO-OP RASHDIYA</String>
+                  <String>U16741 - PH ARABIAN RANCHES</String>
+                  <String>U16742 - PH MALL OF THE EMIRATES</String>
+                  <String>U16746 - PH GARDENS - ENOC</String>
+                  <String>U16750 - PH CITY CENTRE DUBAI</String>
+                  <String>U16752 - PH SILICON OASIS</String>
+                  <String>U16759 - PH DUBAI MALL</String>
+                  <String>U16762 - PH BARSHA GRAND LUBE</String>
+                  <String>U16764 - PH KNOWLAGE VILLAGE</String>
+                  <String>U16767 - PH CENTURY MALL DUBAI</String>
+                  <String>U16906 - PH AL NAHDA DUBAI</String>
+                  <String>U16885 - PH FESTIVAL PLAZA</String>
+                  <String>U16876 - PH INTERNATIONAL CITY</String>
+                  <String>U16915 - PH SHINDAGHA CITY CENTER</String>
+                  <String>U16874 - PH LAST EXIT</String>
+                  <String>U16889 - PH WARQA CITY MALL</String>
+                  <String>U16925 - PH GREEN SOUK</String>
+                  <String>U16974 - PH LIVING LEGENDS</String>
+                  <String>U16988 - PH ENOC MIZHAR</String>
+                  <String>U16958 - PH AKOYA OXYGEN</String>
+                  <String>U16928 - PH BOX PARK</String>
+                  <String>U16940 - PH ENOC SPORTS CITY RELOCATION</String>
+                  <String>U16860 - PH DUBAI HILLS MALL</String>
+                  <String>U16920 - PH JAFZA-FC-RELOCATION</String>
+                  <String>U16772 - PH OASIS MALL</String>
+                  <String>U16776 - PH MIRDIFF CITY CENTER</String>
+                  <String>U16777 - PH AL QUSAIS - ENOC</String>
+                  <String>U16780 - PH AL GHURAIR</String>
+                  <String>U16794 - PH JAFZA JABAL ALI</String>
+                  <String>U16796 - PH JUMAIRA LAKE TOWER</String>
+                  <String>U16797 - PH ENOC 1007 RASHIDYAH</String>
+                  <String>U16803 - PH GRAND LUBE</String>
+                  <String>U16805 - PH DRAGON MART</String>
+                  <String>U16809 - PH ENOC OUD METHA</String>
+                  <String>U16909 - PH DUBAI MARINA MALL</String>
+                  <String>U16883 - PH PALM MALL</String>
+                  <String>U16882 - PH HARBOR CREEK</String>
+                  <String>U16868 - PH ARABIAN CENTER</String>
+                  <String>U16831 - PH DUBAI FESTIVAL CITY (NEW)</String>
+                  <String>U16834 - PH SOUQ EXTRA SILICON OASIS</String>
+                  <String>U16838 - PH THE POINTE</String>
+                  <String>U16840 - PH ENOC MEADOWS</String>
+                  <String>U16841 - PH UMM SUQEIM</String>
+                  <String>U16842 - PH KHALEEJ CENTER (NEW)</String>
+                  <String>U16843 - PH AL DIYAFA ( NEW )</String>
+                  <String>U16844 - PH JBR</String>
+                  <String>U16845 - PH AL HAMRIYA</String>
+                  <String>U16853 - PH DUBAI MALL-FASHION</String>
+                  <String>U16856 - PH BUSINESS BAY AVENUES</String>
+                  <String>U16858 - PH DUBAI INVEST. PARK</String>
+                  <String>U16870 - PH MIRACLE GARDEN DUBAI</String>
+                  <String>U16859 - PH AL WARQAA</String>
+                  <String>U16724 - PH FUJERAH</String>
+                  <String>U16754 - PH SOUQ MIRBAH</String>
+                  <String>U16703 - PH AL WAHDA</String>
+                  <String>U16708 - PH DUBAI-SHARJAH</String>
+                  <String>U16717 - PH MESLON</String>
+                  <String>U16725 - PH OROUBA</String>
+                  <String>U16730 - PH SHARJAH CITY CENTER</String>
+                  <String>U16766 - PH AL-TAAWON</String>
+                  <String>U16918 - PH CITY LIFE TALLAH</String>
+                  <String>U16982 - PH MUWAFJAH</String>
+                  <String>U16983 - PH AL DHAID</String>
+                  <String>U16747 - PH SIYOUH COOP</String>
+                  <String>U16954 - PH NUKHAILAT</String>
+                  <String>U16980 - PH MAJAZ WATERFRONT</String>
+                  <String>U16854 - PH CIT. CENT AJMAN RELO</String>
+                  <String>U16878 - PH AJMAN CORNICHE RELOCATION</String>
+                  <String>U16810 - PH GRAND LUBE AJMAN</String>
+                  <String>U16829 - PH AL HUMAIDIEYA</String>
+                  <String>U16723 - PH AJMAN</String>
+                  <String>U16864 - PH THE MALL AJMAN</String>
+                  <String>U16911 - PH AJMAN UNIVERSITY</String>
+                  <String>U16990 - PH OUD MAITHA AL NASR BUILDING</String>
+                  <String>U16833 - PH AL MAWALEH</String>
+                  <String>U16836 - PH MEGA MALL</String>
+                  <String>U16837 - PH SAHARA MALL</String>
+                  <String>U16934 - PH AL KHAN</String>
+                  <String>U16971 - PH ENOC 1124 RAHMANIYA</String>
+                  <String>U16938 - PH KHORFAKAN RELOCATION</String>
+                  <String>U16862 - PH ZAHIA CITY CENTER</String>
+                  <String>U16784 - PH QARAEN-SHJ COOP</String>
+                  <String>U16806 - PH AL ZAHRA MALL SHJ.</String>
+                  <String>U16807 - PH KALBAA</String>
+                  <String>U16951 - PH SKY COURT</String>
+                  <String>U16916 - PH NASHAMA</String>
+                  <String>U16919 - PH REMRAM KIOSK</String>
+                  <String>U16942 - PH ADNOC NAD AL SHEBA</String>
+                  <String>U16985 - PH ADNOC AL KHAWANEEJ</String>
+                  <String>U16948 - PH MARINA DARK KITCHEN</String>
+                  <String>U16945 - PH DIBBA</String>
+                  <String>U16959 - PH CIRCLE MALL</String>
+                  <String>U16981 - PH MOE LOWER FC</String>
+                  <String>U16865 - PH AL BARSHA MALL</String>
+                  <String>U16957 - PH BARSHA SOUTH</String>
+                  <String>U16886 - PH NAD AL HAMAR CO OP</String>
+                  <String>U16956 - PH AL KHAIL GATE</String>
+                  <String>U16978 - PH SALAH EL DIN RELOCATION</String>
+                  <String>U16811 - PH IBN BATTUTA MALL</String>
+                  <String>U16812 - PH MOTOR CITY</String>
+                  <String>U16823 - PH AL MADINA MALL</String>
+                  <String>U16825 - PH BURJUMAN MALL</String>
+                  <String>U16970 - PH AL SHAMKAH MALL NEW</String>
+                  <String>U16986 - PH THE GALLERIA AL MARYAH</String>
+                  <String>U16979 - PH RIYAD CITY COURTYARD</String>
+                  <String>U16987 - PH MBZ</String>
+                  <String>U16976 - PH GARDEN PLAZA</String>
+                  <String>U16863 - PH AL MARYAH CENTRAL MALL</String>
+                  <String>U16907 - PH MASDAR CITY CENTER</String>
+                  <String>U16832 - PH KHALIFA (B) CITY</String>
+                  <String>U16846 - PH ADNOC MUSHRIF</String>
+                  <String>U16852 - PH MUSSAFAH AL SHABEYA</String>
+                  <String>U16873 - PH ABU DHABI UNIVERSITY</String>
+                  <String>U16786 - PH BEDAA ZAYED</String>
+                  <String>U16937 - PH AUH MARINA MALL</String>
+                  <String>U16944 - PH AL REEF</String>
+                  <String>U16908 - PH ADNOC REEM ISLAND</String>
+                  <String>U16779 - PH DALMA MALL</String>
+                  <String>U16782 - PH MUSHRIF MALL</String>
+                  <String>U16783 - PH KHALIFA CITY</String>
+                  <String>U16789 - PH DEERFIELD ABU DHABI</String>
+                  <String>U16813 - PH AL RUWAIS MALL</String>
+                  <String>U16818 - PH SHAMKHA MALL</String>
+                  <String>U16822 - PH BAWABAT ELSHARQ MALL</String>
+                  <String>U16830 - PH YAS MALL</String>
+                  <String>U16701 - PH ABELA</String>
+                  <String>U16706 - PH HEMDAN</String>
+                  <String>U16714 - PH SANAA</String>
+                  <String>U16719 - PH AIRPORT ST.</String>
+                  <String>U16727 - PH TOURIST CLUB</String>
+                  <String>U16731 - PH ABU DHABI MALL</String>
+                  <String>U16748 - PH EL WAHDA MALL ABU DHABI</String>
+                  <String>U16749 - PH MROUR</String>
+                  <String>U16756 - PH DELCO AL-MUSSAFAH</String>
+                  <String>U16757 - PH BANI YAS</String>
+                  <String>U16910 - PH AL FALAH VILLAS</String>
+                  <String>U16941 - PH AL MAQTAA MALL AFCOOP</String>
+                  <String>U16702 - PH SARAB MALL</String>
+                  <String>U16888 - PH WEST YAS</String>
+                  <String>U16977 - PH WATHBA MALL</String>
+                  <String>U16835 - PH AL BARARI MALL</String>
+                  <String>U16839 - PH MAKANI ZAKHER</String>
+                  <String>U16728 - PH AL-AIN MALL</String>
+                  <String>U16704 - PH AL AIN</String>
+                  <String>U16787 - PH FOAA LULU</String>
+                  <String>U16788 - PH ZAKHER</String>
+                  <String>U16722 - PH GEMEI</String>
+                  <String>U16738 - PH MUQAM</String>
+                  <String>U16758 - PH AL-KHOBISEY AL-AIN</String>
+                  <String>U16771 - PH AL BAWADI MALL</String>
+                  <String>U16923 - PH UAE UNIVERSITY - MALE</String>
+                  <String>U16922 - PH UAE UNIVERSITY - FEMALE</String>
+                  <String>U16808 - PH YAHR</String>
+                  <String>U16887 - PHUT AL AIN CO OP AQABIYA</String>
+                  <String>U16955 - PH KENZ HAMDIYA</String>
+                  <String>U16848 - PH MONTASER ST</String>
+                  <String>U16851 - PH MANAR MALL</String>
+                  <String>U16877 - PH AL HAMRA RAK</String>
+                  <String>U16718 - PH RAS KHIMA</String>
+                  <String>U16824 - PH UM AL QUWAIN</String>
+                  <String>U16962 - PH UMM AL QUWAIN COOP</String>
+                  <String>U16804 - PH EPPCO 509 FUJEIRAH</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="T.G.I FRIDAYS">
+              <value>
+                <List>
+                  <String>U18703 - TGIF ABU DHABI</String>
+                  <String>U18722 - TGIF WAHDA MALL</String>
+                  <String>U18718 - TGIF BAWADI MALL</String>
+                  <String>U18717 - TGIF AL MAJAZ WATERFRONT</String>
+                  <String>U18709 - TGIF AL JUMIRAH</String>
+                  <String>U18711 - TGIF DUBAI CITY CENTER</String>
+                  <String>U18743 - TGIF DUBAI MALL WATERFRONT</String>
+                  <String>U18726 - TGIF JUMEIRAH PALM THE POINT</String>
+                  <String>U18730 - TGIF DUBAI FESTIVAL CITY (NEW)</String>
+                  <String>U18732 - TGIF DUBAI PARKS</String>
+                  <String>U18740 - TGIF - KITE BEACH</String>
+                  <String>U18734 - TGIF DOWN TOWN ROVE HOTEL</String>
+                  <String>U18721 - TGIF IBN BATTUTA MALL</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="United Arab Emirates">
+              <value>
+                <List>
+                  <String>Chicken Tikka</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Peets Coffee</String>
+                  <String>Pizza Hut</String>
+                  <String>T.G.I FRIDAYS</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="Wimpy">
+              <value>
+                <List>
+                  <String>U11723 - WIMPY GARDEN PLAZA</String>
+                  <String>U11728 - WIMPY ENOC 1066</String>
+                  <String>U11735 - WIMPY AL FALAH MALL</String>
+                  <String>U11721 - WIMPY TOURISTIC CLUB CARVE OUT</String>
+                  <String>U11731 - WIMPY AL CORNICHE ABU DHABI</String>
+                  <String>U11736 - WIMPY - KALBA</String>
+                  <String>U11724 - WIMPY UMM SUQEIM</String>
+                  <String>U11730 - WIMPY MARINA SCAPE</String>
+                  <String>U11734 - WIMPY - WARQA MALL</String>
+                  <String>U11732 - WIMPY DUBAI MALL</String>
+                  <String>U11727 - WIMPY CIRCLE MALL</String>
+                  <String>U11729 - WIMPY NAD AL HAMAR CO OP</String>
+                  <String>U11733 - WIMPY DUBAI HILLS MALL</String>
+                  <String>U11725 - WIMPY EMARAT STATION BARSHA</String>
+                  <String>U11726 - WIMPY EMARAT STATION H.O.</String>
+                  <String>U11722 - WIMPY RIYAD CITY COURTYARD</String>
+                  <String>U11738 - WIMPY MBZ MALL ABU DHABI</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

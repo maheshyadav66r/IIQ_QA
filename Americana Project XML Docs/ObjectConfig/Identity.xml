@@ -1,0 +1,581 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<ObjectConfig name="Identity">
+  <Attributes>
+    <Map>
+      <entry key="defaultIdentityType">
+        <value>
+          <IdentityTypeDefinition name="IIQ_default">
+            <DisallowedAttributes>
+              <String>softwareVersion</String>
+              <String>administrator</String>
+            </DisallowedAttributes>
+          </IdentityTypeDefinition>
+        </value>
+      </entry>
+      <entry key="identityTypeDefinitions">
+        <value>
+          <List>
+            <IdentityTypeDefinition displayName="identity_type_employee" name="employee">
+              <DisallowedAttributes>
+                <String>softwareVersion</String>
+                <String>administrator</String>
+              </DisallowedAttributes>
+            </IdentityTypeDefinition>
+            <IdentityTypeDefinition displayName="identity_type_contractor" name="contractor">
+              <DisallowedAttributes>
+                <String>softwareVersion</String>
+                <String>administrator</String>
+              </DisallowedAttributes>
+            </IdentityTypeDefinition>
+            <IdentityTypeDefinition displayName="identity_type_partner" name="partner">
+              <DisallowedAttributes>
+                <String>softwareVersion</String>
+                <String>administrator</String>
+              </DisallowedAttributes>
+            </IdentityTypeDefinition>
+            <IdentityTypeDefinition displayName="identity_type_rpa" name="rpa">
+              <DisallowedAttributes>
+                <String>manager</String>
+              </DisallowedAttributes>
+              <ManagerCertifierAttribute>administrator</ManagerCertifierAttribute>
+            </IdentityTypeDefinition>
+            <IdentityTypeDefinition displayName="identity_type_service" name="service">
+              <DisallowedAttributes>
+                <String>softwareVersion</String>
+              </DisallowedAttributes>
+              <ManagerCertifierAttribute>administrator</ManagerCertifierAttribute>
+            </IdentityTypeDefinition>
+          </List>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+  <ObjectAttribute displayName="att_user_name" name="name" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_detected_roles" groupFactory="true" name="bundles" system="true" type="string" />
+  <ObjectAttribute displayName="att_detected_role_summary" name="bundleSummary" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_assigned_roles" groupFactory="true" name="assignedRoles" system="true" type="string" />
+  <ObjectAttribute displayName="att_assigned_role_summary" name="assignedRoleSummary" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_exceptions" name="exceptions" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_last_refresh" name="lastRefresh" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_last_login" name="lastLogin" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_capabilities" name="capabilities" system="true" type="string" />
+  <ObjectAttribute displayName="att_composite_score" name="scorecard.compositeScore" silent="true" system="true" type="string" />
+  <ObjectAttribute displayName="att_manager_status" name="managerStatus" system="true" type="boolean" />
+  <ObjectAttribute displayName="att_rights" name="rights" system="true" type="string" />
+  <ObjectAttribute displayName="att_workgroups" name="workgroups" system="true" type="string" />
+  <ObjectAttribute displayName="att_identity_type" name="type" standard="true" type="string" />
+  <ObjectAttribute displayName="att_software_version" name="softwareVersion" standard="true" type="string" />
+  <ObjectAttribute displayName="att_administrator" name="administrator" standard="true" type="sailpoint.object.Identity" />
+  <ObjectAttribute displayName="Grade Code" editMode="ReadOnly" name="gradeCode" namedColumn="true" type="string">
+    <AttributeSource name="Grade_Code">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="location" editMode="ReadOnly" name="location" namedColumn="true" type="string">
+    <AttributeSource name="Location_Code">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="City" editMode="ReadOnly" name="city" namedColumn="true" type="string">
+    <AttributeSource name="CITY">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="l">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Status" editMode="ReadOnly" name="status" namedColumn="true" type="string">
+    <AttributeSource name="ASSIGNMENT_STATUS">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_display_name" editMode="ReadOnly" name="displayName" standard="true" type="string">
+    <AttributeSource name="DISPLAY_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="displayName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Region" editMode="ReadOnly" name="region" namedColumn="true" type="string">
+    <AttributeSource name="REGION">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Country" editMode="ReadOnly" name="country" namedColumn="true" type="string">
+    <AttributeSource name="LegislationCode__c">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Business Unit" editMode="ReadOnly" name="businessUnit" namedColumn="true" type="string">
+    <AttributeSource name="Business_Unit_Name">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="Business_Unit_Name_Pending_worker">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="People Group" editMode="ReadOnly" name="peopleGroup" namedColumn="true" type="string">
+    <AttributeSource name="People_Group">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="People_Group_Pending_Worker">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Person ID" editMode="ReadOnly" name="personId" namedColumn="true" type="string">
+    <AttributeSource name="PERSON_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Assignment ID" editMode="ReadOnly" name="assignmentId" namedColumn="true" type="string">
+    <AttributeSource name="ASSIGNMENT_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Manager Flag" editMode="ReadOnly" name="managerFlag" namedColumn="true" type="string">
+    <AttributeSource name="MANAGER_FLAG">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="RevokeUserAccess" editMode="ReadOnly" name="revokeUserAccess" namedColumn="true" type="string">
+    <AttributeSource name="Revoke_User_Access">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Start Date" editMode="ReadOnly" name="startDate" namedColumn="true" type="string">
+    <AttributeSource name="AppRule: Americana-Rule-IdentityAttribute-StartDate Oracle Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-Rule-IdentityAttribute-StartDate" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="User Principal Name" editMode="ReadOnly" name="userPrincipalName" namedColumn="true" type="string">
+    <AttributeSource name="userPrincipalName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="HCMUserName" editMode="ReadOnly" extendedNumber="1" name="hcmUserName" type="string">
+    <AttributeSource name="USER_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="mail">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Office" editMode="ReadOnly" name="countryName" type="string">
+    <AttributeSource name="LegislationName__c">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Department" editMode="ReadOnly" name="department" namedColumn="true" type="string">
+    <AttributeSource name="Department_Name">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="department">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="Department_Name_Pending_worker">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="department" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="Active Directory" />
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Employee Number" editMode="ReadOnly" name="employeeNumber" namedColumn="true" type="string">
+    <AttributeSource name="PERSON_NUMBER">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="employeeNumber">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="employeeNumber" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="Active Directory" />
+        </ApplicationRef>
+      </AttributeTarget>
+      <AttributeTarget name="employeeID" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="Active Directory" />
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Position Name" editMode="ReadOnly" extendedNumber="2" name="PositionName" type="string">
+    <AttributeSource name="Position_Name">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Store Incharge" editMode="ReadOnly" extendedNumber="3" name="storeincharge" type="string">
+    <AttributeSource name="storeInCharge">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_first_name" editMode="ReadOnly" name="firstname" standard="true" type="string">
+    <AttributeSource name="FIRST_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="givenName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="att_last_name" editMode="ReadOnly" name="lastname" standard="true" type="string">
+    <AttributeSource name="LAST_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="sn">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="ContractorCreation" editMode="ReadOnly" extendedNumber="5" name="ContractorCreation" type="string" />
+  <ObjectAttribute displayName="ContractorLicense" editMode="ReadOnly" name="ContractorLicense" type="string" />
+  <ObjectAttribute displayName="dummyphone" editMode="ReadOnly" name="phone" type="string" />
+  <ObjectAttribute displayName="ImmediateJoiner" editMode="ReadOnly" name="ImmediateJoiner" type="string" />
+  <ObjectAttribute displayName="JoiningDate" editMode="ReadOnly" name="JoiningDate" type="string" />
+  <ObjectAttribute displayName="wifiaccess" editMode="ReadOnly" name="wifiaccess" type="string" />
+  <ObjectAttribute displayName="JobTitle" editMode="ReadOnly" name="jobTitle" namedColumn="true" type="string">
+    <AttributeSource name="Job_Name">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="title">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="title" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="Active Directory" />
+        </ApplicationRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Mobile" editMode="ReadOnly" extendedNumber="4" name="mobile" type="string">
+    <AttributeSource name="AppRule: Americana_Application Rule_Mobile Azure AD">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Azure AD" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana_Application Rule_Mobile" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Americana_Application Rule_Mobile Oracle Fusion HCM">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana_Application Rule_Mobile" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Americana_Application Rule_Mobile Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana_Application Rule_Mobile" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Americana_Application Rule_Mobile AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana_Application Rule_Mobile" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="AD sAMAccountName" editMode="ReadOnly" name="adLogOnName" namedColumn="true" type="string">
+    <AttributeSource name="sAMAccountName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="sAMAccountName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="ADlastLogon" editMode="ReadOnly" name="ADlastLogon" type="string">
+    <AttributeSource name="AppRule: Ps_lastLogon Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Ps_lastLogon" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Ps_lastLogon AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Ps_lastLogon" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="ADlastLogonTimestamp" editMode="ReadOnly" name="ADlastLogonTimestamp" type="string">
+    <AttributeSource name="AppRule: PS_AD_lastLogonTimestamp Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="PS_AD_lastLogonTimestamp" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: PS_AD_lastLogonTimestamp AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="PS_AD_lastLogonTimestamp" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="ADstatus" editMode="ReadOnly" name="ADstatus" type="string" />
+  <ObjectAttribute displayName="att_email" editMode="ReadOnly" name="email" standard="true" type="string">
+    <AttributeSource name="USER_NAME">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="mail">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="mail">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="End Date" editMode="ReadOnly" name="endDate" namedColumn="true" type="string">
+    <AttributeSource name="ASSIGNMENT_TERMINATION_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="TERMINATION_DATE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Americana-Contractor-Enddate-MappinG-Rule AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-Contractor-Enddate-MappinG-Rule" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="accountExpires" editMode="ReadOnly" name="accountExpires" type="string">
+    <AttributeSource name="accountExpires">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: Americana-Contractor-Enddate-MappinG-Rule AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-Contractor-Enddate-MappinG-Rule" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="passwordExpires" editMode="ReadOnly" name="passwordExpires" type="string">
+    <AttributeSource name="AppRule: ps_pwdlstset_v1 Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_pwdlstset_v1" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: ps_pwdlstset_v1 AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_pwdlstset_v1" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="pwdLastSet" editMode="ReadOnly" name="pwdLastSet" type="string">
+    <AttributeSource name="AppRule: ps_pwdlstset Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_pwdlstset" />
+      </RuleRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: ps_pwdlstset AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_pwdlstset" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="disabledDate" editMode="ReadOnly" name="disabledDate" type="string" />
+  <ObjectAttribute displayName="ContractorAccountName" editMode="ReadOnly" name="ContractorAccountName" type="string">
+    <AttributeSource name="sAMAccountName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="isContractor" editMode="ReadOnly" extendedNumber="6" name="isContractor" type="string">
+    <AttributeSource name="AppRule: ps_isContractor AD Contractors">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_isContractor" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Manager" editMode="ReadOnly" groupFactory="true" name="manager" standard="true" type="sailpoint.object.Identity">
+    <AttributeSource name="ASSIGNMENT_MANAGER_ID">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="manager">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="AD Contractors" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeTargets>
+      <AttributeTarget name="manager" provisionAllAccounts="true">
+        <ApplicationRef>
+          <Reference class="sailpoint.object.Application" name="Active Directory" />
+        </ApplicationRef>
+        <RuleRef>
+          <Reference class="sailpoint.object.Rule" name="Americana-rule-transformation-AD-manager" />
+        </RuleRef>
+      </AttributeTarget>
+    </AttributeTargets>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Azurelastsignin" editMode="ReadOnly" name="Azurelastsignin" type="string">
+    <AttributeSource name="lastSignInDateTime">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Azure AD" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Inactive" editMode="ReadOnly" name="inactive" standard="true" type="boolean">
+    <RuleRef>
+      <Reference class="sailpoint.object.Rule" name="Americana-Rule-IdentityAttribute-Inactive" />
+    </RuleRef>
+    <AttributeSource name="GlobalRule:Americana-Rule-IdentityAttribute-Inactive">
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-Rule-IdentityAttribute-Inactive" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="User Type" editMode="ReadOnly" name="userType" namedColumn="true" type="string">
+    <AttributeSource name="WORKER_TYPE">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Oracle Fusion HCM" />
+      </ApplicationRef>
+    </AttributeSource>
+    <AttributeSource name="AppRule: ps_UserType_Admin_Support_Service Active Directory">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps_UserType_Admin_Support_Service" />
+      </RuleRef>
+    </AttributeSource>
+  </ObjectAttribute>
+  <ObjectAttribute displayName="Distinguished Name" editMode="ReadOnly" name="distinguishedName" namedColumn="true" type="string">
+    <AttributeSource name="distinguishedName">
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Active Directory" />
+      </ApplicationRef>
+    </AttributeSource>
+  </ObjectAttribute>
+</ObjectConfig>
+
+</sailpoint>

@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Rule_PowerBI_Enable_Provisioning" type="JDBCOperationProvisioning">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>The application whose data file is being processed.</Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>The Schema currently in use.</Description>
+      </Argument>
+      <Argument name="connection">
+        <Description>A connection object to connect to database.</Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>The ProvisioningPlan created against the JDBC application.</Description>
+      </Argument>
+      <Argument name="request">
+        <Description>The ProvisioningRequest created against the JDBC application.</Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan</Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import java.lang.*;
+  import java.util.*;
+  import java.io.*;
+  import java.sql.ResultSet;
+  import java.sql.Statement;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import sailpoint.api.SailPointContext;  
+  import sailpoint.object.Identity;
+  import sailpoint.object.*;  
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.tools.Util;
+  import sailpoint.api.*;
+
+  ProvisioningResult provresult = new ProvisioningResult();
+
+  System.out.println("calling enable ");
+  if ( plan != null ) {
+  System.out.println("Plan in Enable Prov Rule:\n" + plan.toXml());
+  String userName = plan.getNativeIdentity();
+  List accRequests = plan.getAccountRequests(); 
+  if ( ( accRequests != null ) &amp;&amp; ( accRequests.size() &gt; 0 ) ) {
+  for(AccountRequest accRequest : accRequests) {
+    //String empID = accRequest.getNativeIdentity();
+	String email = accRequest.getNativeIdentity();
+    Identity idObj = context.getObjectByName(Identity.class, userName);
+	
+	String disableQuery = null;
+	
+    if ((accRequest.getApplicationName()).equalsIgnoreCase("Microsoft Power BI"))
+    {
+        try
+        {
+          if(AccountRequest.Operation.Enable.equals(accRequest.getOperation())) 
+          {
+		  
+		  //  disableQuery ="UPDATE USERDB.User_Security SET DELETE_FLAG='F' WHERE EMAIL_ADDRESS=\'" + email + "\'";
+
+disableQuery ="UPDATE USERDB.User_Security SET DELETE_FLAG='T', SALES_FLAG='T', PL_FLAG='T', Marketing_FLAG='F' WHERE EMAIL_ADDRESS=\'" + email + "\'";
+
+
+            PreparedStatement st = connection.prepareStatement(disableQuery);
+            System.out.println("enableQuery is: " + disableQuery);
+            st.executeUpdate();
+
+  		  }
+		System.out.println("Power BI Application- Disable User Result is " + provresult);
+        provresult.setStatus(ProvisioningResult.STATUS_COMMITTED);
+        System.out.println("plan in enable rule" + plan.toXml());
+	    }
+		catch (Exception e) 
+		{
+            System.out.println("JDBCApplication Enable Error e: " +e.getMessage());    
+        }
+		finally 
+		{ 
+            try
+			{ 
+              if (connection != null) 
+                connection.close(); 
+            }
+			catch (SQLException e) 
+			{ 
+              e.printStackTrace(); 
+            } 
+        }
+    }
+		
+ }
+		
+}
+          
+}  
+
+  return provresult;</Source>
+</Rule>
+
+</sailpoint>

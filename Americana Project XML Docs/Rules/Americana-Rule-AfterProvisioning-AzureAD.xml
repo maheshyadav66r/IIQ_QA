@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-AfterProvisioning-AzureAD" type="AfterProvisioning">
+  <Description>An IdentityIQ server-side rule that is executed after the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan AFTER it has been sent out to the specific applications. 
+
+This rule will be called for any application found in a plan that also has a configured 'afterProvisioningRule' configured.</Description>
+  <Signature>
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application object that references this before/after script.
+        </Description>
+      </Argument>
+      <Argument name="result">
+        <Description>
+          The ProvisioningResult object returned by the connectors provision method. This can be null and in many cases the connector will  not return a result and instead will annotate the plan's ProvisioningResult either at the plan or account level.        
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>import sailpoint.object.Filter;
+  import sailpoint.tools.Message;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.connector.ConnectorClassLoader;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+
+  Logger logger = Logger.getLogger("Americana.Rule.AzureAD.AfterProvisioning");
+  logger.setLevel(Level.DEBUG);
+
+  ClassLoader currentCl = Thread.currentThread().getContextClassLoader();
+  ClassLoader bakcedUpCl = null;
+  if(currentCl instanceof ConnectorClassLoader){
+    bakcedUpCl = currentCl;
+    Thread.currentThread().setContextClassLoader(currentCl.getParent());
+  }
+
+
+  logger.debug("Start Americana-Rule-AzureAD-AfterProvisioning");
+  //logger.debug(" result : "+result.toXml());
+
+
+
+
+  List toList = new ArrayList();
+  toList.add("ishaikh@americana-food.com");
+  toList.add("akapany@americana-food.com");
+  toList.add("mmohsen@americana-food.com");
+
+
+  List ccList = new ArrayList();
+  ccList.add("sbabikian@americana-food.com");
+  ccList.add("mmadian@americana-food.com");
+  ccList.add("skurian@americana-food.com");
+
+
+
+  Filter appFilter = Filter.and(Filter.eq("application.name", "Azure AD"), Filter.eq("attribute", "assignedPlans"));
+
+  Map dataMap = new HashMap();
+  List errors =  result.getErrors();
+  if(null != errors &amp;&amp; !errors.isEmpty()){
+
+    for(Message msg : errors){
+      String strMsg = msg.getKey().toString();
+      if(strMsg.contains("does not have any available licenses")){
+
+        String maval = strMsg.substring(0, strMsg.lastIndexOf(":")).trim();
+        logger.debug("***  maval :"+maval);
+        Filter filter = Filter.and(appFilter, Filter.eq("value", maval));
+        ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class, filter);
+        logger.debug("***  ma :"+ma);
+        dataMap.put(ma.getDisplayName(), strMsg);
+      }
+    }
+
+  }
+
+  logger.debug("***  dataMap :"+dataMap);
+
+  if(dataMap != null &amp;&amp; dataMap.size() &gt; 0){
+
+    Map variablesMap = new HashMap();
+    variablesMap.put("identityName", plan.getIdentity().getName());
+    variablesMap.put("userEmail", plan.getIdentity().getEmail());
+    variablesMap.put("identityDisplayName", plan.getIdentity().getDisplayName());
+
+    variablesMap.put("dataMap", dataMap);
+
+    EmailOptions emailops = new EmailOptions();
+    emailops.setTo(toList);
+    emailops.setCc(sailpoint.tools.Util.listToCsv(ccList));
+
+    emailops.setVariables(variablesMap);
+
+
+    EmailTemplate template = context.getObject(EmailTemplate.class, "Americana-EmailTemplate-AzureADLicenseAssignmentFailureNotification");
+
+    if(template != null){
+      context.sendEmailNotification(template, emailops);
+
+    }
+  }
+  if(bakcedUpCl != null){
+    Thread.currentThread().setContextClassLoader(bakcedUpCl);
+  }
+
+  logger.debug("End Americana-Rule-AzureAD-AfterProvisioning");</Source>
+</Rule>
+
+</sailpoint>

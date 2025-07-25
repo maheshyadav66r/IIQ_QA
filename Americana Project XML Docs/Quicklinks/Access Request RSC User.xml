@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Account Management" messageKey="Access Request RSC User" name="Access Request RSC User">
+  <Attributes>
+    <Map>
+      <entry key="requester">
+        <value>
+          <Script>
+            <Source> return currentUser.getName();
+            </Source>
+          </Script>
+        </value>
+      </entry>
+      <entry key="workflowName" value="Americana_RSCAdditionalAccessRequest_Workflow_21052024" />
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Self Service" />
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>
+
+</sailpoint>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Contractors" messageKey="Contractor End Date Update/Revoke" name="Americana_ContractorEndDateExtension_Quicklink">
+  <Attributes>
+    <Map>
+      <entry key="httpSession">
+        <value>
+          <Script>
+            <Source>   
+              import javax.faces.context.FacesContext;  
+              import javax.servlet.http.HttpSession;  
+              FacesContext fc = FacesContext.getCurrentInstance();  
+              HttpSession session = fc.getExternalContext().getSession(true);  
+              return session;  
+            </Source>
+          </Script>
+        </value>
+      </entry>
+      <entry key="requester">
+        <value>
+          <Script>
+            <Source> 
+              return currentUser.getName();          
+            </Source>
+          </Script>
+        </value>
+      </entry>
+      <entry key="workflowName" value="Americana_ContractorEndDateExtension_Workflow_updated" />
+    </Map>
+  </Attributes>
+  <Description>QuickLink to View Service Account in IIQ table</Description>
+  <QuickLinkOptions allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Everyone" />
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>
+
+</sailpoint>

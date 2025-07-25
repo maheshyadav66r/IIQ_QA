@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow explicitTransitions="true" libraries="Identity" name="Americana-ContractorWorkflow-ScheduleLifecycleEvent-Leaver-updated" type="IdentityLifecycle">
+  <Variable input="true" name="trigger">
+    <Description>The IdentityTrigger</Description>
+  </Variable>
+  <Variable input="true" name="event" transient="true">
+    <Description>
+      The IdentityChangeEvent.  It can be used to build
+      the provisioning plan, but does not need to be
+      persisted with the case, so marked as transient.
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity.</Description>
+  </Variable>
+  <Variable initializer="script:(identityDisplayName != void) ? identityDisplayName : resolveDisplayName(identityName)" input="true" name="identityDisplayName">
+    <Description>
+      The displayName of the identity being updated.
+      Query for this using a projection query and fall back to the name.
+    </Description>
+  </Variable>
+  <Variable name="plan">
+    <Description>The provisioning plan, which is built by a service method. </Description>
+  </Variable>
+  <Variable editable="true" initializer="false" name="optimisticProvisioning">
+    <Description>
+      Set to true to enable optimistic provisioning.  This will cause
+      changes to the entitlements compiled from role assignments to be 
+      applied immediately to the identity cube rather than waiting
+      for the next refresh/reaggregation after the provisioning system
+      completes the request.
+    </Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="foregroundProvisioning">
+    <Description>
+      Normally provisioning is done in a step that uses the "background"
+      option to force the workflow to be suspend and be resumed in a
+      background task thread.  This prevents the browser session from
+      hanging since provision can sometimes take a long time.  For demos
+      and testing it can be better to do this in the foreground so that
+      provisioning will have been performed when control is returned to the
+      user.  This prevents having to run the Perform Maintenance task to 
+      see the results of the request.
+    </Description>
+  </Variable>
+  <Variable initializer="spadmin" input="true" name="fallbackApprover">
+    <Description>
+      A String that specifies the name of the Identity that will 
+      be assigned any approvals where the owner of the approver 
+      can't be resolved. Example if the scheme is "owner" and the 
+      application doesn't specify and owner.
+    </Description>
+  </Variable>
+  <Variable initializer="LCM" input="true" name="source">
+    <Description>
+      String version of sailpoint.object.Source to indicate
+      where the request originated.  Defaults to LCM.
+    </Description>
+  </Variable>
+  <Variable input="true" name="trace">
+    <Description>
+      Used for debugging this workflow and when set to true trace
+      will be sent to stdout.
+    </Description>
+  </Variable>
+  <Variable name="project">
+    <Description>
+      ProvisioningProject which is just a compiled version of the ProvisioningPlan.
+    </Description>
+  </Variable>
+  <Variable name="identityRequestId" output="true">
+    <Description>
+      The sequence id of the Identity request object which is stored in 
+      the name field of the identity request.
+    </Description>
+  </Variable>
+  <Variable name="cart" output="true">
+    <Description>
+      This variable includes all ApprovalItems that are part of 
+      the request process and is updated during the AfterScript
+      of the approval process by assimilating the decisions 
+      and comments from the Approvals copy of the ApprovalItem.
+    </Description>
+  </Variable>
+  <Variable initializer="Normal" input="true" name="workItemPriority">
+    <Description>
+      The String version of a WorkItem.Priority. This variable is 
+      used to set the priority on all of the workitems generated 
+      as part of this workflow and also set on the IdentityRequest
+      object.
+    </Description>
+  </Variable>
+  <Variable input="true" name="accountName" />
+  <Description>Disable all accounts when an employee leaves the company.</Description>
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="LCM Workflow Library" />
+  </RuleLibraries>
+  <Step action="call:scheduleWorkflowEvent" icon="Start" name="Schedule Workflow" posX="2134" posY="242">
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="workflow" value="Americana-ContractorWorkflow-LifecycleEvent-Leaver" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="processName" value="Cleanup-Leaver" />
+    <Arg name="scheduleDate">
+      <Script>
+        <Source>
+          import java.text.SimpleDateFormat;
+          import java.util.Date;
+          public long timeDifference(String dateStart,String dateStop){
+          // Custom date format
+          log.error("inside method timeDifference");
+          SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");  
+
+          Date d1 = null;
+          Date d2 = null;
+          try {
+          d1 = format.parse(dateStart);
+          d2 = format.parse(dateStop);
+          } catch (ParseException e) {
+          e.printStackTrace();
+          }    
+
+          // Get msec from each, and subtract.
+          long diff = d2.getTime() - d1.getTime();
+          long diffSeconds = diff / 1000;         
+          long diffMinutes = diff / (60 * 1000);         
+          long diffHours = diff / (60 * 60 * 1000);
+          // return diffHours;
+          log.error("diff in mins::"+diffMinutes);
+          return diffMinutes;
+
+          }
+          String dateStart = new SimpleDateFormat("yy/MM/dd HH:mm:ss").format(new java.util.Date()); 
+          String dateStop = new SimpleDateFormat("yy/MM/dd").format(new java.util.Date())+" 20:00:00";
+        // String dateStop = new SimpleDateFormat("yy/MM/dd").format(new java.util.Date())+" 04:15:00";
+          log.error("start date is:"+dateStart);
+          log.error("start date is:"+dateStop);
+
+          long minutes=timeDifference(dateStart,dateStop);
+          int num=(int)minutes;
+          GregorianCalendar currCal = (GregorianCalendar) GregorianCalendar.getInstance();        
+          currCal.add(Calendar.MINUTE, num);
+          log.error("Existing advanceTimeByMinutes");  
+          return currCal.getTime();
+        </Source>
+      </Script>
+    </Arg>
+    <Arg name="launcher" value="ref:launcher" />
+    <Description>  Workflow step to Process the user that Leaver.Perform Removal Of role Access after 3 days</Description>
+    <Return name="schedulerMessage" to="schedulerMessage" />
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="540" posY="10" />
+</Workflow>
+
+</sailpoint>

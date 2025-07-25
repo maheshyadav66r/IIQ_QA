@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="AD provision - march21">
+  <Source>
+       
+        import sailpoint.object.*;
+   import sailpoint.api.*;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.reporting.ReportingLibrary;
+
+  
+      // Identity userid = context.getObjectByName(Identity.class, "Mohammad Akbar");
+  //Identity userid = context.getObjectById(Identity.class, "0a0805848d121323818d1d92a2071244");
+ Identity userid = context.getObjectByName(Identity.class,"sdharmavaram"); 
+  
+       
+if (userid != null) {
+  
+  
+  List links=userid.getLinks();
+   ProvisioningPlan plan = new ProvisioningPlan();
+  List acrs = new ArrayList();
+  for(Link link:links){
+   //if(link.getApplicationName().equalsIgnoreCase("Active Directory") || link.getApplicationName().equalsIgnoreCase("Azure AD") link.getApplicationName().equalsIgnoreCase("Oracle BPM IDCS")){
+ if(link.getApplicationName().equalsIgnoreCase("Microsoft Power BI")){   
+//if(link.getApplicationName().equalsIgnoreCase("Oracle BPM IDCS")){
+ //  if(link.getApplicationName().equalsIgnoreCase("Active Directory")){
+ // if(link.getApplicationName().equalsIgnoreCase("Azure AD")){
+    accountName= link.getNativeIdentity();  
+        AccountRequest acr = new AccountRequest();
+ // acr.setNativeIdentity("CN=12705 KFC CENTER,OU=KFC,OU=Chains,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global");
+  acr.setNativeIdentity(accountName);
+        acr.setApplication(link.getApplicationName());
+       // acr.setOperation(AccountRequest.Operation.Enable);  
+      acr.setOperation(AccountRequest.Operation.Disable);  
+      acrs.add(acr);
+  	}
+  }
+  
+  
+        plan.setIdentity(userid);
+				plan.setAccountRequests(acrs);
+  // return plan.toXml();
+		 //plan.add(acr);
+        log.error("plan is:"+plan.toXml());
+
+        log.error("end of the plan");
+       
+        Provisioner prov=new Provisioner(context);
+        prov.setNoLocking(true);
+        prov.setOptimisticProvisioning(true);
+        ProvisioningProject project = prov.compile(plan);
+        prov.execute(plan);
+ log.error("................................................PROVISION COMPLETERD FOR....................FOR ::"+userid.getName());
+
+  
+}
+</Source>
+</Rule>
+
+</sailpoint>

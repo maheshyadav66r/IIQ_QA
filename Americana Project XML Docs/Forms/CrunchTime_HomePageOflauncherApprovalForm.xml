@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="CrunchTime_HomePageOflauncherApprovalForm" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form" />
+    </Map>
+  </Attributes>
+  <Section name="verifying the User Account">
+    <Field displayName="Are you a new user to Crunch Time?" displayType="radio" name="radioSection" postBack="true">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Yes</String>
+            <String>No</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <ValidationScript>
+        <Source>
+          
+          if("Yes".equalsIgnoreCase(value) @and hasLinks){
+          return "WARNING : user have a Crunch Time Account";
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

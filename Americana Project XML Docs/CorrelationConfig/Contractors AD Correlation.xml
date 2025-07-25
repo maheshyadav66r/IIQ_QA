@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="Contractors AD Correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="name" value="displayName" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="TestRule">
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="Americana-RuleLibrary-Attribute" />
+  </ReferencedRules>
+  <Source>
+
+
+  import sailpoint.api.Provisioner;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.object.*;
+  import sailpoint.object.Filter;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+  import sailpoint.object.QueryOptions;
+  //String decryptedPassword = context.decrypt("1:ACP:vV2c7RNIXci3RUoqtIPef9ImaWQZUw+cEfUL2ubRG5Hfnfe1BuzNS2S4HS6RmRLa");
+  //return decryptedPassword;
+  //return getAccessToken();
+  //Application application = context.getObjectByName(Application.class, "Active Directory");
+  //return isUniqueADName(application, "sAMAccountName","aekfc12151");
+  
+  //return singleAccountAggregation("Active Directory","CN=amd.gl.jradhakrishna,OU=AMD ADMINS,OU=Americana Office,DC=Americana,DC=global");
+  //return singleAccountAggregation("Oracle BPM IDCS","bhtgi18702@americana-food.com");
+  
+  return singleAccountAggregation("Oracle Fusion HCM","381");
+ // return singleAccountAggregation("Azure AD","6697");
+  //return singleAccountAggregation("AD Contractors","CN=jedoual mohamed(Generic),OU=Generic-Use,OU=Americana Office,DC=Americana,DC=global");
+  //36195
+  //return context.decrypt("1:ACP:z8F3Sp+GkzIpqjkJdoUm9nPbQN0q2+cqFcPtPPg+wjA=");
+/*
+  Identity identity = context.getObjectByName(Identity.class,"30015400");
+  // IdentityService identityService=new IdentityService(context);
+  // Application app=context.getObjectByName(Application.class,"ManageEngine");
+
+
+  if( null != identity &amp;&amp; null != emailTemp){
+    IdentityService identityService=new IdentityService(context);
+    Application app=context.getObjectByName(Application.class,"ManageEngine");
+    
+      List apps=new ArrayList();
+      apps.add(app);
+      List groupList=identity.getExceptions(apps);
+    
+         
+      List entGroupList = new ArrayList();
+      
+      if(groupList != null &amp;&amp; groupList.size()&gt;0 &amp;&amp; groupList.get(0) != null &amp;&amp; groupList.get(0).getAttributes() != null &amp;&amp; groupList.get(0).getAttributes().get("Assigned Roles")){
+         return "yes";
+        entGroupList= groupList.get(0).getAttributes().get("Assigned Roles");
+      }
+      
+      if( identityService.getLinks(identity,app)!=null &amp;&amp; identityService.getLinks(identity,app).size()&gt;0 &amp;&amp; entGroupList != null  &amp;&amp; ( entGroupList.contains("Managers") || entGroupList.contains("SDAdmin") || entGroupList.contains("Technician") || entGroupList.contains("SDReport") || entGroupList.contains("Management") || entGroupList.contains("SDChangeManager") || entGroupList.contains("SDSubscriptionInCharge") )){
+        return "yes";
+        sendigEmail(identity, emailTemp,"Access Deprovisioning",identity.getEmail());
+        
+        context.decache(app);
+      }
+    //}
+      return "no";
+    
+  }
+  /*
+  if(app != null){
+    ArrayList ar = new ArrayList();
+    ar.add(app);
+    List entGroupList=identity.getExceptions(ar );
+    EntitlementGroup ent = entGroupList.get(0);
+    return ent.getAttributes().get("Assigned Roles");
+    if( identityService.getLinks(identity,app)!=null &amp;&amp; identityService.getLinks(identity,app).size()&gt;0 &amp;&amp; entGroupList != null  &amp;&amp; ( entGroupList.contains("Managers") || entGroupList.contains("SDAdmin") || entGroupList.contains("Technician") || entGroupList.contains("SDReport") || entGroupList.contains("Management") || entGroupList.contains("SDChangeManager") || entGroupList.contains("SDSubscriptionInCharge") )){
+      return true;
+      //decache
+      context.decache(app);
+    }else{
+      return false;
+    }
+  }
+  */
+  </Source>
+</Rule>
+
+</sailpoint>

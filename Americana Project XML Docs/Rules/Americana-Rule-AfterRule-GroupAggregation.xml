@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-AfterRule-GroupAggregation" type="WebServiceAfterOperationRule">
+  <Description>The Web Services connector will call this rule after performing ANY defined operation. This rule can be used to update the parsed resource object and/or add persistent values to the application's data.
+    (See information about what to return for more information)</Description>
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="Americana-RuleLibrary-Attribute" />
+  </ReferencedRules>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>The application whose data file is being processed.</Description>
+      </Argument>
+      <Argument name="requestEndPoint">
+        <Description>The current request information contain header, body ,response object</Description>
+      </Argument>
+      <Argument name="processedResponseObject">
+        <Description>Response Object processed by the Web services connector</Description>
+      </Argument>
+      <Argument name="rawResponseObject">
+        <Description>Response Object returned from the end system</Description>
+      </Argument>
+      <Argument name="restClient">
+        <Description>REST Client Object</Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="Map">
+        <Description>A newly created map containing a 'data' key and optionally, a 'connectorStateMap' key.  The 'data' value should be set to a map containing a parsed list of accounts/groups.  
+          The 'connectorStateMap' value can be set to a map containing values that will be persisted to the application definition.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+  import com.google.gson.Gson;
+  import com.google.gson.JsonElement;
+  import com.google.gson.JsonObject;
+  import com.google.gson.JsonParser;
+  import com.google.gson.JsonArray;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+  import sailpoint.tools.Util;
+
+  import sailpoint.connector.webservices.EndPoint;
+  import sailpoint.connector.webservices.WebServicesClient;
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger logger = Logger.getLogger("rule.americana.AfterRule.OracleBPMIDCS");
+  String ruleName = "Americana-Rule-AfterRule-GroupAggregation";
+
+  Map updatedMapInfo = new HashMap();
+  try {
+
+    Integer fetchedRecordsCount = 0;
+    Integer expectedCount = null;
+    Integer offset = null;
+    Integer startIndex = 1;
+
+    if(null != rawResponseObject &amp;&amp; processedResponseObject != null) {
+      Gson gson = new Gson();
+      JsonParser jsonParser = new JsonParser();
+      JsonObject jsonObject = jsonParser.parse(rawResponseObject).getAsJsonObject();
+
+      expectedCount = jsonObject.get("totalResults").getAsInt();
+      fetchedRecordsCount = processedResponseObject.size();
+    }
+    URL url = new URL(requestEndPoint.getFullUrl());
+    String param = url.getQuery();
+
+    if (Util.isNotNullOrEmpty(param)) {
+      String name = param.split("=")[0];  
+      String value = param.split("=")[1];
+      switch(name) {
+        case "startIndex" : offset = Integer.parseInt(value);
+        break;
+        default:
+      }
+    }
+
+    boolean hasMore = (null != offset &amp;&amp; (offset &lt;expectedCount));
+
+
+    Map transientValues = application.getAttributeValue("transientValues");
+    if(transientValues == null) {
+      transientValues = new HashMap();
+      application.setAttribute("transientValues", transientValues);
+    }
+    transientValues.put("hasMore", hasMore);
+    if (hasMore) {
+      if(null != offset) {
+        offset = offset + 50;
+        transientValues.put("offset", String.valueOf(offset));
+      }
+    }
+  } catch (Exception e) {
+    String exceptMsg = "Exception Occuredn IN [ "+ ruleName + " ]  ::: "+e.getMessage();
+    log.error(exceptMsg);
+  }
+  updatedMapInfo.put("data", processedResponseObject);
+  if (logger.isTraceEnabled()) {
+    logger.trace("====The processedResponseObject IN [ " +ruleName+ " ] " +processedResponseObject);
+  }
+
+  return updatedMapInfo;
+  </Source>
+</Rule>
+
+</sailpoint>

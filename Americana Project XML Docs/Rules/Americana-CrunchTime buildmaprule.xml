@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-CrunchTime buildmaprule" type="BuildMap">
+  <Description>This rule is used by the delimited file connector to build a map representation of the delimited data.</Description>
+  <Signature returnType="Map">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application whose data file is being processed.
+        </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+          The Schema currently in use.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+      <Argument name="record">
+        <Description>
+          A List of data tokens parsed from the current line of the data file.
+        </Description>
+      </Argument>
+      <Argument name="cols">
+        <Description>
+          A List of the columns to use.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="map">
+        <Description>
+          A Map of the resource object assembled from the data.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Schema;
+  import sailpoint.connector.DelimitedFileConnector;
+  import sailpoint.object.Permission;
+  
+  String objtype = schema.getObjectType();
+  
+  Map map = DelimitedFileConnector.defaultBuildMap(cols, record);
+  if(objtype != null @and objtype.equalsIgnoreCase("HIERARCHY_LOGICALNAME")){
+      
+    String hirtyp = map.get("HIERARCHY_TYPE");
+    String logcname = map.get("LOGICAL_NAME");
+    String hirlogical = hirtyp+"("+logcname+")";
+    map.put("HIERARCHY(LOGICAL_NAME)",hirlogical);
+    
+  }
+  else if(objtype != null @and objtype.equalsIgnoreCase("account")){
+    String htype = map.get("HIERARCHY_TYPE");
+    String aclogname= map.get("LOGICAL_NAME");
+    String acmergedname = htype+"("+aclogname+")";
+if(aclogname != null @and htype != null){
+     map.put("HIERARCHY_TYPE(LOGICAL_NAME)",acmergedname);
+}
+String userId = map.get("USER_ID");
+    String grpName= map.get("USER_GROUP_NAME");
+    String userGrpname = userId+"("+grpName+")";
+    map.put("USER_ID(USER_GROUP_NAME)",userGrpname);
+  }
+          
+  return map;</Source>
+</Rule>
+
+</sailpoint>

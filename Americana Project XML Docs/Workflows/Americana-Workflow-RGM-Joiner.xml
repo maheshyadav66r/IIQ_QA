@@ -1,0 +1,434 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+	<Workflow explicitTransitions="true"
+	          libraries="Identity"
+	          name="Americana-Workflow-RGM-Joiner"
+	          type="IdentityLifecycle">
+		<Variable input="true"
+		          name="trigger"/>
+		<Variable initializer="mover"
+		          name="flow">
+			<Description>The flow</Description>
+		</Variable>
+		<Variable initializer="false"
+		          input="true"
+		          name="trace"/>
+		<Variable input="true"
+		          name="event"
+		          transient="true">
+			<Description>
+      The IdentityChangeEvent.  It can be used to build
+      the provisioning plan, but does not need to be
+      persisted with the case, so marked as transient.
+    </Description>
+		</Variable>
+		<Variable input="true"
+		          name="identityName">
+			<Description>The name of the identity.</Description>
+		</Variable>
+		<Variable name="newIdentity"
+		          type="Identity">
+			<Description>The name of the identity.</Description>
+		</Variable>
+		<Variable name="isHaveEmail">
+			<Description>identity Department</Description>
+		</Variable>
+		<Variable name="distName"/>
+		<Variable name="StoreInCharge"/>
+		<Variable initializer="false"
+		          name="isPos"
+		          type="boolean">
+			<Description>identity PositionName</Description>
+		</Variable>
+		<Step icon="Start"
+		      name="Start"
+		      posX="28"
+		      posY="10"
+		      resultVariable="newIdentity"
+		      wait="1">
+			<Script>
+				<Source>
+        import sailpoint.object.Identity;
+        newIdentity = context.getObjectByName(Identity.class,identityName);
+        return newIdentity;
+      </Source>
+			</Script>
+			<Transition to="Create Identity Email"/>
+		</Step>
+		<Step icon="Task"
+		      name="Create Identity Email"
+		      posX="40"
+		      posY="121"
+		      resultVariable="newEmail">
+			<Description>create Identity certification for the new Mover.</Description>
+			<Script>
+				<Source>
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Iterator;
+        import sailpoint.object.Identity;
+        import sailpoint.object.QueryOptions;
+        import sailpoint.object.Filter;
+
+        HashMap map1=new HashMap();
+        map1.put("001","ae");
+        map1.put("005","qa");
+        map1.put("011","kw");
+        map1.put("028","lb");
+        map1.put("057","in");
+        map1.put("024","ma");
+        map1.put("009","om");
+        map1.put("007","bh");
+        map1.put("008","bh");
+        map1.put("055","sa");
+        map1.put("010","kz");
+        map1.put("026","iqb");
+        map1.put("027","iq");
+        map1.put("029","iq");
+	    	map1.put("030","jo");
+		    map1.put("031","jo");
+	    	map1.put("037","eg");
+		    map1.put("045","eg");
+
+        HashMap map=new HashMap();
+        map.put("TGIF","tgi");
+        map.put("Hardees","hrd");
+        map.put("KFC","kfc");
+        map.put("Pizza Hut","pht");
+        map.put("Krispy Kreme","kk");
+        map.put("Wimpy","wmp");
+        map.put("Tikka","tk");
+        map.put("Pavilion","pav");
+        map.put("Peets Coffee","pts");
+        map.put("BR","bsk");
+        map.put("Costa","costa");
+		    map.put("Grand Cafe","grand");
+		    map.put("Fish Market","fm");
+
+        if(newIdentity != null){
+
+        QueryOptions qo=new QueryOptions();
+        qo.setCloneResults(true);
+
+        String location=newIdentity.getAttribute("location");
+        String co=location.substring(0, 3)+"";
+
+        String store=location.substring(3);
+        if(store.endsWith("0")){
+        store=store.substring(0,store.length()-1);
+        }
+        String department=newIdentity.getAttribute("department");
+        String[] str= department.split("-");
+        String br=str[0].trim();
+
+        String main=map1.get(co)+map.get(br)+store+"@americana-food.com";
+
+        String hql = "FROM Identity i, Link l WHERE i.id = l.identity.id AND l.application.name = 'Oracle Fusion HCM' AND l.attributes LIKE '%&lt;entry key=\"USER_NAME\" value=\""+main+"\"/&gt;%' ";
+        Iterator it=   context.search(hql, null, qo);
+        
+        try{
+        while(it.hasNext()) {
+
+        Object [] obj = it.next();
+        Identity  id = obj[0];
+        if (id == null) continue;
+        if (id != null) 
+        {
+        workflow.put("isHaveEmail",id.getName());
+        
+        context.decache(id);
+        break;
+        }
+
+        }
+        }catch(Exception Ex){
+           return main;
+        }
+        return main;
+        }
+
+      </Source>
+			</Script>
+			<Transition to="Old ID plan"
+			            when="workflow.get(&quot;isHaveEmail&quot;) != null"/>
+			<Transition to="New ID plan"/>
+		</Step>
+		<Step icon="Task"
+		      name="Old ID plan"
+		      posX="307"
+		      posY="46">
+			<Arg name="plan">
+				<Script>
+					<Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.object.ProvisioningPlan.AccountRequest;
+          import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+          Identity identity=context.getObjectByName(Identity.class,isHaveEmail);
+          if(identity !=null){
+          ProvisioningPlan  plan = new ProvisioningPlan();
+          plan.setIdentity(identity);
+          AccountRequest accountRequest = new AccountRequest();
+          accountRequest.setApplication("Oracle Fusion HCM");
+          accountRequest.setNativeIdentity(identity.getAttribute("employeeNumber"));
+          accountRequest.add(new AttributeRequest("WORK_EMAIL",ProvisioningPlan.Operation.Set,"AM_"+identity.getName()+"@americana-food.com"));
+          accountRequest.add(new AttributeRequest("USER_NAME",ProvisioningPlan.Operation.Set,"AM_"+identity.getName()+"@americana-food.com"));
+          plan.add(accountRequest);
+
+          return plan;
+          }
+          else log.error("Identity Not Available");
+        </Source>
+				</Script>
+			</Arg>
+			<Arg name="flow"
+			     value="Mover"/>
+			<Arg name="approvalScheme"
+			     value="none"/>
+			<Arg name="notificationScheme"
+			     value="none"/>
+			<Arg name="policyScheme"
+			     value="none"/>
+			<Arg name="noTriggers"
+			     value="true"/>
+			<Arg name="identityName">
+				<Script>
+					<Source>
+          return isHaveEmail;
+        </Source>
+				</Script>
+			</Arg>
+			<WorkflowRef>
+				<Reference class="sailpoint.object.Workflow"
+				           name="LCM Provisioning"/>
+			</WorkflowRef>
+			<Transition to="New ID plan"/>
+		</Step>
+		<Step icon="Task"
+		      name="New ID plan"
+		      posX="297"
+		      posY="199">
+			<Arg name="plan">
+				<Script>
+					<Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.object.ProvisioningPlan.AccountRequest;
+          import sailpoint.object.ProvisioningPlan.AttributeRequest;		  
+
+          ProvisioningPlan  plan = new ProvisioningPlan();
+          plan.setIdentity(newIdentity);
+          AccountRequest accountRequest = new AccountRequest();
+          accountRequest.setApplication("Oracle Fusion HCM");
+          accountRequest.setNativeIdentity(newIdentity.getAttribute("employeeNumber"));
+          accountRequest.add(new AttributeRequest("WORK_EMAIL",ProvisioningPlan.Operation.Set,newEmail));
+          accountRequest.add(new AttributeRequest("USER_NAME",ProvisioningPlan.Operation.Set,newEmail));
+          plan.add(accountRequest);
+          return plan;
+        </Source>
+				</Script>
+			</Arg>
+			<Arg name="approvalScheme"
+			     value="none"/>
+			<Arg name="notificationScheme"
+			     value="none"/>
+			<Arg name="policyScheme"
+			     value="none"/>
+			<Arg name="flow"
+			     value="Mover"/>
+			<Arg name="noTriggers"
+			     value="true"/>
+			<Arg name="identityName"
+			     value="ref:identityName"/>
+			<WorkflowRef>
+				<Reference class="sailpoint.object.Workflow"
+				           name="LCM Provisioning"/>
+			</WorkflowRef>
+			<Transition to="ADLinkMover"/>
+		</Step>
+		<Step name="ADLinkMover"
+		      posX="505"
+		      posY="48"
+		      resultVariable="flag">
+			<Script>
+				<Source>
+        import org.apache.log4j.Logger;
+        import org.apache.log4j.Level;
+        import org.apache.commons.logging.Log;
+        import org.apache.bsf.BSFException;
+        import java.util.*;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+        import sailpoint.tools.GeneralException;
+        import sailpoint.tools.Message;
+        import sailpoint.tools.Util;
+
+        try{
+        String srcIdName = null;
+        String tgtIdName = identityName;   
+        String appName = "Active Directory";
+        String acctToMove = null ;
+
+        QueryOptions qo=new QueryOptions();
+        qo.setCloneResults(true);
+        String hql = "FROM Identity i, Link l WHERE i.id = l.identity.id AND l.application.name = 'Active Directory' AND l.attributes LIKE '%&lt;entry key=\"mail\" value=\""+newEmail+"\"/&gt;%' AND i.inactive = 0 AND l.attributes NOT LIKE '%&lt;entry key=\"IIQDisabled\"&gt;%' ";
+        Iterator it=   context.search(hql, null, qo);
+        List idList = new ArrayList();
+        while(it.hasNext()) {
+        Object [] obj = it.next();
+        id = obj[0];
+        li = obj[1];
+        srcIdName=id.getName();
+        acctToMove= id.getName();
+        distName=li.getAttribute("distinguishedName");
+        }
+        Logger log = Logger.getLogger("sailpoint.services.DemonstrateMovingLink");
+        log.setLevel(Level.DEBUG); // TODO: Turn this off or remove this line when checking in.
+
+        Identity srcId = context.getObjectByName(Identity.class, srcIdName);
+        if (null == srcId) {
+        String eMsg = "Could not find source Identity with name: " + srcIdName;
+        log.error(eMsg);
+        return eMsg;
+        }
+
+        Identity tgtId = context.getObjectByName(Identity.class, tgtIdName);
+        if (null == tgtId) {
+        String eMsg = "Could not find target Identity with name: " + tgtIdName;
+        log.error(eMsg);
+        return eMsg;
+        }
+
+        Application appObj = context.getObjectByName(Application.class, appName);
+        if (null == appObj) {
+        String eMsg = "Could not find Application with name: " + appName;
+        log.error(eMsg);
+        return eMsg;
+        }
+
+        IdentityService idServ = new IdentityService(context);
+
+        Link linkToMove = idServ.getLink(srcId, appObj, null, distName);
+        if (null == linkToMove) {
+        String eMsg = "Could not find Link/Account named [" + acctToMove + "] from Application name: " + appName + " under Identity:" + srcId.getName();
+        log.error(eMsg);
+        return eMsg;  
+        }
+
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(tgtId);
+        plan.addRequester(context.getObjectByName(Identity.class, "spadmin"));
+        plan.setSource(sailpoint.object.Source.Rule); 
+
+        ProvisioningPlan.AccountRequest account = new ProvisioningPlan.AccountRequest();
+        account.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+        account.setApplication(ProvisioningPlan.APP_IIQ);  // Modify only IdentityIQ.
+        plan.add(account);
+
+
+        ProvisioningPlan.AttributeRequest req = new ProvisioningPlan.AttributeRequest();
+        req.setName(ProvisioningPlan.ATT_IIQ_LINKS);  // Magic value to alter IdentityIQ links.
+        req.setOperation(ProvisioningPlan.Operation.Add);
+        req.put(ProvisioningPlan.ARG_SOURCE_IDENTITY, linkToMove.getIdentity().getName());
+        req.setValue(linkToMove.getId());
+
+        String reqDisplayVal =
+        linkToMove.getApplicationName() + ": " +
+        linkToMove.getNativeIdentity() + "(" +
+        linkToMove.getIdentity().getName() + ")";  
+        req.setDisplayValue(reqDisplayVal);
+
+        account.add(req);
+        plan.add(account);
+
+        log.debug("Plan to move the account: " + plan.toXml());
+
+        Provisioner provisioner = new Provisioner(context);
+        provisioner.setAssigner("spadmin");  // String of Identity making the change.
+        provisioner.compile(plan);
+        provisioner.execute();
+
+        log.debug("Account moved!");
+        }catch(Exception ex){
+        return "Success";
+        }
+
+        return "Success";
+      </Source>
+			</Script>
+			<Transition to="AttrChanges"
+			            when="script:flag != null &amp;&amp; flag.equals(&quot;Success&quot;)"/>
+			<Transition to="Stop"/>
+		</Step>
+		<Step name="AttrChanges"
+		      posX="570"
+		      posY="122">
+			<Script>
+				<Source>
+        import org.apache.log4j.Level;
+        import org.apache.commons.logging.Log;
+        import org.apache.bsf.BSFException;
+        import java.util.*;
+        import sailpoint.object.Identity;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+        import sailpoint.tools.GeneralException;
+        import sailpoint.tools.Message;
+        import sailpoint.tools.Util;
+
+        Identity tgtId = context.getObjectByName(Identity.class, identityName);
+
+        if (null == tgtId) {
+        String eMsg = "Could not find target Identity with name: " + identityName;
+        log.error(eMsg);
+        return eMsg;
+        }
+
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(tgtId);
+
+        String managerDisName;
+
+
+        AccountRequest acr = new AccountRequest();
+        acr.setApplication("Active Directory");
+        acr.setOperation(AccountRequest.Operation.Modify);
+        acr.setNativeIdentity(distName);
+
+        Identity manager = tgtId.getManager();
+        if(manager != null){
+        Application app = context.getObjectByName(Application.class, "Active Directory");
+        Link account = manager.getLink(app);
+        if(account != null){
+        managerDisName = account.getAttribute("distinguishedName");
+        }
+        }
+        if(null != managerDisName &amp;&amp; !managerDisName.isEmpty())
+        acr.add(new AttributeRequest("manager", ProvisioningPlan.Operation.Add, managerDisName));
+
+        acr.add(new AttributeRequest("employeeNumber", ProvisioningPlan.Operation.Add, tgtId.getAttribute("employeeNumber")));
+        acr.add(new AttributeRequest("employeeID", ProvisioningPlan.Operation.Add, tgtId.getAttribute("employeeNumber")));
+
+        plan.add(acr);
+
+        Provisioner provisioner = new Provisioner(context);
+        provisioner.setAssigner("spadmin");  // String of Identity making the change.
+        provisioner.compile(plan);
+        provisioner.execute();
+
+      </Source>
+			</Script>
+			<Transition to="Stop"/>
+		</Step>
+		<Step icon="Stop"
+		      name="Stop"
+		      posX="851"
+		      posY="44"/>
+	</Workflow>
+</sailpoint>

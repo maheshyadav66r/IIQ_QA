@@ -1,0 +1,147 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Rule_Get_PowerBI_FormFields" type="Validation">
+  <Source>
+  import java.util.*;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.sql.*;
+  import java.io.*;
+
+  QueryOptions qoObj = new QueryOptions();
+  qoObj.add(Filter.eq("attribute", "COMPANY_NO"));
+  qoObj.add(Filter.eq("application.name", "Microsoft Power BI"));
+
+  List maObjList = new ArrayList();
+  List countriesList = new ArrayList();
+
+  Custom cObj = context.getObjectByName(Custom.class, "Americana_Custom_PowerBI_Brands");
+  Custom sObj = context.getObjectByName(Custom.class, "Americana_Custom_PowerBI_Stores");
+
+  String url = "jdbc:sqlserver://americana-server.database.windows.net:1433;database=BI_UserDB";
+  String username = "BI_UserAccess";
+  String password = "Biuser!@123#";
+  String query = null;
+  String query1 = null;
+  String query2 = null;
+
+  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+  Connection con = DriverManager.getConnection(url, username, password);
+
+ /* // Updating the values for "Country" field in the Custom object after daily Group Aggregation
+  maObjList = context.getObjects(ManagedAttribute.class, qoObj);
+  for (int i=0; i &lt; maObjList.size(); i++)
+  {
+    ManagedAttribute maObj = maObjList.get(i);          
+    //System.out.println("Country Code is; " + maObj.getValue() + " and Country Name is: " + maObj.getDisplayName());
+    if (!countriesList.contains(maObj.getDisplayName().trim()))
+      countriesList.add(maObj.getDisplayName().trim()); 
+  }
+  if (cObj != null)
+  {
+    cObj.put("Country", countriesList);
+    //  return cObj.get("Country");
+  }
+*/
+  try
+  {
+    
+    query2 = "SELECT distinct COUNTRY_DESC FROM USERDB.DimRestaurant";
+    System.out.println("query2 is: " + query2);
+    Statement st2 = con.createStatement();
+    ResultSet rs2 = st2.executeQuery(query2);
+    while (rs2.next())
+    {
+        System.out.println("Country is: " + rs2.getString("COUNTRY_DESC"));
+        if (!countriesList.contains(rs2.getString("COUNTRY_DESC").trim()))
+          countriesList.add(rs2.getString("COUNTRY_DESC").trim()); 
+
+    }
+    System.out.println("countriesList is: " + countriesList);
+    if (cObj != null)
+    {
+    cObj.put("Country", countriesList);
+    
+    }
+    
+    //Updating the values for "Brands" field in the Custom object from DimRestaurant table
+
+    for (int i=0; i &lt; countriesList.size(); i++)
+    {
+      String country = countriesList.get(i);
+      Map cBrandsMap = cObj.get(country);
+
+      query = "SELECT distinct CHAIN_NAME, COUNTRY_DESC FROM USERDB.DimRestaurant where COUNTRY_DESC=\'" + countriesList.get(i) + "\'";
+      System.out.println("query is: " + query);
+      Statement st = con.createStatement();
+      ResultSet rs = st.executeQuery(query); 
+      List cBrandsList = new ArrayList();
+      while (rs.next())
+      {
+        System.out.println("Brand is: " + rs.getString("CHAIN_NAME"));
+        if (!cBrandsList.contains(rs.getString("CHAIN_NAME").trim()))
+          cBrandsList.add(rs.getString("CHAIN_NAME").trim()); 
+
+      }
+
+      System.out.println("cBrandsList is " + cBrandsList);
+      cBrandsMap.put("Brands", cBrandsList);
+      System.out.println("Brands in  " + country + " are " + cBrandsMap.get("Brands"));
+
+      cObj.put(country, cBrandsMap);
+      st.close();
+
+      Map countryMap = sObj.get(country);
+      System.out.println("countryMap is: " + countryMap);
+      for (int j=0; j &lt; cBrandsList.size(); j++)
+      {
+        String brand = cBrandsList.get(j);
+        System.out.println("brand is: " + brand);
+        
+        query1 = "SELECT distinct StoreID, [Restaurant Code], [Restaurant Name], CHAIN_NAME, COUNTRY_DESC from USERDB.DimRestaurant where COUNTRY_DESC=\'" + countriesList.get(i) + "\' and CHAIN_NAME=\'" + cBrandsList.get(j) + "\'";
+        System.out.println("query1 is: " + query1);
+        Statement st1 = con.createStatement();
+        ResultSet rs1 = st1.executeQuery(query1);
+        
+               
+        List cbStoresList = new ArrayList();
+
+        System.out.println("cbStoresList is : " + cbStoresList);
+        while (rs1.next())
+        {
+          System.out.println("Store is: " + rs1.getString("Restaurant Name"));
+          if (!cbStoresList.contains(rs1.getString("Restaurant Name")))
+          cbStoresList.add(rs1.getString("Restaurant Name")+" # "+rs1.getString("StoreID")); 
+        }
+        
+        System.out.println("cbStoresList is: " + cbStoresList);
+        countryMap.put(brand, cbStoresList);
+        System.out.println("Stores in " + country + " and " + brand + " are " + countryMap.get(brand));
+        
+ 
+        st1.close();
+      }
+      sObj.put(country, countryMap);
+  
+    }
+
+  }
+
+  
+  catch (SQLException e) 
+  { 
+    e.printStackTrace(); 
+  } 
+
+  con.close();   
+  context.saveObject(cObj);
+  context.saveObject(sObj);
+  context.commitTransaction();
+
+    return sObj.toXml();
+
+  </Source>
+</Rule>
+
+</sailpoint>

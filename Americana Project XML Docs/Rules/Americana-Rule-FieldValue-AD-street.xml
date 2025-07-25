@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-FieldValue-AD-street" type="FieldValue">
+  <Description>This rule can be used to generate a field value (eg - an account name) using data from the given Identity. If this rule is run in the context of a workflow step then the arguments passed into the step will also be available. Also, any field values that have been processed so far from the policy related to the Application/Role will be available.</Description>
+  <Signature returnType="String" />
+  <Source>
+String country = identity.getAttribute("country");
+if(country!=null &amp;&amp; country.equalsIgnoreCase("AE")){
+	return "Al Rayyan Tower Al Nahda";
+}
+else if(country!=null &amp;&amp; country.equalsIgnoreCase("QA")){
+		return "Arianne Tower Omar Mokhtar Street";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("KW")){
+		return "Street No.77, Block No. 3";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("IN")){
+		return "GCR 3rd Floor, Orchid Centre,INNOV8";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("LB")){
+		return "Diamond Tower,Ground Floor";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("MA")){
+		return "Rue Kadi Iass 1ER Maarif";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("OM")){
+		return "AI Khwai 33, 5th Floor";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("BH")){
+		return "3009 Block, 330 New Zinj";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("SA")){
+		return "7896 St At Takhassusi North Mathar Dist";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("KZ")){
+		return "Abisha Kekilbayuly 34";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("JO")){
+		return "Aishah al Taymouriah";
+		}
+  else if(country!=null &amp;&amp; country.equalsIgnoreCase("IQ")){
+  
+  if (identity.getAttribute("location") != null){
+    
+  String loc = (identity.getAttribute("location")).substring(0,3);
+  
+  if (loc.equalsIgnoreCase("026")) {
+  return "Al-Qadisiyah, Ministers Complex Street";
+  }
+  else if (loc.equalsIgnoreCase("027")) {
+    return "Iraq-Kurdistan- Erbil 60 Meter Street Royal Mall 7th Floor Office NO.3";
+  }
+  }
+    return null;
+}
+else if(country!=null &amp;&amp; country.equalsIgnoreCase("EG")){
+  
+  if (identity.getAttribute("location") != null){
+    
+  String loc = (identity.getAttribute("location")).substring(0,3);
+  
+  if (loc.equalsIgnoreCase("037")) {
+  return "47 El Batal Ahmed Abdel Aziz";
+  }
+  else if (loc.equalsIgnoreCase("045")) {
+    return "Kilo 28.8 Cairo - Alex desert road Abo rawash";
+  }
+  }
+    return null;
+}
+</Source>
+</Rule>
+
+</sailpoint>

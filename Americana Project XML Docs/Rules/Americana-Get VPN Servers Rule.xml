@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Get VPN Servers Rule">
+  <Source>
+import sailpoint.object.RpcRequest;
+import sailpoint.object.RpcResponse;
+import sailpoint.connector.RPCService;
+import sailpoint.object.Rule;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.*;
+import sailpoint.object.Application;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+  
+Map data = new HashMap();
+	
+Rule rule = context.getObjectByName(Rule.class, "Americana-GetServers Powershell Rule");
+data.put("postScript", rule);
+	
+Application application = context.getObjectByName(Application.class,"Active Directory");
+data.put("Application", application.getAttributes());
+  
+Map regionsOUMap = null;
+List regionKeys = new ArrayList();
+List regionsList = new ArrayList();
+Custom customObj = context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+  if(null != customObj){
+  	regionsOUMap = customObj.get("Region-OUMapping");
+    if(null != regionsOUMap @and regionsOUMap.size() &gt; 0){
+    Set keySet = regionsOUMap.keySet();
+      if(null != keySet @and keySet.size() &gt; 0){
+        for(String key : keySet){
+          if(null != key @and !"".equalsIgnoreCase(key)){
+            regionKeys.add(key);
+            
+            String regionValue = regionsOUMap.get(key);
+            if(null != regionValue @and !"".equalsIgnoreCase(regionValue)){
+          		regionsList.add(regionValue);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+	
+	// Fake account request
+	AccountRequest accountRequest = new AccountRequest();
+	accountRequest.setApplication("IIQ");
+	accountRequest.setNativeIdentity("*FAKE*");
+	accountRequest.setOperation(AccountRequest.Operation.Modify);
+
+	// Fake attribute request
+	List fakeAttributeRequests = new ArrayList();
+	AttributeRequest fakeAttribute = new AttributeRequest();
+	fakeAttribute.setOperation(Operation.Add);
+	fakeAttribute.setName("regionsList");
+	fakeAttribute.setValue(regionsList);
+	fakeAttributeRequests.add(fakeAttribute);
+  
+	AttributeRequest fakeAttribute1 = new AttributeRequest();
+	fakeAttribute1.setOperation(Operation.Add);
+	fakeAttribute1.setName("regionKeys");
+	fakeAttribute1.setValue(regionKeys);
+	fakeAttributeRequests.add(fakeAttribute1);
+	accountRequest.setAttributeRequests(fakeAttributeRequests);
+
+	// Add to the IQService params
+	data.put("Request", accountRequest);
+	
+	String IQServiceHost = "";
+	int IQServicePortNumber;
+	//boolean useTLS = false;
+	
+	if(null != application){
+		List IQServiceConfigurationList = application.getAttributeValue("IQServiceConfiguration");
+		if(null != IQServiceConfigurationList @and IQServiceConfigurationList.size() &gt; 0){
+			Map IQServiceConfiguration = IQServiceConfigurationList.get(0);
+			if(null != IQServiceConfiguration @and IQServiceConfiguration.size() &gt; 0){
+				IQServiceHost = IQServiceConfiguration.get("IQServiceHost");
+				IQServicePortNumber = Integer.parseInt(IQServiceConfiguration.get("IQServicePort"));
+			}
+		}
+		System.out.println("Inside the Rule--Nirmal");
+    
+		//	useTLS = application.getAttributeValue("useTLSForIQService");
+		// return "IQService Details "+IQServiceHost+" IQServicePort "+IQServicePortNumber;
+		if(null != IQServiceHost @and !"".equalsIgnoreCase(IQServiceHost)){
+			RPCService service = new RPCService(IQServiceHost, IQServicePortNumber, false, false);
+			service.setConnectorServices(new sailpoint.connector.DefaultConnectorServices());
+			RpcRequest request = new RpcRequest("ScriptExecutor", "runAfterScript", data);
+      
+      System.out.println("Request"+request);
+			RpcResponse response = service.execute(request);
+      System.out.println("Response"+response);
+			Map ouMap = new HashMap();
+			Map map = response.getResultAttributes();
+      System.out.println("Map"+map);
+			if(null != map @and map.size() &gt; 0){
+				Map serverMapObject = map.get("serverValues");
+       // return serverMapObject;
+				if(null != serverMapObject @and serverMapObject.size() &gt; 0){
+					Set keys = serverMapObject.keySet();
+					if(null != keys @and keys.size() &gt; 0){
+						for(String key : keys){
+						  if(null != key @and !"".equalsIgnoreCase(key)){
+							String ouValue = serverMapObject.get(key);
+							if(null != ouvalue @and !"".equalsIgnoreCase(ouValue)){
+								String replacedOUValue = ouValue.replace(",OU=Americana Office,DC=Americana,DC=global","");
+								if(null != replacedOUValue @and !"".equalsIgnoreCase(replacedOUValue)){
+									String finalOUValue = replacedOUValue.substring(replacedOUValue.lastIndexOf(",")+1);
+									if(null != finalOUValue @and !"".equalsIgnoreCase(finalOUValue)){
+										if(regionsList.contains(finalOUValue)){
+											if(null != ouMap){
+												if(null != ouMap.get(finalOUValue)){
+													List listOfValues = ouMap.get(finalOUValue);
+													if(null != listOfValues @and listOfValues.size() &gt; 0){
+														listOfValues.add(key);
+														ouMap.put(finalOUValue,listOfValues);
+													}else{
+														List elementsList = new ArrayList();
+														elementsList.add(key);
+														ouMap.put(finalOUValue,elementsList);
+													}
+												}else{
+													List elementsList = new ArrayList();
+													elementsList.add(key);
+													ouMap.put(finalOUValue,elementsList);
+												}
+											}
+										}
+									}
+								}
+							}
+							  
+						}
+					}
+          if(null != ouMap){
+						List convertedList = new ArrayList(keys);
+						List globalServersList = customObj.get("Global-VPN-Servers");
+            if(null != globalServersList @and globalServersList.size() &gt; 0 @and null != convertedList @and convertedList.size() &gt; 0){
+            	globalServersList.addAll(convertedList);
+							ouMap.put("Server-Global",globalServersList);
+            }
+					}  
+				}
+			}
+		}
+		
+      
+    //Map dummyMap = new HashMap();
+      
+		if(null != ouMap @and ouMap.size() &gt; 0){
+			Set setOfOUKeys = ouMap.keySet();
+			if(null != setOfOUKeys @and setOfOUKeys.size() &gt; 0){
+				for(String key : setOfOUKeys){
+					if(null != key){
+						if(null != regionsList @and regionsList.contains(key)){
+              if(null != ouMap.get(key) @and ouMap.get(key).size() &gt; 0){
+              	List serversList = new ArrayList();
+								for(String regionKey : regionKeys){
+                	if(null != regionKey @and !"".equalsIgnoreCase(regionKey)){
+                  	if(key.contains(regionKey)){
+                      serversList.add("Access to Servers across "+regionKey);
+											serversList.addAll(ouMap.get(key));
+              				customObj.put("Server-"+regionKey,serversList);
+                      //dummyMap.put("Server-"+regionKey,serversList);
+                  	}
+                	}
+              	}
+							}
+						}else{
+							customObj.put("Server-Global",ouMap.get("Server-Global"));
+              //dummyMap.put("Global-Servers",ouMap.get("Global-Servers"));
+						}
+					}
+					
+				}
+        context.saveObject(customObj);
+        context.commitTransaction();
+			}
+		}
+      //return dummyMap;
+	}
+			
+}
+		
+	
+		
+	
+  	</Source>
+</Rule>
+
+</sailpoint>

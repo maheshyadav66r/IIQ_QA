@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="Americana-OracleERP-Correlation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="employeeNumber" value="Person Number" />
+    <Filter operation="EQ" property="email" value="Email" />
+    <Filter operation="EQ" property="hcmUserName" value="User Name" />
+    <Filter operation="EQ" property="email" value="User Name" />
+    <Filter operation="EQ" property="displayName" value="Display Name" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

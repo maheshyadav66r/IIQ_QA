@@ -1,0 +1,1085 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-RuleLibrary-Attribute">
+  <Source>
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.api.Provisioner;
+
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Rule;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningProject;
+
+  import sailpoint.object.Workflow;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import sailpoint.object.ResourceObject;
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailFileAttachment;
+  import java.io.File;
+  import sailpoint.object.ManagedAttribute;
+
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.ResourceObject; 
+  import sailpoint.object.TaskResult; 
+  import sailpoint.api.Aggregator;
+  import org.json.JSONException;
+  import org.json.JSONObject;
+  import org.json.JSONArray;
+  import org.apache.log4j.Logger;
+ 
+ 
+
+
+  String ruleName = "Americana-RuleLibrary-Attribute";
+
+ 
+  Log log = LogFactory.getLog("americana.ruleLibrary.Attribute");  
+  log.trace("***RUNNING Americana-RuleLibrary-Attribute***");
+
+
+
+  /**********************************************************
+    Identity Attribute Methods 
+  **********************************************************/
+
+  public String getIdentityAttributeValue(Identity identity, String attributeName) {
+    String attributeValue = "";
+    if (identity != null &amp;&amp; Util.isNotNullOrEmpty(attributeName)) {
+      attributeValue = identity.getStringAttribute(attributeName);
+    }
+    return attributeValue;
+  }
+
+
+  /***********************************************************
+    Methods to calculate sAMAccountName for Active Directory
+  ************************************************************/
+
+
+  public String finalStr(String str) {
+    String finalWord = Util.deleteWhitespace(str.toLowerCase());
+    if(finalWord.length()&gt;20 ){
+      return finalWord.substring(0, 20);
+    }else {
+      return finalWord;
+    }
+    return finalWord;
+  }
+
+  public String getsAMAccountName(String firstName, String middleName, String lastName, Application application) {
+    boolean isUniqueName = false;
+    String sAMAccountName = "";
+    if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) {
+      if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { // Case :- A
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("****************sAMAccountName A :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { //Case:- B
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName);
+
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("****************sAMAccountName B :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- C
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("****************sAMAccountName C :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- E
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName+lastName.substring(0,1));
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("****************sAMAccountName E :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- D
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName.substring(0,1) + lastName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("****************sAMAccountName D :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      } else { //if all cases are failed then appending numbers to sAMAccountName
+        int count = 1;
+        while (!isUniqueName &amp;&amp; Util.isNotNullOrEmpty(sAMAccountName)) {
+          if (sAMAccountName.length() &gt;= 12) {
+            sAMAccountName = sAMAccountName.substring(0,11)+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          } else {
+            sAMAccountName = sAMAccountName+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          }
+        }
+      }
+
+    }
+    else if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) {
+
+      if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { // Case :- A
+
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("######sAMAccountName A :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { //Case:- B
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("######sAMAccountName B :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; firstName.length() &gt;=2 &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- C
+        sAMAccountName = finalStr(firstName.substring(0,2)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("######sAMAccountName C :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; firstName.length() &gt;=3  &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- E
+        sAMAccountName = finalStr(firstName.substring(0,3) +lastName.substring(0,1));
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("######sAMAccountName E :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- D
+        sAMAccountName = finalStr(firstName.substring(0,1) + firstName.substring(firstName.length()-1,firstName.length()) + lastName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        log.debug("######sAMAccountName D :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      } else { //if all cases are failed then appending numbers to sAMAccountName
+        int count = 1;
+        while (!isUniqueName &amp;&amp; Util.isNotNullOrEmpty(sAMAccountName)) {
+          if (sAMAccountName.length() &gt;= 12) {
+            sAMAccountName = sAMAccountName.substring(0,11)+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          } else {
+            sAMAccountName = sAMAccountName+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          }
+        }
+      }
+    }
+
+    return sAMAccountName;
+  }
+   public String getsAMAccountNameContractor(String firstName, String middleName, String lastName, Application application) {
+    boolean isUniqueName = false;
+    System.out.println("****************test");
+    String sAMAccountName = "";
+    if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) {
+      System.out.println("****************test1");
+      if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { // Case :- A
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("****************sAMAccountName A :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { //Case:- B
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName);
+
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("****************sAMAccountName B :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- C
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("****************sAMAccountName C :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- E
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName+lastName.substring(0,1));
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("****************sAMAccountName E :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(middleName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- D
+        sAMAccountName = finalStr(firstName.substring(0,1) + middleName.substring(0,1) + lastName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("****************sAMAccountName D :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      } else { //if all cases are failed then appending numbers to sAMAccountName
+        int count = 1;
+        while (!isUniqueName &amp;&amp; Util.isNotNullOrEmpty(sAMAccountName)) {
+          if (sAMAccountName.length() &gt;= 12) {
+            sAMAccountName = sAMAccountName.substring(0,11)+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          } else {
+            sAMAccountName = sAMAccountName+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          }
+        }
+      }
+
+    }
+    else if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) {
+System.out.println("****************test3");
+      if (Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { // Case :- A
+System.out.println("****************test4");
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        System.out.println("****************sAMAccountName"+sAMAccountName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("######sAMAccountName A :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName)) { //Case:- B
+        sAMAccountName = finalStr(firstName.substring(0,1) + lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("######sAMAccountName B :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; firstName.length() &gt;=2 &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- C
+        sAMAccountName = finalStr(firstName.substring(0,2)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("######sAMAccountName C :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; firstName.length() &gt;=3  &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- E
+        sAMAccountName = finalStr(firstName.substring(0,3) +lastName.substring(0,1));
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("######sAMAccountName E :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+
+      }
+      if ((!isUniqueName) &amp;&amp; Util.isNotNullOrEmpty(firstName) &amp;&amp; Util.isNotNullOrEmpty(lastName) ) { //Case:- D
+        sAMAccountName = finalStr(firstName.substring(0,1) + firstName.substring(firstName.length()-1,firstName.length()) + lastName.substring(0,1)+lastName);
+        isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+        System.out.println("######sAMAccountName D :"+sAMAccountName+ "\nisUniqueName : "+isUniqueName);
+      } if (!isUniqueName) { //if all cases are failed then appending numbers to sAMAccountName
+        int count = 1;
+        while (!isUniqueName &amp;&amp; Util.isNotNullOrEmpty(sAMAccountName)) {
+          if (sAMAccountName.length() &gt;= 12) {
+            sAMAccountName = sAMAccountName.substring(0,11)+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          } else {
+            sAMAccountName =sAMAccountName+String.valueOf(count);
+            isUniqueName = isUniqueADName(application, "sAMAccountName",sAMAccountName);
+            if (isUniqueName) break;
+            count++;
+          }
+        }
+      }
+    }
+
+    return sAMAccountName;
+  }
+
+  public Boolean isUniqueADName(Application application, String attName, String attValue) {
+
+    if (log.isDebugEnabled()) log.debug("Checking for uniqueness of " + attName + " " + attValue + " for application " + application.getName());
+    Boolean unique = true;
+
+    // Make a copy of the AD application
+    Application appCopy = (Application) application.deepCopy((sailpoint.object.Resolver) context);
+    String appConnName = appCopy.getConnector();
+
+    // Get the domain DN and use this as the searchDN so that we search the entire domain
+    List domainSettings = appCopy.getAttributes().getMap().get("domainSettings");
+    Map searchDNMap = domainSettings.get(0);
+    String searchDN = searchDNMap.get("domainDN");
+    // String searchDN = appCopy.getAttributes().getMap().get("domainSettings").get(0).get("domainDN");
+    if (log.isDebugEnabled()) log.debug("Searching in: " + searchDN);
+
+    List dnList = new ArrayList();
+    Map setupMap = new HashMap();
+    setupMap.put("iterateSearchFilter", "(" + attName  + "=" + attValue + ")");
+    setupMap.put("searchDN", searchDN);
+
+    dnList.add(0, setupMap); // This takes the map we just changed and adds it back to the list in place of the map that was there.
+    appCopy.setAttribute("searchDNs", dnList); // Add the list back to the app copy. 
+
+    appCopy.setAttribute("referral", "ignore");
+    appCopy.setAttribute("useHasMoreElements", true);
+    appCopy.setCustomizationRule(null);
+
+    Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appCopy, null);
+    CloseableIterator iterator = appConnector.iterateObjects(Connector.TYPE_ACCOUNT, null, null);
+
+    try {
+      if (iterator != null &amp;&amp; iterator.hasNext() ) { 
+        if (iterator.hasNext()) {   
+          ResourceObject user = iterator.next();    
+          String foundName = user.getAttribute(attName).toString();
+          if (log.isDebugEnabled()) log.debug("Found an AD account with " + attName + ": " + foundName);        
+          unique = false;
+        }
+      } else {
+        if (log.isDebugEnabled()) log.debug("Could not find an AD account with " + attName + ": " + attValue);
+      }
+    } finally {
+      if ( iterator != null ) iterator.close();
+    }
+    if (log.isDebugEnabled()) log.debug("Unique: " + unique);
+    return unique;
+  }
+
+  /***********************************************************************
+     AD Distinguished Name Method
+  ***********************************************************************/
+
+
+  public String getDistinguishedName(String sAMAccountName, String department,String country) {
+    String distinguishedName = ""; 
+    log.debug("****************Entering getDistinguishedName : sAMAccountName : "+sAMAccountName+ " | department : " + department + " | Country : "+country);
+    if (Util.isNotNullOrEmpty(sAMAccountName) &amp;&amp; Util.isNotNullOrEmpty(department) &amp;&amp; Util.isNotNullOrEmpty(country)) {
+      Custom custom = context.getObjectByName(Custom.class,"Americana-Custom-DepartementalMapping-ActiveDirectory");
+      if (custom == null) {
+        return distinguishedName;
+      }
+      Map map = custom.getAttributes().getMap();
+      country = country.trim();
+      department = department.trim();
+      if (country.equalsIgnoreCase("AE")) {
+        Map uaeMap = map.get("UAE-Office");
+        if (uaeMap != null &amp;&amp; !uaeMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ uaeMap.get(department);
+        }
+      } else if (country.equalsIgnoreCase("QA")) {
+        Map qatarMap = map.get("Qatar-Office");
+        if (qatarMap != null &amp;&amp; !qatarMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ qatarMap.get(department);
+        }     
+      }
+      
+      else if (country.equalsIgnoreCase("KW")) {
+        Map kwMap = map.get("Kuwait-Office");
+        if (kwMap != null &amp;&amp; !kwMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ kwMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("LB")) {
+        Map lbMap = map.get("Lebanon-Office");
+        if (lbMap != null &amp;&amp; !lbMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ lbMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("IN")) {
+        Map inMap = map.get("India-Office");
+        if (inMap != null &amp;&amp; !inMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ inMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("MA")) {
+        Map moMap = map.get("Morocco-Office");
+        if (moMap != null &amp;&amp; !moMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ moMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("OM")) {
+        Map omMap = map.get("Oman-Office");
+        if (omMap != null &amp;&amp; !omMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ omMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("BH")) {
+        Map bhMap = map.get("Bahrain-Office");
+        if (bhMap != null &amp;&amp; !bhMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ bhMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("SA")) {
+        Map saMap = map.get("KSA-Office");
+        if (saMap != null &amp;&amp; !saMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ saMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("KZ")) {
+        Map kzMap = map.get("Kazakhstan-Office");
+        if (kzMap != null &amp;&amp; !kzMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ kzMap.get(department);
+        }     
+      }
+      else if (country.equalsIgnoreCase("IQ")) {
+        Map iqMap = map.get("Iraq-Office");
+        if (iqMap != null &amp;&amp; !iqMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ iqMap.get(department);
+        }     
+      }
+	  else if (country.equalsIgnoreCase("EG")) {
+        Map egMap = map.get("Egypt-Office");
+        if (egMap != null &amp;&amp; !egMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ egMap.get(department);
+        }     
+      }
+	  else if (country.equalsIgnoreCase("JO")) {
+        Map joMap = map.get("Jordan-Office");
+        if (joMap != null &amp;&amp; !joMap.isEmpty()) {
+          distinguishedName = "CN="+ sAMAccountName+ ","+ joMap.get(department);
+        }     
+      }
+      
+    }
+    log.debug("****************Exiting From  getDistinguishedName | distinguishedName : " +distinguishedName);
+    return distinguishedName;
+  }
+
+  /**************************************************************************
+
+         Americana Joiner Methods 
+
+  **************************************************************************/
+
+  public ProvisioningPlan buildADJoinerPlan(Workflow workflow,String identityName) {
+    log.trace("********Entered buildADJoinerPlan : "+identityName);
+    ProvisioningPlan plan = null;
+
+    if (Util.isNotNullOrEmpty(identityName)) {
+      Identity identity = context.getObjectByName(Identity.class,identityName);
+      if (identity == null) {
+        log.error("Identity not found in the system :"+identityName);
+        return plan;
+      }
+
+      plan = new ProvisioningPlan();
+      plan.setIdentity(identity);
+      AccountRequest acctReq = new AccountRequest();
+      acctReq.setOperation(AccountRequest.Operation.Create);
+      acctReq.setApplication("Active Directory");
+
+      String userType = identity.getAttribute("userType");
+      String country = identity.getAttribute("country");
+
+
+      if(Util.isNotNullOrEmpty(userType) &amp;&amp; ("E".equalsIgnoreCase(userType) || "P".equalsIgnoreCase(userType))){
+        if(country.equalsIgnoreCase("AE")){
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=UAE WiFi,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        else if (country.equalsIgnoreCase("QA")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Qatar Wifi,OU=Groups,OU=Users,OU=Qatar-Office,OU=Americana Office,DC=Americana,DC=global"));
+        } 
+        
+        else if (country.equalsIgnoreCase("KW")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Kuwait Wifi,OU=Groups,OU=Users,OU=Kuwait,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        else if (country.equalsIgnoreCase("OM")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Oman WiFi,OU=Groups,OU=Users,OU=Oman-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+                
+        else if (country.equalsIgnoreCase("LB")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Lebanon Internet Limited Access,OU=Groups,OU=Users,OU=Lebanon-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        else if (country.equalsIgnoreCase("SA")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=KSA WiFi,OU=Disabled_Groups,OU=Disabled Users,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        else if (country.equalsIgnoreCase("KZ")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Kazakhstan WiFi,OU=Groups,OU=Users,OU=Kazakhstan-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+        
+        else if (country.equalsIgnoreCase("IQ")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Iraq WiFi,OU=Disabled_Groups,OU=Disabled Users,OU=Americana Office,DC=Americana,DC=global"));
+        }
+		
+		else if (country.equalsIgnoreCase("EG")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Egypt WiFi,OU=Groups,OU=Users,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+		
+		else if (country.equalsIgnoreCase("JO")) {
+          acctReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=Jordan WiFi,OU=Groups,OU=Users,OU=Jordan-Office,OU=Americana Office,DC=Americana,DC=global"));
+        }
+
+      }
+
+
+      plan.add(acctReq);
+      //Setting the hasADProvisioned to true
+      workflow.put("hasADProvisioned",true);
+    }
+    return plan;
+  }
+
+
+  /* public ProvisioningPlan buildERPJoinerPlan(Workflow workflow,String identityName) {
+    log.trace("********Entered buildADJoinerPlan : "+identityName);
+    ProvisioningPlan plan = null;
+    List gradeCodeList = new ArrayList(Arrays.asList("C2", "C3"));
+
+
+    if (Util.isNotNullOrEmpty(identityName)) {
+      Identity identity = context.getObjectByName(Identity.class,identityName);
+      if (identity == null) {
+        log.error("Identity not found in the system :"+identityName);
+        return plan;
+      }
+
+      String userType = identity.getAttribute("userType");
+      String gradeCode = identity.getAttribute("gradeCode");
+
+      //TODO :Need to know the ManagerFlag from HR
+      boolean managerFlag = identity.getManagerStatus();
+
+      if (Util.isNullOrEmpty(userType)) {
+        return plan;
+      }
+
+      plan = new ProvisioningPlan();
+      plan.setIdentity(identity);
+      AccountRequest acctReq = new AccountRequest();
+      acctReq.setOperation(AccountRequest.Operation.Create);
+      acctReq.setApplication("Oracle ERP");
+      if (Util.isNotNullOrEmpty(userType) &amp;&amp; "E".equalsIgnoreCase(userType)) {
+        ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name","Oracle ERP"),Filter.eq("displayValue","AMR Employee")));
+        if (ma != null) {
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest();
+          attrReq.setOperation(ProvisioningPlan.Operation.Set);
+          attrReq.setName("Roles");
+
+          attrReq.setValue(ma.getValue());
+          acctReq.add(attrReq);
+        }
+      }
+
+      if (managerFlag == true) {
+        ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name","Oracle ERP"),Filter.eq("displayValue","AMR Line Manager")));
+        if (ma != null) {
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest();
+          attrReq.setOperation(ProvisioningPlan.Operation.Set);
+          attrReq.setName("Roles");
+
+          attrReq.setValue(ma.getValue());
+          acctReq.add(attrReq);
+        }      }
+      if (Util.isNotNullOrEmpty(gradeCode) &amp;&amp; gradeCodeList.contains(gradeCode)) {
+        ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name","Oracle ERP"),Filter.eq("displayValue","AMR Hiring Manager")));
+        if (ma != null) {
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest();
+          attrReq.setOperation(ProvisioningPlan.Operation.Set);
+          attrReq.setName("Roles");
+
+          attrReq.setValue(ma.getValue());
+          acctReq.add(attrReq);
+        }      
+      }
+
+      plan.add(acctReq);
+      // Setting the erpProvision status to true
+      workflow.put("erpProvisionStatus",true);
+    }
+    log.debug("***************THE PLAN IN buildERPJoinerPlan : "+plan.toXml());
+    return plan;
+  }*/
+
+  public String getUserType(Workflow workflow,String identityName) {
+    log.trace("********Entered getUserType : "+identityName);
+    String userType = null;
+
+    if (Util.isNotNullOrEmpty(identityName)) {
+      Identity identity = context.getObjectByName(Identity.class,identityName);
+      if (identity == null) {
+        log.error("Identity not found in the system :"+identityName);
+        return plan;
+      }
+      userType = identity.getAttribute("peopleGroup");
+      log.trace("********Exiting getUserType With UserType : "+userType);
+    }
+    return userType;
+  }
+
+
+  public void buildAndExecuteWriteBackPlan(Workflow workflow,String identityName) {
+    log.trace("********Entered buildAndExecuteWriteBackPlan : "+identityName);
+    ProvisioningPlan plan = null;
+    Application application = null;
+    Application applicationHCM = null;
+    Identity identity = null;
+
+    if (Util.isNotNullOrEmpty(identityName)) {
+      identity = context.getObjectByName(Identity.class,identityName);
+      if (identity == null) {
+        log.error("Identity not found in the system :"+identityName);
+        return plan;
+      }
+      IdentityService service = new IdentityService(context);
+      application = context.getObjectByName(Application.class,"Active Directory");
+      applicationHCM = context.getObjectByName(Application.class,"Oracle Fusion HCM");
+
+      List adLinks = service.getLinks(identity,application);
+      List hrLinks = service.getLinks(identity,applicationHCM);
+
+      if (adLinks != null &amp;&amp; adLinks.size() == 1 &amp;&amp; hrLinks != null &amp;&amp; hrLinks.size() == 1)  {
+        String mail = adLinks.get(0).getAttribute("mail");
+        String hrWorkerEmail = hrLinks.get(0).getAttribute("WORK_EMAIL");
+        String hrUserName = hrLinks.get(0).getAttribute("USER_NAME");
+        if (Util.isNotNullOrEmpty(mail) &amp;&amp; (Util.isNullOrEmpty(hrWorkerEmail) || Util.isNullOrEmpty(hrUserName))) {
+          plan = new ProvisioningPlan();
+          plan.setIdentity(identity);
+          AccountRequest acctReq = new AccountRequest();
+          acctReq.setOperation(AccountRequest.Operation.Modify);
+          acctReq.setApplication("Oracle Fusion HCM");
+          acctReq.setNativeIdentity(hrLinks.get(0).getNativeIdentity());
+
+          if (Util.isNullOrEmpty(hrWorkerEmail)) {
+            ProvisioningPlan.AttributeRequest attrReqEmail = new ProvisioningPlan.AttributeRequest();
+            attrReqEmail.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqEmail.setName("WORK_EMAIL");
+
+            attrReqEmail.setValue(mail);
+            acctReq.add(attrReqEmail);
+          }
+          if (Util.isNotNullOrEmpty(hrUserName)) {
+            ProvisioningPlan.AttributeRequest attrReqUserName = new ProvisioningPlan.AttributeRequest();
+            attrReqUserName.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqUserName.setName("USER_NAME");
+
+            attrReqUserName.setValue(mail);
+            acctReq.add(attrReqUserName);
+          }
+          AccountRequest acctReq1 = new AccountRequest();
+          acctReq1.setOperation(AccountRequest.Operation.Create);
+          acctReq1.setApplication("Oracle BPM IDCS");
+          acctReq1.add(new AttributeRequest("userName", ProvisioningPlan.Operation.Add, mail));
+          //Commenting the groups as a part of RBAC Golive
+        //  acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "49aa9a4abfa248cfb3763a919e7c7d3b"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "f9c75f0c84834a7c8d0163204c24dc20"));
+         // acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "7d2abd3dc39d42488f1581505e00d9d5"));
+         // acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "775077c9c790458987f68dc0048f4fd8"));
+         // acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "0a6bf450e1604237b51e933b6c2cfca6"));
+          plan.add(acctReq1);
+          
+          plan.add(acctReq);
+        }
+      }
+    }
+    if (plan != null) {
+      log.debug("==============THE PLAN IN buildAndExecuteWriteBackPlan :"+plan.toXml());
+
+      Provisioner provisioner = new Provisioner(context);
+      ProvisioningProject project = provisioner.compile(plan);
+      log.debug("==============THE project IN buildAndExecuteWriteBackPlan :"+project.toXml());
+
+      provisioner.execute(project);
+
+      log.debug("==============THE project IN buildAndExecuteWriteBackPlan :"+provisioner.getProject().toXml());
+
+
+      workflow.put("isWriteBackComplete",true);
+
+    }
+    if (application != null) {
+      context.decache(application);
+    }
+    if (applicationHCM != null) {
+      context.decache(applicationHCM);
+    }
+    if (identity != null) {
+      context.decache(identity);
+    }
+  }
+
+
+  /**********************************************************
+
+       Get Acccess Token method Oracle BPM
+
+  **********************************************************/
+  public String getAccessToken() {
+    String accessToken = "";
+    log.trace("Entered Method getAccessToken : ");
+    try {
+
+      URL url = new URL("https://idcs-fdf3b0329b2c4925a350f9aecd4113a2.identity.oraclecloud.com/oauth2/v1/token");
+      HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+      httpConn.setRequestMethod("POST");
+
+      httpConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+      httpConn.setRequestProperty("Authorization", "Basic Y2E1ZjJmNWNlNWVkNDAzZWJlOWNmNzEzOTUwMjM3NDI6MmU1MDM0ZDItNzcyMS00ZDk4LTgwYWEtNGVmYzcyM2FkOGU1");
+
+      httpConn.setDoOutput(true);
+      OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+      writer.write("grant_type=client_credentials&amp;&amp;scope=urn:opc:idm:__myscopes__");
+      writer.flush();
+      writer.close();
+      httpConn.getOutputStream().close();
+
+      InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+        ? httpConn.getInputStream()
+        : httpConn.getErrorStream();
+      Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+      String response = s.hasNext() ? s.next() : "";
+
+      response= response.replaceAll(":","="); //This is to replace in the response  : with =
+      response = response.replaceAll("\"",""); //This is to replace in the response  " with empty
+      Map responseMap = sailpoint.tools.Util.stringToMap(response); //Converting the response String to Map 
+      if (responseMap != null &amp;&amp; !responseMap.isEmpty()) {
+        accessToken = responseMap.get("access_token");
+      }
+    } catch (Exception e) {
+      String exceptMsg = "Error While Generating the Access Token in Rule [ "+ruleName +" ] :"+ e;
+      log.error(exceptMsg);
+    }
+    log.trace("Exiting Method getAccessToken : "+accessToken);
+    return accessToken;
+  }
+
+
+  /****************************************************************************
+     Single Account Aggregation Method
+
+  ****************************************************************************/
+
+  public Attributes singleAccountAggregation(String applicationName,String accountName) {
+    Attributes attributes = new Attributes();
+    if (Util.isNotNullOrEmpty(applicationName) &amp;&amp; Util.isNotNullOrEmpty(accountName)) {
+
+      Application appObject = context.getObjectByName(Application.class, applicationName);
+      if(null != appObject){
+        String appConnName = appObject.getConnector();  
+        log.debug("Application " + applicationName + " uses connector " + appConnName);  
+
+        Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);  
+        if (null != appConnector) {  
+
+          log.debug("Connector instantiated, calling getObject() to read account details...");  
+
+          ResourceObject rObj = null;  
+          try {  
+            log.debug("test :");
+            rObj = (ResourceObject) appConnector.getObject("account", accountName, null);
+             
+            log.debug("rObj :"+rObj);
+
+            Attributes argMap = new Attributes();  
+            argMap.put("correlateEntitlements",   "true");  
+            argMap.put("noOptimizeReaggregation", "true");
+
+            Aggregator agg = new Aggregator(context, argMap); 
+
+            TaskResult result = agg.aggregate(appObject, rObj);
+            log.debug("aggregation complete.");  
+
+            if (result != null) {
+              attributes = result.getAttributes();
+              attributes.put("account", accountName);
+            }
+          } catch (sailpoint.connector.ObjectNotFoundException onfe) {  
+            log.error(onfe);   
+          }  
+        }
+      }
+
+      log.debug("End - Azure AD Single Account Aggregation");
+    }
+    return attributes;
+
+  }
+  public String getStoreInCharge(String url) {
+    String storeInCharge = "";
+
+
+    try {
+      URL url1 = new URL(url);
+      HttpURLConnection httpConn = (HttpURLConnection) url1.openConnection();
+      httpConn.setRequestMethod("GET");
+
+      httpConn.setRequestProperty("Authorization", "Basic YW1zLmFlLmlhbTpFI2trZXIjIzIzRiNWQA==");
+      InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+        ? httpConn.getInputStream()
+        : httpConn.getErrorStream();
+      Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+      String response = s.hasNext() ? s.next() : "";
+      
+      if (response != null) {
+
+        JSONObject jObject  = new JSONObject(response);
+        if (jObject != null) {
+          JSONArray itemjArray = jObject.getJSONArray("items");
+          if (itemjArray != null &amp;&amp; itemjArray.get(0) != null &amp;&amp; itemjArray.get(0).get("assignments") != null &amp;&amp; itemjArray.get(0).get("assignments").get(0) != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF") != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0) != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0).get("StoreInCharge")!= null) {
+            storeInCharge = itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0).get("StoreInCharge").toString();
+          }
+        }
+
+      }
+    } catch (Exception e) {
+      String exceptMsg = "Error While Uing getStoreInCharge method in Rule [ "+ruleName +" ] :"+ e;
+      log.error(exceptMsg);
+    }
+
+    return storeInCharge;
+  }
+  public Set getKeys(Map map, String str){
+    Set keys = new HashSet();
+    for(Map.Entry entry : map.entrySet()){
+      if(entry.getValue() != null &amp;&amp; entry.getValue().equals(str)){
+        keys.add(entry.getKey());
+      }
+    }
+    return keys;
+  }
+  public void executeWriteBackPlanForMover(Workflow workflow,String identityName) {
+    log.trace("********Entered executeWriteBackPlanForMover : "+identityName);
+    
+    ProvisioningPlan plan = null;
+    Application application = null;
+    Application applicationHCM = null;
+    Identity identity = null;
+
+    if (Util.isNotNullOrEmpty(identityName)) {
+      identity = context.getObjectByName(Identity.class,identityName);
+      if (identity == null) {
+        log.error("Identity not found in the system :"+identityName);
+        
+        return plan;
+      }
+      IdentityService service = new IdentityService(context);
+      application = context.getObjectByName(Application.class,"Active Directory");
+      applicationHCM = context.getObjectByName(Application.class,"Oracle Fusion HCM");
+
+      List adLinks = service.getLinks(identity,application);
+      List hrLinks = service.getLinks(identity,applicationHCM);
+
+      if (adLinks != null &amp;&amp; adLinks.size() == 1 &amp;&amp; hrLinks != null &amp;&amp; hrLinks.size() == 1)  {
+        
+        String mail = adLinks.get(0).getAttribute("mail");
+        
+        String hrWorkerEmail = hrLinks.get(0).getAttribute("WORK_EMAIL");
+        String hrUserName = hrLinks.get(0).getAttribute("USER_NAME");
+        
+          plan = new ProvisioningPlan();
+          plan.setIdentity(identity);
+          AccountRequest acctReq = new AccountRequest();
+          acctReq.setOperation(AccountRequest.Operation.Modify);
+          acctReq.setApplication("Oracle Fusion HCM");
+          acctReq.setNativeIdentity(hrLinks.get(0).getNativeIdentity());
+
+          
+            ProvisioningPlan.AttributeRequest attrReqEmail = new ProvisioningPlan.AttributeRequest();
+            attrReqEmail.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqEmail.setName("WORK_EMAIL");
+
+            attrReqEmail.setValue(mail);
+            acctReq.add(attrReqEmail);
+         
+            ProvisioningPlan.AttributeRequest attrReqUserName = new ProvisioningPlan.AttributeRequest();
+            attrReqUserName.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqUserName.setName("USER_NAME");
+
+            attrReqUserName.setValue(mail);
+            acctReq.add(attrReqUserName);
+       
+          AccountRequest acctReq1 = new AccountRequest();
+          acctReq1.setOperation(AccountRequest.Operation.Create);
+          acctReq1.setApplication("Oracle BPM IDCS");
+          acctReq1.add(new AttributeRequest("userName", ProvisioningPlan.Operation.Add, mail));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-007"));
+          acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "41f9c1dcfca545318c03ffad823f74fe"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-019"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-024"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-075"));
+          plan.add(acctReq);
+          //plan.add(acctReq1);
+       // }
+      } else if (adLinks != null &amp;&amp; hrLinks != null &amp;&amp; hrLinks.size() == 1)  {
+       
+        String department = hrLinks.get(0).getAttribute("Department_Name");
+        QueryOptions qo=new QueryOptions();
+        qo.setCloneResults(true);
+        String hql = "FROM Identity i, Link l WHERE i.id = l.identity.id AND l.application.name = 'Active Directory' AND l.attributes LIKE '%&lt;entry key=\"department\" value=\""+department+"\"/&gt;%' AND i.inactive = 0 AND l.attributes NOT LIKE '%&lt;entry key=\"IIQDisabled\"&gt;%' ";
+        Iterator it=   context.search(hql, null, qo);
+        
+        Link l=null;
+        while(it.hasNext()) {
+
+        Object [] obj = it.next();
+        l = obj[1];
+               
+        }
+        String mail = null;
+        if(l != null){
+        String mail = l.getAttribute("mail");
+       
+        String hrWorkerEmail = hrLinks.get(0).getAttribute("WORK_EMAIL");
+        String hrUserName = hrLinks.get(0).getAttribute("USER_NAME");
+          plan = new ProvisioningPlan();
+          plan.setIdentity(identity);
+          AccountRequest acctReq = new AccountRequest();
+          acctReq.setOperation(AccountRequest.Operation.Modify);
+          acctReq.setApplication("Oracle Fusion HCM");
+          acctReq.setNativeIdentity(hrLinks.get(0).getNativeIdentity());
+
+          
+            ProvisioningPlan.AttributeRequest attrReqEmail = new ProvisioningPlan.AttributeRequest();
+            attrReqEmail.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqEmail.setName("WORK_EMAIL");
+
+            attrReqEmail.setValue(mail);
+            acctReq.add(attrReqEmail);
+         
+            ProvisioningPlan.AttributeRequest attrReqUserName = new ProvisioningPlan.AttributeRequest();
+            attrReqUserName.setOperation(ProvisioningPlan.Operation.Add);
+            attrReqUserName.setName("USER_NAME");
+
+            attrReqUserName.setValue(mail);
+            acctReq.add(attrReqUserName);
+          
+          AccountRequest acctReq1 = new AccountRequest();
+          acctReq1.setOperation(AccountRequest.Operation.Create);
+          acctReq1.setApplication("Oracle BPM IDCS");
+          acctReq1.add(new AttributeRequest("userName", ProvisioningPlan.Operation.Add, mail));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-007"));
+          acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "41f9c1dcfca545318c03ffad823f74fe"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-019"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-024"));
+          //acctReq1.add(new AttributeRequest("Group", ProvisioningPlan.Operation.Add, "AM-P-075"));
+          plan.add(acctReq);
+          //plan.add(acctReq1);
+        }
+      }
+    }
+    if (plan != null) {
+      
+      Provisioner provisioner = new Provisioner(context);
+      ProvisioningProject project = provisioner.compile(plan);
+      
+      provisioner.execute(project);
+
+      
+      workflow.put("isWriteBackComplete",true);
+
+    }
+    if (application != null) {
+      context.decache(application);
+    }
+    if (applicationHCM != null) {
+      context.decache(applicationHCM);
+    }
+    if (identity != null) {
+      context.decache(identity);
+    }
+  }
+  public String bpmDatabaseApiCall(ProvisioningPlan plan,Application application){
+    System.out.println("Inside the db api call");
+  StringBuilder sb = new StringBuilder();
+  boolean hasEntRequest = false;
+   boolean hasdbGroup = false;
+
+  if (plan != null) {
+    
+    Identity identity = plan.getIdentity();
+
+    if (identity == null) identity = context.getObjectByName(Identity.class,plan.getNativeIdentity());
+
+    List acctReqs = plan.getAccountRequests();
+    if (Util.nullSafeSize(acctReqs) &gt; 0) {
+      for (AccountRequest acctReq : acctReqs) {
+        //if (acctReq != null &amp;&amp; acctReq.getOperation() != null &amp;&amp; acctReq.getOperation().toString().equals("Create")) {
+          if (acctReq != null ) {
+          List attrReqs = acctReq.getAttributeRequests();
+          if (Util.nullSafeSize(attrReqs) &gt; 0) {
+            for (AttributeRequest attrReq : attrReqs) {
+              if (attrReq != null &amp;&amp; attrReq.getName() != null &amp;&amp; attrReq.getName().equals("Group")) {
+                if (!hasEntRequest) {
+                  sb.append("{\"emailAddress\":\""+identity.getEmail()+"\",\"accessDetailsTable\":[");
+                }
+                System.out.println("body in rule "+sb.toString());
+                String action = null;
+                
+                if (attrReq.getOp() != null &amp;&amp; (attrReq.getOp().toString().equals("Add") || attrReq.getOp().toString().equals("Set"))) {
+                  action = "ADD";
+                } else {
+                  action = "REMOVE";
+                }
+                 if (attrReq.getValue() instanceof String) {
+                   String role = attrReq.getValue();
+                   String displayValue = null;
+                    ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name",application.getName()),Filter.eq("value",role)));
+                    if (ma != null) {
+                      displayValue = ma.getAttribute("Display Name");
+                      context.decache(ma);
+                    }
+                   if(displayValue != null &amp;&amp; displayValue.startsWith("AM-P")){
+                    sb.append("{\"system\": \"BPM\",    \"approveReject\": \"APPROVE\",    \"roles\": \""+displayValue+"\",    \"action\": \""+action+"\"},");
+                     hasdbGroup = true;
+                   }
+                  } else if (attrReq.getValue() instanceof List) {
+                    for(String role : attrReq.getValue()) {
+                      String displayValue = null;
+                    ManagedAttribute ma = context.getUniqueObject(ManagedAttribute.class,Filter.and(Filter.eq("application.name",application.getName()),Filter.eq("value",role)));
+                    if (ma != null) {
+                      displayValue = ma.getAttribute("Display Name");
+                      context.decache(ma);
+                    }
+                      if(displayValue != null &amp;&amp; displayValue.startsWith("AM-P")){
+                    sb.append("{\"system\": \"BPM\",    \"approveReject\": \"APPROVE\",    \"roles\": \""+displayValue+"\",    \"action\": \""+action+"\"},");
+                        hasdbGroup = true;
+                      }
+                    }
+                  }
+                hasEntRequest = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (Util.isNotNullOrEmpty(sb.toString()) &amp;&amp; hasdbGroup) {
+    sb.deleteCharAt(sb.length()-1);
+    sb.append("]}");
+    //Calling a API
+    URL url = new URL("https://ar-medxb-prod-bpm-oic-axcajhzysxjs-dx.integration.ocp.oraclecloud.com:443/ic/api/integration/v1/flows/rest/AM_USER_ACCESS_REQUEST/1.0/userRequest");
+    
+    HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+    httpConn.setRequestMethod("POST");
+
+    httpConn.setRequestProperty("Authorization", "Basic aWFtX2JwbV9hcGlfdXNlcjpJQU1CI3BtQGgzMTEjNA==");
+    httpConn.setRequestProperty("Content-Type", "application/json");
+
+    httpConn.setDoOutput(true);
+    OutputStreamWriter writer = new OutputStreamWriter(httpConn.getOutputStream());
+    writer.write(sb.toString());
+    writer.flush();
+    writer.close();
+    httpConn.getOutputStream().close();
+
+    InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+      ? httpConn.getInputStream()
+      : httpConn.getErrorStream();
+    Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+    String response = s.hasNext() ? s.next() : "";
+    return response;
+  }
+    System.out.println("Exiting the db api call");
+  return null;
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

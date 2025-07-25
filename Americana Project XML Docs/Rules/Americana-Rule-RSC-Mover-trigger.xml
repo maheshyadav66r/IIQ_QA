@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-RSC-Mover-trigger" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+  import sailpoint.object.Custom;
+  import sailpoint.object.Identity;
+  import sailpoint.api.*;
+
+  boolean result = false;
+  
+  if(previousIdentity != null &amp;&amp; newIdentity != null){
+  String peopleGroup = newIdentity.getAttribute("peopleGroup");
+  
+  String oldPosition = previousIdentity.getAttribute("PositionName");
+  
+  String newPosition = newIdentity.getAttribute("PositionName");
+  
+  String oldDepartment = previousIdentity.getAttribute("department");
+  String newDepartment = newIdentity.getAttribute("department");
+  String oldGradeCode = previousIdentity.getAttribute("gradeCode");
+  String newGradeCode = newIdentity.getAttribute("gradeCode");
+
+  if ((peopleGroup != null &amp;&amp; peopleGroup.contains("RSC")) &amp;&amp; ((oldPosition != null &amp;&amp; !(oldPosition.equalsIgnoreCase(newPosition))) || (oldDepartment != null &amp;&amp; !(oldDepartment.equalsIgnoreCase(newDepartment)))))
+    result = true;
+  else if ((peopleGroup != null &amp;&amp; peopleGroup.contains("RSC")) &amp;&amp; (oldPosition != null &amp;&amp; !(oldPosition.equalsIgnoreCase(newPosition)))) 
+    result = true;
+    else if ((peopleGroup != null &amp;&amp; peopleGroup.contains("RSC")) &amp;&amp; (oldGradeCode != null &amp;&amp; !(oldGradeCode.equalsIgnoreCase(newGradeCode))))
+    result = true;
+   }
+    return result;</Source>
+</Rule>
+
+</sailpoint>

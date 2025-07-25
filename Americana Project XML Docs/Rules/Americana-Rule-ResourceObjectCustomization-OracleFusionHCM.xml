@@ -1,0 +1,218 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-ResourceObjectCustomization-OracleFusionHCM" type="ResourceObjectCustomization">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="Americana-RuleLibrary-Attribute" />
+  </ReferencedRules>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.tools.Util;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.api.Provisioner;
+
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Rule;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningProject;
+
+  import sailpoint.object.Workflow;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import sailpoint.object.ResourceObject;
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailFileAttachment;
+  import java.io.File;
+  import sailpoint.object.ManagedAttribute;
+
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.ResourceObject; 
+  import sailpoint.object.TaskResult; 
+  import sailpoint.api.Aggregator;
+  import org.json.JSONException;
+  import org.json.JSONObject;
+  import org.json.JSONArray;
+
+  {
+
+/*
+    public String getStoreInCharge(String url) {
+      String storeInCharge = "";
+
+
+      try {
+        URL url1 = new URL(url);
+        HttpURLConnection httpConn = (HttpURLConnection) url1.openConnection();
+        httpConn.setRequestMethod("GET");
+
+        httpConn.setRequestProperty("Authorization", "Basic YW1zLmFlLmlhbTpFI2trZXIjIzIzRiNWQA==");
+        InputStream responseStream = httpConn.getResponseCode() / 100 == 2
+          ? httpConn.getInputStream()
+          : httpConn.getErrorStream();
+        Scanner s = new Scanner(responseStream).useDelimiter("\\A");
+        String response = s.hasNext() ? s.next() : "";
+
+        if (response != null) {
+
+          JSONObject jObject  = new JSONObject(response);
+          if (jObject != null) {
+            JSONArray itemjArray = jObject.getJSONArray("items");
+            if (itemjArray != null &amp;&amp; itemjArray.get(0) != null &amp;&amp; itemjArray.get(0).get("assignments") != null &amp;&amp; itemjArray.get(0).get("assignments").get(0) != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF") != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0) != null &amp;&amp; itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0).get("StoreInCharge")!= null) {
+              storeInCharge = itemjArray.get(0).get("assignments").get(0).get("assignmentDFF").get(0).get("StoreInCharge").toString();
+            }
+          }
+
+        }
+      } catch (Exception e) {
+        String exceptMsg = "Error While Uing getStoreInCharge method in Rule [ "+ruleName +" ] :"+ e;
+        log.error(exceptMsg);
+      }
+
+      return storeInCharge;
+    }
+*/
+    
+    String country = object.getAttribute("LegislationCode__c");
+    String personNumber = object.getAttribute("PERSON_NUMBER");
+    String peopleGroup = object.getAttribute("People_Group");
+    String storeInCharge = null;
+
+
+
+    //Country Filter only allow AE and QA
+    if(Util.isNullOrEmpty(country) || !(("AE".equalsIgnoreCase(country) || "QA".equalsIgnoreCase(country) || "KW".equalsIgnoreCase(country) || "IN".equalsIgnoreCase(country) || "MA".equalsIgnoreCase(country) || "OM".equalsIgnoreCase(country)  || "BH".equalsIgnoreCase(country) || "LB".equalsIgnoreCase(country) || "SA".equalsIgnoreCase(country) || "KZ".equalsIgnoreCase(country) || "IQ".equalsIgnoreCase(country) || "EG".equalsIgnoreCase(country) || "JO".equalsIgnoreCase(country))))
+      return null;
+    
+//    if(Util.isNullOrEmpty(country) || !(("EG".equalsIgnoreCase(country) || "JO".equalsIgnoreCase(country))))
+//      return null;
+    
+    if (Util.isNotNullOrEmpty(peopleGroup) &amp;&amp; !peopleGroup.contains("RSC")) {
+
+      String url = "https://fa-eucb-saasfaprod1.fa.ocs.oraclecloud.com:443/hcmRestApi/resources/11.13.18.05/emps?expand=assignments&amp;fields=assignments:assignmentDFF&amp;onlyData=true&amp;q=PersonNumber="+personNumber;
+
+      storeInCharge = getStoreInCharge(url);
+
+
+      if (storeInCharge != null){
+        if(storeInCharge.equalsIgnoreCase("null")){
+
+          object.put("storeInCharge","N");
+        }else{
+          object.put("storeInCharge",storeInCharge);
+        }
+      }
+    } else {
+      object.put("storeInCharge","N");
+      storeInCharge = "N";
+    }
+    
+    Identity identity = context.getObjectByName(Identity.class,personNumber);
+   // if(Util.isNotNullOrEmpty(peopleGroup) &amp;&amp; peopleGroup.contains("RSC") &amp;&amp; identity != null){
+     if(identity != null){
+      return object;
+    }
+if(object.get("storeInCharge") != null &amp;&amp; object.get("storeInCharge").equalsIgnoreCase("N") &amp;&amp; Util.isNotNullOrEmpty(peopleGroup) &amp;&amp; peopleGroup.contains("Store Level")){
+      return null;
+}
+
+    //filter for USER_NAME if username starts with XXXXX (X is any 0-9 ch)
+    String userName = object.getAttribute("USER_NAME");
+    Boolean skipAccount = true;
+    if(Util.isNotNullOrEmpty(userName)){
+      for(int i = 0; i &lt; 5 ; i++) {
+
+        if( i &lt; userName.length()) {
+          if(Character.isAlphabetic(userName.charAt(i))) {
+            skipAccount = false;
+            break;
+          }
+        }else {
+          break;
+        }
+      }
+    }else{
+      return object;
+    }
+if(userName != null &amp;&amp; Util.isNotNullOrEmpty(peopleGroup) &amp;&amp; peopleGroup.contains("Para-Professionals") &amp;&amp; (userName.startsWith("americana") || !userName.contains("@americana-food.com") || !skipAccount) ){
+      return null;
+    }
+
+    if(skipAccount &amp;&amp; storeInCharge != null &amp;&amp; !storeInCharge.equalsIgnoreCase("Y"))
+      return null;
+
+    return object;
+  }</Source>
+</Rule>
+
+</sailpoint>

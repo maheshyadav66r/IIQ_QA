@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana_Custom_PowerBI_Brands">
+  <Attributes>
+    <Map>
+      <entry key="Bahrain">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Country">
+        <value>
+          <List>
+            <String>United Arab Emirates</String>
+            <String>Iraq</String>
+            <String>Bahrain</String>
+            <String>Saudi Arabia</String>
+            <String>Iran</String>
+            <String>Morocco</String>
+            <String>Jordan</String>
+            <String>Lebanon</String>
+            <String>Qatar</String>
+            <String>Egypt</String>
+            <String>Kuwait</String>
+            <String>Oman</String>
+            <String>Kazakhstan</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="Egypt">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Bakery</String>
+                  <String>Samady</String>
+                  <String>Fusion</String>
+                  <String>Krispy Kreme</String>
+                  <String>Baskin Robbins</String>
+                  <String>Fish Market</String>
+                  <String>Chicken Tikka</String>
+                  <String>Cafeteria</String>
+                  <String>Maestro</String>
+                  <String>Grand Cafe</String>
+                  <String>Hardees</String>
+                  <String>Express</String>
+                  <String>Costa Coffee</String>
+                  <String>Pizza Hut</String>
+                  <String>TGI Fridays</String>
+                  <String>KFC</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Iran">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>CARAVANS</String>
+                  <String>CATERING</String>
+                  <String>Star Cafe</String>
+                  <String>Star Fried Chicken</String>
+                  <String>Super Star</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Iraq">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Pizza Hut</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Jordan">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Kazakhstan">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Pizza Hut</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Kuwait">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Americana</String>
+                  <String>Baskin Robbins</String>
+                  <String>Chicken Tikka</String>
+                  <String>Cloud Kitchen</String>
+                  <String>Felfela</String>
+                  <String>Fish Market</String>
+                  <String>Fusion</String>
+                  <String>Grand Cafe</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Olive Garden</String>
+                  <String>Peets Coffee</String>
+                  <String>Red Lobster</String>
+                  <String>Samady</String>
+                  <String>Sbarro</String>
+                  <String>Signor Sassi</String>
+                  <String>TGI Fridays</String>
+                  <String>The Counter</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Lebanon">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Baskin Robbins</String>
+                  <String>Costa Coffee</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Signor Sassi</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Morocco">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Grand Cafe</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Oman">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Qatar">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Cafeteria</String>
+                  <String>Hardees</String>
+                  <String>KFC</String>
+                  <String>Krispy Kreme</String>
+                  <String>Long Horn</String>
+                  <String>Red Lobster</String>
+                  <String>TGI Fridays</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="Saudi Arabia">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Cloud Kitchen</String>
+                  <String>Peets Coffee</String>
+                  <String>Krispy Kreme</String>
+                  <String>Chicken Tikka</String>
+                  <String>Red Lobster</String>
+                  <String>Hardees</String>
+                  <String>Pizza Hut</String>
+                  <String>Long Horn</String>
+                  <String>TGI Fridays</String>
+                  <String>KFC</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+      <entry key="United Arab Emirates">
+        <value>
+          <Map>
+            <entry key="Brands">
+              <value>
+                <List>
+                  <String>Carpo</String>
+                  <String>Pavilion</String>
+                  <String>Cloud Kitchen</String>
+                  <String>Peets Coffee</String>
+                  <String>Krispy Kreme</String>
+                  <String>Chicken Tikka</String>
+                  <String>Red Lobster</String>
+                  <String>Cafeteria</String>
+                  <String>Hardees</String>
+                  <String>Pizza Hut</String>
+                  <String>Long Horn</String>
+                  <String>TGI Fridays</String>
+                  <String>Olive Garden</String>
+                  <String>The Counter</String>
+                  <String>KFC</String>
+                  <String>Wimpy</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

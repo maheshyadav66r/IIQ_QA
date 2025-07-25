@@ -1,0 +1,221 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_Validate_accountExpiry_send_Email_Reminders_Rule">
+  <Source>
+           
+  
+  
+  
+  
+ import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+
+ Logger log=Logger.getLogger("customRule4");
+ 
+  
+  
+   Filter f = Filter.eq("correlated",true);
+
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+  for(Identity id :ids)
+  {
+    
+    
+     String idName=id.getName();
+  log.error("idName :"+idName);
+    
+  // if(idName.equalsIgnoreCase("test abbas(Datalife)")||idName.equalsIgnoreCase("test farana(Datalife)")||idName.equalsIgnoreCase("test soumya(ServiceMax)")){
+   if(id!=null){
+      
+      
+       // Identity id=context.getObjectByName(Identity.class,idName);
+
+    List links=id.getLinks();
+    
+    for(Link link:links)
+      
+    {
+      
+      //Boolean admin=link.getAttribute("adminaa");
+      
+    /*  if(admin)
+      {
+      }*/
+      
+    if(link.getApplicationName().equalsIgnoreCase("AD Contractors")||link.getApplicationName().equalsIgnoreCase("Active Directory"))
+    {
+      
+      if(!link.isDisabled()){
+    
+    String status="Activelink";  
+      if(link.isDisabled())
+      {
+      status="inactiveLink";  
+        
+        
+      }
+    String accountExpires=id.getAttribute("accountExpires");
+    
+    String firstName=id.getAttribute("firstname");
+        String lastname=id.getAttribute("lastname");
+        
+        Identity manager=id.getManager();
+      	String  managerEmail="";
+      if(manager!=null)
+         
+      {
+    managerEmail=manager.getAttribute("email");
+      }
+		String accountName=id.getAttribute("adLogOnName");
+        	String idemail=id.getAttribute("email");
+
+ 
+
+if(accountExpires!=null)
+{
+
+      // List links=newIdentity.getLinks();
+
+
+  if( !accountExpires.equalsIgnoreCase("never") &amp;&amp; !accountExpires.isEmpty() ){
+
+//return accountExpires;
+
+ //String dateString = "07/01/2024 12:00:00 AM";
+  
+     
+    Date currentDate=new Date();
+    SimpleDateFormat dateFormat;
+   //  log.info("currentDate "+currentDate);
+        /***********************************************SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");*********************************/
+    /********************************changing to yyyy-MM-dd format, after endDate and accountExpires mapping, leaver trigger was failing as endDate is yyyy-MM-dd format***************************/
+    if(link.getApplicationName().equalsIgnoreCase("Active Directory")){
+      dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+    }  
+    else{
+      dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    }
+    
+    log.error("accountExpires :"+accountExpires);
+        Date expirydate = dateFormat.parse(accountExpires);
+    // log.info("expirydate "+expirydate);
+     log.error("expirydate :"+expirydate);
+    	Long accountexpiry = expirydate.getTime();
+    
+    Long current=currentDate.getTime();
+    
+	  diffInDays = (int) ((accountexpiry-current) / (1000*60*60*24)) ;	
+      log.error(idName);
+	 log.info("diffInDays "+diffInDays);
+    
+   
+   
+     List accountExpires30 = new ArrayList();
+     List accountExpires15 = new ArrayList(); List accountExpires5 = new ArrayList();
+    String info="";
+    
+    if(diffInDays==29){
+    log.error("inside workflow difference in days is 30");
+      info=idName +","+accountExpires+","+status+","+manager+","+managerEmail;
+           accountExpires30.add(info);
+      
+    if (!accountExpires30.isEmpty()) {
+     
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\may22accountExpires30.csv", true);
+        for (String info : accountExpires30) {
+          return info;
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+	
+        
+    }
+	if(diffInDays==14)
+{
+ log.error("inside workflow difference in days is 15");
+    info=idName +","+accountExpires+","+status+","+manager+","+managerEmail;
+       accountExpires15.add(info);
+     if (!accountExpires15.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\may22accountExpires15.csv", true);
+        for (String info : accountExpires15) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+
+}	
+        
+        if(diffInDays==4)
+{
+ log.error("inside workflow difference in days is 5");
+         info=idName +","+accountExpires+","+status+","+manager+","+managerEmail;
+       accountExpires5.add(info);
+          
+           if (!accountExpires5.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\may22accountExpires5.csv", true);
+        for (String info : accountExpires5) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+
+
+}	
+}
+
+		
+
+
+
+
+     
+    }
+	
+    }
+    } 
+      
+    }
+   }
+  }
+  
+  
+  
+  
+  
+
+       
+</Source>
+</Rule>
+
+</sailpoint>

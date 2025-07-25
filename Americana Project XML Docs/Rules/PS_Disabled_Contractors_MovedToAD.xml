@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_Disabled_Contractors_MovedToAD">
+  <Source>
+  import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+ 
+Logger log=Logger.getLogger("customRule4");
+ 
+  
+ List identitiesWithContractorAD = new ArrayList();
+ 
+  
+
+
+// Filter f = Filter.eq("correlated",true);
+ 
+// QueryOptions qo= new QueryOptions();
+// qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+  for(Identity id :ids)
+  {
+
+     String idName=id.getName();
+     String idemail=id.getAttribute("email");
+     String userType=id.getAttribute("userType");
+
+    //if(idName.equalsIgnoreCase("Nirmal Chitlangi(Paramount)")){
+    if(id!=null){
+   if(userType.equalsIgnoreCase("Contractor")||userType.equalsIgnoreCase("Interim")||userType.equalsIgnoreCase("General Use")){
+
+       // Identity id=context.getObjectByName(Identity.class,idName);
+ 
+    List links=id.getLinks();
+    for(Link link:links)
+    {
+
+    if(link.getApplicationName().equalsIgnoreCase("Active Directory"))
+    {
+      Boolean linkstatus=link.isDisabled();
+
+      if(linkstatus)
+      {
+    String linkname=link.getApplicationName();
+    String linkdn=link.getAttribute("distinguishedName");
+        String accountExpires=link.getAttribute("accountExpires");
+    String firstName=id.getAttribute("firstname");
+        String lastname=id.getAttribute("lastname");
+         String userType=id.getAttribute("userType");
+        Identity manager=id.getManager();
+      	log.error("manager :"+manager);
+      String  managerEmail="";
+      if(manager!=null){
+         managerEmail=manager.getAttribute("email");
+      }
+
+        	String idemail=id.getAttribute("email");
+      log.error("idemail "+idemail);
+
+ 
+//String info=firstName+","+lastname+","+userType+","+accountExpires+","+"\""+linkdn+"\"";
+        String info=firstName+","+lastname+","+userType+","+accountExpires;
+            identitiesWithContractorAD.add(info);
+
+
+
+    }
+    }
+}
+ 
+    }
+  }
+    if (!identitiesWithContractorAD.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\disabledContractrs.csv", true);
+        for (String info : identitiesWithContractorAD) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+  }
+
+
+ 
+ 
+</Source>
+</Rule>
+
+</sailpoint>

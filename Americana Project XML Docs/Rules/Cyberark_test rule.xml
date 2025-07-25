@@ -1,0 +1,99 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Cyberark_test rule">
+  <Description>This rule is run when the certification either enters or leaves a phase.</Description>
+  <Signature returnType="void">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="certification">
+        <Description>
+          The sailpoint.object.Certification being certified.
+        </Description>
+      </Argument>
+      <Argument name="certificationItem">
+        <Description>
+          The sailpoint.object.CertificationItem that is being certified.
+        </Description>
+      </Argument>
+      <Argument name="previousPhase">
+        <Description>
+          Certification.Phase (may be null) that is the previous phase.
+        </Description>
+      </Argument>
+      <Argument name="nextPhase">
+        <Description>
+          Certification.Phase (may be null) that is the next phase.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>
+   import sailpoint.tools.Util;
+  import sailpoint.object.Application;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.CertificationEntity;
+  import sailpoint.object.CertificationItem;
+  import sailpoint.object.Certification;
+  import sailpoint.object.Identity;
+  import sailpoint.object.CertificationAction;
+  
+    import sailpoint.object.CertificationLink;
+    import sailpoint.object.EntitlementSnapshot;
+   
+    import sailpoint.object.IdentityHistoryItem;
+   
+
+ 
+         
+          EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "EmailTemplate- CyberArk Accees Review Revocation");
+
+         
+
+          EmailOptions emailOptions = new EmailOptions();
+
+
+             
+          
+          Map args = new HashMap();
+          args.put("identityName","Test demo");
+          args.put("item","Access Deprovisioning");
+          args.put("displayName","Test demo");
+          args.put("employeeNumber","123");
+          args.put("PositionName","text 1");
+          args.put("department","Security");
+         // args.put("startDate",startDate);
+         // args.put("endDate",endDate);
+          args.put("email","testdemo@americana-food.com");
+          args.put("manager","Shibu Perumpallil Kurian");
+          args.put("EntitlementDisplayname","Safe Permission");
+         args.put("TypeofEntitlement","Del_test1");
+           args.put("Permission","deleteFolders");
+
+          emailOptions.setVariables(args);
+        
+         // emailOptions.setTo("servicedesk@americana-food.com");
+    //emailOptions.setTo("binu.v@paramountassure.com");
+        //emailOptions.setCc("skurian@americana-food.com");
+
+
+          context.sendEmailNotification(emailTemplate,emailOptions);
+   
+   
+                      
+                    
+  
+  </Source>
+</Rule>
+
+</sailpoint>

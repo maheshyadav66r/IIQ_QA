@@ -1,0 +1,189 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-CreateSA">
+  <Source>
+ import sailpoint.object.TaskResult;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  
+
+  import java.util.*;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.sql.*;
+  import java.io.*;
+
+  	import sailpoint.object.Identity;
+    import java.util.*;
+    import java.util.Date;
+    import java.text.DateFormat;
+    import java.text.SimpleDateFormat;
+  
+   import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+
+        import sailpoint.api.PasswordGenerator;
+        import sailpoint.object.PasswordPolicy;
+        import sailpoint.tools.Util;
+    
+	//	String displayName = null;
+ 
+ /*         
+     
+ Identity id=new Identity();
+
+ 	id.setFirstname("amd.gl");
+    id.setLastname("jradhakrishnan");
+  id.setAttribute("country","AE");
+  	Identity manager = context.getObjectByName(Identity.class,"39930");
+ 
+  id.setManager(managerId);  
+ 
+ id.setDisplayName("amd.gl.Jayas");
+   id.setName("amd.gl.Jayas");
+    id.setAttribute("adLogOnName","amd.gl.Jayas"); 
+    
+        
+    
+                
+		    context.saveObject(id);
+        context.commitTransaction();
+   
+*/
+
+/*
+  	String policyName = "Americana-AD-PasswordPolicy";
+        PasswordPolicy policyAD = context.getObjectByName(PasswordPolicy.class, policyName);
+        String   password = new PasswordGenerator(context).generatePassword(policyAD);
+        
+        policyAD = null;
+    Identity identityProvAct = null;		
+               
+        identityProvAct = context.getObjectByName(Identity.class, "amd.gl.Jayas"); 
+  
+  ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(identityProvAct);    
+     
+        AccountRequest accountRequestProv = new AccountRequest(AccountRequest.Operation.Create, "Active Directory", null, "CN=amd.gl.Jayas,OU=AMD ADMINS,OU=Americana Office,DC=Americana,DC=global");
+		
+		
+		    accountRequestProv.add(new AttributeRequest("givenName", ProvisioningPlan.Operation.Add, "amd.gl"));
+       accountRequestProv.add(new AttributeRequest("sn", ProvisioningPlan.Operation.Add, "jradhakrishnan"));
+      accountRequestProv.add(new AttributeRequest("sAMAccountName", ProvisioningPlan.Operation.Set, "amd.gl.Jayas"));        
+        accountRequestProv.add(new AttributeRequest("password", ProvisioningPlan.Operation.Add,password));
+       
+        	accountRequestProv.add(new AttributeRequest("displayName", ProvisioningPlan.Operation.Add,  "amd.gl jradhakrishnan")); 
+  	accountRequestProv.add(new AttributeRequest("manager", ProvisioningPlan.Operation.Add,  "CN=Absel Kamaludeen,OU=MIS,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));   
+        	accountRequestProv.add(new AttributeRequest("title", ProvisioningPlan.Operation.Add,  "Domain Account -Generic"));   
+  	accountRequestProv.add(new AttributeRequest("department", ProvisioningPlan.Operation.Add,  "QA"));   
+  	
+  
+       accountRequestProv.add(new AttributeRequest("description", ProvisioningPlan.Operation.Add, "She has sprinklr admin access and need to login sprinklr via PAM only.,Account For an Application(s)"));  
+      accountRequestProv.add(new AttributeRequest("mail", ProvisioningPlan.Operation.Set, "amd.gl.Jayas@americana-food.com"));
+     accountRequestProv.add(new AttributeRequest("userPrincipalName", ProvisioningPlan.Operation.Set, "amd.gl.Jayas@americana-food.com" ));
+        
+        accountRequestProv.add(new AttributeRequest("distinguishedName", ProvisioningPlan.Operation.Set, "CN=amd.gl.Jayas,OU=AMD ADMINS,OU=Americana Office,DC=Americana,DC=global"));
+		
+                          
+        accountRequestProv.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=IAMSingleServerAccess,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));	 
+                  
+        plan.add(accountRequestProv);
+  
+ 
+    Provisioner pv = new Provisioner(context);
+    pv.setNoCreateTemplates(true);
+    pv.execute(plan);
+*/
+/*
+ import java.util.Date;
+
+        import sailpoint.api.RequestManager;
+        import sailpoint.object.Attributes;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Request;
+        import sailpoint.object.RequestDefinition;
+        import sailpoint.object.Workflow;
+        import sailpoint.tools.GeneralException;
+        import sailpoint.workflow.StandardWorkflowHandler;
+
+        import org.apache.log4j.Logger;
+        import org.apache.log4j.Level;
+
+
+String identityName="ams.gl.FB2Infosys";
+  String requesterId="0000011639";
+        Logger logger = Logger.getLogger("Americana.Workflow.LifecycleEvent.Joiner.Step.ScheduleAzureADLicenseAssignmentWorkflow");
+        logger.setLevel(Level.DEBUG);
+
+        logger.debug("Start Step.ScheduleAzureADLicenseAssignmentWorkflow");
+
+
+        String workflowName = "Americana-Workflow-AzureADLicenseAssignment";
+        String caseName     = "Run '" + workflowName + "' for: " + identityName;
+        String requesterId  = "spadmin";
+
+        Workflow eventWorkflow = context.getObject(Workflow.class, workflowName);
+        if (null == eventWorkflow) {
+        logger.error("Could not find a workflow named: " + workflowName);
+        throw new GeneralException("Invalid worklfow: " + workflowName);
+        }
+
+        // Simulate the request being submitted by a user. Default: spadmin.
+        Identity id = context.getObjectByName(Identity.class, requesterId);
+        if (null == id) {
+        logger.error("Could not find a requester Identity: " + requesterId);
+        throw new GeneralException("Invalid identity: " + requesterId);
+        }
+
+        // Ask the Request Processor to start the workflow 35 minutes from now.
+        // Append the time stamp to the workflow case name to ensure it's unique. 
+        long launchTime = System.currentTimeMillis() + (35 * 60 * 1000);
+        caseName = caseName + "(" + launchTime + ")";
+
+        // Build out a map of arguments to pass to the Request Scheduler.
+        Attributes reqArgs = new Attributes();
+        reqArgs.put(StandardWorkflowHandler.ARG_REQUEST_DEFINITION, sailpoint.request.WorkflowRequestExecutor.DEFINITION_NAME);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_WORKFLOW, workflowName);
+        reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_REQUEST_NAME, caseName);
+        reqArgs.put( "requestName", caseName );            
+
+        // Build a map of arguments to pass to the Workflow case when it launches.
+        Attributes wfArgs = new Attributes();
+        wfArgs.put("identityName",    identityName);
+        wfArgs.put("workflow",        eventWorkflow.getName());
+        wfArgs.put("strLicenseNameFromWorkflow","P2");
+
+        reqArgs.putAll(wfArgs);
+
+        // Use the Request Launcher to schedule the workflow reqeust.  This requires
+        // a Request object to store the properties of the request item.
+        Request req = new Request();
+        RequestDefinition reqdef = context.getObject(RequestDefinition.class, "Workflow Request");
+        req.setDefinition(reqdef);
+        req.setEventDate( new Date( launchTime ) );
+        req.setOwner(id);
+        req.setName(caseName);
+        req.setAttributes( reqdef, reqArgs );
+
+        // Schedule the work flow via the request manager.
+        RequestManager.addRequest(context, req);
+
+        logger.debug("End Step.ScheduleAzureADLicenseAssignmentWorkflow");
+    */   
+  </Source>
+</Rule>
+
+</sailpoint>

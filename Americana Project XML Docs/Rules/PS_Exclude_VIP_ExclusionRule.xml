@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_Exclude_VIP_ExclusionRule" type="CertificationExclusion">
+  <Description>This rule is an example Certification Exclusion rule that removes all of the certifiable items from a certification if the identity being certified is marked as inactive.</Description>
+  <Signature returnType="String" />
+  <Source>import org.apache.log4j.Logger;
+  import java.util.List;
+  import java.util.Iterator;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.object.EntitlementGroup;
+  import sailpoint.object.AbstractCertifiableEntity;
+  import sailpoint.api.certification.AccountGroupMembershipCertificationBuilder.MembershipCertifiable;
+  import sailpoint.object.*;
+  import sailpoint.api.certification.DataOwnerCertificationBuilder.DataOwnerCertifiable;
+  import sailpoint.object.Link;
+  import sailpoint.tools.Util;
+
+
+ 
+	String manageremailtoexclude= "htalaat@americana-food.com, asandhu@americana-food.com,hbansal@americana-food.com,rvirdi@americana-food.com,vbhatia@americana-food.com,tbernert@americana-food.com,mhybschmann@americana-food.com,pbrown@americana-food.com,kkapur@americana-food.com,fbari@americana-food.com,dfolta@americana-food.com,dadhya@americana-food.com";
+
+//String manageremailtoexclude= "dgoel@americana-food.com";
+  
+ // String Managerjobtitle="ceo";
+  
+  log.error("PS_Exclude_VIPManagers_Dec2023: entity: " + entity);
+  String idname = entity.getName();
+  log.error("PS_Exclude_VIPManagers_Dec2023: idname: " + idname);
+
+  //1.checks if identity itself is active in the authoritative application
+  Identity id = context.getObjectByName(Identity.class, idname);
+  
+  //log.debug("PS_Exclude_VIPManagers_Oct2023: id: " + id);
+  
+  if (id!=null) {
+  if (id.isInactive()) {
+    explanation = "Identity belongs to an inactive employee.";
+    itemsToExclude.addAll(items); 
+    //log.debug("PS_Exclude_VIPManagers_Oct2023: explanation:" + explanation);
+    items.removeAll(itemsToExclude);
+    return explanation;
+  }
+  
+ //case2: exclude if identity is vip
+     String IDmail = id.getAttribute("email");
+  //log.debug("PS_Exclude_NonVIPManagers_Oct2023: ADstatus: " + ADstatus);
+ // if (ADstatus == null || ADstatus.equalsIgnoreCase("inactive")) {
+ if (IDmail!=null &amp;&amp;manageremailtoexclude.toString().toLowerCase().contains(IDmail) == true ) {
+    explanation = "Identity's email matches with vip email.";
+    itemsToExclude.addAll(items); 
+   
+    items.removeAll(itemsToExclude);
+    return explanation;
+  }
+  
+   
+ /*    String identityemail=id.getAttribute("email");
+     
+   if(identityemail!=null)
+{
+
+if (manageremailtoexclude.toString().toLowerCase().contains(identityemail) == true) {
+      explanation = "Identity is a VIP.";
+      itemsToExclude.addAll(items);
+      log.error("PS_Exclude_VIP_DEC2023: explanation: " + explanation);
+      items.removeAll(itemsToExclude);
+      return explanation;
+    } else {
+      explanation = "Access review is generated for this identity.";
+      log.error("PS_Exclude_VIP_Dec2023: explanation:" + explanation);
+      return explanation; 
+    }
+  }*/
+     
+     
+  }
+ 
+  
+ 
+  String manager = id.getManager().getName();
+ 
+ 
+  
+  // manager is not equal to null
+  if (manager != null) {
+    manager = manager.toLowerCase();
+    Identity mngrid = context.getObjectByName(Identity.class, manager);
+	///////////String mangerJobtitle=(String) mngrid.getAttribute("jobtitle");
+	
+	String mangeremail=(String) mngrid.getAttribute("email");
+
+  
+   log.error("mangeremail :"+mangeremail);
+
+    // manager is to be excluded (If entity's manager is a VIP, exclude items for this entity. This certification is for non-VIPs.)
+   /// if (jobTitlestoexclude.toString().toLowerCase().contains(mangerJobtitle) == true) {
+if(mangeremail!=null)
+{
+
+if (manageremailtoexclude.toString().toLowerCase().contains(mangeremail) == true) {
+      explanation = "Identity's manager is a VIP.";
+      itemsToExclude.addAll(items);
+      log.error("PS_Exclude_VIPManagers_DEC2023: explanation: " + explanation);
+      items.removeAll(itemsToExclude);
+      return explanation;
+    } else {
+      explanation = "Access review is generated for this identity.";
+      log.error("PS_Exclude_VIPManagers_Dec2023: explanation:" + explanation);
+      return explanation; 
+    }
+  }
+  }</Source>
+</Rule>
+
+</sailpoint>

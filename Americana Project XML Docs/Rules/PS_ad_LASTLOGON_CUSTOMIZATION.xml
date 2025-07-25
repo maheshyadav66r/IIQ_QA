@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_ad_LASTLOGON_CUSTOMIZATION" type="ResourceObjectCustomization">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject" />
+  <Source>import java.time.format.DateTimeFormatter;
+		import java.util.Date;
+
+		import sailpoint.object.ResourceObject;
+
+		import java.time.LocalDate;
+		import java.time.LocalDateTime;
+		import java.text.SimpleDateFormat;
+
+
+			
+import org.apache.log4j.Logger;
+
+Logger log=Logger.getLogger("customRule4");
+
+		String lastLogon=(String) object.getAttribute("lastLogon");
+		String lastLogonTimestamp=(String) object.getAttribute("LastLogonTimestamp");
+log.info("lastLogon"+lastLogon);
+log.info("lastLogonTimestamp"+lastLogonTimestamp);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDate now = LocalDate.now(); //Gets the Current Date 
+		//LocalDate then = now.minusDays(....); //(....) Put in an Integer Value for the Date you are going to compare with
+		//String lastLogon="0";
+		//String lastLogonTimestamp ="";
+		long DIFF_FOR_DATE_AND_TIMES = 11644473600000L;
+
+		if(lastLogon!=null &amp;&amp;!(lastLogon.equalsIgnoreCase("0")))
+		{
+		long adDate = Long.parseLong(lastLogon);
+		System.out.println("ad date"+adDate);
+		long epochTime = ((adDate / 10000) - DIFF_FOR_DATE_AND_TIMES);
+		System.out.println(epochTime);
+		Date lastLogonDate = new Date(epochTime);
+		System.out.println(lastLogonDate);
+		String formatDate = new SimpleDateFormat("yyyyMMdd").format(lastLogonDate);
+		System.out.println(formatDate);
+		LocalDate logon = LocalDate.parse(formatDate, formatter);
+		log.info("logon"+logon);
+		//object.put("lastLogon",logon);
+		//object.setAttribute("lastLogon",logon);
+		}
+
+
+	
+		if(lastLogonTimestamp!=null&amp;&amp;!lastLogonTimestamp.isEmpty())
+		{
+		long LTSadDate = Long.parseLong(lastLogonTimestamp);
+		long LTSepochTime = (LTSadDate/ 10000) - DIFF_FOR_DATE_AND_TIMES;
+		Date LTSlastLogonDate = new Date(LTSepochTime);
+		String LTSformatDate = new SimpleDateFormat("yyyyMMdd").format(LTSlastLogonDate);
+		LocalDate logontimEstAmp = LocalDate.parse(LTSformatDate, formatter);
+		//object.put("LastLogonTimestamp",logontimEstAmp);
+log.info("timestamp"+logontimEstAmp);
+		}
+		
+		return object;</Source>
+</Rule>
+
+</sailpoint>

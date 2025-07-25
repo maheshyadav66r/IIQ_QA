@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_Validate_inactiveContractrsOU">
+  <Description>rule is used to send email reminders 1||7 days before accountExpiry(check against endadate) , so that contractors can extend their endDate by quicklink </Description>
+  <Source>
+ 
+  import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+
+Logger log=Logger.getLogger("customRule4");
+
+  
+  
+ String app;
+  String dn;
+  String managername;
+  String manageremail;
+  String endDate;
+
+  
+   log.error("start");
+  
+  
+  
+ Filter f = Filter.eq("correlated",true);
+
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+			//	List ids = context.getObjects(Identity.class,qo);
+  List ids = context.getObjects(Identity.class);
+ 
+  for(Identity id :ids)
+  {
+    
+    if(id!=null){
+    // String idName=id.getName();
+     String userType=id.getAttribute("userType");
+     //String isContractor=id.getAttribute("isContractor");
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    //if(idName.equalsIgnoreCase("Nirmal Chitlangi(Paramount)")){
+  
+     if(userType.equalsIgnoreCase("Contractor")||userType.equalsIgnoreCase("Interim")||userType.equalsIgnoreCase("General Use")){
+     
+     //log.error("idName :"+id.getName());
+     
+     
+     // String endDate = (String) id.getAttribute("endDate");
+      
+			
+			
+			
+              
+    
+  Application appObj = context.getObjectByName(Application.class, "Active Directory");
+    log.error("appObj "+appObj);
+ IdentityService isr = new IdentityService(context);
+            List links = isr.getLinks(id, appObj);
+			//countLinks(Identity identity, Application application)
+      
+            if(Util.nullSafeSize(links) &gt; 0){
+               Link adLink = links.get(0);
+
+             log.debug("testing isr");
+                  linkstatus ="inactive"; 
+  boolean disabled=adLink.isDisabled();
+             String dn= adLink.getAttribute("distinguishedName");
+   if(disabled)
+   
+   {
+    
+   
+   
+        
+       // Identity manager=id.getManager();
+     
+    /* if(manager!=null)
+     {
+     managername=manager.getName();
+       managermail=manager.getAttribute("email");
+     }*/
+      	//log.error("manager :"+manager);
+     // String  managerEmail="";
+     List passwordExpires30=new ArrayList();
+     // if(manager==null){
+     if(userType!=nul&amp;&amp;dn!=null){
+       info=userType +","+"\""+dn+"\"";
+       //info="hi";
+           passwordExpires30.add(info);
+     }
+         if (!passwordExpires30.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\manager7.csv", true);
+        for (String info : passwordExpires30) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    } 
+      
+     
+      
+     
+	
+		
+
+
+
+
+     
+    }
+	
+    
+   }
+            }
+      }
+   }
+  
+  
+  
+
+  
+  
+  
+
+  
+
+
+</Source>
+</Rule>
+
+</sailpoint>

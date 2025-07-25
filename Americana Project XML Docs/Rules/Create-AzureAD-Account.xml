@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Create-AzureAD-Account">
+  <Source>
+  import sailpoint.api.Provisioner;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.object.*;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+
+  List l = new ArrayList();
+  l.add("efccb6f7-5641-4e0e-bd10-b4976e1bf68e : 8a256a2b-b617-496d-b51b-e76466e88db0");
+  l.add("efccb6f7-5641-4e0e-bd10-b4976e1bf68e : 41781fb2-bc02-4b7c-bd55-b576c07bb09d");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : bea4c11e-220a-4e6d-8eb8-8ea15d019f90");
+  l.add("efccb6f7-5641-4e0e-bd10-b4976e1bf68e : c1ec4a95-1f05-45b3-a911-aa3fa01094f5");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : b737dad2-2f6c-4c65-90e3-ca563267e8b9");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : c87f142c-d1e9-4363-8630-aaea9c4d9ae5");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 43de0ff5-c92c-492b-9116-175376d08c38");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : efb87545-963c-4e0d-99df-69c6916d9eb0");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 199a5c09-e0ca-4e37-8f7c-b05d533e1ea2");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : b76fb638-6ba6-402a-b9f9-83d28acb3d86");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : a82fbf69-b4d7-49f4-83a6-915b2cf354f4");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 57ff2da0-773e-42df-b2af-ffb7a2317929");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 94a54592-cd8b-425e-87c6-97868b000b91");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 0feaeb32-d00e-4d66-bd5a-43b5b83db82c");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 95b76021-6a53-4741-ab8b-1d1f3d66a95a");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 041fe683-03e4-45b6-b1af-c0cdc516daee");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : e95bec33-7c88-4a70-8e19-b10bd9d0c014");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 9e700747-8b1d-45e5-ab8d-ef187ceec156");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 4ff01e01-1ba7-4d71-8cf8-ce96c3bbcf14");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : aebd3021-9f8f-4bf8-bbe3-0ed2f4f047a1");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 8c7d2df8-86f0-4902-b2ed-a0458298f3b3");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 76846ad7-7776-4c40-a281-a386362dd1b9");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : c68f8d98-5534-41c8-bf36-22fa496fa792");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 5136a095-5cf0-4aff-bec3-e84448b38ea5");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 33c4f319-9bdd-48d6-9c4d-410b750a4a5a");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 2789c901-c14e-48ab-a76a-be334d9d793a");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : a23b959c-7ce8-4e57-9140-b90eb88a9e97");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 31b4e2fc-4cd6-4e7d-9c1b-41407303bd66");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 5dbe027f-2339-4123-9542-606e4d348a72");
+  l.add("6fd2c87f-b296-42f0-b197-1e91e994b900 : 7547a3fe-08ee-4ccb-b430-5077c5041653");
+
+
+
+  String identityName = "41556";
+
+  Filter filter = Filter.and(Filter.eq("identity.name", identityName), Filter.eq("application.name", "Azure AD"));
+  List links = context.getObjects(Link.class, new QueryOptions().addFilter(filter));
+
+  for(Link link : links){
+    try{
+      ProvisioningPlan plan = new ProvisioningPlan();
+      plan.setIdentity(context.getObjectByName(Identity.class, identityName));
+
+      AccountRequest accountRequest = new AccountRequest();
+      accountRequest.setOperation(AccountRequest.Operation.Modify);
+      accountRequest.setApplication("Azure AD");
+      accountRequest.setNativeIdentity(link.getNativeIdentity());
+      accountRequest.add(new AttributeRequest("assignedPlans", ProvisioningPlan.Operation.Add, l));
+
+      //accountRequest.add(new AttributeRequest("assignedPlans", ProvisioningPlan.Operation.Remove, link.getAttribute("assignedPlans")));
+      plan.add(accountRequest);
+
+      //return plan;
+      Provisioner pv = new Provisioner(context);
+      pv.setNoCreateTemplates(true);
+      pv.execute(plan);
+      return pv.getProject();
+    }catch(Exception e){
+      return e.getMessage();
+    }
+  }
+
+  </Source>
+</Rule>
+
+</sailpoint>

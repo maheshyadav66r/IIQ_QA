@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-IdentityTrigger-RGM-Joiner" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean" />
+  <Source>import sailpoint.object.Identity;
+  import sailpoint.object.WorkflowCase;
+  import sailpoint.object.TaskResult;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+
+
+
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger log = Logger.getLogger("rule.americana.AfterProvisioning");
+  String ruleName = "Americana-Rule-IdentityTrigger-RGM-Joiner";
+  String caseName = "Americana-Lifecycle Event-RGM-Joiner: ";
+
+  boolean joinerTrigger = false;
+  
+
+
+  if (newIdentity != null) {
+    Filter filter = Filter.eq("name",caseName+newIdentity.getAttribute("displayName"));
+    QueryOptions options = new QueryOptions();
+    options.addFilter(filter);
+
+    List wfCaseList = context.getObjects(WorkflowCase.class,options);
+    List taskResults = context.getObjects(TaskResult.class,options);
+
+    if ((Util.nullSafeSize(wfCaseList) &gt; 0) || (Util.nullSafeSize(taskResults) &gt; 0)) {
+      return joinerTrigger;
+    }
+
+ String peopleGroup = newIdentity.getAttribute("peopleGroup");
+  String storeIncharge = newIdentity.getAttribute("storeincharge");
+  
+
+  if (peopleGroup != null  &amp;&amp; storeIncharge != null &amp;&amp;  peopleGroup.contains("Store Level") &amp;&amp; storeIncharge.equalsIgnoreCase("Y"))
+    joinerTrigger = true;
+}
+return joinerTrigger;</Source>
+</Rule>
+
+</sailpoint>

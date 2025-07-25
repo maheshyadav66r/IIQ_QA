@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Contractor-Enddate-MappinG-Rule" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+           The Link object from the Identity, if this is an application
+           mapping rule.  For global mapping rules this will be void.
+        </Description>
+      </Argument>
+      <Argument name="attributeSource">
+        <Description>
+          The AttributeSource object.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the application account attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import sailpoint.object.*;
+import sailpoint.api.*;
+      //  String inputDate = "12/18/2024 12:00:00 AM GST";
+  
+  import org.apache.log4j.Logger;
+
+Logger log = Logger.getLogger("customRule5");
+        String inputDate =link.getAttribute("accountExpires");
+  log.error("accountExpires "+inputDate);
+  String sAMAccountName =(String)link.getAttribute("sAMAccountName");
+log.error("sAMAccountName  :"+sAMAccountName);
+        String outputFormat = "yyyy-MM-dd";
+
+        SimpleDateFormat inputFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a z");
+        SimpleDateFormat outputFormatter = new SimpleDateFormat(outputFormat);
+
+        try {
+            // Parse input date string to Date object
+            Date date = inputFormatter.parse(inputDate);
+
+            // Format Date object to desired output format
+            String formattedDate = outputFormatter.format(date);
+log.error("end date after converting to desired formate :"+formattedDate);
+            // Print the formatted date
+           return formattedDate;
+        } catch (ParseException e) {
+            // Handle parsing exception
+            System.out.println("Error parsing date: " + e.getMessage());
+        }
+  return inputDate;
+</Source>
+</Rule>
+
+</sailpoint>

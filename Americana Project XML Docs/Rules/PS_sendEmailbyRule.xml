@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_sendEmailbyRule">
+  <Source>
+
+import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+import sailpoint.object.Identity;
+   import org.apache.log4j.Logger;
+  
+  Logger log=Logger.getLogger("customRule4");
+
+
+  
+try {
+      log.debug("PS_SendReminderEmails: Sending emails...");
+
+  
+   
+	 Identity certifier = context.getObjectByName(Identity.class,"36336");
+	  if(certifier!=null) {
+	  String certifierEmail=(String) certifier.getAttribute("email");
+	  
+	  String certifierName=certifier.getName();
+       String firstName=certifier.getFirstname();
+       String lastname=certifier.getLastname();
+       String endDate=certifier.getAttribute("passwordExpires");
+       String accountName=certifier.getDisplayName();
+    
+	 
+	  String certifierDisplayName=certifier.getDisplayName();
+	  //log.error("certifierDisplayName "+certifierDisplayName);
+				//	log.error("send email");
+
+//Identity manager = context.getObjectByName(Identity.class, "36336");
+     // Identity manager = context.getObjectByName(Identity.class, "sdharmavaram");
+        //log.debug("PS_SendReminderEmails: manager with that email: " + manager);
+//if (manager != null) {
+//String firstname = manager.getFirstname();
+//String lastname = manager.getLastname();
+         // String spTools.formatDate($expiration,3,1)="30/01/2024";
+         // String email = manager.getAttribute("email");
+          //log.debug("PS_SendReminderEmails: manager's firstname: " + firstname);
+          //log.debug("PS_SendReminderEmails: manager's lastname: " + lastname);
+
+          //Use to send reminder emails to managers who have pending access reviews
+          //String templateName = "PS_REMINDER_MAILS";
+
+          //Use to send certification initiation emails to managers for whom access reviews are created
+       //   String templateName = "PS_work item reminder_Dynamic_cc_final_by rule";
+
+      
+      
+      
+      /*String templateName =  "PS_Reminder_Email_Template_Modified";
+
+EmailTemplate eTemplate = context.getObjectByName(EmailTemplate.class, templateName);
+EmailOptions eOpts = new EmailOptions();*/
+//eOpts.setTo(email);
+//eOpts.setVariable("workItem.owner.firstname", firstname);
+//eOpts.setVariable("workItem.owner.lastname", lastname);
+      
+    // String templateName = "PasswordExpiry First Reminder Template";
+String templateName ="Americana_BPM_Submission_EmailTemplate_User";
+
+		 EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, templateName); 
+		  
+		 
+		EmailOptions options = new EmailOptions();
+		 
+		
+      options.setVariable("firstName",firstName);
+      options.setVariable("lastname", lastname);
+      options.setVariable("accountName",accountName);
+   options.setVariable("approvalLevel", "Application Owner");
+    
+options.setTo("nchitlangi@americana-food.com");
+context.sendEmailNotification(template, options);
+
+}
+}
+  
+     // log.debug("PS_SendReminderEmails: Sent emails.");
+catch (Exception e) {
+// TODO: handle exception
+     log.error("PS_SendReminderEmails: " + e.getMessage());
+}
+//  log.debug("PS_SendReminderEmails: **********End**********");
+  </Source>
+</Rule>
+
+</sailpoint>

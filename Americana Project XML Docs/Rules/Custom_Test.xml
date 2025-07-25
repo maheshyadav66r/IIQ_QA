@@ -1,0 +1,535 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Custom_Test">
+  <Source>
+  import sailpoint.object.TaskResult;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+  import java.util.*;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.sql.*;
+  import java.io.*;
+  
+  
+/*  
+  Filter f = Filter.eq("links.application.name", "Active Directory");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+  
+  List ids = context.getObjects(Identity.class, qo);
+ // return ids.size();
+  
+  List adMailList = new ArrayList();
+  
+  Application appObj = context.getObjectByName(Application.class, "Active Directory");
+  IdentityService idServObj = new IdentityService(context);
+  
+  for (int i=0; i &lt; ids.size(); i++)
+  {
+    List adLinks = idServObj.getLinks(ids.get(i), appObj);
+    for (int j=0; j &lt; adLinks.size(); j++)
+    {
+      String mkStr = ids.get(i).getName() + " - " + adLinks.get(j).getAttribute("mail") + " - " + adLinks.get(j).getAttribute("userPrincipalName");
+      adMailList.add(mkStr);
+    }
+  }
+  Collections.sort(adMailList);
+  return adMailList;
+*/  
+ /* 
+  Identity identityObj = context.getObjectByName(Identity.class, "37616852");
+            ProvisioningPlan plan = new ProvisioningPlan();
+                 
+         String nativeIdentity = "CN=Sameh Mohamed Fahim,OU=Users,OU=Egypt Office,OU=Americana Office,DC=Americana,DC=global";
+
+        plan.setIdentity(identityObj);
+        plan.setNativeIdentity("37616852");
+       
+        AccountRequest acctReqAD = new AccountRequest();
+        acctReqAD.setApplication("Active Directory");
+        acctReqAD.setOp(ProvisioningPlan.ObjectOperation.Modify);
+        acctReqAD.setNativeIdentity(nativeIdentity);
+       
+        acctReqAD.add(new AttributeRequest("memberOf",          ProvisioningPlan.Operation.Add, "CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));
+       
+        plan.add(acctReqAD);
+       
+        Provisioner provisioner = new Provisioner(context);
+       
+        provisioner.execute(plan);
+        context.saveObject(identityObj);
+        context.commitTransaction();
+  
+      return plan.toXml();
+*/  
+  
+  
+ List xen = new ArrayList();
+  Custom cObj = context.getObjectByName(Custom.class, "Custom");
+  if (null != cObj)
+  {
+    xen = cObj.getAttributes().get("nkumar");
+  }
+ //  return xen.size();
+  
+  for (int j=0; j &lt; xen.size(); j++)
+  {
+    
+    String value = xen.get(j);
+    
+    /*
+    if (value.contains("'"))
+    {
+      removedList.add(value);
+    }
+    */
+    
+     
+    if (value.contains("Unmapped"))
+    {
+      //unmappedList.add(value);
+      xen.remove(value);
+    }
+    
+    
+  }
+  
+  Collections.sort(xen);
+  
+  return xen;
+ 
+  
+/*  
+  Filter f = Filter.eq("type", "QuickLink Approval for Power BI Access");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+  
+  List list = new ArrayList();
+  
+  List idReqList = context.getObjects(IdentityRequest.class, qo);
+  for (int l=0; l &lt; idReqList.size(); l++)
+  {
+    String str = idReqList.get(l).getName() + " | " + idReqList.get(l).getTargetDisplayName() + " | " + idReqList.get(l).getCompletionStatus();
+    list.add(str);
+  }
+  return list;
+*/
+  
+/*  
+  String idRName = "0000006202";
+  List idReqItemsList = new ArrayList();
+  List idReqValue = new ArrayList();
+  List removedList = new ArrayList();
+  List unmappedList = new ArrayList();
+  
+  IdentityRequest idReqObj = context.getObjectByName(IdentityRequest.class, idRName);
+//  idReqItemsList = idReqObj.getPendingProvisioning();
+  idReqItemsList = idReqObj.getItems();
+  
+  for (int i=0; i &lt; idReqItemsList.size(); i++)
+  {
+    if ("Microsoft Power BI". equalsIgnoreCase(idReqItemsList.get(i).getApplication())  &amp;&amp; "addGroups".equalsIgnoreCase(idReqItemsList.get(i).getName()))
+    {
+      
+      idReqValue.add(idReqItemsList.get(i).getValue());
+    }
+  }
+  
+ // return idReqValue.size();
+  
+  for (int j=0; j &lt; idReqValue.size(); j++)
+  {
+    String value = idReqValue.get(j);
+    if (value.contains("'"))
+    {
+      removedList.add(value);
+    }
+    if (value.contains("Unmapped"))
+    {
+      unmappedList.add(value);
+    }
+  }
+  
+  idReqValue.removeAll(removedList);
+  idReqValue.removeAll(unmappedList);
+//  return idReqValue;
+  return removedList;
+  
+*/  
+/*  
+EmailOptions eo = new EmailOptions();
+  EmailTemplate et = context.getObjectByName(EmailTemplate.class,"Americana-EmailTemplate-RSCMover-Certification");
+
+  Map args = new HashMap();
+  args.put("identityName","Test");
+  args.put("item","Test");
+  args.put("displayName","Test");
+  args.put("employeeNumber","Test");
+  args.put("PositionName","Test");
+  args.put("department","Test");
+  args.put("startDate","Test");
+  args.put("email","Test");
+  args.put("manager","Test");
+
+  eo.setVariables(args);
+  
+  //eo.setTo("servicedesk@americana-food.com");
+  
+  eo.setTo("sdharmavaram@americana-food.com");
+
+  context.sendEmailNotification(et,eo);
+
+  
+  return "success";
+*/ 
+  
+  /*  
+    List returnList = new ArrayList();
+
+    String hqlQuery = "SELECT email From Identity GROUP BY email HAVING COUNT(email) &gt; 1";
+
+    Iterator it = context.search(hqlQuery, null,new QueryOptions());
+    while (it != null @and it.hasNext())
+    {
+      Object email = it.next();
+      if (email != null) {
+
+       
+        QueryOptions options = new QueryOptions();
+        options.addFilter(Filter.eq("email", email));
+       
+        List  idList = context.getObjects(Identity.class,options);
+        
+        if (Util.nullSafeSize(idList) &gt; 0)
+        {
+          for (Identity id : idList)
+          {
+            if (id != null)
+            {
+              String mkstr = id.getAttribute("email") + " | " + id.getAttribute("employeeNumber") + " | " + id.getAttribute("hcmUserName") + " | " +  id.getAttribute("peopleGroup") +" | " + id.getAttribute("country") + " | " + id.getName() ;
+              returnList.add(mkstr);
+            }
+          }
+        }
+      }
+    }
+    return returnList;
+*/  
+  
+/*  
+  Filter f = Filter.eq("links.application.name", "AD Contractors");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+  
+  Application appObj = context.getObjectByName(Application.class, "AD Contractors");
+  //IdentityService idServObj = new IdentityService(context);
+  List arrayList = new ArrayList();
+  List idList = new ArrayList();
+  idList = context.getObjects(Identity.class, qo);
+  String str = null;
+  
+  for (Identity idObj : idList)
+  {
+    IdentityService idServObj = new IdentityService(context);
+    List links = idServObj.getLinks(idObj,appObj);
+    if (null != links) {
+    for (Link l : links)
+    {
+      if (null != l) {
+        
+      str = idObj.getDisplayName() + "  |  " + idObj.getAttribute("endDate");
+        arrayList.add(str);
+        
+      }
+    }
+  }
+  
+  }
+//  System.out.println("arrayList size is : " + arrayList.size());
+ Collections.sort(arrayList);
+  return arrayList;
+*/  
+  
+//  return context.decrypt("1:ACP:dDiYNzLkyt2tNAHQdWgtBH9ZvvUVmFhNuoascXjp93A=");
+
+/*    
+ Filter f = Filter.and(Filter.eq("application", "Microsoft Power BI"), Filter.eq("status","Remediated"));
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+  
+  List idHistItems = new ArrayList();
+  List arrayList = new ArrayList();
+  idHistItems = context.getObjects(IdentityHistoryItem.class, qo);
+  
+  for (IdentityHistoryItem idHistObj : idHistItems)
+  {
+    if (!arrayList.contains(idHistObj.getIdentity().getDisplayName()))
+    arrayList.add(idHistObj.getIdentity().getDisplayName());
+  }
+  
+  return arrayList;
+*/  
+     
+//  Filter f2 = Filter.eq("status", "ACTIVE");
+//  Filter f = Filter.eq("peopleGroup", "RSC");
+//  Filter f2 = Filter.eq("country", "EG");
+//  Filter f = Filter.eq("country", "JO");
+ 
+/*  
+  Filter f1 = Filter.eq("links.application.name", "Oracle Fusion HCM");
+  QueryOptions qoObj = new QueryOptions();
+//  qoObj.add(f);
+  qoObj.add(f1);
+//  qoObj.add(f2);
+
+  List idList = new ArrayList();
+  List emailIdsList = new ArrayList();
+  List stringsList = new ArrayList();
+
+  idList = context.getObjects(Identity.class, qoObj);
+//  return idList.size();
+
+  for (i=0; i &lt; idList.size(); i++) {
+    
+    if (null != idList.get(i).getAttribute("email"))
+    {
+      emailIdsList.add(idList.get(i).getAttribute("email"));
+    }
+    
+  }
+  
+  Collections.sort(emailIdsList);
+  return emailIdsList;
+  
+  for (int j=0; j &lt; emailIdsList.size(); j++) {
+    
+  if(null != idList.get(i).getName() &amp;&amp; null != idList.get(i).getAttribute("email") &amp;&amp;null != idList.get(i).getAttribute("hcmUserName") ) {
+    String mkstr = idList.get(i).getAttribute("email") + " | " + idList.get(i).getAttribute("employeeNumber") + " | " + idList.get(i).getAttribute("hcmUserName") + " | " +  idList.get(i).getAttribute("peopleGroup") +" | " + idList.get(i).getAttribute("country") + " | " + idList.get(i).getName() ;
+    stringsList.add(mkstr);
+    }
+  }
+
+  Collections.sort(stringsList);
+  return stringsList;
+*/ 
+
+/*    
+  QueryOptions qoObj = new QueryOptions();
+
+  Filter f = Filter.eq("peopleGroup", "RSC");
+  Filter f1 = Filter.eq("links.application.name", "Oracle Fusion HCM");
+
+  qoObj.add(f);
+  qoObj.add(f1);
+
+  List idList = new ArrayList();
+  Application appObj = context.getObjectByName(Application.class, "Active Directory");
+  idList = context.getObjects(Identity.class, qoObj);
+
+ // return idList.size();
+
+  int sizeOfLinks;
+  int BI;
+  List testList = new ArrayList();
+  String userName;
+
+  List idUserNameList = new ArrayList();
+  List noADList = new ArrayList();
+
+  for (int i=0; i &lt; idList.size(); i++) {
+   // userName = idList.get(i).getName();
+     int disabledADLinks = 0;
+
+   Identity idObj = context.getObjectByName(Identity.class, idList.get(i).getName());
+    IdentityService isObj = new IdentityService(context);
+    List links = isObj.getLinks(idObj, appObj);
+    List adGroupList = new ArrayList();
+
+    if (Util.nullSafeSize(links) == 0) {
+     
+   String noADString = idList.get(i).getAttribute("email") + " | " + idList.get(i).getName();
+      noADList.add(noADString);
+
+    }
+      if (Util.nullSafeSize(links) &gt; 0) {
+
+      sizeOfLinks = links.size();
+
+
+		for (int j = 0; j &lt; links.size(); j++) {
+			if (null != links.get(j).getAttribute("memberOf")) {
+				if (links.get(j).getAttribute("memberOf") instanceof List) {
+					adGroupList.addAll(links.get(j).getAttribute("memberOf"));
+				} else {
+					adGroupList.add(links.get(j).getAttribute("memberOf"));
+				}
+			}
+      //if (null != links.get(j).getAttribute("IIQDisabled")) {
+        if (true == links.get(j).getAttribute("IIQDisabled"))
+        disabledADLinks++;
+
+     // }
+		}
+
+		if (null != adGroupList &amp;&amp; !adGroupList.contains("CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")) {
+
+			BI = 0;
+		} else {
+			BI = 1;
+		}
+      if (sizeOfLinks &gt; 1 &amp;&amp; BI == 0) {
+      userName = idList.get(i).getName() + "-" + sizeOfLinks + ", disabledADLinks - " + disabledADLinks + ", BI - " + BI;
+      testList.add(userName);
+      }
+
+	} 
+}
+Collections.sort(noADList);
+return noADList;
+*/
+//  return testList;
+  
+  
+  /*
+  Filter f = Filter.eq("links.application.name", "AD Contractors");
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+  
+  Application appObj = context.getObjectByName(Application.class, "AD Contractors");
+  //IdentityService idServObj = new IdentityService(context);
+  List arrayList = new ArrayList();
+  List idList = new ArrayList();
+  idList = context.getObjects(Identity.class, qo);
+  String str = null;
+  
+  for (Identity idObj : idList)
+  {
+    IdentityService idServObj = new IdentityService(context);
+    List links = idServObj.getLinks(idObj,appObj);
+    if (null != links) {
+    for (Link l : links)
+    {
+      if (null != l) {
+        
+      str = idObj.getName() + "  |  " + l.getAttribute("accountExpires");
+        arrayList.add(str);
+        
+      }
+    }
+  }
+  
+  }
+  
+  return arrayList;
+*/ 
+  
+/*  
+  import sailpoint.api.IdentityService;
+            import sailpoint.tools.Util;
+            import sailpoint.object.Identity;
+            import sailpoint.object.Application;
+            import sailpoint.object.Application;
+            import sailpoint.object.Attributes;
+            import sailpoint.object.ResourceObject; 
+            import sailpoint.connector.Connector;
+            import sailpoint.object.TaskResult; 
+            import sailpoint.api.Aggregator;
+
+            import org.apache.log4j.Level;
+            import org.apache.log4j.Logger;
+
+            Logger logger = Logger.getLogger("Americana.Workflow.AzureADLicenseAssignment");
+            logger.setLevel(Level.DEBUG);
+
+
+            logger.debug("Start - Americana-Workflow-AzureADLicenseAssignment.Step.CheckForAzureLink"); 
+
+            String identityName = "aekfc12151id";
+            String applicationName = "Azure AD";
+            Identity identityObj = context.getObjectByName(Identity.class, identityName);
+            Application appObject = context.getObjectByName(Application.class, applicationName);
+
+            if(null != identityObj &amp;&amp; appObject != null){
+
+              IdentityService isr = new IdentityService(context);
+              List links = isr.getLinks(identityObj, appObject);
+
+              if(Util.nullSafeSize(links) &gt; 0){
+                return true;
+              }
+              else{
+
+                String  azureDomainName = appObject.getAttributeValue("domainName");
+        	
+        Application appObjectAD = context.getObjectByName(Application.class, "Active Directory");
+         List adLinks = isr.getLinks(identityObj, appObjectAD);
+ 				logger.debug("adLinks : " + adLinks);
+        
+        String adSamName = "";
+              if(Util.nullSafeSize(adLinks) &gt; 0){
+               adSamName = adLinks.get(0).getAttribute("sAMAccountName");
+              }
+                String accountName =  adSamName + "@americana-food.com";
+        
+         logger.debug("accountName : " + accountName);
+
+                Attributes attributes = new Attributes();
+
+                String appConnName = appObject.getConnector();  
+                logger.debug("Application " + applicationName + " uses connector " + appConnName);  
+
+                Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);  
+                if (null != appConnector) {  
+
+                  logger.debug("Connector instantiated, calling getObject() to read account details...");  
+
+                  ResourceObject rObj = null;  
+                  try {  
+                    rObj = (ResourceObject) appConnector.getObject("account", accountName, null);
+
+                    Attributes argMap = new Attributes();  
+                    argMap.put("correlateEntitlements",   "true");  
+                    argMap.put("noOptimizeReaggregation", "true");
+
+                    Aggregator agg = new Aggregator(context, argMap); 
+
+                    TaskResult result = agg.aggregate(appObject, rObj);
+                    log.debug("aggregation complete.");  
+
+                    if (result != null) {
+                      attributes = result.getAttributes();
+                      attributes.put("account", accountName);
+                    }
+                  } catch (sailpoint.connector.ObjectNotFoundException onfe) {  
+                    logger.error(onfe);   
+                  }  
+                }
+
+                logger.debug("attributes : "+attributes); 
+
+                if(attributes.get("account") != null){
+                  return true;
+                }
+              }
+            }
+
+            logger.debug("Start - Americana-Workflow-AzureADLicenseAssignment.Step.CheckForAzureLink"); 
+            return false;
+  
+*/  
+  
+  
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-SendSMS-Rule">
+  <Source>
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import java.util.*;
+  import java.text.MessageFormat;
+  import javax.inject.Inject;
+  import java.io.IOException;
+  import java.util.*;
+  import org.apache.commons.logging.Log;
+  import org.apache.commons.logging.LogFactory;
+  import sailpoint.object.*;
+  import sailpoint.web.UserContext;
+  import sailpoint.api.*;
+  import sailpoint.messaging.MessageResult;
+  import sailpoint.messaging.MessagingServiceProvider;
+  import sailpoint.rest.ui.UserResetResource;
+  import java.util.Scanner;
+  import org.apache.http.HttpResponse;
+  import org.apache.http.StatusLine;
+  import org.apache.http.client.ClientProtocolException;
+  import org.apache.http.client.methods.HttpGet;
+  import org.apache.http.impl.client.CloseableHttpClient;
+  import org.apache.http.impl.client.HttpClients;
+  import java.io.BufferedReader;
+  import java.io.DataOutputStream;
+  import java.io.InputStreamReader;
+  import javax.net.ssl.HttpsURLConnection;
+  import java.net.URL;
+  import java.net.URLEncoder;
+  import sailpoint.web.LoginBean;
+  import sailpoint.web.BaseBean;
+  public String sendSMS(String id, String code){
+  
+  log.error("identity name is:::"+id);
+    log.error("code is ::"+code);
+  String mobile = null;
+
+  String pswd = null;
+  String server=null;
+  String username=null;
+  String password=null;
+  String destination = null;
+  String message=null;
+  String source=null;
+  String type=null;
+  String dlr=null;
+  Identity identity =null;
+  identity = context.getObjectByName(Identity.class, id);
+  if(identity!=null){
+    mobile =identity.getAttribute("mobile");
+    log.error("mobile num is::"+mobile);
+    server="api.rmlconnect.net";
+    
+    username="OTPsAMERICA";
+
+    password="D0*j(5Pz";
+
+    destination=mobile;
+
+    message="Your one time verification code to generate new password is "+code;
+
+    source="Americana";
+
+    type="0";
+
+    dlr="0";
+
+    //System.out.println("inside main");
+
+    //System.out.println("msg is::"+message);
+
+    //Sender("api.rmlconnect.net", "OTPsAMERICA", "D0*j(5Pz", "971509246851", "Your one time password is %m", "Americana", "5", "Americana", "60");
+
+    // submitMessage();
+
+    URL sendUrl = new URL("https://api.rmlconnect.net:443/bulksms/bulksms?");
+
+    HttpsURLConnection httpsConnection = (HttpsURLConnection) sendUrl.openConnection();
+    log.error("inside https connection");
+
+    httpsConnection.setRequestMethod("POST");
+
+    httpsConnection.setDoInput(true);
+
+    httpsConnection.setDoOutput(true);
+
+    httpsConnection.setUseCaches(false);
+
+    DataOutputStream dataStreamToServer = new DataOutputStream(httpsConnection.getOutputStream());
+
+    dataStreamToServer.writeBytes("username="+ URLEncoder.encode(username, "UTF-8") + "&amp;password="+ URLEncoder.encode(password, "UTF-8") + "&amp;message="+ URLEncoder.encode(message, "UTF-8")+"&amp;type="+ URLEncoder.encode(type, "UTF-8") + "&amp;dlr="+ URLEncoder.encode(dlr, "UTF-8")  + "&amp;destination="+ URLEncoder.encode(destination, "UTF-8") + "&amp;source="+ URLEncoder.encode(source, "UTF-8") );
+
+    dataStreamToServer.flush();
+
+    dataStreamToServer.close();
+
+    BufferedReader dataStreamFromUrl = new BufferedReader(new InputStreamReader(httpsConnection.getInputStream()));
+
+    String dataFromUrl = "", dataBuffer = "";
+
+    while ((dataBuffer =dataStreamFromUrl.readLine()) != null) {
+
+      dataFromUrl += dataBuffer;
+
+    }
+
+    dataStreamFromUrl.close();
+
+    //System.out.println("Response: " + dataFromUrl);
+
+
+
+    if(dataFromUrl.contains("1701")||dataFromUrl.contains(destination)) {
+
+      log.error("message submitted successfully");
+      return "1701";
+
+    }
+  }
+  
+  }
+
+  </Source>
+</Rule>
+
+</sailpoint>

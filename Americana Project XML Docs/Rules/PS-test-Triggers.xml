@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS-test-Triggers">
+  <Source>
+       
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+  import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
+import sailpoint.object.ResourceObject;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+   import java.lang.*;
+  import org.apache.log4j.Logger;
+ import java.time.format.DateTimeFormatter;
+		import java.util.Date;
+
+		import sailpoint.object.ResourceObject;
+
+		import java.time.LocalDate;
+		import java.time.LocalDateTime;
+		import java.text.SimpleDateFormat;
+
+Logger log=Logger.getLogger("customRule4");
+
+  
+  
+  
+boolean process=false;
+ String psswd=context.decrypt("1:ACP:1Lgl02hCZcP3uQrvBu1tf+G89YaQtqTixTskiSF3+T4bQJWGMdKfy2jzb17D4f+/");
+  return psswd;
+  
+  
+  /*
+  String idname="aaagarwal";
+    log.error("idname"+idname);
+  log.error(context.decrypt("1:ACP:JUQ750s7V8BWddueMqzo6b+hk5rZph4SPKGgFzofDYzVg5W0zo7rUImf1bpwQZ7P"));
+  Identity newIdentity=context.getObjectByName(Identity.class,idname);
+
+       List links=newIdentity.getLinks();
+for(Link link :links)
+{
+if(link.getApplicationName().equalsIgnoreCase("Active Directory")||link.getApplicationName().equalsIgnoreCase("AD Contractors"))
+{
+String accountExpires=link.getAttribute("accountExpires");
+ log.info("accountExpires "+accountExpires);
+  if( !accountExpires.equalsIgnoreCase("never") &amp;&amp; accountExpires!=null ){
+
+
+
+ //String dateString = "07/01/2024 12:00:00 AM";
+  Date currentDate=new Date();
+     log.info("currentDate "+currentDate);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
+        Date expirydate = dateFormat.parse(accountExpires);
+     log.info("expirydate "+expirydate);
+    	Long accountexpiry = expirydate.getTime();
+    log.info("accountexpiry "+accpountexpiry);
+    Long current=currentDate.getTime();
+      log.info("accountexpiry "+accpountexpiry);
+	  diffInDays = (int) ((accountexpiry-current) / (1000*60*60*24)) ;	
+	   log.info("diffInDays "+diffInDays);
+   // return diffIndays;
+	 if((diffInDays==30|| diffInDays==15 || diffInDays==5 )){
+     process=true;
+      
+	
+    }
+	
+		
+}		
+
+
+
+}
+
+}
+ return process;
+*/
+  
+  
+  //test trigger latest lastLogon:
+  //String idname="36336";
+ // "Hanuma Emani(Paramount)";
+  String idname="amd.az.iam1";
+  log.info("idname :"+idname);
+ 
+        Identity newIdentity = context.getObjectByName(Identity.class, idname);
+
+        Date latestDatee = null;
+        Date logonn = null;
+        Date logontimEstAmpp = null;
+
+        List links = newIdentity.getLinks();
+
+        for (Link link : links) {
+            if (link.getApplicationName().equalsIgnoreCase("Active Directory")
+                    || link.getApplicationName().equalsIgnoreCase("AD Contractors")) {
+                String lastLogon = (String) link.getAttribute("lastLogon");
+                String lastLogonTimestamp = (String) link.getAttribute("LastLogonTimestamp");
+                log.info("lastLogon: " + lastLogon);
+                log.info("lastLogonTimestamp: " + lastLogonTimestamp);
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+                LocalDate now = LocalDate.now();
+
+                long DIFF_FOR_DATE_AND_TIMES = 11644473600000L;
+
+                if (lastLogon != null &amp;&amp; !lastLogon.equalsIgnoreCase("0")) {
+                    long adDate = Long.parseLong(lastLogon);
+                    long epochTime = ((adDate / 10000) - DIFF_FOR_DATE_AND_TIMES);
+                    Date lastLogonDate = new Date(epochTime);
+
+                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                    logonn = sf.parse(sf.format(lastLogonDate));
+                    log.info("logonn: " + logonn);
+                }
+
+                if (lastLogonTimestamp != null &amp;&amp; !lastLogonTimestamp.isEmpty()) {
+                    long LTSadDate = Long.parseLong(lastLogonTimestamp);
+                    long LTSepochTime = (LTSadDate / 10000) - DIFF_FOR_DATE_AND_TIMES;
+                    Date LTSlastLogonDate = new Date(LTSepochTime);
+
+                    SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                    logontimEstAmpp = sf.parse(sf.format(LTSlastLogonDate));
+                    log.info("timestamp: " + logontimEstAmpp);
+                }
+
+                if (logonn != null &amp;&amp; logontimEstAmpp != null) {
+                    latestDatee = (logontimEstAmpp.after(logonn)) ? logontimEstAmpp : logonn;
+                  
+                  log.info("latestDatee :"+latestDatee);
+                  
+                  
+                    long diffInMillies = Math.abs(new Date().getTime() - latestDatee.getTime());
+        int diff= (int) (diffInMillies / (24 * 60 * 60 * 1000));
+                //    int diff = Util.getDaysDifference(new Date(), latestDatee);
+                    log.info("Difference in days: " + diff);
+                }
+            }
+        }
+ 
+
+  
+
+  //if(need to check if this differnce is more than 14 and flag is null then trigger first WF)
+  //{
+  
+ // process=true;
+//}
+  //else if(differnce is 45 and flag is dormant then trigger secoon dWF)
+  
+  //{
+  
+   
+ // process=true;
+//}
+  
+ // else
+  //process=false;
+    
+
+  
+
+
+// return process;
+
+	
+
+
+	
+	
+		
+	
+</Source>
+</Rule>
+
+</sailpoint>

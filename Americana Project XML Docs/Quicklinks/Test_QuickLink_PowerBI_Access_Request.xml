@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Tasks" messageKey="Test - PowerBI Access Request" name="Test_QuickLink_PowerBI_Access_Request">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="Test_PowerBI_Workflow" />
+    </Map>
+  </Attributes>
+</QuickLink>
+
+</sailpoint>

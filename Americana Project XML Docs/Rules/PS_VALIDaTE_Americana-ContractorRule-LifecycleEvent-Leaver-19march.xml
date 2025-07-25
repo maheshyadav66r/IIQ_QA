@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_VALIDaTE_Americana-ContractorRule-LifecycleEvent-Leaver-19march">
+  <Source>
+   import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+  import sailpoint.object.*;
+
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Logger;
+  Logger log=Logger.getLogger("customRule4");
+
+
+  boolean leaverTriggerFlg = false;
+//Filter f = Filter.eq("application.name","AD Contractors");
+
+  QueryOptions qo= new QueryOptions();
+  //qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+String info;
+String idname;
+String linkstatus;
+String endDate;
+String ContractorCreation;
+Boolean disabled;
+  String IIQDisabled;
+  String Type;
+  String status;
+  String Country;
+List al=new ArrayList();
+
+
+for(Identity newIdentity :ids)
+{
+
+if(null != newIdentity){
+
+ if( null != newIdentity.getAttribute("endDate")&amp;&amp;!newIdentity.getAttribute("endDate").equalsIgnoreCase("never")){
+ 
+   linkstatus = "inactive";
+  List links =newIdentity.getLinks();
+  
+  for(Link link:links){
+  
+    if(link.getApplicationName().equalsIgnoreCase("AD Contractors")){
+      
+     /* if(link.getAttribute("IIQDisabled")!=null&amp;&amp;!link.getAttribute("IIQDisabled")){
+ IIQDisabled=String.valueOf(link.getAttribute("IIQDisabled"));
+      }*/
+   disabled=link.isDisabled();
+   if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     linkstatus ="active";
+   }
+      
+      idname=newIdentity.getName();
+ContractorCreation =(String) newIdentity.getAttribute("ContractorCreation");
+      String strEndDate = (String) newIdentity.getAttribute("endDate");
+       status=(String) newIdentity.getAttribute("status");
+      Type=(String) newIdentity.getAttribute("type");
+      Country=(String) newIdentity.getAttribute("country");
+     log.error("end date of contractor is:::"+strEndDate);
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+ 
+        Date endDate = sf.parse(strEndDate);
+        log.error("formatting string to date: " + endDate);
+        
+        Date goLiveDate = sf.parse("2022-12-23");
+       log.error("goLiveDate: " + goLiveDate);
+       
+  
+   
+        if (endDate.after(goLiveDate)) {
+            Date currentDate = new Date();
+            if (endDate.compareTo(currentDate) &lt; 0||endDate.compareTo(currentDate) == 0) {
+              log.error("hi"); // logic to print identity name, end date, link status active , attribute valuecontractor creation true
+			  info=idname+","+strEndDate+","+ContractorCreation+","+linkstatus+","+Country;
+                        leaverTriggerFlg = true;
+						
+						al.add(info);
+            }
+        }
+        
+  
+  }
+  
+
+        
+    }
+    
+    
+    /* if(leaverTriggerFlg){
+
+    //check for already same event got trigged in the past or not
+    Filter typeF = Filter.eq("type", "Leaver");
+    Filter userF = Filter.eq("targetId", newIdentity.getId());
+
+    //Date before3daysDate = Util.incrementDateByDays(new Date(), -3);
+    //Filter dateFilter = Filter.ge("created", before3daysDate);
+
+    List cmpStatus = new ArrayList(Arrays.asList(IdentityRequest.CompletionStatus.Pending, IdentityRequest.CompletionStatus.Success,IdentityRequest.CompletionStatus.Incomplete));
+    Filter cmpllF = Filter.in("completionStatus", cmpStatus);
+
+    QueryOptions op = new QueryOptions();
+    op.add(typeF);
+    op.add(userF);
+       
+    
+    op.add(cmpllF);
+    //op.add(dateFilter);
+
+    int  count = context.countObjects(IdentityRequest.class, op);
+    log.error(" count : "+count);
+    if(count &gt; 0){
+      leaverTriggerFlg = false;
+      
+      log.error("Already Leaver-Event Processed/Pending!!");
+      
+      return leaverTriggerFlg;
+    }
+    return leaverTriggerFlg;    
+
+  }*/
+// return leaverTriggerFlg;
+    
+     
+  }
+}
+}
+  
+
+
+
+ if (!al.isEmpty()&amp;&amp; al.size()&gt;0) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\leaverfile2.csv", true);
+        for (String info : al) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+  
+
+  
+  
+</Source>
+</Rule>
+
+</sailpoint>

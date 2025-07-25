@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Oracle BPM Manual Provisioning">
+  <Source>
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.api.Provisioner;
+
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Rule;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.Workflow;
+
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import sailpoint.object.ResourceObject;
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailFileAttachment;
+  import java.io.File;
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+
+  Log log = LogFactory.getLog("americana.ruleLibrary.Attribute");
+  log.trace("***RUNNING Americana-RuleLibrary-Attribute***");
+  //return context.decrypt("1:ACP:5FbA9TcHnFj5NB/uiH5MaSEZgGVLWysXcfcTkEVW7P0=");
+
+  String identityName = "20533";
+  
+
+  log.trace("********Entered Test Provision Rule : "+identityName);
+  ProvisioningPlan plan = null;
+
+  if (Util.isNotNullOrEmpty(identityName)) {
+    Identity identity = context.getObjectByName(Identity.class,identityName);
+    if (identity == null) {
+      log.error("Identity not found in the system :"+identityName);
+      return plan;
+    }
+    plan = new ProvisioningPlan();
+    plan.setIdentity(identity);
+    /*AccountRequest acctReq = new AccountRequest();
+    acctReq.setOperation(AccountRequest.Operation.Modify);
+    acctReq.setApplication("Active Directory");
+    acctReq.setNativeIdentity("");
+    acctReq.add(new AttributeRequest("password",ProvisioningPlan.Operation.Set,"y_bSy1?t9ZU;"));
+    plan.add(acctReq);
+*/
+    AccountRequest acctReqOracle = new AccountRequest();
+    acctReqOracle.setOperation(AccountRequest.Operation.Modify);
+    acctReqOracle.setApplication("Oracle BPM IDCS");
+    String nativeIdentity = "";
+    List linksList = identity.getLinks();
+    if(null != linksList @and linksList.size() &gt; 0){
+      for(Link link : linksList){
+        if(null != link @and "Oracle BPM IDCS".equalsIgnoreCase(link.getApplicationName())){
+        	nativeIdentity = link.getNativeIdentity();
+        }
+      }
+    }
+    
+    /*List assignedPlans = null;
+    if(null != linksList){
+      for(Link link : linksList){
+        if(null != link){
+          if("Azure AD".equalsIgnoreCase(link.getApplicationName())){
+          	nativeIdentity = link.getNativeIdentity();
+            assignedPlans =  link.getAttribute("assignedPlans");
+          }
+        }
+      }
+    }*/
+    
+    List groupsList = new ArrayList();
+     groupsList.add("a20fee19e3ad466eaaebe8058ebb58ff");
+ /*
+ groupsList.add("ef4188bce1244231ac31f7c498e94e6b");
+              groupsList.add("0d80e731b1c94cb682bfa9b9bc570932");
+              groupsList.add("fbfe6725b83749a09dfa24ff23fc6045");
+              groupsList.add("08f64796b2a14b77ba541da86e65824c");
+              groupsList.add("dc4e0cef31a940da8cb2e48c0c68fa82");
+              groupsList.add("57e8beecb4aa4ac382c502075f84b810");
+              groupsList.add("30a0873f00fc4a5e830f664263894bcd");
+              groupsList.add("de1e1f2629bb45809e7a69c20f4de5a6");
+              groupsList.add("5f7a3820eac2424ea9121ee970950ca5");
+              groupsList.add("ec7cf56ec55a467fafe5a68785dd4e0a");
+              groupsList.add("49aa9a4abfa248cfb3763a919e7c7d3b");
+              groupsList.add("5c5c42f27c284fa2acfd0afaf63a5f73");
+              groupsList.add("0a6bf450e1604237b51e933b6c2cfca6");
+*/
+    
+          //acctReqOracle.add(new AttributeRequest("assignedPlans", ProvisioningPlan.Operation.Remove, assignedPlans));
+    acctReqOracle.setNativeIdentity(nativeIdentity);
+    acctReqOracle.add(new AttributeRequest("Group",ProvisioningPlan.Operation.Add,groupsList));
+    
+    plan.add(acctReqOracle);
+    
+    
+
+    Provisioner pro = new Provisioner(context);
+    //pro.setNoCreateTemplates(true);
+    //return pro.compile(plan);
+    return pro.execute(plan);
+  }
+  </Source>
+</Rule>
+
+</sailpoint>

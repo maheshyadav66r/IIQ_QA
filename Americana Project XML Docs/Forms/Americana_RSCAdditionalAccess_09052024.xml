@@ -1,0 +1,595 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_RSCAdditionalAccess_09052024" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Americana_AdditionalAccess_Form" />
+    </Map>
+  </Attributes>
+  <Section>
+    <Field displayName="Select User" displayType="comboBox" filterString="(links.application.name == &quot;Active Directory&quot;)" name="user" postBack="true" required="true" type="sailpoint.object.Identity" />
+    <Field displayName="sAMAccountName" dynamic="true" name="sAMAccountName" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.api.Provisioner;
+          import sailpoint.connector.Connector; 
+          import sailpoint.api.ObjectUtil;
+          import org.apache.log4j.Logger;
+          import sailpoint.object.Link;
+
+          List links = null;
+          String sName =null;
+
+          String name=null;
+          Identity identity=null;
+          Logger  logger = Logger.getLogger("com.CustomLogs");
+
+          try{
+
+          logger.debug(" - Start");
+          if(null != username){
+
+          name = form.getField("user").getValue();
+          log.error("name is"+name);
+          identity = context.getObjectByName(Identity.class,name);
+          if(identity!= null){
+          log.error("inside if");
+
+          links = identity.getLinks();
+          if(links != null &amp;&amp; links.size()&gt; 0) {
+
+          for(Link link : links) {
+
+          String applicationName = link.getApplicationName();
+          if(applicationName != null &amp;&amp; applicationName.equalsIgnoreCase("Active Directory")){
+          log.error("inside ad loop");
+          sName = (String)link.getAttribute("sAMAccountName");
+          log.error("sam accoiunt name is"+sName);
+          //  return sName;
+          break;
+          }
+          }
+          return sName;
+          }        	        
+          }
+
+          } 
+          return sName;
+          }catch(Exception e){
+
+          logger.error("Exception= "+e.printStackTrace());          
+          throw e;
+          }
+          //  return "c.samaccountname";
+
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="2" label="User Details" type="text">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="First name" dynamic="true" name="firstname" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getFirstname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last name" dynamic="true" name="lastname" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getLastname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Job Title" dynamic="true" name="jobTitle" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("jobTitle");	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department" dynamic="true" name="department" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("department");
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="2" displayName="Manager" displayType="combobox" dynamic="true" name="manager" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	Identity managerObj = identityObj.getManager();
+          	if(null != managerObj){
+          		return managerObj.getDisplayName();
+          	}
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="2" label="Options to select access">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="VPN Access" displayType="radio" dynamic="true" name="vpn" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Call Center Group" displayType="radio" dynamic="true" name="callcenter" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Wifi Access" displayType="radio" dynamic="true" name="wifi" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Application Group" displayType="radio" dynamic="true" name="groups" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="AD displayName" displayType="radio" dynamic="true" name="adname" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="VPNAccess" dynamic="true" hidden="true" name="vpntest" postBack="true" type="string">
+      <Script>
+        <Source>
+          log.error("vpn test value from form11111::"+form.getField("vpn").getValue());        
+          String strVpn=null;
+          if(form.getField("vpn").getValue()!=null){
+          strVpn=form.getField("vpn").getValue().toString();
+          }
+          log.error("vpntest is:::"+strVpn);
+          return strVpn;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Vpn Access" displayType="comboBox" dynamic="true" multi="true" name="vpnaccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>UAE VPN</String>
+            <String>AZURE VPN</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  String strVpntest=form.getField("vpntest").getValue();
+                  if(strVpntest==null || (strVpntest!=null &amp;&amp; strVpntest.equalsIgnoreCase("false")))
+                  {
+                  log.error("inside if loop hidden"+strVpntest);
+                  return true;
+                  }
+                  if(strVpntest!=null){
+                  log.error("strVpn is:::"+strVpntest);
+                  if(strVpntest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="AD displayName" dynamic="true" hidden="true" name="adtest" postBack="true" type="string">
+      <Script>
+        <Source>
+          log.error("vpn test value from form11111::"+form.getField("adname").getValue());        
+          String strAd=null;
+          if(form.getField("adname").getValue()!=null){
+          strAd=form.getField("adname").getValue().toString();
+          }
+          log.error("vpntest is:::"+strAd);
+          return strAd;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="First name" dynamic="true" name="editfirstname" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+
+                  String stradtest=form.getField("adtest").getValue();
+                  if(stradtest==null || (stradtest!=null &amp;&amp; stradtest.equalsIgnoreCase("false"))){
+                  log.error("inside if loop hidden"+stradtest);
+                  return true;
+                  }
+                  if(stradtest!=null){
+                  log.error("strWifi is:::"+stradtest);
+                  if(stradtest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Last name" dynamic="true" name="editlastname" postBack="true" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+
+                  String stradtest=form.getField("adtest").getValue();
+                  if(stradtest==null || (stradtest!=null &amp;&amp; stradtest.equalsIgnoreCase("false"))){
+                  log.error("inside if loop hidden"+stradtest);
+                  return true;
+                  }
+                  if(stradtest!=null){
+                  log.error("strWifi is:::"+stradtest);
+                  if(stradtest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="2" displayName="AD displayName" dynamic="true" helpKey="Display Name should be combination of Firstname and Lastname. Edit the Firstname or Lastname if change required" name="editdisplayname" postBack="true" readOnly="true" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+
+                  String stradtest=form.getField("adtest").getValue();
+                  if(stradtest==null || (stradtest!=null &amp;&amp; stradtest.equalsIgnoreCase("false"))){
+                  log.error("inside if loop hidden"+stradtest);
+                  return true;
+                  }
+                  if(stradtest!=null){
+                  log.error("strWifi is:::"+stradtest);
+                  if(stradtest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+      	
+        
+        String firstName = form.getField("editfirstname").getValue();
+		 String lastName = form.getField("editlastname").getValue();
+        if(null != firstName &amp;&amp; !"".equalsIgnoreCase(firstName) &amp;&amp; null != lastName &amp;&amp; !"".equalsIgnoreCase(lastName)){
+          
+          	return firstName+" "+lastName;	
+          }
+       
+        
+        
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="grouptest" dynamic="true" hidden="true" name="grouptest" postBack="true" type="string">
+      <Script>
+        <Source>
+          log.error("vpn test value from form11111::"+form.getField("groups").getValue());        
+          String strgroup=null;
+          if(form.getField("groups").getValue()!=null){
+          strgroup=form.getField("groups").getValue().toString();
+          }
+          log.error("vpntest is:::"+strgroup);
+          return strgroup;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Application Group" displayType="comboBox" dynamic="true" multi="true" name="groupaccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>POWER BI</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  String strgrouptest=form.getField("grouptest").getValue();
+                  if(strgrouptest==null || (strgrouptest!=null &amp;&amp; strgrouptest.equalsIgnoreCase("false")))
+                  {
+                  log.error("inside if loop hidden"+strgrouptest);
+                  return true;
+                  }
+                  if(strgrouptest!=null){
+                  log.error("strVpn is:::"+strgrouptest);
+                  if(strgrouptest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="calltest" dynamic="true" hidden="true" name="calltest" postBack="true" type="string">
+      <Script>
+        <Source>
+          log.error("vpn test value from form11111::"+form.getField("callcenter").getValue());        
+          String str1=null;
+          if(form.getField("callcenter").getValue()!=null){
+          str1=form.getField("callcenter").getValue().toString();
+          }
+          log.error("vpntest is:::"+str1);
+          return str1;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Call Center Group" displayType="comboBox" dynamic="true" multi="true" name="callaccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Call center RDP Users</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  String strcalltest=form.getField("calltest").getValue();
+                  if(strcalltest==null || (strcalltest!=null &amp;&amp; strcalltest.equalsIgnoreCase("false")))
+                  {
+                  log.error("inside if loop hidden"+strcalltest);
+                  return true;
+                  }
+                  if(strcalltest!=null){
+                  log.error("calltest is:::"+strcalltest);
+                  if(strcalltest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="WifiAccess" dynamic="true" hidden="true" name="wifitest" postBack="true" type="string">
+      <Script>
+        <Source>
+
+          log.error("wifi test value from form11111::"+form.getField("wifi").getValue());         
+          String strwifi=null;
+          if(form.getField("wifi").getValue()!=null){
+          strwifi=form.getField("wifi").getValue().toString();
+          }
+          log.error("wifitest is:::"+strwifi);
+          return strwifi;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Wifi Access" displayType="comboBox" dynamic="true" multi="true" name="wifiaccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>UAE Wifi</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+
+                  String strwifitest=form.getField("wifitest").getValue();
+                  if(strwifitest==null || (strwifitest!=null &amp;&amp; strwifitest.equalsIgnoreCase("false"))){
+                  log.error("inside if loop hidden"+strwifitest);
+                  return true;
+                  }
+                  if(strwifitest!=null){
+                  log.error("strWifi is:::"+strwifitest);
+                  if(strwifitest.equalsIgnoreCase("true")){
+                  return false;
+                  } 
+                  }
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field displayName="Business Justification" displayType="combobox" name="justification" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Requesting additional access</String>
+            <String>Active Directory displayName change</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field displayName="Justificatiion Reason" displayType="textarea" dynamic="true" helpKey="Please enter a business justification ensuring that it's no less than 100 characters" name="otherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          System.out.println("Value "+value);
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="next" label="OK" />
+  <Button action="cancel" label="nav_cancel" />
+</Form>
+
+</sailpoint>

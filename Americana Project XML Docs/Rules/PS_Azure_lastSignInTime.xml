@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_Azure_lastSignInTime" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String" />
+  <Source> import java.text.SimpleDateFormat;
+		import java.time.LocalDate;
+		import java.time.LocalDateTime;
+		import java.util.Date;
+		import sailpoint.object.ResourceObject;
+    import org.apache.log4j.Logger;
+  import java.io.FileWriter;
+  import java.util.*;
+  import sailpoint.object.*;
+ import java.io.FileWriter;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.ResourceObject;
+import sailpoint.tools.Util.ParseException;
+import sailpoint.tools.Util;
+  Logger log=Logger.getLogger("customRule4");   
+try {
+
+
+		
+    String lastSignInDateTime=(String)link.getAttribute("lastSignInDateTime");
+	
+String lastNonInteractiveSignInDateTime=(String)link.getAttribute("lastNonInteractiveSignInDateTime");
+
+Date date1;
+  Date date2;
+  Date date3;
+  Date latestDate;
+   Date thelatestDate;
+  Date date ;
+  List dateList = new ArrayList(); 
+int daysDifference;
+  
+  if(lastSignInDateTime!=null&amp;&amp;!lastSignInDateTime.isEmpty() &amp;&amp; !lastSignInDateTime.equals("0") ) { 
+
+
+
+log.error("last log on is not null ");
+   SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  Date date1 = dateFormat.parse(lastSignInDateTime);
+   dateList.add(date1);
+}
+ if(lastNonInteractiveSignInDateTime!=null&amp;&amp;!lastNonInteractiveSignInDateTime.isEmpty() &amp;&amp; !lastNonInteractiveSignInDateTime.equals("0") )
+  {
+    log.error("last log time stamp on is not null ");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  Date date2 = dateFormat.parse(lastNonInteractiveSignInDateTime);
+     dateList.add(date2);
+  }
+  
+ 
+		        // Create a List of Dates
+  
+		       // List dateList = List.of(date1, date2, date3);
+
+		        // Compare dates and find the latest one
+		      //  Date latestDate = findLatestDate(dateList);
+  
+  if(dateList!=null &amp;&amp; dateList.size()  &gt; 0)
+  {
+  
+   Date latestDate = null;
+          log.info("finding latest date");
+
+		        for (Date date : dateList) {
+		            if (date != null &amp;&amp; (latestDate == null || date.after(latestDate))) {
+		                latestDate = date;
+		            }
+		        }
+          log.info("latest date is "+latestDate);	
+			//	return latestDate;
+ thelatestDate=latestDate;
+  
+  }
+  
+
+		        // Print the latest date
+		        log.info("Latest Date: " + thelatestDate);
+		     // Compare theLatest with today's date
+  
+ 
+		String formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(thelatestDate);
+		log.debug("formatDate in stamp :"+formatDate);
+  return formatDate;
+  
+}
+
+
+catch (Exception e)
+{
+System.out.println(e);	
+}</Source>
+</Rule>
+
+</sailpoint>

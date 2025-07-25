@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="CrunchTime_addNewAccess" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form" />
+    </Map>
+  </Attributes>
+  <Section name="Section For user Data">
+    <Field displayName="Choose an option" displayType="radio" name="ModifyAccess" postBack="true">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Remove my existing access and add new access</String>
+            <String>Only Add additional access</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <ValidationScript>
+        <Source>
+          if("Remove my existing access and add new access".equalsIgnoreCase(value) @and !hasLinks)
+          return "WARNING : user doesn’t have a Crunch Time Account";
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

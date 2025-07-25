@@ -1,0 +1,219 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_RSCAdditionalAccess_Second_Level_Approval_Form" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Additional Access Request - Second Level Approval form" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="Selected Details for additional access request">
+    <Field columnSpan="2" displayName="Selected User" name="user" readOnly="true" required="true" type="String" />
+  </Section>
+  <Section columns="2" type="datatable">
+    <Field columnSpan="1" displayName="sAMAccountName" name="sAMAccountName" readOnly="true" type="String" />
+    <Field columnSpan="1" displayName="First name" name="firstname" readOnly="true" type="String" />
+    <Field columnSpan="1" displayName="Last name" name="lastname" readOnly="true" type="String" />
+    <Field columnSpan="1" displayName="Job Title" name="jobTitle" readOnly="true" type="String" />
+    <Field columnSpan="1" displayName="Department" name="department" readOnly="true" type="String" />
+    <Field columnSpan="1" displayName="Manager" name="manager" readOnly="true" type="String" />
+  </Section>
+  <Section columns="2" label="selected access">
+    <Field columnSpan="1" displayName="VPN Access" displayType="radio" dynamic="true" name="vpn" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="AD displayName" displayType="radio" dynamic="true" name="adname" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Call Center Group" displayType="radio" dynamic="true" name="callcenter" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Wifi Access" displayType="radio" dynamic="true" name="wifi" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Application Group" displayType="radio" dynamic="true" name="groups" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Vpn Access" displayType="comboBox" dynamic="true" multi="true" name="vpnaccess" postBack="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("vpn").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="AD displayName" dynamic="true" name="editdisplayname" postBack="true" required="true" type="String">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+
+ boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("adname").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Application Group" displayType="comboBox" dynamic="true" multi="true" name="groupaccess" postBack="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("groups").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Call Center Group" displayType="comboBox" dynamic="true" multi="true" name="callaccess" postBack="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("callcenter").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Wifi Access" displayType="comboBox" dynamic="true" multi="true" name="wifiaccess" postBack="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("wifi").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" readOnly="true" required="true" type="string">
+      <AllowedValues>
+        <String>Requesting additional access</String>
+        <String>Active Directory displayName change</String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" name="otherJustificationReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Section label="Approval Status" name="Approval Status" type="datatable">
+    <Field helpKey="Please find Approval Status">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps-approvalStatus-FieldValue-DeptHead" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Button action="next" label="Approve" value="Approve" />
+  <Button action="back" label="Reject" value="Reject" />
+  <Button action="cancel" label="nav_cancel" />
+</Form>
+
+</sailpoint>

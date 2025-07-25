@@ -1,0 +1,109 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="AD Powershell" type="ConnectorAfterCreate">
+  <Attributes>
+    <Map>
+      <entry key="ObjectOrientedScript" value="true" />
+      <entry key="disabled" value="false" />
+      <entry key="extension" value=".ps1" />
+      <entry key="program" value="powershell.exe" />
+      <entry key="timeout" value="300" />
+    </Map>
+  </Attributes>
+  <Source>
+  $logFile = "C:\ConnectorBeforeCreate\ConnectorBeforeCreate.log";
+   $pwdText = "T9=A!5gCUHPe~KkUr";
+   $username = 'Americana\ams.ae.iam'
+   $servername = 'aedxbsrvexch01'
+   $serverFQN = 'aedxbsrvexch01.americana.global'
+   $azureDomain = '@americanafood.onmicrosoft.com'
+
+    Function writeToLog() {
+    param([string]$message)
+      Add-Content ($(Get-Date -format "yyyy-MM-dd HH:mm:ss") + "::$message") -Path $logFile
+  }
+
+   Function Login {
+           
+        #$secpasswd = ConvertTo-SecureString $secString -Force
+          
+          $secpasswd = ConvertTo-SecureString $pwdText -AsPlainText -Force
+          
+          $credObject = New-Object System.Management.Automation.PSCredential($username, $secpasswd)
+          
+          $uri = "http://"+$serverFQN+"/PowerShell/"
+          $session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri $uri -Credential $credObject -Authentication Kerberos #-ErrorAction Stop
+          
+          Import-PSSession $session -AllowClobber -DisableNameChecking	
+          $session
+      }
+
+  Add-type -path "C:\Program Files\IQService\Utils.dll";
+    writeToLog("Start PS Rule") 
+    
+    
+
+    # Read the environment variables
+    $sReader = New-Object System.IO.StringReader([System.String]$env:Request)
+    $sResult = New-Object System.IO.StringReader([System.String]$env:Result)
+
+    # Form the xml reader objects
+    $xmlReader = [ System.xml.XmlTextReader]([sailpoint.utils.xml.XmlUtil]::getReader($sReader))
+    $xmlReader_Result = [ System.xml.XmlTextReader]([sailpoint.utils.xml.XmlUtil]::getReader($sResult))
+
+    # Create SailPoint objects
+    $requestObject = New-Object Sailpoint.Utils.objects.AccountRequest($xmlReader)
+    $resultObject = New-Object Sailpoint.Utils.objects.ServiceResult($xmlReader_Result)
+
+    # Loop through the attributes from the request
+    $atrBaseDN = ""
+    $atrDepartmentName = ""
+    foreach ($attribute in $requestObject.AttributeRequests)
+  {
+    if($attribute.Name -eq "baseDN")
+    {
+      $atrBaseDN=$attribute.value;
+      writeToLog("atrBaseDN::$atrBaseDN")  
+    }
+    if($attribute.Name -eq "departmentName")
+    {  
+      $atrDepartmentName=$attribute.value;
+      writeToLog("atrDepartmentName::$atrDepartmentName")  
+    }
+  }
+  //"OU=Users,OU=Rajasekhar5,DC=Eshiam,DC=com"
+  //"PPPPPPPPPP"
+  $securePassword = ConvertTo-SecureString "T9=A!5gCUHPe~KkUr" -AsPlainText -force
+   # writeToLog("securePassword: " + $securePassword)
+    $credential = New-Object System.Management.Automation.PsCredential("Americana\ams.ae.iam",$securePassword)  
+   # writeToLog("credential: " + $credential)
+    $session = New-PSSession -computername "10.220.1.4" -credential $credential
+     Import-PSSession -Session $session
+   # writeToLog("session: " + $session)
+
+    $atrDepartmentName = "`"$atrDepartmentName`""
+    writeToLog("atrDepartmentName: $atrDepartmentName")
+    $atrBaseDN = "`"$atrBaseDN`""
+    writeToLog("atrBaseDN: $atrBaseDN")
+   $cmmmmm = "New-ADOrganizationalUnit $atrDepartmentName -path $atrBaseDN"
+    writeToLog("cmmmmm: $cmmmmm")
+   
+    $finalcmd= "Invoke-Command -session $session -scriptblock {$cmmmmm}"
+     
+   
+     writeToLog("finalcmd: $finalcmd")
+    
+   
+    $res = Invoke-Command -Session $session -scriptblock {$cmmmmm}
+  writeToLog("res: $res")
+
+    Remove-PSSession -ID $session.ID
+
+    
+    writeToLog("Rule End")
+
+    </Source>
+</Rule>
+
+</sailpoint>

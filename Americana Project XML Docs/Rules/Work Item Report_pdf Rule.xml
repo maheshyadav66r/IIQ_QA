@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Work Item Report_pdf Rule" type="AllowedValues">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import org.apache.commons.lang.StringUtils;
+import sailpoint.api.SailPointContext;
+import sailpoint.api.SailPointFactory;
+import sailpoint.object.Filter;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.WorkItem;
+import sailpoint.object.Workflow;
+import sailpoint.tools.GeneralException;
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+  
+Date todaydate = new Date();
+  SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh.mm aa");
+  SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+  String reportdate = formatter.format(todaydate);
+  String filepath = "E:\\WorkItemReportPdf\\WorkItemReport-"+reportdate+".pdf";
+  File reportfile = new File(filepath);
+  if(!reportfile.exists())
+    reportfile.createNewFile();
+  FileOutputStream fos = new FileOutputStream(reportfile);
+  //SailPointContext context = SailPointFactory.getCurrentContext();
+  try{
+    QueryOptions qo = new QueryOptions();
+    Filter filter = Filter.eq("WorkItem.type","Form");
+    qo.addFilter(filter);
+    qo.addOrdering("WorkItem.created",false);
+    Document document = new Document(PageSize.A4.rotate());
+    PdfWriter.getInstance(document, fos);
+    document.open();
+    Font headingFont = FontFactory.getFont(FontFactory.COURIER_BOLD, 12);
+    headingFont.setColor(new Color(0, 102, 204));
+    Paragraph heading = new Paragraph("Work Item Report: "+reportdate, headingFont);
+    heading.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(heading);
+    document.add(Chunk.NEWLINE);
+    PdfPTable table = new PdfPTable(8);
+    Font theaderFont = FontFactory.getFont(FontFactory.COURIER, 10,Font.BOLD, Color.WHITE);
+    Font bodyFont = FontFactory.getFont(FontFactory.COURIER, 9,Font.NORMAL, Color.BLACK);
+    PdfPCell appcell = new PdfPCell(new Phrase("Application",theaderFont));
+    appcell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(appcell);
+    PdfPCell ownercell = new PdfPCell(new Phrase("Owner",theaderFont));
+    ownercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(ownercell);
+    PdfPCell requesterNamecell = new PdfPCell(new Phrase("Requester",theaderFont));
+    requesterNamecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(requesterNamecell);
+    PdfPCell managercell = new PdfPCell(new Phrase("Manager",theaderFont));
+    managercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(managercell);
+    PdfPCell secondLevelApprovercell = new PdfPCell(new Phrase("Second Level Approver",theaderFont));
+    secondLevelApprovercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(secondLevelApprovercell);
+    PdfPCell thirdLevelApprovercell = new PdfPCell(new Phrase("Third Level Approver",theaderFont));
+    thirdLevelApprovercell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(thirdLevelApprovercell);
+    PdfPCell storeAccesscell = new PdfPCell(new Phrase("Store Access Request",theaderFont));
+    storeAccesscell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(storeAccesscell);
+    PdfPCell createdDatecell = new PdfPCell(new Phrase("Requested Date", theaderFont));
+    createdDatecell.setBackgroundColor(new Color(0, 0, 255));
+    table.addCell(createdDatecell);
+    table.setHeaderRows(1);
+    List workItemList = (List) context.getObjects(WorkItem.class,qo);
+    for(WorkItem wItem :workItemList){
+      if(wItem != null) {
+        if (wItem.getDescription().contains("Power BI Access Request")) {
+          List storeAccessRequest = wItem.getList("storesAR");
+          for(int i=0;i&lt;storeAccessRequest.size();i++){
+            String appName = "Microsoft Power BI";
+            String Owner = wItem.getOwner().getDisplayName();
+            String requesterFirstName = (String) wItem.getAttribute("requesterFirstName");
+            String requesterLastName = (String) wItem.getAttribute("requesterLastName");
+            String managerName = (String) wItem.getAttribute("managerDisplayName");
+            String secondLevelApproverName = (String) wItem.getAttribute("secondLevelApproverName");
+            String thirdLevelApproverName = (String) wItem.getAttribute("thirdLevelApproverName");
+            table.addCell(new PdfPCell(new Paragraph(appName, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(Owner, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(requesterLastName + " " + requesterLastName, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(managerName, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(secondLevelApproverName, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(thirdLevelApproverName, bodyFont)));
+            table.addCell(new PdfPCell(new Paragraph(String.valueOf(storeAccessRequest.get(i)), bodyFont)));
+            SimpleDateFormat createdDf = new SimpleDateFormat("M/dd/yy");
+            Date wItemDate = wItem.getCreated();
+            String createdDate = formatter.format(wItemDate);
+            table.addCell(new PdfPCell(new Paragraph(createdDate, bodyFont)));
+          }
+        }
+      }
+    }
+    document.add(table);
+    document.add(Chunk.NEWLINE);
+    Paragraph footer = new Paragraph("Work Item Report End", headingFont);
+    footer.setAlignment(Paragraph.ALIGN_CENTER);
+    document.add(footer);
+    table.flushContent();
+    document.close();  
+  }
+  catch (Exception e){
+    throw new RuntimeException(e);
+  }
+return "Exit with Success";
+</Source>
+</Rule>
+
+</sailpoint>

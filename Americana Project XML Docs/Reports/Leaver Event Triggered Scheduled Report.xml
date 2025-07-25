@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<TaskDefinition name="Leaver Event Triggered Scheduled Report" resultAction="Rename" subType="Custom Reports" type="LiveReport">
+  <Attributes>
+    <Map>
+      <entry key="TaskDefinition.runLengthAverage" value="8" />
+      <entry key="TaskDefinition.runLengthTotal" value="148" />
+      <entry key="TaskDefinition.runs" value="17" />
+      <entry key="TaskSchedule.host" />
+      <entry key="creationDateEnd">
+        <value>
+          <Date>1708977600000</Date>
+        </value>
+      </entry>
+      <entry key="creationDateStart">
+        <value>
+          <Date>1706299200000</Date>
+        </value>
+      </entry>
+      <entry key="disableDetail" value="false" />
+      <entry key="disableHeader" value="false" />
+      <entry key="disableSummary" value="false" />
+      <entry key="dontEmailEmptyReport">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="emailFileFormat">
+        <value>
+          <List>
+            <String>CSV</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="emailIdentities">
+        <value>
+          <List>
+            <String>sdharmavaram</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="enableCsvHeader" value="false" />
+      <entry key="eventName" value="Americana-LifecycleEvent-Leaver" />
+      <entry key="reportColumnOrder" value="PERSON_NUMBER, displayName, email, managerPersonNumber, managerDisplayName, managerEmail, eventTriggered Date" />
+      <entry key="reportCreateTimeZone" value="Asia/Dubai" />
+    </Map>
+  </Attributes>
+  <Description>Event Triggered User(s) Report</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="para_spadmin" />
+  </Owner>
+  <Parent>
+    <Reference class="sailpoint.object.TaskDefinition" name="Event Triggered User(s) Report" />
+  </Parent>
+</TaskDefinition>
+
+</sailpoint>

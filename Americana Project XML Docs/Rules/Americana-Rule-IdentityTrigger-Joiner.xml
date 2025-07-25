@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-IdentityTrigger-Joiner" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>/*
+
+  Status is set to ‘PendingWorker or Employee’ and  
+
+  People Group Should be RSC or Paraprofessional or Store level emp
+
+  Trigger Date: 15 days prior to Joiner
+
+  */
+
+  import sailpoint.object.Identity;
+  import sailpoint.object.WorkflowCase;
+  import sailpoint.object.TaskResult;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+
+
+
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger log = Logger.getLogger("rule.americana.IdentityTrigger");
+  log.setLevel(Level.DEBUG);
+
+  String ruleName = "Americana-Rule-IdentityTrigger-Joiner";
+  String caseName = "Americana - Lifecycle Event - Joiner: ";
+
+  boolean joinerTrigger = false;
+  log.debug("==============THE TRIGGER POINT :"+joinerTrigger);
+
+
+  if (newIdentity != null) {
+    Filter filter = Filter.eq("name",caseName+newIdentity.getAttribute("displayName"));
+    QueryOptions options = new QueryOptions();
+    options.addFilter(filter);
+
+    List wfCaseList = context.getObjects(WorkflowCase.class,options);
+    List taskResults = context.getObjects(TaskResult.class,options);
+
+    if ((Util.nullSafeSize(wfCaseList) &gt; 0) || (Util.nullSafeSize(taskResults) &gt; 0)) {
+      return joinerTrigger;
+    }
+
+    String startDate = newIdentity.getStringAttribute("startDate");
+    String userType = newIdentity.getStringAttribute("userType");
+
+    if (Util.isNullOrEmpty(userType) || Util.isNullOrEmpty(startDate)) {
+      return joinerTrigger;
+    }
+    if (Util.isNotNullOrEmpty(startDate) &amp;&amp; Util.isNotNullOrEmpty(userType) &amp;&amp; "E".equalsIgnoreCase(userType)) {
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+      Date startDt = sf.parse(startDate);
+      Date goLiveDate = sf.parse("2022-12-23");
+      if (Util.isDateAfter(startDt,goLiveDate)) {
+        joinerTrigger = true;
+        log.debug("==============THE TRIGGER POINT IN IF startDt :"+startDt);
+      }
+    } else if (Util.isNotNullOrEmpty(startDate) &amp;&amp; Util.isNotNullOrEmpty(userType) &amp;&amp; "P".equalsIgnoreCase(userType)) {
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+      Date startDt = sf.parse(startDate);
+      int diff = Util.getDaysDifference(startDt,new Date());
+      log.debug("==============THE TRIGGER POINT IN ELSE diff :"+diff);
+
+      if (diff &lt;= 15) {
+        joinerTrigger = true;
+      }
+    }
+  }
+
+  log.debug("==============THE TRIGGER POINT :"+joinerTrigger);
+  return joinerTrigger;</Source>
+</Rule>
+
+</sailpoint>

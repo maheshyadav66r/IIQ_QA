@@ -1,0 +1,246 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="PS_Identity_Selection_Approval_DepartmentHead" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="hideIncompleteFields">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="includeHiddenFields">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="pageTitle" value="Store Email Accounts Creation - Second Level Approval Form" />
+    </Map>
+  </Attributes>
+  <Section label="Identity Details" name="CreateID">
+    <Field displayName="Country" displayType="combobox" name="Country" postBack="true" readOnly="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>United Arab Emirates</String>
+            <String>Qatar</String>
+            <String>Kuwait</String>
+            <String>Lebanon</String>
+            <String>India</String>
+            <String>Morocco</String>
+            <String>Oman</String>
+            <String>Bahrain</String>
+            <String>KSA</String>
+            <String>Kazakhstan</String>
+            <String>Iraq-Erbil</String>
+            <String>Iraq-Baghdad</String>
+            <String>Jordan</String>
+            <String>Egypt</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field displayName="Brand" displayType="combobox" dynamic="true" name="Brand" readOnly="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+                  import java.util.ArrayList;
+                  import java.util.List;
+
+                  List qaList=new ArrayList();
+                  qaList.add("Hardees");
+                  qaList.add("KFC");
+                  qaList.add("Krispy Kreme");
+                  qaList.add("T.G.I FRIDAYS");
+                  qaList.add("Peet's Coffee");
+                  qaList.add("Wimpy");
+                  qaList.add("Chicken Tikka");
+                  qaList.add("Pavilion");
+                  qaList.add("Pizza Hut");
+                  qaList.add("Baskin Robins");
+                  qaList.add("Costa");
+				          qaList.add("Grand Cafe");
+				          qaList.add("Fish Market");
+
+                  return qaList;
+
+                </Source>
+        </Script>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field displayName="Area" dynamic="true" helpKey="Ex: Al Majaz" name="Location" postBack="true" readOnly="true" required="true" type="string" />
+    <Field displayName="Store Number" dynamic="true" name="storeNumber" readOnly="true" required="true" type="string">
+      <ValidationScript>
+        <Includes>
+          <Reference class="sailpoint.object.Rule" name="Americana-RuleLibrary-Attribute" />
+        </Includes>
+        <Source>
+                import sailpoint.object.Identity;
+                import sailpoint.object.Application;
+                import java.util.*;
+
+
+                try{
+                int number=Integer.parseInt(value);
+                if(value != null){
+                if(value.length() &gt; 5 || value.length() &lt; 5){
+                return "Store Number should be 5 digits only";
+                }
+                }
+
+                }catch(NumberFormatException e){
+                return "Non-Numeric value provided; must be numeric.";
+                }
+
+                if(storeNumber != null &amp;&amp; Country != null &amp;&amp; Brand != null){
+
+                HashMap map=new HashMap();
+                map.put("T.G.I FRIDAYS","tgi");
+                map.put("Hardees","hrd");
+                map.put("KFC","kfc");
+                map.put("Pizza Hut","pht");
+                map.put("Krispy Kreme","kk");
+                map.put("Wimpy","wmp");
+                map.put("Chicken Tikka","tk");
+                map.put("Pavilion","pav");
+                map.put("Peet's Coffee","pts");
+                map.put("Baskin Robins","bsk");
+                map.put("Costa","costa");
+				        map.put("Grand Cafe","grand");
+				        map.put("Fish Market","fm");
+
+                HashMap map1=new HashMap();
+                map1.put("United Arab Emirates","ae");
+                map1.put("Qatar","qa");
+                map1.put("Kuwait","kw");
+                map1.put("Lebanon","lb");
+                map1.put("India","in");
+                map1.put("Morocco","ma");
+                map1.put("Oman","om");
+                map1.put("Bahrain","bh");
+                map1.put("KSA","sa");
+                map1.put("Kazakhstan","kz");
+                map1.put("Iraq-Erbil","iq");
+          map1.put("Iraq-Baghdad","iqb");
+				        map1.put("Egypt","eg");
+				        map1.put("Jordan","jo");
+
+                String disName=map1.get(Country)+map.get(Brand)+storeNumber+"ID";
+                Identity ide = context.getObjectByName(Identity.class, disName);
+                Application application = context.getObjectByName(Application.class,"Active Directory");
+                boolean isUniqueName = isUniqueADName(application, "sAMAccountName",map1.get(Country)+map.get(Brand)+storeNumber);
+                
+                if(ide != null || !isUniqueName) return "email account already created for this store; please ensure your details.";
+                }
+              </Source>
+      </ValidationScript>
+    </Field>
+    <Field displayName="Display Name" dynamic="true" name="displayName" readOnly="true" type="string">
+      <Script>
+        <Source>
+                if(storeNumber != null &amp;&amp; Brand != null &amp;&amp; Location != null) return storeNumber+" "+Brand+" "+Location;</Source>
+      </Script>
+    </Field>
+    <Field displayName="Department - Store Name" dynamic="true" name="Department" readOnly="true" type="string">
+      <Script>
+        <Source>
+               if(storeNumber != null &amp;&amp; Brand != null &amp;&amp; Location != null) return storeNumber+" "+Brand+" "+Location;</Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Reports to" filterString="managerStatus == true" name="managerName" readOnly="true" required="true" type="sailpoint.object.Identity" />
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" readOnly="true" required="true" type="string">
+      <AllowedValues>
+        <String>Creating an email id for the new store</String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" helpKey="Please enter a business justification ensuring that it's no less than 100 characters" name="otherJustificationReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Section label="Attachment Details" name="attachment section" type="datatable">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+              if(null != fileParameters @and void != fileParameters){
+              return false;
+              }
+              
+              return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+        <entry key="subtitle" value="Below are the attachment details submitted by the requestor" />
+      </Map>
+    </Attributes>
+    <Field helpKey="Please click on the link to check the approval document">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="Americana-ContractorForms-DynamicTable-FieldValue" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Section label="Approval Status" name="Approval Status" type="datatable">
+    <Field helpKey="Please find Approval Status">
+      <Attributes>
+        <Map>
+          <entry key="contentIsEscaped" value="true" />
+        </Map>
+      </Attributes>
+      <RuleRef>
+        <Reference class="sailpoint.object.Rule" name="ps-approvalStatus-FieldValue-DeptHead" />
+      </RuleRef>
+    </Field>
+  </Section>
+  <Button action="next" label="Approve" value="Approve" />
+  <Button action="back" label="Reject" value="Reject" />
+  <Button action="cancel" label="nav_cancel" />
+</Form>
+
+</sailpoint>

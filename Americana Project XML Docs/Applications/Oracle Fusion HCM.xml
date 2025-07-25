@@ -1,0 +1,367 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Application authoritative="true" connector="sailpoint.connector.OpenConnectorAdapter" featuresString="SEARCH, PROVISIONING, ADDITIONAL_ACCOUNT_REQUEST, ACCOUNT_ONLY_REQUEST" icon="internetIcon" name="Oracle Fusion HCM" profileClass="" type="Oracle Fusion HCM">
+  <Attributes>
+    <Map>
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1716992601666</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1716992601665</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule" />
+      <entry key="aggregatePendingAndNonWorkers">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="aggregatedTerminatedWorkers">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="attributeMappings">
+        <value>
+          <Map>
+            <entry key="ADDRESS_LINE_1" value="addresses[?(@.PrimaryFlag==true)].AddressLine1" />
+            <entry key="ADDRESS_LINE_2" value="addresses[?(@.PrimaryFlag==true)].AddressLine2" />
+            <entry key="ADDRESS_LINE_3" value="addresses[?(@.PrimaryFlag==true)].AddressLine3" />
+            <entry key="ASSIGNMENT_ID" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].AssignmentId" />
+            <entry key="BIRTH_DATE" value="DateOfBirth" />
+            <entry key="Business_Unit_Name" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].BusinessUnitName" />
+            <entry key="Business_Unit_Name_Pending_worker" value="workRelationships[?(@.PrimaryFlag==false)].assignments[?(@.PrimaryAssignmentFlag==true)].BusinessUnitName" />
+            <entry key="CITY" value="addresses[?(@.PrimaryFlag==true)].TownOrCity" />
+            <entry key="COUNTRY" value="addresses[?(@.PrimaryFlag==true)].Country" />
+            <entry key="DISPLAY_NAME" value="names[0].DisplayName" />
+            <entry key="Department_Name" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].DepartmentName" />
+            <entry key="Department_Name_Pending_worker" value="workRelationships[?(@.PrimaryFlag==false)].assignments[?(@.PrimaryAssignmentFlag==true)].DepartmentName" />
+            <entry key="FIRST_NAME" value="names[0].FirstName" />
+            <entry key="Grade_Code" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].GradeCode" />
+            <entry key="HOME_TELEPHONE" value="phones[?(@.PhoneType=='H1')].PhoneNumber" />
+            <entry key="HR_BUSINESS_PARTNER" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].representatives[0].AssignmentId" />
+            <entry key="Job_Name" value="['urn:scim:schemas:extension:fa:2.0:faUser'].workerInformation.job" />
+            <entry key="LAST_NAME" value="names[0].LastName" />
+            <entry key="Last_Working_Date" value="workRelationships[?(@.PrimaryFlag==true)].LastWorkingDate" />
+            <entry key="LegislationCode__c" value="workRelationships[?(@.PrimaryFlag==true)].LegislationCode" />
+            <entry key="LegislationName__c" value="workRelationships[?(@.PrimaryFlag==true)].LegislationName" />
+            <entry key="Location_Code" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].LocationCode" />
+            <entry key="MANAGER_FLAG" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].ManagerFlag" />
+            <entry key="Manager_Name" value="['urn:scim:schemas:extension:fa:2.0:faUser'].workerInformation.manager" />
+            <entry key="NATIONAL_ID" value="nationalIdentifiers[?(@.PrimaryFlag==true)].NationalIdentifierNumber" />
+            <entry key="NATIONAL_ID_EXPIRATION_DATE" value="nationalIdentifiers[?(@.PrimaryFlag==true)].ExpirationDate" />
+            <entry key="NATIONAL_ID_TYPE" value="nationalIdentifiers[?(@.PrimaryFlag==true)].NationalIdentifierType" />
+            <entry key="PERSON_ID" value="PersonId" />
+            <entry key="PERSON_NUMBER" value="PersonNumber" />
+            <entry key="People_Group" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].PeopleGroup" />
+            <entry key="People_Group_Pending_Worker" value="workRelationships[?(@.PrimaryFlag==false)].assignments[?(@.PrimaryAssignmentFlag==true)].PeopleGroup" />
+            <entry key="Position_Code" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].PositionCode" />
+            <entry key="Position_Id" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].PositionId" />
+            <entry key="Position_Name" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].PositionName" />
+            <entry key="Projected_End_Date" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].ProjectedEndDate" />
+            <entry key="Projected_Start_Date" value="workRelationships[?(@.PrimaryFlag==true)].assignments[?(@.PrimaryAssignmentFlag==true)].ProjectedStartDate" />
+            <entry key="REGION" value="Region" />
+            <entry key="Revoke_User_Access" value="workRelationships[?(@.PrimaryFlag==true)].RevokeUserAccess" />
+            <entry key="TERMINATION_DATE" value="workRelationships[?(@.PrimaryFlag==true)].TerminationDate" />
+            <entry key="USER_NAME" value="UserName" />
+            <entry key="WORK_EMAIL" value="emails[?(@.EmailType=='W1')].EmailAddress" />
+            <entry key="WORK_MOBILE" value="phones[?(@.PhoneType=='WM')].PhoneNumber" />
+            <entry key="WORK_TELEPHONE" value="phones[?(@.PhoneType=='W1')].PhoneNumber" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="authenticationType" value="Basic" />
+      <entry key="beforeProvisioningRule" />
+      <entry key="compositeDefinition" />
+      <entry key="connectorClass" value="openconnector.connector.oraclefusionhcm.OracleFusionHCMConnector" />
+      <entry key="customTimeOut" value="5" />
+      <entry key="doNotMigrate">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="effectiveDateOffset" value="15" />
+      <entry key="includeWorkersApiAdditionalFields">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="lastAggregationDate">
+        <value>
+          <Date>1716991804324</Date>
+        </value>
+      </entry>
+      <entry key="managerCorrelationFilter">
+        <value>
+          <Filter operation="EQ" property="assignmentId" value="ASSIGNMENT_MANAGER_ID" />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements" />
+      <entry key="nativeChangeDetectionAttributes" />
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations" />
+      <entry key="pageSize" />
+      <entry key="password" value="1:ACP:J/14aem1WX7HTEjTdCxp0xWDEvzFiDwo9ryu+5ixwcA=" />
+      <entry key="pastTerminationOffset" />
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Oracle Fusion HCM" />
+      <entry key="url" value="https://fa-eucb-saasfaprod1.fa.ocs.oraclecloud.com/" />
+      <entry key="useWorkersApi">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="username" value="ams.ae.iam" />
+      <entry key="workersAPIAdditionalFields">
+        <value>
+          <List>
+            <String>workRelationships.assignments:DepartmentName,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:BusinessUnitName,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:GradeCode,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:AssignmentId,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:PeopleGroup,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:LocationCode,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:ProjectedStartDate,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:PositionCode,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:PositionId,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:PositionName,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:ProjectedEndDate,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships.assignments:ManagerFlag,PrimaryAssignmentFlag,PrimaryFlag</String>
+            <String>workRelationships:LegislationName,PrimaryFlag</String>
+            <String>workRelationships:LegislationCode,PrimaryFlag</String>
+            <String>workRelationships:RevokeUserAccess,PrimaryFlag</String>
+            <String>workRelationships:LastWorkingDate,PrimaryFlag</String>
+            <String>workRelationships:TerminationDate,PrimaryFlag</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="workersAPIImprovedAggregation">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+  <CustomizationRule>
+    <Reference class="sailpoint.object.Rule" name="Americana-Rule-ResourceObjectCustomization-OracleFusionHCM" />
+  </CustomizationRule>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="BPM_application_owners" />
+  </Owner>
+  <Schemas>
+    <Schema displayAttribute="PERSON_NUMBER" identityAttribute="PERSON_NUMBER" instanceAttribute="" nativeObjectType="account" objectType="account">
+      <AttributeDefinition name="PERSON_NUMBER" remediationModificationType="None" required="true" type="string">
+        <Description>Unique identifier of Person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="DISPLAY_NAME" remediationModificationType="None" required="true" type="string">
+        <Description>Person's display name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="HOME_TELEPHONE" remediationModificationType="None" type="string">
+        <Description>Person's home telephone number</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="REGION" remediationModificationType="None" type="string">
+        <Description>Person's region</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="TERMINATION_DATE" remediationModificationType="None" type="string">
+        <Description>Person's termination date</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="CITY" remediationModificationType="None" type="string">
+        <Description>Person's City</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="WORK_EMAIL" remediationModificationType="None" type="string">
+        <Description>Primary work email of person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="WORKER_TYPE" remediationModificationType="None" type="string">
+        <Description>Person type i.e. Employee, Contingent</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_NAME" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment Id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_POSITION_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment position id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_DEPARTMENT_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment department id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_MANAGER_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment manager id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_LOCATION_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment location id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_ACTION_CODE" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment's action code i.e. HIRE</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_TERMINATION_DATE" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment termination date</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_JOB_ID" remediationModificationType="None" type="string">
+        <Description> Person's primary assignment job id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_BUSINESS_UNIT_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment business unit id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_WORKER_CATEGORY" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment worker category</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_MANAGER_TYPE" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment's manager type</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_MANAGER_NUMBER" remediationModificationType="None" type="string">
+        <Description>Person number of assignment's manager</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_EFFECTIVE_START_DATE" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment effective start date.</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_EFFECTIVE_END_DATE" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment effective end date</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_STATUS" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment status</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ASSIGNMENT_STATUS_TYPE_ID" remediationModificationType="None" type="string">
+        <Description>Person's primary assignment status type Id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LEGAL_ENTITY_ID" remediationModificationType="None" type="string">
+        <Description>Id of legal employer's legal entity</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="NATIONAL_ID_TYPE" remediationModificationType="None" type="string">
+        <Description>Type of person's national Id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="NATIONAL_ID" remediationModificationType="None" type="string">
+        <Description>Person's national Id</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="NATIONAL_ID_EXPIRATION_DATE" remediationModificationType="None" type="string">
+        <Description>Person's national Id expiration date</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LAST_NAME" remediationModificationType="None" type="string">
+        <Description>Last name of Person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="FIRST_NAME" remediationModificationType="None" type="string">
+        <Description>First name of Person</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ADDRESS_LINE_1" remediationModificationType="None" type="string">
+        <Description>Address line number 1</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ADDRESS_LINE_2" remediationModificationType="None" type="string">
+        <Description>Address line number 2</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="ADDRESS_LINE_3" remediationModificationType="None" type="string">
+        <Description>Address line number 3</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="HIRE_DATE" remediationModificationType="None" type="string">
+        <Description>Person's hire date</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="COUNTRY" remediationModificationType="None" type="string">
+        <Description>Person' Country  </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="WORK_TELEPHONE" remediationModificationType="None" type="string">
+        <Description>Person' telephone number of type work  </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="WORK_MOBILE" remediationModificationType="None" type="string">
+        <Description>Person' mobile number of type work  </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="FUTURE_DATE" remediationModificationType="None" type="string">
+        <Description>Person's future hire or termination date </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="FUTURE_ACTION" remediationModificationType="None" type="string">
+        <Description>Person's future action</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Manager_Name" type="string">
+        <Description>Person's Manager Name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Business_Unit_Name" type="string">
+        <Description>Person's  BusinessUnitName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Job_Name" type="string">
+        <Description>Person's  JobName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Department_Name" type="string">
+        <Description>Person's DepartmentName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Department_Name_Pending_worker" type="string">
+        <Description>Pending Worker's DepartmentName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Business_Unit_Name_Pending_worker" type="string">
+        <Description>Pending Worker's BusinessUnitName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_NAME" type="string">
+        <Description>Person's  USER_NAME</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Grade_Code" type="string">
+        <Description>Person's  Grade_Code</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="People_Group" type="string">
+        <Description>Person's  PeopleGroup</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Location_Code" type="string">
+        <Description>Person's  LocationCode</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="BIRTH_DATE" type="string">
+        <Description>Person's  BirthDate</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Projected_Start_Date" type="string">
+        <Description>Person's  ProjectedStartDate</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Projected_End_Date" type="string">
+        <Description>Person's  ProjectedEndDate</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Position_Name" type="string">
+        <Description>Person's  PositionName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Position_Id" type="string">
+        <Description>Person's  PositionId</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Position_Code" type="string">
+        <Description>Person's  PositionCode</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LegislationName__c" type="string">
+        <Description>Person's  LegislationName</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="LegislationCode__c" type="string">
+        <Description>Person's  LegislationCode</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last_Working_Date" type="string">
+        <Description>Person's  LastWorkingDate</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Revoke_User_Access" type="string">
+        <Description>Person's  RevokeUserAccess</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="MANAGER_FLAG" type="string">
+        <Description>Person's  ManagerFlag weather Person is manager or user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="People_Group_Pending_Worker" type="string">
+        <Description>Pending Worker's PeopleGroup</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="PERSON_ID" type="string">
+        <Description>Person's PersonId</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="HR_BUSINESS_PARTNER" remediationModificationType="None" type="string">
+        <Description>Person's Business Partner (represetative)</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="storeInCharge" type="string">
+        <Description>Person's storeInCharge</Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard />
+</Application>
+
+</sailpoint>

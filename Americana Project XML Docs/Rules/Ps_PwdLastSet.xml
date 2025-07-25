@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_PwdLastSet" type="IdentityAttribute">
+  <Description>Identity attribute rules are used when the value is not simply a copy of an application account attribute value.  A transformation may be necessary on the account attribute, or several account attributes may need to be combined to produce the identity attribute.
+
+This rule can be called in two ways: as a global mapping rule and an application mapping rule.  A global mapping rule is called whenever the identity is refreshed.  The rule can look at any account attributes.  An application mapping rule is called only when the identity contains an account link for that application, this link is passed in the "link" argument which is not passed in global mapping rules.</Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+           Arguments passed to the aggregation or refresh task.
+        </Description>
+      </Argument>
+      <Argument name="identity">
+        <Description>
+           The Identity object that represents the user
+           that is being aggregated.
+        </Description>
+      </Argument>
+      <Argument name="attributeDefinition">
+        <Description>
+           The AttributeDefinition object for this attribute.
+        </Description>
+      </Argument>
+      <Argument name="link">
+        <Description>
+           The Link object from the Identity, if this is an application
+           mapping rule.  For global mapping rules this will be void.
+        </Description>
+      </Argument>
+      <Argument name="attributeSource">
+        <Description>
+          The AttributeSource object.
+        </Description>
+      </Argument>
+      <Argument name="oldValue">
+        <Description>
+          The original value of the application account attribute.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="attributeValue">
+        <Description>
+          The value of the attribute that should be populated.
+          The rule should return this value.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.text.SimpleDateFormat;
+
+import org.apache.log4j.Logger;
+
+Logger log = Logger.getLogger("customRule4");
+String pwdLastSet =(String)link.getAttribute("pwdLastSet");
+
+
+log.info("pwdLastSet: " + pwdLastSet);
+
+DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+LocalDate now = LocalDate.now(); // Gets the Current Date 
+
+long DIFF_FOR_DATE_AND_TIMES = 11644473600000L;
+
+if (pwdLastSet != null &amp;&amp; !(pwdLastSet.equalsIgnoreCase("0")) &amp;&amp; !pwdLastSet.isEmpty()) {
+    long adDate = Long.parseLong(pwdLastSet);
+    log.debug("ad date: " + adDate);
+    long epochTime = ((adDate / 10000) - DIFF_FOR_DATE_AND_TIMES);
+    log.debug("epochTime: " + epochTime);
+    Date pwdLastSetDate = new Date(epochTime);
+    log.debug("pwdLastSetDate: " + pwdLastSetDate);
+    String formatDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(pwdLastSetDate);
+    log.debug("formatDate: " + formatDate);
+    // LocalDate logon = LocalDate.parse(formatDate, formatter);
+
+    log.info("logon: " + logon);
+    log.info("thedate: " + thedate);
+    // log.info(attributeValue.getClass());
+    return formatDate;
+}</Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,1342 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="First Level Approval - Line Manager" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="First Level Approval - Line Manager" />
+    </Map>
+  </Attributes>
+  <Section columns="3" label="Details provided by User">
+    <Field columnSpan="1" displayName="Selected Account" name="selectingAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;                  
+                  String selectingAccount = form.getField("selectingAccount").getValue();                   
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>                
+          return selectingAccount;
+          </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected User Type" name="userSelection" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String selectingAccount = form.getField("selectingAccount").getValue();                 
+                if(Util.isNullOrEmpty(selectingAccount) || selectingAccount.contains("Service Account")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return userSelection;         
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected User Type" name="userSelectionforServiceAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String selectingAccount = form.getField("selectingAccount").getValue();
+                if(Util.isNullOrEmpty(selectingAccount) || selectingAccount.contains("Domain Account")){
+                  return true ;
+                  }
+                      else{      
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return userSelectionforServiceAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Region" name="newuserRegion" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return newuserRegion;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Region" name="servicenewuserRegion" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicenewuserRegion;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="2">
+    <Field columnSpan="1" displayName="Selected Account Type" name="genericAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return genericAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Requested Account Name" name="preferredAccountName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;				
+				String genericAccount = form.getField("genericAccount").getValue();					
+				if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Named")){                   
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return preferredAccountName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Named Account that will be created :" name="namedAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;  
+				String genericAccount = form.getField("genericAccount").getValue();	
+				if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Generic")){  
+                return true ;				 
+					}                
+                      else{      
+                        return false;
+                        }	
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return namedAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected Account Type" name="servicegenericAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicegenericAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Requested Account Name" name="servicepreferredAccountName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;                        
+                String servicegenericAccount = form.getField("servicegenericAccount").getValue();					  
+                if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Named")){   				
+                  return true ;
+                  }
+                      else{					  
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicepreferredAccountName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Named Account that will be created :" name="servicenamedAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;   
+				String servicegenericAccount = form.getField("servicegenericAccount").getValue();	
+				if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Generic")){  
+                 return true ;				 
+				 }                
+                      else{      
+                        return false;
+                        }	
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicenamedAccount;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="3">
+    <Field columnSpan="1" displayName="Temporary Account" name="tempAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();				         			 
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return tempAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Start Date" name="startDate" postBack="true" readOnly="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;    
+			    String tempAccount = form.getField("tempAccount").getValue();				     
+                if(tempAccount == null){   
+                 return true ;
+                  }
+                 else{
+				 return false;
+                    }                   
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return startDate;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="End Date" name="endDate" postBack="true" readOnly="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;    
+			    String tempAccount = form.getField("tempAccount").getValue();				     
+                if(tempAccount == null){   
+                 return true ;
+                  }
+                 else{
+					return false;
+                    }                   
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return endDate;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Temporary Account" name="tempServiceAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();				         			 
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return tempServiceAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Start Date" name="startDateService" postBack="true" readOnly="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;    
+			    String tempServiceAccount = form.getField("tempServiceAccount").getValue();				     
+                if(tempServiceAccount == null){   
+                 return true ;
+                  }
+                 else{
+                      return false;
+                      }                   
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return startDateService;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="End Date" name="endDateService" postBack="true" readOnly="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;    
+			    String tempServiceAccount = form.getField("tempServiceAccount").getValue();				     
+                if(tempServiceAccount == null){   
+                 return true ;
+                  }
+                 else{
+					return false;
+                    }                   
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return endDateService;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section columns="3">
+    <Field columnSpan="1" displayName="Requester Email ID" name="requesterEmailId" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return requesterEmailId;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Existing Admin Account" name="exestingAdminAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return exestingAdminAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected Servers for Access" name="requestforServerAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return requestforServerAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Server Region" name="region" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return region;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" name="deptnTeam" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return deptnTeam;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="First Name of the Requester" name="requesterFirstName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return requesterFirstName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last Name of the Requester" name="requesterlastName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return requesterlastName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Requester Email ID" name="newUserrequesterEmailId" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;     
+				String userSelection = form.getField("userSelection").getValue();  
+                if(Util.isNullOrEmpty(userSelection) ||  userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return newUserrequesterEmailId;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected Servers for Access" name="serverAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelection = form.getField("userSelection").getValue();
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return serverAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" name="newUserdeptnTeam" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;                 
+                String userSelection = form.getField("userSelection").getValue();                                        
+                if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){                 
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return newUserdeptnTeam;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Requester Email ID" name="servicerequesterEmailIdofExestinguser" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequesterEmailIdofExestinguser;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Existing Admin Account" name="serviceexestingAdminAccount" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                      }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return serviceexestingAdminAccount;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected Servers for Access" name="servicerequestforServerAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequestforServerAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Server Region" name="serviceregion" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return serviceregion;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" name="servicedeptnTeam" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicedeptnTeam;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="First Name of the Requester" name="servicerequesterFirstName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequesterFirstName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last Name of the Requester" name="servicerequesterlastName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequesterlastName;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Requester Email ID" name="servicerequesterEmailId" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;                                         
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequesterEmailId;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Selected Servers for Access" name="serviceserverAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return serviceserverAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" name="servicerequesterdeptnTeam" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{                
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicerequesterdeptnTeam;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Kind of Privilege Requested" name="privilaged" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return privilaged;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Specify the kind of access privilege" displayType="textarea" name="otherKindOfPrivilege" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("privilaged") @and null != form.getField("privilaged").getValue() @and "Other".equalsIgnoreCase(form.getField("privilaged").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Kind of Privilege Requested" name="serviceprivilaged" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{                
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return serviceprivilaged;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Specify the kind of access privilege" displayType="textarea" name="serviceotherKindOfPrivilege" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("serviceprivilaged") @and null != form.getField("serviceprivilaged").getValue() @and "Other".equalsIgnoreCase(form.getField("serviceprivilaged").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Justification Provided for Access" displayType="textarea" name="justificationforAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return justificationforAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" name="otherJustificationReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("justificationforAccess") @and null != form.getField("justificationforAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("justificationforAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification provided for Access" displayType="textarea" name="jstAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return jstAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" name="otherjstAccessReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("jstAccess") @and null != form.getField("jstAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("jstAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification provided for Access" displayType="textarea" name="servicejustificationforAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicejustificationforAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" name="serviceotherJustificationReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  				  
+                  if(null != form.getField("servicejustificationforAccess") @and null != form.getField("servicejustificationforAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("servicejustificationforAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification provided for Access" displayType="textarea" name="servicejstAccess" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+                String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return servicejstAccess;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" name="servicejstAccessReason" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("servicejstAccess") @and null != form.getField("servicejstAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("servicejstAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section columns="2" label="Details provided by Admin">
+    <Field columnSpan="1" displayName="Admin Provided Group" multi="true" name="domainGroup" postBack="true" readOnly="true" type="string">
+      <Script>
+        <Source>
+          return domainGroup;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Admin Selected Region" name="selectRegion" postBack="true" readOnly="true" type="string">
+      <Script>
+        <Source>
+          return selectRegion;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Admin Selected Azure License" name="azureADLicenses" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  if(null == value){
+                  	return true;
+                  }
+                  
+                  return false;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          return azureADLicenses;
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Button action="next" label="Approve" value="Approve" />
+  <Button action="back" label="Reject" value="Reject" />
+  <Button action="cancel" label="nav_cancel" />
+</Form>
+
+</sailpoint>

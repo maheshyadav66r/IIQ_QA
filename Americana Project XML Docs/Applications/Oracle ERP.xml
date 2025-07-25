@@ -1,0 +1,213 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Application connector="sailpoint.connector.OpenConnectorAdapter" featuresString="PROVISIONING, SYNC_PROVISIONING, ENABLE, PASSWORD, ADDITIONAL_ACCOUNT_REQUEST, ACCOUNT_ONLY_REQUEST" icon="internetIcon" name="Oracle ERP" profileClass="" type="Oracle ERP Cloud">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="Americana-OracleERP-Correlation" />
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="accounts_filter" />
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1716993688743</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1716991805690</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule" />
+      <entry key="beforeProvisioningRule" />
+      <entry key="compositeDefinition" />
+      <entry key="connTimeout" value="1" />
+      <entry key="connectorClass" value="openconnector.connector.oracleerp.OracleERPCloudConnector" />
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements" />
+      <entry key="nativeChangeDetectionAttributes" />
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations" />
+      <entry key="noPermissions" value="true" />
+      <entry key="operations" value="Create, Modify, Delete, Enable, Disable, SetPassword" />
+      <entry key="pageSize" value="100" />
+      <entry key="password" value="1:ACP:e+k6/pzJ+uNotzbhCrfGJ0ip12eje/nBDd1BfgZGpYo=" />
+      <entry key="roles_filter" />
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="Oracle ERP Cloud" />
+      <entry key="url" value="https://fa-eucb-saasfaprod1.fa.ocs.oraclecloud.com/" />
+      <entry key="username" value="ams.ae.iam.erp" />
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="BPM_application_owners" />
+  </Owner>
+  <ProvisioningForms>
+    <Form name="account" objectType="account" type="Create">
+      <Attributes>
+        <Map>
+          <entry key="pageTitle" value="account" />
+        </Map>
+      </Attributes>
+      <Section label="Account" name="Account">
+        <Field displayName="con_con_prov_oracle_erp_cloud_username" helpKey="help_con_prov_oracle_erp_cloud_username" name="User Name" required="true" section="Account" type="string">
+          <Script>
+            <Source>
+              import sailpoint.object.Application;
+              import sailpoint.tools.Util;
+              import sailpoint.api.IdentityService;
+              
+              String peopleGroup =  identity.getAttribute("peopleGroup");
+              
+              if("Store Level".equalsIgnoreCase(peopleGroup)){
+              	return identity.getAttribute("employeeNumber") + "@americana-food.com";
+              }else  if("RSC".equalsIgnoreCase(peopleGroup)){
+              
+                IdentityService isr = new IdentityService(context);
+                List links = isr.getLinks(identity, context.getObjectByName(Application.class, "Active Directory"));
+                if(Util.nullSafeSize(links) &gt; 0){
+                  return links.get(0).getAttribute("sAMAccountName");
+                }
+              }
+            
+            </Source>
+          </Script>
+        </Field>
+        <Field displayName="con_con_prov_oracle_erp_cloud_user_category" helpKey="help_con_con_prov_oracle_erp_cloud_user_category" name="User Category" section="Account" type="string" />
+        <Field displayName="con_con_prov_oracle_erp_cloud_firstname" helpKey="help_con_con_prov_oracle_erp_cloud_firstname" name="First Name" section="Account" type="string">
+          <Script>
+            <Source>return identity.getFirstname();</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_con_prov_oracle_erp_cloud_lastname" helpKey="help_con_con_prov_oracle_erp_cloud_lastname" name="Last Name" section="Account" type="string">
+          <Script>
+            <Source>return identity.getLastname();</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_con_prov_oracle_erp_cloud_email" helpKey="help_con_con_prov_oracle_erp_cloud_email" name="Email" section="Account" type="string">
+          <Script>
+            <Source>return identity.getEmail();</Source>
+          </Script>
+        </Field>
+        <Field displayName="con_con_prov_oracle_erp_cloud_person_number" helpKey="help_con_con_prov_oracle_erp_cloud_person_number" name="Person Number" section="Account" type="string">
+          <Script>
+            <Source>return identity.getAttribute("employeeNumber");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Job" helpKey="Job" name="Job" section="Account" type="string">
+          <Script>
+            <Source>return identity.getAttribute("jobTitle");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Business Unit" helpKey="Business Unit" name="Business Unit" section="Account" type="string">
+          <Script>
+            <Source>return identity.getAttribute("businessUnit");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Department" helpKey="Department" name="Department" section="Account" type="string">
+          <Script>
+            <Source>return identity.getAttribute("department");</Source>
+          </Script>
+        </Field>
+        <Field displayName="Manager" helpKey="Manager" name="Manager" section="Account" type="string">
+          <Script>
+            <Source>return (identity.getManager() != null) ? identity.getManager().getDisplayName() : null ;</Source>
+          </Script>
+        </Field>
+      </Section>
+    </Form>
+  </ProvisioningForms>
+  <Schemas>
+    <Schema displayAttribute="Display Name" identityAttribute="ID" instanceAttribute="" nativeObjectType="account" objectType="account">
+      <AttributeDefinition name="ID" remediationModificationType="None" type="string">
+        <Description>A unique identifier for the user resource in Oracle Applications Cloud</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Display Name" remediationModificationType="None" type="string">
+        <Description>The display name of the user, usually the full name</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Email" remediationModificationType="None" type="string">
+        <Description>The primary e-mail address of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="User Name" remediationModificationType="None" type="string">
+        <Description>A unique identifier for the user to authenticate with the service provider directly</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Status" remediationModificationType="None" type="boolean">
+        <Description>Indicates the administrative status of the user. </Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="First Name" remediationModificationType="None" type="string">
+        <Description>The first name of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last Name" remediationModificationType="None" type="string">
+        <Description>The last name of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last Modified Date" remediationModificationType="None" type="string">
+        <Description>The last modified date of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Created Date" remediationModificationType="None" type="string">
+        <Description>The created date of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="User Category" remediationModificationType="None" type="string">
+        <Description>The user category of the user. By default, the value is DEFAULT</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Account Type" remediationModificationType="None" type="string">
+        <Description>The account type of a user to indicate person or party association</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Manager" remediationModificationType="None" type="string">
+        <Description>The manager associated to the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Person Number" remediationModificationType="None" type="string">
+        <Description>The worker ID or person number associated to the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Business Unit" remediationModificationType="None" type="string">
+        <Description>The business unit to which the user belongs</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Department" remediationModificationType="None" type="string">
+        <Description>The department to which the user belongs</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Job" remediationModificationType="None" type="string">
+        <Description>The job title of the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="Roles" remediationModificationType="None" schemaObjectType="group" type="string">
+        <Description>The list of roles assigned to the user</Description>
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="Data Access" remediationModificationType="None" type="string">
+        <Description>Combination of role, security context and its values assigned to the user</Description>
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="Description" displayAttribute="Display Name" identityAttribute="ID" instanceAttribute="" nativeObjectType="role" objectType="group">
+      <AttributeDefinition name="ID" remediationModificationType="None" type="string">
+        <Description>A unique identifier for the role resource in Oracle Applications Cloud</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Description" remediationModificationType="None" type="string">
+        <Description>Description of the role</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Category" remediationModificationType="None" type="string">
+        <Description>The category of role</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Name" type="string">
+        <Description>A unique identifier for the role to authenticate with the service provider directly</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Last Modified Date" type="string">
+        <Description>The last modified date of the role</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Created Date" type="string">
+        <Description>The created date of the role</Description>
+      </AttributeDefinition>
+      <AttributeDefinition name="Display Name" required="true" type="string">
+        <Description>The display name of the role</Description>
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard />
+</Application>
+
+</sailpoint>

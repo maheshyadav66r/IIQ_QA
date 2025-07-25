@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Ps_AD_accountExpiry_never_identities">
+  <Description>
+    This rule is used to find unmatched end date and account expiry date in the Contrctor AD
+  </Description>
+  <Source>
+           
+  
+  
+  
+  
+  import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.Util;
+import sailpoint.object.*;
+  import java.text.SimpleDateFormat;
+
+try {
+    List identitiesWithContractorAD = new ArrayList();
+     List bl=new ArrayList();
+ 
+  
+Filter f2 = Filter.eq("links.application.name", "Active Directory");
+ 
+
+ // bl.add(f5);
+
+// Create an "and" filter combining f and f2
+
+  
+    //Filter filter = Filter.eq("correlated", true).and(Filter.eq("links.application.name", "AD Contractors"));
+   QueryOptions qo = new QueryOptions();
+qo.addFilter(f2);
+
+    List identities = context.getObjects(Identity.class, qo);
+
+    for (Identity identity : identities) {
+        String identityName = identity.getName();
+        String accountExpires = (String) identity.getAttribute("accountExpires");
+     
+      
+    
+//identitiesWithContractorAD.add(endDate);
+        String laccountExpires = null;
+       String disabled = "false";
+     String distinguishName=null;
+
+        for (Link link : identity.getLinks()) {
+            if (link.getApplicationName().equalsIgnoreCase("Active Directory")) {
+                laccountExpires = link.getAttribute("accountExpires");
+              distinguishName=link.getAttribute("distinguishedName");
+              
+              
+            // if( link.getAttribute("IIQDisabled").equalsIgnoreCase("true"))
+              if( link.isDisabled())
+             {
+               disabled="true";
+               log.error("disabled");
+             }
+              
+              log.error("not disabled ");
+                break;
+            }
+        }
+
+        if (accountExpires != null) {
+            // Parse account expiry date
+          
+          
+          /*if(!accountExpires.equalsIgnoreCase("never")){
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a z");
+            Date expiryDate = inputDateFormat.parse(accountExpires);
+
+            // Format expiry date to MM/dd/yyyy format
+            SimpleDateFormat outputDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+            accountExpires = outputDateFormat.format(expiryDate);
+          }
+          
+          else
+          {
+            accountExpires="never";
+          }
+          
+          */
+          
+         // if (endDate != null &amp;&amp; accountExpires != null &amp;&amp; accountExpires.equalsIgnoreCase("never")) {
+          
+         if(!accountExpires.equals("never")&amp;&amp;disabled.equals("false"))
+         {
+           // String info = "The identity " + identityName + " has endDate: " + endDate + " and accountExpiry: " + accountExpires;
+           String info=identityName+","+accountExpires+","+disabled+","+"\""+distinguishName+"\"";
+            identitiesWithContractorAD.add(info);
+        }
+        }
+    }
+
+    if (!identitiesWithContractorAD.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\neverAccountExpADidentities.csv", true);
+        for (String info : identitiesWithContractorAD) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+
+    System.out.println("End");
+
+} catch (Exception e) {
+    e.printStackTrace();
+}
+
+  
+  
+  
+  
+  
+
+       
+</Source>
+</Rule>
+
+</sailpoint>

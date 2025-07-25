@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="CyberArk Group group permission" type="GroupAggregationRefresh">
+  <Description>This rule is used to set the owner or modify the account group before it is persisted to the database.</Description>
+  <Signature returnType="Object">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="environment" type="Map">
+        <Description>
+          Arguments passed to the aggregation task.
+        </Description>
+      </Argument>
+      <Argument name="obj" type="ResourceObject">
+        <Description>
+          A sailpoint.object.ResourceObject generated from the application
+          and the ProvisioningPlan's ObjectRequest.
+        </Description>
+      </Argument>
+      <Argument name="accountGroup" type="ManagedAttribute">
+        <Description>
+          The account group being refreshed.
+        </Description>
+      </Argument>
+      <Argument name="groupApplication" type="Application">
+        <Description>
+          Application being aggregated.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="accountGroup" type="ManagedAttribute">
+        <Description>
+          The refreshed account group object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Custom;
+import sailpoint.object.Filter;
+import sailpoint.object.ManagedAttribute;
+import sailpoint.object.QueryOptions;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+accountGroup.setRequestable(false);
+String appName="CyberArk PAM";
+Map descMap = new HashMap();
+Custom customObj = context.getObjectByName(Custom.class,"CyberArk Safe Permission");
+Filter filter = Filter.eq("application.name",appName);
+QueryOptions qo = new QueryOptions();
+qo.addFilter(filter);
+
+List list = context.getObjects(ManagedAttribute.class,qo);
+for(ManagedAttribute ma :list){
+	if(ma.getAttribute().equalsIgnoreCase("accountPermission")){
+		if(ma.getValue() != null){
+			for(String k : customObj.getAttributes().getKeys()){
+				if(ma.getValue().contains(k)){
+					descMap = new HashMap();
+					String description = (String)customObj.get(k);
+					System.out.println("Description-Details :"+description);
+					descMap.put("en_US",description);
+					ma.setDescriptions(descMap);
+                                        
+				}
+			}
+		}
+		context.saveObject(ma);
+	    context.commitTransaction();
+
+	}
+}
+
+return accountGroup;</Source>
+</Rule>
+
+</sailpoint>

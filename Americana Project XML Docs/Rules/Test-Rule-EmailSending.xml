@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-Rule-EmailSending">
+  <Source>   
+  import sailpoint.object.Identity;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningResult;
+
+  import sailpoint.tools.Util;
+
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger log = Logger.getLogger("rule.americana.AfterProvisioning");
+  log.setLevel(Level.DEBUG);
+
+  Identity identityObject=context.getObjectByName(Identity.class,"Shruti Vashistha(Infosys)");
+
+
+  String  displayName=(String)  identityObject.getAttribute("displayName");
+  if(displayName.contains("(")){
+    String[] str=displayName.split("\\(");
+    //return str[1].substring(0,str[1].length()-1);
+    
+  }
+  String  employeeNumber=(String) identityObject.getAttribute("employeeNumber");
+  String  PositionName=(String) identityObject.getAttribute("PositionName");
+  String  department=(String) identityObject.getAttribute("department");
+  String  startDate=(String) identityObject.getAttribute("startDate");
+  String  email=(String) identityObject.getAttribute("email");
+
+  String  manager;
+  if(identityObject.getManager() != null &amp;&amp; identityObject.getManager().getDisplayName() != null){
+    manager=(String) identityObject.getManager().getDisplayName();
+  }
+
+
+
+  String ruleName = "Americana-Rule-AfterProvisioning-ActiveDirectory";
+
+  //List ccList = new ArrayList(Arrays.asList("sbabikian@americana-food.com", "mmadian@americana-food.com"));
+
+  EmailOptions eo = new EmailOptions();
+  EmailTemplate et = context.getObjectByName(EmailTemplate.class,"Manage-Engine-Templete");
+
+  Map args = new HashMap();
+  args.put("identityName","Hanuma Reddy");
+  args.put("item","Access Provisioning");
+  args.put("displayName",displayName);
+  args.put("employeeNumber",employeeNumber);
+  args.put("PositionName",PositionName);
+  args.put("department",department);
+  args.put("startDate",startDate);
+  args.put("email",email);
+  args.put("manager",manager);
+
+  eo.setVariables(args);
+  //eo.setTo("servicedesk@americana-food.com");
+  eo.setTo("hanuma.emani@eshiam.com");
+
+  context.sendEmailNotification(et,eo);
+  context.decache(identityObject);
+  //  return args;
+
+
+
+  return "Success";
+
+
+
+  //EmailTemplate et = context.getObjectByName(EmailTemplate.class,"Americana-EmailTemplate-UserCredentialsNotification");
+  /* Identity identity = context.getObjectByName(Identity.class,"");
+  if (identity != null ) {
+    if (identity.getManager() != null &amp;&amp; Util.isNotNullOrEmpty(identity.getManager().getAttribute("email"))) {
+      String mail = identity.getManager().getAttribute("email");
+      if (Util.isNotNullOrEmpty(mail)) {
+        log.debug("IN IF The Manager Email :"+mail);
+        eo.setTo(mail);
+       // eo.setCc(Util.listToCsv(ccList));
+        Map args = new HashMap();
+        args.put("application","Active Directory");
+        args.put("idname",identity.getDisplayName());
+        args.put("username","");  
+        args.put("password","");
+        eo.setVariables(args);
+        context.sendEmailNotification(et,eo);
+      }
+    } else {
+     // eo.setTo(ccList);
+      log.debug("IN ELSE The Email :"+ccList);
+      //eo.setCc(Util.listToCsv(ccList));
+      Map args = new HashMap();
+      args.put("application","Active Directory");
+      args.put("idname",identity.getDisplayName());
+      args.put("username","");  
+      args.put("password","");
+      eo.setVariables(args);
+      context.sendEmailNotification(et,eo);
+    }
+  }
+
+
+*/
+  </Source>
+</Rule>
+
+</sailpoint>

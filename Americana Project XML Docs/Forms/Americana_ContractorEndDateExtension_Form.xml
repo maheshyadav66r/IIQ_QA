@@ -1,0 +1,251 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_ContractorEndDateExtension_Form" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Contractor End Date Extension Form" />
+    </Map>
+  </Attributes>
+  <Section>
+    <Field displayName="Select Contractor" displayType="comboBox" name="user" postBack="true" required="true" type="sailpoint.object.Identity" />
+  </Section>
+  <Section columns="2" label="User Details" type="text">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="First name" dynamic="true" name="firstname" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getFirstname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last name" dynamic="true" name="lastname" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getLastname();	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Job Title" dynamic="true" name="jobTitle" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("jobTitle");	
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Department" dynamic="true" name="department" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	return identityObj.getStringAttribute("department");
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Manager" displayType="combobox" dynamic="true" name="manager" readOnly="true" type="String">
+      <Script>
+        <Source>
+      	import sailpoint.object.Identity;
+        
+        String identityName = form.getField("user").getValue();
+        if(null != identityName @and !"".equalsIgnoreCase(identityName)){
+          Identity identityObj = context.getObjectByName(Identity.class,identityName);
+          if(null != identityObj){
+          	Identity managerObj = identityObj.getManager();
+          	if(null != managerObj){
+          		return managerObj.getDisplayName();
+          	}
+          }
+        }
+        
+        return "";
+      </Source>
+      </Script>
+    </Field>
+    <Field displayName="EndDate" dynamic="true" name="endDate" readOnly="true" type="String">
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+           import org.apache.log4j.Logger;
+
+        String eDate=" ";
+          String accountExp=" ";
+        if(user!=null){
+        Identity id=context.getObjectByName(Identity.class, user);
+        if(id!=null){
+         eDate=id.getStringAttribute("endDate");
+          
+          
+         if(eDate!=null){
+          
+              return eDate;
+          
+          }
+          else
+          {
+          
+          
+         accountExp=id.getStringAttribute("accountExpires");
+          
+          
+          
+          
+          if(accountExp!=null &amp;&amp; !accountExp.equalsIgnoreCase("never"))
+          
+          {
+           return accountExp;
+          }
+          }
+          return " ";
+       
+          }
+      
+        
+        }
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section label="End Date Extension Details">
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+                
+                	return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field displayName="Enter New End Date" name="newEndDate" required="true" type="date" />
+  </Section>
+  <Section>
+    <Attributes>
+      <Map>
+        <entry key="hidden">
+          <value>
+            <Script>
+              <Source>
+                if ( user !=null ) {
+
+                return false;
+                }
+                return true;
+              </Source>
+            </Script>
+          </value>
+        </entry>
+      </Map>
+    </Attributes>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" required="true" type="string">
+      <AllowedValues>
+        <String>Extend the Contract</String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" helpKey="Please enter a business justification ensuring that it's no less than 50 characters" name="otherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="next" label="OK" />
+  <Button action="cancel" label="Cancel" />
+</Form>
+
+</sailpoint>

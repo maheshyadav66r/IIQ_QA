@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<QuickLink action="workflow" category="Custom" messageKey="CrunchTime Provisioning" name="CrunchTime_Provisioning">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="CrunchTime_Custom_workflow for Approval" />
+      <entry key="workflowSuccess" value="Workflow started" />
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Everyone" />
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>
+
+</sailpoint>

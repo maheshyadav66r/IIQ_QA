@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Certification SignOff Rule">
+  <Source>
+  	import sailpoint.object.Certification;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import java.util.Iterator;
+  import sailpoint.object.Identity;
+  import java.util.List;
+  import java.util.ArrayList;
+  import sailpoint.object.CertificationEntity;
+  import sailpoint.object.CertificationAction;
+  import sailpoint.api.Certificationer;
+  import sailpoint.tools.Message;
+  import sailpoint.tools.Message.Type;
+  import sailpoint.object.TaskResult;
+  
+  List userNamesList = new ArrayList();
+  List successMessages = new ArrayList();
+	StringBuilder stringBuilder = new StringBuilder();
+  stringBuilder.append("Access Review Name, Certifier, Email, Manager");
+  stringBuilder.append("\n");
+  Certificationer certificationer = new Certificationer(context);
+  
+  Filter identitiesFilter = Filter.and(Filter.eq("peopleGroup","Store Level"),Filter.eq("storeincharge","Y"));
+  QueryOptions qoIdentityFilter = new QueryOptions();
+  qoIdentityFilter.addFilter(identitiesFilter);
+  qoIdentityFilter.setCloneResults(true);
+  
+  Iterator iterator = context.search(Identity.class,qoIdentityFilter,"name");
+  while(iterator.hasNext()){
+  	Object[] nameArray =	iterator.next();
+    userNamesList.add(nameArray[0]);
+  }
+  
+  Identity defaultCertifier = context.getObjectByName(Identity.class,"spadmin");
+ 
+  Filter filter = Filter.in("manager",userNamesList);
+  Filter certGroupFilter = Filter.eq("certificationGroups.id","0a0805848cb619d6818cb6e663f40096");
+  Filter andFilter = Filter.and(filter,certGroupFilter);
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(andFilter);
+  qo.setCloneResults(true);
+                     
+  Iterator iterator = context.search(Certification.class,qo);
+   while(iterator.hasNext()){
+  	Certification certObj = (Certification)iterator.next();
+    Identity identityObj = null;
+     String email = "";
+  //  return "certobj"+certObj.getId();
+     
+    if(null != certObj @and null == certObj.getSigned()){
+      /* Uncomment the below code to see the list of certifications and the certifiers */
+      if(null != certObj.getName() @and null != certObj.getCertifiers() @and certObj.getCertifiers().size() &gt; 0 @and null != certObj.getManager()){
+        String certifier = certObj.getCertifiers().get(0);
+        if(null != certifier @and !"".equalsIgnoreCase(certifier)){
+        	identityObj = context.getObjectByName(Identity.class,certifier);
+          if(null != identityObj){
+          	email = identityObj.getEmail();
+          }
+        }
+      	stringBuilder.append(certObj.getName()+", "+certObj.getCertifiers().get(0)+", "+email+", "+certObj.getManager());
+        
+        successMessages.add(new Message(Message.Type.Info,certObj.getName()+", "+certObj.getCertifiers().get(0)+" signed off successfully",null));
+        stringBuilder.append("\n");
+      }
+      
+    	
+      CertificationAction certAction = new CertificationAction();
+      certAction.approve(certObj.getId(), defaultCertifier, null, "Automatically sign-off the Store IDs where team members doesn't have access to critical applications.");
+      List certEntities = certObj.getEntities();
+      for(CertificationEntity certEntity : certEntities){
+        if(null != certEntity){
+  				certEntity.bulkCertify(defaultCertifier,null,certAction,null,false);
+      	}
+        
+        
+      }
+     	context.saveObject(certObj);
+      
+			certificationer.refresh(certObj);
+			certificationer.sign(certObj,defaultCertifier);
+
+			context.commitTransaction();
+			context.decache(certObj);
+      
+      
+    	
+      }
+    }
+  
+  		String trMsg = "Success"; 
+
+ 
+
+if ( (void == taskResult) || (null == taskResult) || ( ! (taskResult instanceof TaskResult)) ) { 
+
+   String errMsg = "taskResult is void, null or not a handle to a sailpoint.object.TaskResult"; 
+
+   return errMsg; 
+
+} 
+
+ 
+
+taskResult.setMessages(successMessages); 
+
+taskResult.setProgress("Done with execution " + trMsg); 
+
+taskResult.setCompletionStatus(TaskResult.CompletionStatus.Success); 
+
+ 
+
+context.saveObject(taskResult); 
+
+context.commitTransaction(); 
+  
+      return stringBuilder.toString();
+  		return "SUCCESS";
+  </Source>
+</Rule>
+
+</sailpoint>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_HomePageOfLauncher" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section name="verifying the User Account">
+    <Field displayName="Are you a new user to  Power BI?" displayType="radio" name="radioSection" postBack="true">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Yes</String>
+            <String>No</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <ValidationScript>
+        <Source>
+          System.out.println("hasLinks === "+hasLinks);
+          System.out.println("value === "+value);
+          if("Yes".equalsIgnoreCase(value) @and hasLinks){
+          return "WARNING : You have a Power BI Account";
+          }
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

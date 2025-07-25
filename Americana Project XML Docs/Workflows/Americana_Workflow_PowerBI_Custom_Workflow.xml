@@ -1,0 +1,1258 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow explicitTransitions="true" name="Americana_Workflow_PowerBI_Custom_Workflow">
+  <Variable initializer="false" name="trace">
+    <Description>Used for debugging this workflow and when set to true trace will be sent to stdout.</Description>
+  </Variable>
+  <Variable initializer="spadmin" input="true" name="fallbackApprover" />
+  <Variable initializer="false" name="transient" />
+  <Variable initializer="QuickLink Approval for Power BI Access" name="flow" />
+  <Variable name="launcher">
+    <Description>The name of the identity.</Description>
+    <Script>
+      <Source>
+        loggingMethod().debug("user name : "+context.getUserName());
+        return context.getUserName();     
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="identityDisplayName" />
+  <Variable name="rejector" />
+  <Variable initializer="false" name="optimisticProvisioning" />
+  <Variable name="applicationName">
+    <Description>Name of the application</Description>
+  </Variable>
+  <Variable name="hasLinks">
+    <Description>User has Power BI applicationLinks</Description>
+  </Variable>
+  <Variable name="linksAD">
+    <Description>User's Active Directory applicationLinks</Description>
+  </Variable>
+  <Variable name="hasLinksAD">
+    <Description>User has Active Directory applicationLinks</Description>
+  </Variable>
+  <Variable name="memberOfBI">
+    <Description>User's BIUserGroup membership in AD</Description>
+  </Variable>
+  <Variable name="biADAccEmail">
+    <Description>Value of Email in AD account with membership in BIUserGroup</Description>
+  </Variable>
+  <Variable name="idEmailEqualsBiADEmail">
+    <Description>Boolean stating whether Email in AD account with BIUserGroup membership is the same as Email on Identity</Description>
+  </Variable>
+  <Variable name="appNameAD" />
+  <Variable name="appNameADCon" />
+  <Variable name="firstName" />
+  <Variable name="lastName" />
+  <Variable name="userId" />
+  <Variable name="email" />
+  <Variable name="links" />
+  <Variable name="stores" />
+  <Variable name="storesAR" />
+  <Variable name="environment">
+    <Description>Assigning the custom object.</Description>
+  </Variable>
+  <Variable name="storeValue">
+    <Description>Assigning the storeValue custom object.</Description>
+  </Variable>
+  <Variable name="ITInfraApprovers">
+    <Description>Assigning the IT INfra approvers custom object.</Description>
+  </Variable>
+  <Variable name="CFMApprovers">
+    <Description>Assigning the CFM approvers custom object.</Description>
+  </Variable>
+  <Variable name="secondLevelApproverName">
+    <Description>Name of second level approver</Description>
+  </Variable>
+  <Variable name="secondLevelApproverEmail">
+    <Description>Email of second level approver</Description>
+  </Variable>
+  <Variable name="secondLevelApproverUserName">
+    <Description>Name of second level approver</Description>
+  </Variable>
+  <Variable name="thirdLevelApproverName">
+    <Description>Name of third level approver</Description>
+  </Variable>
+  <Variable name="thirdLevelApproverEmail">
+    <Description>Email of third level approver</Description>
+  </Variable>
+  <Variable name="thirdLevelApproverUserName">
+    <Description>Name of third level approver</Description>
+  </Variable>
+  <Variable name="fourthLevelApproverName">
+    <Description>Name of fourth level approver</Description>
+  </Variable>
+  <Variable name="fourthLevelApproverEmail">
+    <Description>Email of fourth level approver</Description>
+  </Variable>
+  <Variable name="fourthLevelApproverUserName">
+    <Description>Name of fourth level approver</Description>
+  </Variable>
+  <Variable name="COMPANY_NO">
+    <Description>Link Attribute COMPANY_NO of user.</Description>
+  </Variable>
+  <Variable name="REST_NUMBER">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_SLM">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_SL">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_SM">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_LM">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_S">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_L">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="STORE_INFO_P">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="MARKETING_GROUP">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="PL_GROUP">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="SALES_GROUP">
+    <Description>Link Attribute REST_NUMBER of user.</Description>
+  </Variable>
+  <Variable name="managerName">
+    <Description>Name of Requester's Manager</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerName  = "";
+        if (launcher != null) {
+        Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getName() != null) {
+        managerName = launchObject.getManager().getName();
+        context.decache(launchObject);
+        }
+        }
+        return managerName;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="managerDisplayName">
+    <Description>Name of Requester's Manager</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerDisplayName  = "";
+        if (launcher != null) {
+        Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getDisplayName() != null) {
+        managerDisplayName = launchObject.getManager().getDisplayName();
+        context.decache(launchObject);
+        }
+        }
+        return managerDisplayName;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable name="managerEmail">
+    <Description>Name of Requester's Manager</Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        {
+        String managerEmail  = "";
+        if (launcher != null) {
+        Identity launchObject = context.getObjectByName(Identity.class,launcher);
+        if (launchObject != null @and launchObject.getManager() != null @and launchObject.getManager().getEmail() != null) {
+        managerEmail = launchObject.getManager().getEmail();
+        context.decache(launchObject);
+        }
+        }
+        return managerEmail;
+        }
+      </Source>
+    </Script>
+  </Variable>
+  <Variable input="true" name="workItemDescription" />
+  <Variable initializer="Americana_EmailTemplate_PowerBI_Manager_Notification" input="true" name="PowerBIManagerNotify">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana_EmailTemplate_PowerBI_User_Notification" input="true" name="PowerBIUserNotify">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana_EmailTemplate_PowerBI_Approval_User_Notification" input="true" name="PowerBIApprovalUserNotify">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana_EmailTemplate_PowerBI_Rejection_User_Notification" input="true" name="PowerBIRejectionUserNotify">
+    <Description>
+      The email template to use for rejection notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana_EmailTemplate_PowerBI_BITeam_Notification" input="true" name="PowerBITeamNotify">
+    <Description>
+      The email template to use for BI Team notifications.
+    </Description>
+  </Variable>
+  <Variable name="identityName" />
+  <Variable initializer="true" input="true" name="noFiltering">
+    <Description>Passing this variable to Identity Request Initialize subprocess to see that requests for existing attributes are not filtered.</Description>
+  </Variable>
+  <Variable name="managerApprover" />
+  <Variable name="secondlevelApproval" />
+  <Variable name="thirdlevelApproval" />
+  <Variable name="secondLevelApproverJobTitle" />
+  <Variable name="thirdLevelApproverJobTitle" />
+  <Variable initializer="27390" input="true" name="financeDirector" />
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="Americana_Rule_Get_PowerBI_ApprovalMatrix" />
+    <Reference class="sailpoint.object.Rule" name="Custom_Logger" />
+  </RuleLibraries>
+  <Step icon="Start" name="Start" posX="51" posY="411">
+    <Transition to="Fetching User Details" />
+  </Step>
+  <Step icon="Start" name="Fetching User Details" posX="251" posY="411">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import sailpoint.api.IdentityService;
+        import sailpoint.object.Application;
+        import sailpoint.object.Link;
+        import java.util.*;
+        import sailpoint.tools.Util;
+
+        List countryList = new ArrayList();
+        List storeList = new ArrayList();
+
+        List storeListSLM = new ArrayList();
+        List storeListSL = new ArrayList();
+        List storeListSM = new ArrayList();
+        List storeListLM = new ArrayList();
+        List storeListSales = new ArrayList();
+        List storeListPl = new ArrayList();
+        List storeListMarketing = new ArrayList();
+        List allStores = new ArrayList();
+
+        Identity idObject = context.getObjectByName(Identity.class, launcher);
+
+        if(null != idObject){
+        wfcontext.setVariable("identity", idObject);
+        wfcontext.setVariable("identityDisplayName", idObject.getDisplayName());
+        loggingMethod().debug("identityDisplayName : " + wfcontext.getVariable("identityDisplayName"));
+
+        Application appObj = context.getObjectByName(Application.class,"Microsoft Power BI");//add applicaion
+        wfcontext.setVariable("applicationName", appObj.getName());
+        IdentityService identityService = new IdentityService(context);
+        List links = identityService.getLinks(idObject, appObj);
+
+        if(Util.nullSafeSize(links)&gt;0){
+        wfcontext.setVariable("links", links);
+        wfcontext.setVariable("hasLinks", true);
+        if(null != links.get(0).getAttribute("COMPANY_NO")){//add link Attribute
+        if(links.get(0).getAttribute("COMPANY_NO") instanceof List){
+        countryList.addAll(links.get(0).getAttribute("COMPANY_NO"));
+        }else{
+        countryList.add(links.get(0).getAttribute("COMPANY_NO"));
+        }
+        wfcontext.setVariable("COMPANY_NO", countryList);
+        }
+        if(null != links.get(0).getAttribute("REST_NUMBER")){//add link Attribute
+        if(links.get(0).getAttribute("REST_NUMBER") instanceof List){
+        storeList.addAll(links.get(0).getAttribute("REST_NUMBER"));
+        }else{
+        storeList.add(links.get(0).getAttribute("REST_NUMBER"));
+        }
+        wfcontext.setVariable("REST_NUMBER", storeList);
+
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_SLM")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_SLM") instanceof List){
+        storeListSLM.addAll(links.get(0).getAttribute("STORE_INFO_SLM"));
+        }else{
+        storeListSLM.add(links.get(0).getAttribute("STORE_INFO_SLM"));
+        }
+        wfcontext.setVariable("STORE_INFO_SLM", storeListSLM);
+        //   loggingMethod().debug("STORE_INFO_SLM is : " + storeListSLM);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_SL")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_SL") instanceof List){
+        storeListSL.addAll(links.get(0).getAttribute("STORE_INFO_SL"));
+        }else{
+        storeListSL.add(links.get(0).getAttribute("STORE_INFO_SL"));
+        }
+        wfcontext.setVariable("STORE_INFO_SL", storeListSL);
+        //  loggingMethod().debug("STORE_INFO_SL is : " + storeListSL);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_SM")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_SM") instanceof List){
+        storeListSM.addAll(links.get(0).getAttribute("STORE_INFO_SM"));
+        }else{
+        storeListSM.add(links.get(0).getAttribute("STORE_INFO_SM"));
+        }
+        wfcontext.setVariable("STORE_INFO_SM", storeListSM);
+        //   loggingMethod().debug("STORE_INFO_SM is : " + storeListSM);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_LM")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_LM") instanceof List){
+        storeListLM.addAll(links.get(0).getAttribute("STORE_INFO_LM"));
+        }else{
+        storeListLM.add(links.get(0).getAttribute("STORE_INFO_LM"));
+        }
+        wfcontext.setVariable("STORE_INFO_LM", storeListLM);
+        //   loggingMethod().debug("STORE_INFO_LM is : " + storeListLM);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_S")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_S") instanceof List){
+        storeListSales.addAll(links.get(0).getAttribute("STORE_INFO_S"));
+        }else{
+        storeListSales.add(links.get(0).getAttribute("STORE_INFO_S"));
+        }
+        wfcontext.setVariable("STORE_INFO_S", storeListSales);
+        //  loggingMethod().debug("STORE_INFO_S is : " + storeListSales);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_L")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_L") instanceof List){
+        storeListPl.addAll(links.get(0).getAttribute("STORE_INFO_L"));
+        }else{
+        storeListPl.add(links.get(0).getAttribute("STORE_INFO_L"));
+        }
+        wfcontext.setVariable("STORE_INFO_L", storeListPl);
+        //  loggingMethod().debug("STORE_INFO_L is : " + storeListPl);
+        }
+
+        if(null != links.get(0).getAttribute("STORE_INFO_M")){//add link Attribute
+        if(links.get(0).getAttribute("STORE_INFO_M") instanceof List){
+        storeListMarketing.addAll(links.get(0).getAttribute("STORE_INFO_M"));
+        }else{
+        storeListMarketing.add(links.get(0).getAttribute("STORE_INFO_M"));
+        }
+        wfcontext.setVariable("STORE_INFO_M", storeListMarketing);
+        //    loggingMethod().debug("STORE_INFO_M is : " + storeListMarketing);
+        }
+
+        }
+        else{
+        wfcontext.setVariable("hasLinks", false);
+        }
+
+        if (Util.nullSafeSize(storeListSLM) &gt; 0) {
+        allStores.addAll(storeListSLM);
+        } 
+        if (Util.nullSafeSize(storeListSL) &gt; 0) {
+        allStores.addAll(storeListSL);
+        }
+        if (Util.nullSafeSize(storeListSM) &gt; 0) {
+        allStores.addAll(storeListSM);
+        }
+        if (Util.nullSafeSize(storeListLM) &gt; 0) {
+        allStores.addAll(storeListLM);
+        }
+        if (Util.nullSafeSize(storeListSales) &gt; 0) {
+        allStores.addAll(storeListSales);
+        }
+        if (Util.nullSafeSize(storeListPl) &gt; 0) {
+        allStores.addAll(storeListPl);
+        }
+        if (Util.nullSafeSize(storeListMarketing) &gt; 0) {
+        allStores.addAll(storeListMarketing);
+        }
+
+        Collections.sort(allStores);
+
+        wfcontext.setVariable("userId", idObject.getName());
+        wfcontext.setVariable("firstName", idObject.getFirstname());
+        wfcontext.setVariable("lastName",idObject.getLastname());
+        wfcontext.setVariable("email",idObject.getEmail());
+
+        //	loggingMethod().debug("stores in workflow is : " + allStores);
+        wfcontext.setVariable("stores", allStores);
+
+        }
+
+      </Source>
+    </Script>
+    <Transition to="Assigning custom Object" />
+  </Step>
+  <Step icon="Start" name="Assigning custom Object" posX="451" posY="411">
+    <Script>
+      <Source>
+        import sailpoint.object.Custom;
+
+        Custom customObj =  context.getObjectByName(Custom.class,"Americana_Custom_PowerBI_Brands");//add custom object name
+        Custom customObjStores =  context.getObjectByName(Custom.class,"Americana_Custom_PowerBI_Stores");//add custom object for Store Field 
+        //Custom customITInfraApproverObj = context.getObjectByName(Custom.class, "Americana_Custom_PowerBI_ITInfraApprovers"); //add custom object for IT Infra approvers
+        Custom customCFMApproverObj = context.getObjectByName(Custom.class, "Americana_Custom_PowerBI_CFMApprovers"); //add custom object for CFM approvers
+
+        if(null != customObj || null != customObjStores ){
+        wfcontext.setVariable("environment",customObj.getAttributes().getMap());
+        wfcontext.setVariable("storeValue",customObjStores.getAttributes().getMap());
+        context.decache(customObj);
+		    context.decache(customObjStores);
+        }
+        /*
+        if(null != customITInfraApproverObj){
+        wfcontext.setVariable("ITInfraApprovers",customITInfraApproverObj.getAttributes().getMap());
+        context.decache(customITInfraApproverObj);
+        }
+        */
+        if(null != customCFMApproverObj){
+        wfcontext.setVariable("CFMApprovers",customCFMApproverObj.getAttributes().getMap());
+        context.decache(customCFMApproverObj);
+        }
+      </Source>
+    </Script>
+    <Transition to="User verification" />
+  </Step>
+  <Step icon="Default" name="User verification" posX="651" posY="411">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="radioSection" send="hasLinks">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_HomePageOfLauncher" />
+      <Arg name="workItemDescription" value="User Account Request for Power BI Access" />
+      <InterceptorScript>
+        <Source>
+
+        import sailpoint.workflow.IdentityRequestLibrary;
+        import java.util.List;
+		import sailpoint.object.Workflow;  
+        import sailpoint.object.Attributes;
+        import java.util.Date;
+        import java.util.Calendar;
+          
+        if (method != null &amp;&amp; method.equals(Workflow.INTERCEPTOR_OPEN_WORK_ITEM)) {
+			if (workflow != null) {
+				if (item != null &amp;&amp; context != null) {
+					Calendar cal = Calendar.getInstance();
+					cal.add(Calendar.MINUTE,15);
+          
+					item.setExpiration(cal.getTime());
+					item.setWakeUpDate(cal.getTime()); 
+					context.saveObject(item);
+					context.commitTransaction();
+				}
+			}
+			IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+        }
+        </Source>
+      </InterceptorScript>
+    </Approval>
+    <Transition to="Check for AD link and BIUserGroup" when="approved &amp;&amp; &quot;Yes&quot;.equals(radioSection)" />
+    <Transition to="Existing Accesses Details" when="approved &amp;&amp; &quot;No&quot;.equals(radioSection)" />
+    <Transition to="end" when="!approved" />
+  </Step>
+  <Step icon="Default" name="Check for AD link and BIUserGroup" posX="851" posY="211">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import sailpoint.api.IdentityService;
+        import sailpoint.object.Application;
+        import sailpoint.object.Link;
+        import java.util.*;
+        import sailpoint.tools.Util;
+
+        //List adGroupList = new ArrayList();
+        List linksAD = new ArrayList();
+        List linksADCon = new ArrayList();
+        Identity idObject = context.getObjectByName(Identity.class, launcher);
+        IdentityService identityServiceAD = new IdentityService(context);
+
+        if (null != idObject) {
+        Application appObjAD = context.getObjectByName(Application.class, "Active Directory");
+        wfcontext.setVariable("appNameAD", appObjAD.getName());
+        // IdentityService identityServiceAD = new IdentityService(context);
+        linksAD = identityServiceAD.getLinks(idObject, appObjAD);
+        loggingMethod().debug("linksAD in check ad is : " + linksAD);
+
+        if (null == linksAD || linksAD.size() == 0)
+        {
+        wfcontext.setVariable("appNameAD", null);
+        Application appObjADCon = context.getObjectByName(Application.class, "AD Contractors");
+        wfcontext.setVariable("appNameADCon", appObjADCon.getName());
+        // IdentityService identityServiceADCon = new IdentityService(context);
+        linksADCon = identityServiceAD.getLinks(idObject, appObjADCon);
+        loggingMethod().debug("linksADCon in check ad is : " + linksADCon);
+        if (Util.nullSafeSize(linksADCon) &gt; 0)
+        linksAD.addAll(linksADCon);
+        }
+        loggingMethod().debug("linksAD after adding linksADCon is : " + linksAD);
+        
+        if (Util.nullSafeSize(linksAD) &gt; 0) {
+        wfcontext.setVariable("linksAD", linksAD);
+        wfcontext.setVariable("hasLinksAD", true);
+        loggingMethod().debug("linksAD is: " + linksAD);
+
+        for (int i = 0; i &lt; linksAD.size(); i++) {
+        List adGroupList = new ArrayList();
+
+        if (null == linksAD.get(i).getAttribute("memberOf")) {
+        wfcontext.setVariable("memberOfBI", false);
+        loggingMethod().debug("memberOfBI in null adGroupList is: " + wfcontext.getVariable("memberOfBI"));
+        }
+        if (null != linksAD.get(i).getAttribute("memberOf")) {
+        if (linksAD.get(i).getAttribute("memberOf") instanceof List) {
+        adGroupList.addAll(linksAD.get(i).getAttribute("memberOf"));
+        } 
+        else {
+        adGroupList.add(linksAD.get(i).getAttribute("memberOf"));
+        }
+        if (null != adGroupList &amp;&amp; !adGroupList.contains("CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")) {
+        wfcontext.setVariable("memberOfBI", false);
+        loggingMethod().debug("memberOfBI is: " + wfcontext.getVariable("memberOfBI"));
+        } 
+        else if (null != adGroupList &amp;&amp; adGroupList.contains("CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")) {
+        wfcontext.setVariable("memberOfBI", true);
+        loggingMethod().debug("memberOfBI in else is: " + wfcontext.getVariable("memberOfBI"));
+
+        if (null != linksAD.get(i).getAttribute("mail")) {
+        wfcontext.setVariable("biADAccEmail", linksAD.get(i).getAttribute("mail"));
+        loggingMethod().debug("biADAccEmail is: " + wfcontext.getVariable("biADAccEmail"));
+
+        if (null != wfcontext.getVariable("email") &amp;&amp; wfcontext.getVariable("email").equalsIgnoreCase(wfcontext.getVariable("biADAccEmail"))) {
+        wfcontext.setVariable("idEmailEqualsBiADEmail", true);
+        loggingMethod().debug("idEmailEqualsBiADEmail is : " + wfcontext.getVariable("idEmailEqualsBiADEmail"));
+        }
+        else if (null != wfcontext.getVariable("email") &amp;&amp; !(wfcontext.getVariable("email").equalsIgnoreCase(wfcontext.getVariable("biADAccEmail")))) {
+        wfcontext.setVariable("idEmailEqualsBiADEmail", false);
+        loggingMethod().debug("idEmailEqualsBiADEmail in else is : " + wfcontext.getVariable("idEmailEqualsBiADEmail"));
+        }
+        }
+		if (null == linksAD.get(i).getAttribute("mail") &amp;&amp; null != linksAD.get(i).getAttribute("userPrincipalName")) {
+        wfcontext.setVariable("biADAccEmail", linksAD.get(i).getAttribute("userPrincipalName"));
+        loggingMethod().debug("biADAccEmail is: " + wfcontext.getVariable("biADAccEmail"));
+
+        if (null != wfcontext.getVariable("email") &amp;&amp; wfcontext.getVariable("email").equalsIgnoreCase(wfcontext.getVariable("biADAccEmail"))) {
+        wfcontext.setVariable("idEmailEqualsBiADEmail", true);
+        loggingMethod().debug("idEmailEqualsBiADEmail is : " + wfcontext.getVariable("idEmailEqualsBiADEmail"));
+        }
+        else if (null != wfcontext.getVariable("email") &amp;&amp; !(wfcontext.getVariable("email").equalsIgnoreCase(wfcontext.getVariable("biADAccEmail")))) {
+        wfcontext.setVariable("idEmailEqualsBiADEmail", false);
+        loggingMethod().debug("idEmailEqualsBiADEmail in else is : " + wfcontext.getVariable("idEmailEqualsBiADEmail"));
+        }
+        }
+        }
+        }
+        }
+        /*
+        if (null != adGroupList &amp;&amp; !adGroupList.contains("CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")) {
+        wfcontext.setVariable("memberOfBI", false);
+        //	loggingMethod().debug("memberOfBI is: " + wfcontext.getVariable("memberOfBI"));
+        } else if (null != adGroupList &amp;&amp; adGroupList.contains("CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global")) {
+        wfcontext.setVariable("memberOfBI", true);
+        //	loggingMethod().debug("memberOfBI in else is: " + wfcontext.getVariable("memberOfBI"));
+        }
+        */
+        } else {
+        wfcontext.setVariable("linksAD", linksAD);
+        wfcontext.setVariable("hasLinksAD", false);
+        //	loggingMethod().debug("linksAD in else is: " + linksAD);
+        }
+        }
+
+
+      </Source>
+    </Script>
+    <Transition to="Launcher Details" />
+  </Step>
+  <Step icon="Default" name="Existing Accesses Details" posX="851" posY="411">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,stores" send="launcher,firstName,lastName,email,hasLinks,links,stores">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_ExistingAccessDetails" />
+      <Arg name="workItemDescription" value="User Account Request for Power BI Access" />
+      <Return name="name" to="identityName" />
+    </Approval>
+    <Transition to="addNewAccess" when="approved" />
+    <Transition to="User verification" when="!approved" />
+  </Step>
+  <Step icon="Default" name="addNewAccess" posX="1051" posY="411">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="ModifyAccess" send="hasLinks">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_AddNewAccess" />
+      <Arg name="workItemDescription" value="User Account Request for Power BI Access" />
+    </Approval>
+    <Transition to="Existing Accesses Details" when="!approved" />
+    <Transition to="Launcher Details" />
+  </Step>
+  <Step icon="Default" name="Launcher Details" posX="1051" posY="211">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,countryName,brandName,storeName,functionalAccess,storeAccess,storesAll" send="launcher,firstName,lastName,email,hasLinks,links">
+      <Arg name="environment" value="ref:environment" />
+      <Arg name="storeValue" value="ref:storeValue" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_LauncherRequest" />
+      <Arg name="workItemDescription" value="User Account Request for Power BI Access" />
+      <Return name="name" to="identityName" />
+    </Approval>
+    <Transition to="Confirm Submission" when="approved" />
+    <Transition to="User verification" when="!approved" />
+  </Step>
+  <Step icon="Default" name="Confirm Submission" posX="1251" posY="211">
+    <Approval name="AD_Global_Form" owner="ref:launcher" return="submission">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_RequestSubmitted" />
+      <Arg name="workItemDescription" value="User Account Request for Power BI Access" />
+    </Approval>
+    <Transition to="Get Stores requested" />
+  </Step>
+  <Step icon="Default" name="Get Stores requested" posX="1451" posY="211">
+    <Script>
+      <Source>
+        if (("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storesAll) &gt; 0)) {
+        loggingMethod().debug("storeAccess is YES. Sending storesALL to storesAR");    
+        wfcontext.setVariable("storesAR", storesAll);
+        }
+        else if (!("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storeName) &gt; 0)) {
+        loggingMethod().debug("storeAccess is NO. Sending storeName to storesAR");    
+        wfcontext.setVariable("storesAR", storeName);
+        }
+      </Source>
+    </Script>
+    <Transition to="Get approver matrix map" />
+  </Step>
+  <Step icon="Default" name="Get approver matrix map" posX="1651" posY="211">
+    <Script>
+      <Source>
+        import java.util.*;
+        import sailpoint.util.*;
+        import sailpoint.object.Identity;
+
+        Map approverMatrixMap = new HashMap();
+        String secondLevelJobTitle = "";
+        String thirdLevelJobTitle = "";
+
+        if (("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storesAll) &gt; 0)) {
+        //  loggingMethod().debug("Calling getApproverMatrixMap with storesAll");    
+        //approverMatrixMap = getApproverMatrixMap(countryName, storesAll, functionalAccess, hasLinks, ITInfraApprovers, CFMApprovers);
+        approverMatrixMap = getApproverMatrixMap(countryName, storesAll, functionalAccess, hasLinks, CFMApprovers);
+        }
+        else if (!("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storeName) &gt; 0)) {
+        //  loggingMethod().debug("Calling getApproverMatrixMap with storeName");    
+        //approverMatrixMap = getApproverMatrixMap(countryName, storeName, functionalAccess, hasLinks, ITInfraApprovers, CFMApprovers);
+        approverMatrixMap = getApproverMatrixMap(countryName, storeName, functionalAccess, hasLinks, CFMApprovers);
+        }
+
+        loggingMethod().debug("approverMatrixMap in workflow is : " + approverMatrixMap);
+        if (null != approverMatrixMap)
+        {
+        if (!hasLinks)
+        {
+        wfcontext.setVariable("secondLevelApproverName", approverMatrixMap.get("slApprName"));
+        wfcontext.setVariable("secondLevelApproverEmail", approverMatrixMap.get("slApprEmail"));
+        wfcontext.setVariable("secondLevelApproverUserName", approverMatrixMap.get("slApprUserName"));
+        if(null != approverMatrixMap.get("slApprUserName")){
+        	Identity secondLevelIdObj = context.getObjectByName(Identity.class,approverMatrixMap.get("slApprUserName"));
+        	if(null != secondLevelIdObj){
+        		secondLevelJobTitle = secondLevelIdObj.getStringAttribute("jobTitle");
+        		if(null != secondLevelJobTitle @and !"".equalsIgnoreCase(secondLevelJobTitle)){
+        			wfcontext.setVariable("secondLevelApproverJobTitle", secondLevelJobTitle);
+        		}
+        	}
+        }
+        /*
+        wfcontext.setVariable("thirdLevelApproverName", approverMatrixMap.get("tlApprName"));
+        wfcontext.setVariable("thirdLevelApproverEmail", approverMatrixMap.get("tlApprEmail"));
+        wfcontext.setVariable("thirdLevelApproverUserName", approverMatrixMap.get("tlApprUserName"));
+        */
+
+        if (null != functionalAccess @and functionalAccess.contains("P/L"))
+        {
+        wfcontext.setVariable("thirdLevelApproverName", approverMatrixMap.get("tlApprName"));
+        wfcontext.setVariable("thirdLevelApproverEmail", approverMatrixMap.get("tlApprEmail"));
+        wfcontext.setVariable("thirdLevelApproverUserName", approverMatrixMap.get("tlApprUserName"));
+        if(null != approverMatrixMap.get("tlApprUserName")){
+        	Identity thirdLevelIdObj = context.getObjectByName(Identity.class,approverMatrixMap.get("tlApprUserName"));
+        	if(null != thirdLevelIdObj){
+        		thirdLevelJobTitle = thirdLevelIdObj.getStringAttribute("jobTitle");
+        		if(null != thirdLevelJobTitle @and !"".equalsIgnoreCase(thirdLevelJobTitle)){
+        			wfcontext.setVariable("thirdLevelApproverJobTitle", thirdLevelJobTitle);
+        		}
+        	}
+        }
+
+        wfcontext.setVariable("fourthLevelApproverName", null);
+        wfcontext.setVariable("fourthLevelApproverEmail", null);
+        wfcontext.setVariable("fourthLevelApproverUserName", null);
+        }
+        else if (null != functionalAccess @and !functionalAccess.contains("P/L"))
+        {
+        wfcontext.setVariable("thirdLevelApproverName", null);
+        wfcontext.setVariable("thirdLevelApproverEmail", null);
+        wfcontext.setVariable("thirdLevelApproverUserName", null);    
+
+        wfcontext.setVariable("fourthLevelApproverName", null);
+        wfcontext.setVariable("fourthLevelApproverEmail", null);
+        wfcontext.setVariable("fourthLevelApproverUserName", null);
+        }
+        }
+        else if (hasLinks)
+        {
+        wfcontext.setVariable("secondLevelApproverName", approverMatrixMap.get("slApprName"));
+        wfcontext.setVariable("secondLevelApproverEmail", approverMatrixMap.get("slApprEmail"));
+        wfcontext.setVariable("secondLevelApproverUserName", approverMatrixMap.get("slApprUserName"));
+        if(null != approverMatrixMap.get("slApprUserName")){
+        	Identity secondLevelIdObj = context.getObjectByName(Identity.class,approverMatrixMap.get("slApprUserName"));
+        	if(null != secondLevelIdObj){
+        		secondLevelJobTitle = secondLevelIdObj.getStringAttribute("jobTitle");
+        		if(null != secondLevelJobTitle @and !"".equalsIgnoreCase(secondLevelJobTitle)){
+        			wfcontext.setVariable("secondLevelApproverJobTitle", secondLevelJobTitle);
+        		}
+        	}
+        }
+
+        if (null != functionalAccess @and functionalAccess.contains("P/L"))
+        {
+        wfcontext.setVariable("thirdLevelApproverName", approverMatrixMap.get("tlApprName"));
+        wfcontext.setVariable("thirdLevelApproverEmail", approverMatrixMap.get("tlApprEmail"));
+        wfcontext.setVariable("thirdLevelApproverUserName", approverMatrixMap.get("tlApprUserName"));
+        if(null != approverMatrixMap.get("tlApprUserName")){
+        	Identity thirdLevelIdObj = context.getObjectByName(Identity.class,approverMatrixMap.get("tlApprUserName"));
+        	if(null != thirdLevelIdObj){
+        		thirdLevelJobTitle = thirdLevelIdObj.getStringAttribute("jobTitle");
+        		if(null != thirdLevelJobTitle @and !"".equalsIgnoreCase(thirdLevelJobTitle)){
+        			wfcontext.setVariable("thirdLevelApproverJobTitle", thirdLevelJobTitle);
+        		}
+        	}
+        }
+
+        wfcontext.setVariable("fourthLevelApproverName", null);
+        wfcontext.setVariable("fourthLevelApproverEmail", null);
+        wfcontext.setVariable("fourthLevelApproverUserName", null);
+        }
+        else if (null != functionalAccess @and !functionalAccess.contains("P/L"))
+        {
+        wfcontext.setVariable("thirdLevelApproverName", null);
+        wfcontext.setVariable("thirdLevelApproverEmail", null);
+        wfcontext.setVariable("thirdLevelApproverUserName", null);
+
+        wfcontext.setVariable("fourthLevelApproverName", null);
+        wfcontext.setVariable("fourthLevelApproverEmail", null);
+        wfcontext.setVariable("fourthLevelApproverUserName", null);
+        }
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="IDRInitailize" />
+  </Step>
+  <Step icon="Default" name="IDRInitailize" posX="1851" posY="211">
+    <Arg name="identityName" value="ref:requesterName" />
+    <Arg name="identityDisplayName" value="ref:requesterName" />
+    <Arg name="optimisticProvisioning" value="ref:optimisticProvisioning" />
+    <Arg name="flow" value="PowerBI Approvals Status" />
+    <Arg name="plan">
+      <Script>
+        <Source>
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.object.Identity;
+          import sailpoint.object.ProvisioningPlan.AccountRequest;
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.api.Provisioner;
+          
+          Identity idObj =  context.getObjectByName(Identity.class,requesterName);
+          ProvisioningPlan plan = new ProvisioningPlan(); 
+          plan.setIdentity(idObj);
+          AccountRequest accReq = new AccountRequest();
+          accReq.setApplication("Microsoft Power BI");
+          accReq.setOp(ProvisioningPlan.ObjectOperation.Create);
+
+
+          accReq.setNativeIdentity(idObj.getEmail());
+          plan.add(accReq);
+          return plan;
+
+        </Source>
+      </Script>
+    </Arg>
+    <Return name="identityRequestId" to="identityRequestId" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Identity Request Initialize" />
+    </WorkflowRef>
+    <Transition to="Notify User" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Notify User" posX="2051" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIUserNotify" />
+    <Arg name="approverName" value="ref:managerDisplayName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="Notify Manager" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Notify Manager" posX="2251" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIManagerNotify" />
+    <Arg name="workItemDescription" value="string:Manager Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+    <Arg name="to" value="script:getEmail(managerName)" />
+    <Transition to="ManagerApproval" />
+  </Step>
+  <Step icon="Default" name="ManagerApproval" posX="2451" posY="211">
+    <Approval name="AD_ManagerApproval" owner="ref:managerApprover" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess,managerDisplayName,managerEmail,secondLevelApproverName,secondLevelApproverEmail, thirdLevelApproverName,thirdLevelApproverEmail,managerApprover,financeDirector,secondLevelApproverJobTitle,thirdLevelApproverJobTitle">
+      <AfterScript>
+        <Source>
+
+          if ( item == null )
+          return;
+
+          wfcontext.setVariable("rejector",item.getOwner().getName());
+          loggingMethod().debug("========== rejector :"+wfcontext.get("rejector"));        
+        </Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_ManagerApproval" />
+      <Arg name="workItemDescription" value="string:Manager Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+      <OwnerScript>
+        <Source>
+          import sailpoint.object.Identity;
+
+          loggingMethod().debug("identityName  : "+requesterName);
+          if(null != requesterName @and void != requesterName) { 
+          Identity idObj = context.getObjectByName(Identity.class, requesterName);
+
+          if(null != idObj @and idObj.getManager() != null) {
+          wfcontext.setVariable("managerApprover",idObj.getManager().getName());
+          loggingMethod().debug("managerApprover is: " + wfcontext.getVariable("managerApprover"));
+          return idObj.getManager().getName();
+          }
+          else {
+          wfcontext.setVariable("managerApprover","spadmin");
+          return "spadmin";
+          }
+
+          }
+
+        </Source>
+      </OwnerScript>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+
+          if (ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName()))  {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="SecondLevelUserNotify" when="approved &amp;&amp; !(managerApprover.equals(financeDirector))" />
+    <Transition to="Account Provision Plan" when="approved &amp;&amp; managerApprover.equals(financeDirector)" />
+    <Transition to="Comments Section" when="!approved" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="SecondLevelUserNotify" posX="2651" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIUserNotify" />
+    <Arg name="approverName" value="ref:secondLevelApproverName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="SecondLevelApproverNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="SecondLevelApproverNotify" posX="2851" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIManagerNotify" />
+    <Arg name="workItemDescription" value="string:Second Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+    <Arg name="to" value="ref:secondLevelApproverEmail" />
+    <Transition to="Second level Approval" />
+  </Step>
+  <Step icon="Default" name="Second level Approval" posX="3051" posY="211">
+    <Approval name="AD_secondlevelApproval" owner="ref:secondLevelApproverUserName" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess,managerDisplayName,managerEmail,secondLevelApproverName,secondLevelApproverEmail, secondLevelApproverJobTitle, thirdLevelApproverJobTitle, thirdLevelApproverName,thirdLevelApproverEmail,managerApprover,financeDirector">
+      <AfterScript>
+        <Source>
+
+          if ( item == null )
+          return;
+
+          wfcontext.setVariable("rejector",item.getOwner().getName());
+          loggingMethod().debug("========== rejector :"+rejector);        
+        </Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_SecondLevelApproval" />
+      <Arg name="workItemDescription" value="string:Second Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if (ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="ThirdLevelUserNotify" when="approved &amp;&amp; thirdLevelApproverName != null" />
+    <Transition to="Account Provision Plan" when="approved &amp;&amp; thirdLevelApproverName == null &amp;&amp; fourthLevelApproverName == null" />
+    <Transition to="Comments Section" when="!approved" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="ThirdLevelUserNotify" posX="3251" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIUserNotify" />
+    <Arg name="approverName" value="ref:thirdLevelApproverName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="ThirdLevelApproverNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="ThirdLevelApproverNotify" posX="3451" posY="211">
+    <Arg name="template" value="ref:PowerBIManagerNotify" />
+    <Arg name="workItemDescription" value="string:Third Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+    <Arg name="to" value="ref:thirdLevelApproverEmail" />
+    <Transition to="Third level Approval" />
+  </Step>
+  <Step icon="Default" name="Third level Approval" posX="3651" posY="211">
+    <Approval name="AD_thirdlevelApproval" owner="ref:thirdLevelApproverUserName" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess,managerDisplayName,managerEmail,secondLevelApproverName,secondLevelApproverEmail, secondLevelApproverJobTitle, thirdLevelApproverJobTitle, thirdLevelApproverName,thirdLevelApproverEmail,managerApprover,financeDirector">
+      <AfterScript>
+        <Source>
+
+          if ( item == null )
+          return;
+
+          wfcontext.setVariable("rejector",item.getOwner().getName());
+          loggingMethod().debug("========== rejector :"+rejector);        
+        </Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_ThirdLevelApproval" />
+      <Arg name="workItemDescription" value="string:Third Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if (ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="FourthLevelUserNotify" when="approved &amp;&amp; fourthLevelApproverName != null" />
+    <Transition to="Account Provision Plan" when="approved &amp;&amp; fourthLevelApproverName == null" />
+    <Transition to="Comments Section" when="!approved" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="FourthLevelUserNotify" posX="3851" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIUserNotify" />
+    <Arg name="approverName" value="ref:fourthLevelApproverName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="FourthLevelApproverNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="FourthLevelApproverNotify" posX="4051" posY="211">
+    <Arg name="template" value="ref:PowerBIManagerNotify" />
+    <Arg name="workItemDescription" value="string:Fourth Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+    <Arg name="to" value="ref:fourthLevelApproverEmail" />
+    <Script>
+      <Source>
+        loggingMethod().debug("-------------------fourthLevelApproverUserName : " + wfcontext.getVariable("fourthLevelApproverUserName"));
+      </Source>
+    </Script>
+    <Transition to="Fourth level Approval" />
+  </Step>
+  <Step icon="Default" name="Fourth level Approval" posX="4251" posY="211">
+    <Approval name="AD_fourthlevelApproval" owner="ref:fourthLevelApproverUserName" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess" send="requesterName,requesterFirstName,requesterLastName,requesterEmail,storesAR,functionalAccess,managerDisplayName,managerEmail,secondLevelApproverName,secondLevelApproverEmail, thirdLevelApproverName,thirdLevelApproverEmail,managerApprover,financeDirector">
+      <AfterScript>
+        <Source>
+
+          if ( item == null )
+          return;
+
+          wfcontext.setVariable("rejector",item.getOwner().getName());
+          loggingMethod().debug("========== rejector :"+rejector);        
+        </Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_FourthLevelApproval" />
+      <Arg name="workItemDescription" value="string:Fourth Level Approval Form - Power BI Access Request raised by $(identityDisplayName)" />
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.WorkItem;
+
+          String wdId = item.getId();
+          if ( wdId != null) {
+          WorkItem wItem = context.getObjectById(WorkItem.class,wdId);
+          if ( wItem != null) {
+          Identity ownerIdentity = wItem.getOwner();
+          Identity currentUser = context.getObjectByName(Identity.class,context.getUserName());
+          if (ownerIdentity != null @and ownerIdentity.getName() != null @and !ownerIdentity.getName().equals(currentUser.getName())) {
+          context.decache(ownerIdentity);
+          context.decache(currentUser);
+          context.decache(wItem);
+          return "WARNING: You are Not Authorized Person to take decision on this";
+          }
+          }
+          }
+        </Source>
+      </ValidationScript>
+    </Approval>
+    <Transition to="Account Provision Plan" when="approved" />
+    <Transition to="Comments Section" when="!approved" />
+  </Step>
+  <Step icon="Default" name="Comments Section" posX="4451" posY="211">
+    <Approval name="AD_CommentsSection" owner="script:wfcontext.getVariable(&quot;rejector&quot;)" return="requesterName,requesterFirstName,requesterLastName,requesterEmail,comment" send="requesterName,requesterFirstName,requesterLastName,requesterEmail">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_Form_PowerBI_RejectionComments" />
+      <Arg name="workItemDescription" value="string:Rejection Comments - Power BI Access Request raised by $(identityDisplayName)" />
+    </Approval>
+    <Transition to="RejectionUserNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="RejectionUserNotify" posX="4651" posY="211">
+    <Arg name="template" value="ref:PowerBIRejectionUserNotify" />
+    <Arg name="comment" value="ref:comment" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="closeAR" />
+  </Step>
+  <Step icon="Default" name="Account Provision Plan" posX="4851" posY="211" resultVariable="planBI">
+    <Script>
+      <Source>
+
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+
+        //wfcontext.setVariable("identityName", requesterName);
+
+        // creating a plan  based on user selection
+        ProvisioningPlan planBI = new ProvisioningPlan();
+        
+        try
+        {
+        wfcontext.setVariable("identityName", requesterName);
+		Identity idObject = context.getObjectByName(Identity.class, launcher);
+		planBI.setIdentity(idObject);
+        planBI.setNativeIdentity(launcher);
+
+        // AD group provisioning when none of the AD accounts has BIUserGroup (OR) when AD account with BIUserGroup is not the same as AD account with email attribute on Identity
+        
+        //if (null == links || links.size()==0) {
+        if (null == links || null != links @and links.size()==0) {
+        loggingMethod().debug("hasLinksAD in wfcontext is : " + wfcontext.getVariable("hasLinksAD"));
+        loggingMethod().debug("memberOfBI in wfcontext is : " + wfcontext.getVariable("memberOfBI"));
+        loggingMethod().debug("idEmailEqualsBiADEmail in wfcontext is : " + wfcontext.getVariable("idEmailEqualsBiADEmail"));
+        //if(void != wfcontext.getVariable("hasLinksAD") &amp;&amp; void != wfcontext.getVariable("memberOfBI") &amp;&amp; void != wfcontext.getVariable("idEmailEqualsBiADEmail")){
+        if ((wfcontext.getVariable("hasLinksAD") &amp;&amp; !(wfcontext.getVariable("memberOfBI"))) || (wfcontext.getVariable("hasLinksAD") &amp;&amp; wfcontext.getVariable("memberOfBI") &amp;&amp; !(wfcontext.getVariable("idEmailEqualsBiADEmail")))) {
+
+        String idADAccNativeId = null;
+
+        for (int j = 0; j &lt; linksAD.size(); j++) {
+        if (null != linksAD.get(j).getAttribute("mail") &amp;&amp; null != email &amp;&amp; linksAD.get(j).getAttribute("mail").equalsIgnoreCase(wfcontext.getVariable("email"))) {
+        idADAccNativeId = linksAD.get(j).getNativeIdentity();
+
+        //	loggingMethod().debug("idADAccNativeId is : " + idADAccNativeId);
+        }
+        }
+        //   loggingMethod().debug("idADAccNativeId is : " + idADAccNativeId);
+        if (null != idADAccNativeId) {  
+
+        AccountRequest accReq = new AccountRequest();
+        accReq.setNativeIdentity(idADAccNativeId);
+        if (null == appNameAD) 	accReq.setApplication(appNameADCon);
+        else  accReq.setApplication(appNameAD);
+        accReq.setOperation(AccountRequest.Operation.Modify);
+
+        accReq.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));
+
+        planBI.add(accReq);
+        }
+        loggingMethod().debug("Plan in AD group provisioning is : " + planBI.toXml());
+        }
+        //}
+        }
+        
+        AccountRequest accountRequestProv = new AccountRequest();
+        accountRequestProv.setApplication(applicationName);
+       // accountRequestProv.setNativeIdentity(userId);
+	   accountRequestProv.setNativeIdentity(email);
+        accountRequestProv.setOperation(AccountRequest.Operation.Modify);
+
+        loggingMethod().debug("Current BI links : " + links);
+
+        if (links != null &amp;&amp; "Remove my existing access and add new access".equals(ModifyAccess)) {
+        loggingMethod().debug("links in ModifyAccess  :  " + links.get(0));
+
+        if (null != links.get(0).getAttribute("REST_NUMBER")) {
+        accountRequestProv.add(new AttributeRequest("REST_NUMBER", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("REST_NUMBER")));
+        }
+
+        if (null != links.get(0).getAttribute("COMPANY_NO")) {
+        accountRequestProv.add(new AttributeRequest("COMPANY_NO", ProvisioningPlan.Operation.Remove, links.get(0).getAttribute("COMPANY_NO")));
+        }
+
+        }
+
+        if (links != null &amp;&amp; null != links.get(0).getAttribute("COST_CENTER")) {
+        accountRequestProv.add(new AttributeRequest("COST_CENTER", ProvisioningPlan.Operation.Set, links.get(0).getAttribute("COST_CENTER")));
+        } 
+        else if (links != null &amp;&amp; null == links.get(0).getAttribute("COST_CENTER")) {
+        accountRequestProv.add(new AttributeRequest("COST_CENTER", ProvisioningPlan.Operation.Set, "0"));
+        } 
+        else if (links == null) {
+        accountRequestProv.add(new AttributeRequest("COST_CENTER", ProvisioningPlan.Operation.Set, "0"));
+        }
+
+        if (Util.nullSafeSize(functionalAccess) &gt; 0) {
+        accountRequestProv.add(new AttributeRequest("fnlAccess", ProvisioningPlan.Operation.Add, functionalAccess));
+        }
+
+        if (("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storesAll) &gt; 0)) {
+        accountRequestProv.add(new AttributeRequest("addGroups", ProvisioningPlan.Operation.Add, storesAll));
+        } else if (!("Yes".equalsIgnoreCase(storeAccess)) @and (Util.nullSafeSize(storeName) &gt; 0)) {
+        accountRequestProv.add(new AttributeRequest("addGroups", ProvisioningPlan.Operation.Add, storeName));
+        }
+
+        planBI.add(accountRequestProv);
+        loggingMethod().debug("Plan Inside Try block in BI  :  " + planBI.toXml());
+        loggingMethod().debug("IdentityName inside Try block  :  " + identityName);
+        }
+        catch (Exception e)
+        {
+        loggingMethod().debug("Power BI Error : " + e);
+        loggingMethod().debug("----Plan Inside workflow  :  " + planBI.toXml());
+        loggingMethod().debug("----IdentityName inside workflow  :  " + identityName);
+        }
+        loggingMethod().debug("Plan Inside workflow  :  " + planBI.toXml());
+        loggingMethod().debug("IdentityName inside workflow  :  " + identityName);
+        return planBI;
+        
+
+      </Source>
+    </Script>
+    <Transition to="provisionLCM">
+      <Script>
+        <Source>
+          loggingMethod().debug("plan being sent to LCM : " + planBI.toXml());
+          loggingMethod().debug("identityName being sent to LCM : " + identityName);
+          return true ; 
+        </Source>
+      </Script>
+    </Transition>
+  </Step>
+  <Step icon="Default" name="provisionLCM" posX="5051" posY="211">
+    <Arg name="approvalScheme" value="none" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="plan" value="ref:planBI" />
+    <Arg name="flow" value="ref:flow" />
+    <Arg name="noFiltering" value="ref:noFiltering" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Americana_Workflow_PowerBI_LCM_Provisioning" />
+    </WorkflowRef>
+    <Transition to="closeAR" />
+  </Step>
+  <Step icon="Default" name="closeAR" posX="5251" posY="211">
+    <Script>
+      <Source>
+        import sailpoint.object.*;
+        import sailpoint.object.IdentityRequestItem;
+        import sailpoint.object.TaskResult;
+        import sailpoint.object.ApprovalItem.ProvisioningState;
+        import sailpoint.object.WorkflowSummary.ApprovalSummary;
+        import java.util.*;
+
+        IdentityRequest reqId =  context.getObjectByName(IdentityRequest.class,identityRequestId);
+        String taskResultId = reqId.getTaskResultId();
+        TaskResult objectByName = context.getObjectById(TaskResult.class,taskResultId);
+        Object attribute = objectByName.getAttribute("workflowSummary");
+        List apSList = attribute.getInteractions();
+        for(ApprovalSummary apS : apSList){
+        if(null ==  apS.getState()){
+        apS.setEndDate(new Date());
+        if(approved){
+        apS.setState(sailpoint.object.WorkItem.State.Finished);
+        }
+        else {
+        apS.setState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        }
+        }
+        
+        List reqItems =  reqId.getItems();
+        if (Util.nullSafeSize(reqItems) &gt; 0) {
+        IdentityRequestItem reqItem = reqItems.get(0);
+        System.out.println("comment in for is : " + comment);
+        
+        if (comment != null &amp;&amp; comment != void) {
+        System.out.println("comment in if is : " + comment);
+        reqItem.setProvisioningState(sailpoint.object.ApprovalItem.ProvisioningState.Finished);
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        else if (comment == null || comment == void) {
+        System.out.println("comment in else is : " + comment);
+        reqItem.setProvisioningState(sailpoint.object.ApprovalItem.ProvisioningState.Finished);
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Finished);
+        }
+        }
+        reqId.setApprovalSummaries(attribute.getInteractions());
+        reqId.setCompletionStatus(IdentityRequest.CompletionStatus.Success);
+        reqId.setExecutionStatus(IdentityRequest.ExecutionStatus.Completed);
+        reqId.setState("End");
+        context.saveObject(reqId);
+        context.commitTransaction();
+      </Source>
+    </Script>
+    <Transition to="end" when="null != comment &amp;&amp; void != comment" />
+    <Transition to="User Last Notify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="User Last Notify" posX="5451" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBIApprovalUserNotify" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Transition to="BITeamNotify" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="BITeamNotify" posX="5651" posY="211">
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="template" value="ref:PowerBITeamNotify" />
+    <Arg name="to" value="string:BITeam_WG" />
+    <Transition to="end" />
+  </Step>
+  <Step icon="Default" name="end" posX="5851" posY="211" />
+</Workflow>
+
+</sailpoint>

@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="ContractorCreation_TriggerRule" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Identity;
+  import java.util.Date;
+   import java.util.concurrent.TimeUnit;
+  import java.text.SimpleDateFormat;
+  String strCurrentDate = null;
+  String strEffectiveDate = null;
+  SimpleDateFormat sdf = null;
+  Date effectiveDate = null;
+  Date todaysDate = null;
+  sdf = new SimpleDateFormat("yyyy-MM-dd");       
+  strCurrentDate = sdf.format(new Date());
+  log.error("todays date is::"+new Date());
+  todaysDate = sdf.parse(strCurrentDate); 
+  log.error("todays date:"+todaysDate);
+  if(newIdentity!=null){
+    String strImmediateJoiner = newIdentity.getAttribute("ImmediateJoiner");
+    if(strImmediateJoiner!=null&amp;&amp;strImmediateJoiner.equalsIgnoreCase("true")){
+      return true;
+    }
+    else{
+      strEffectiveDate=newIdentity.getAttribute("JoiningDate");
+      log.error("start date is:"+strEffectiveDate);
+      strcontractorcreation = newIdentity.getAttribute("ContractorCreation");
+      log.error("creation status is"+strcontractorcreation);
+
+      if(strEffectiveDate!=null&amp;&amp;strcontractorcreation!=null&amp;&amp;strcontractorcreation.equalsIgnoreCase("true")){
+        if(strImmediateJoiner==null || (strImmediateJoiner!=null)&amp;&amp;!(strImmediateJoiner.equalsIgnoreCase("JoinerTriggered"))){
+
+          effectiveDate = sdf.parse(strEffectiveDate);
+          log.error("start date in date format:"+effectiveDate);
+          long diff = effectiveDate.getTime() - todaysDate.getTime();
+          long daysin = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+          log.error("days difference is::"+daysin);
+          if(effectiveDate!=null &amp;&amp; daysin==1){
+            log.error("triggered");
+            return true;
+            /*  if(effectiveDate!=null){
+       long dayDifference=effectiveDate.getTime()-todaysDate.getTime();
+       long days=dayDifference / 1000 / 60 / 60 / 24;
+        log.error("NS1_Deletion_After30Days::Days="+days); 
+     // return days;
+      if(days==1){
+        return true;
+      }
+      }*/
+          }
+
+        }
+      }
+    }
+  }
+  return false;</Source>
+</Rule>
+
+</sailpoint>

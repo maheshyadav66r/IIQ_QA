@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-AfterProvisioning-OracleBPMIDCS" type="AfterProvisioning">
+  <Description>An IdentityIQ server-side rule that is executed after the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan AFTER it has been sent out to the specific applications. 
+
+This rule will be called for any application found in a plan that also has a configured 'afterProvisioningRule' configured.</Description>
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="Americana-RuleLibrary-Attribute" />
+  </ReferencedRules>
+  <Signature>
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          The application object that references this before/after script.
+        </Description>
+      </Argument>
+      <Argument name="result">
+        <Description>
+          The ProvisioningResult object returned by the connectors provision method. This can be null and in many cases the connector will  not return a result and instead will annotate the plan's ProvisioningResult either at the plan or account level.        
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>import sailpoint.object.Identity;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+  import sailpoint.connector.ConnectorClassLoader;
+
+  Logger log1 = Logger.getLogger("rule.americana.AfterProvisioning");
+  String ruleName = "Americana-Rule-AfterProvisioning-OracleBPMIDCS";
+
+  ClassLoader currentCl = Thread.currentThread().getContextClassLoader();
+  ClassLoader bakcedUpCl = null;
+  if(currentCl instanceof ConnectorClassLoader){
+    bakcedUpCl = currentCl;
+    Thread.currentThread().setContextClassLoader(currentCl.getParent());
+  }
+
+  EmailOptions eo = new EmailOptions();
+  EmailTemplate et = context.getObjectByName(EmailTemplate.class,"Americana-EmailTemplate-UserCredentialsNotification");
+  if(log1.isDebugEnabled()) log1.debug("***RUNNING RULE [ " + ruleName +" ] ");
+  List ccList = new ArrayList(Arrays.asList("vsivalingam@americana-food.com", "amohite@americana-food.com"));
+
+  if (plan != null) {
+    List accReqs=plan.getAccountRequests();
+    if(Util.nullSafeSize(accReqs)&gt;0) {
+      for(ProvisioningPlan.AccountRequest accReq:accReqs) { 
+        if(ProvisioningPlan.AccountRequest.Operation.Create.equals(accReq.getOperation())){
+          List attrReqs=accReq.getAttributeRequests();
+          String password="";
+          String username="";
+          for(ProvisioningPlan.AttributeRequest attrReq:attrReqs){
+            if(attrReq.getName().equals("USER_NAME")) username=attrReq.getValue();
+          }
+          Identity identity = plan.getIdentity();
+          if ( identity == null) {
+            String identityName = plan.getNativeIdentity();
+            identity = context.getObjectByName(Identity.class,identityName);
+          }
+          List errors = result.getErrors();
+          if (identity != null &amp;&amp; identity.getManager() != null &amp;&amp; Util.isNotNullOrEmpty(identity.getManager().getAttribute("email")) &amp;&amp; (errors == null || (errors != null &amp;&amp; errors.size() == 0))) {
+            String mail = identity.getManager().getAttribute("email");
+            if (Util.isNotNullOrEmpty(mail) &amp;&amp; Util.isNotNullOrEmpty(username)) {
+              eo.setTo(mail);
+              eo.setCc(Util.listToCsv(ccList));
+              Map args = new HashMap();
+              args.put("application",application.getName());
+              args.put("idname",identity.getDisplayName());
+              args.put("username",username);  
+              args.put("password",password);
+              eo.setVariables(args);
+              context.sendEmailNotification(et,eo);
+            }
+          }
+        }
+      }
+    }
+    String response = bpmDatabaseApiCall(plan,application);
+    System.out.println("response :"+response);
+  }
+  if(bakcedUpCl != null){
+    Thread.currentThread().setContextClassLoader(bakcedUpCl);
+  }</Source>
+</Rule>
+
+</sailpoint>

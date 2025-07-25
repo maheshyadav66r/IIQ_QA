@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow configForm="Attribute Sync Workflow Config Form" explicitTransitions="true" name="Attribute Sync" taskType="AttributeSync" type="AttributeSync">
+  <Variable input="true" name="plan">
+    <Description>The provisioning plan ready to execute. This is passed in to the workflow and will have the identity
+      set and a list of account requests that contain attribute requests for all the attributes that
+      changed and were configured to synchronize using workflow.</Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity being updated.</Description>
+  </Variable>
+  <Variable initializer="none" input="true" name="approvalScheme">
+    <Description>
+      A csv string that specifies how approval items should be generated
+      for the incoming request.
+
+      The value can be "none", in which case approvals are disabled.
+
+      The value can also be a combination of any of the values below
+      in any order, separated by commas. The order in which they are
+      specified is the order in which they are processed:
+
+      owner
+      The object owner gets the approval item.
+      For Role approvals this is the Role object owner.
+      For Entitlement approvals this is the Entitlement object owner.
+
+      manager
+      The manager gets the approval item.
+
+      securityOfficer
+      The identity in the variable securityOfficerName gets the approval item.
+
+      identity
+      The identities/workgroups in the variable approvingIdentities get the approval item.
+    </Description>
+  </Variable>
+  <Variable input="true" name="approvalEmailTemplate">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="spadmin" input="true" name="fallbackApprover">
+    <Description>
+      A String that specifies the name of the Identity that will
+      be assigned any approvals where the owner of the approver
+      can't be resolved. Example if the scheme is "owner" and the
+      application doesn't specify and owner.
+    </Description>
+  </Variable>
+  <Variable input="true" name="managerElectronicSignature">
+    <Description>
+      The name of the electronic signature object that should be used when workitems
+      are completed by a manager.
+    </Description>
+  </Variable>
+  <Variable input="true" name="ownerElectronicSignature">
+    <Description>
+      The name of the electronic signature object that should be used when workitems
+      are completed by object owners.
+    </Description>
+  </Variable>
+  <Variable input="true" name="securityOfficerElectronicSignature">
+    <Description>
+      The name of the electronic signature object that should be used when workitems
+      are completed by the security officer.
+    </Description>
+  </Variable>
+  <Variable input="true" name="approvingIdentities">
+    <Description>
+      List of identities and/or workgroups names/ids that should be involved in the approval
+      process.
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityElectronicSignature">
+    <Description>
+      The name of the electronic signature object that should be used when workitems
+      are completed by identities and/or workgroups.
+    </Description>
+  </Variable>
+  <Variable input="true" name="identityEmailTemplate">
+    <Description>
+      Name of the email template to use when notifying the identities/workgroups of pending approvals.
+    </Description>
+  </Variable>
+  <Variable initializer="none" input="true" name="notificationScheme">
+    <Description>
+      A string that specifies who should be notified when the request has been complete.
+      The value can be null or a csv of one or more of the following options.
+
+      none or null
+      disable notifications
+
+      user
+      Identity that is being update will be notified.
+
+      manager
+      The manager of the Identity that is being updated will be notified.
+
+      requester
+      The person that has requested the update will be notified.
+    </Description>
+  </Variable>
+  <Variable input="true" name="userEmailTemplate">
+    <Description>
+      The email template to use for user notification.
+    </Description>
+  </Variable>
+  <Variable input="true" name="requesterEmailTemplate">
+    <Description>
+      The email template to use for requester notification.
+    </Description>
+  </Variable>
+  <Variable input="true" name="managerEmailTemplate">
+    <Description>
+      The email template to use for manager notification.
+    </Description>
+  </Variable>
+  <Variable input="true" name="securityOfficerName">
+    <Description>
+      The name of the identity that will be sent approvals
+      during security officer approvals.
+    </Description>
+  </Variable>
+  <Variable editable="true" name="refreshIdentity">
+    <Description>
+      Set to true to cause an identity refresh after the changes in the plan
+      have been provisioned.  This is normally off, you might want this on
+      if you have an application that is both a source and target mapping for
+      an Identity Attribute.
+    </Description>
+  </Variable>
+  <Description>This workflow processes attribute synchronization using LCM Provisioning.</Description>
+  <Step icon="Start" name="Start" posX="20" posY="22">
+    <Transition to="provision" />
+  </Step>
+  <Step icon="Task" name="provision" posX="100" posY="100">
+    <Arg name="approvalEmailTemplate" value="ref:approvalEmailTemplate" />
+    <Arg name="approvalScheme" value="ref:approvalScheme" />
+    <Arg name="approvingIdentities" value="ref:approvingIdentities" />
+    <Arg name="doRefresh" value="false" />
+    <Arg name="fallbackApprover" value="ref:fallbackApprover" />
+    <Arg name="flow" value="AttributeSync" />
+    <Arg name="foregroundProvisioning" value="false" />
+    <Arg name="identityElectronicSignature" value="ref:identityElectronicSignature" />
+    <Arg name="identityEmailTemplate" value="ref:identityEmailTemplate" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="managerElectronicSignature" value="ref:managerElectronicSignature" />
+    <Arg name="managerEmailTemplate" value="ref:managerEmailTemplate" />
+    <Arg name="notificationScheme" value="ref:notificationScheme" />
+    <Arg name="ownerElectronicSignature" value="ref:ownerElectronicSignature" />
+    <Arg name="plan" value="ref:plan" />
+    <Arg name="requesterEmailTemplate" value="ref:requesterEmailTemplate" />
+    <Arg name="securityOfficerElectronicSignature" value="ref:securityOfficerElectronicSignature" />
+    <Arg name="securityOfficerName" value="ref:securityOfficerName" />
+    <Arg name="source" value="AttributeSync" />
+    <Arg name="userEmailTemplate" value="ref:userEmailTemplate" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning" />
+    </WorkflowRef>
+    <Transition to="Refresh Identity" />
+  </Step>
+  <Step action="call:refreshIdentity" condition="ref:refreshIdentity" icon="Task" name="Refresh Identity" posX="200" posY="150">
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="synchronizeAttributes" value="true" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to sync the attributes again in case an aggregation had changed the value while an
+      Attribute Synchronization approval was pending.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="420" posY="225" />
+</Workflow>
+
+</sailpoint>

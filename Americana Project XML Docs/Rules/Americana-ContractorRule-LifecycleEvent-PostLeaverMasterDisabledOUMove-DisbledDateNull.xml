@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-ContractorRule-LifecycleEvent-PostLeaverMasterDisabledOUMove-DisbledDateNull" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>/*
+
+Status is set to ‘Inactive’ and  
+
+Trigger Date: is ‘End date +31’ (Last Working Day +31) in the HCM 
+tested in dev
+
+*/
+
+  import sailpoint.object.Application;
+  import sailpoint.tools.Util;
+  import sailpoint.api.IdentityService;
+
+
+  import sailpoint.object.Identity;
+  import sailpoint.object.Custom;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+  import java.util.regex.Pattern;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+import org.apache.log4j.Logger;
+ Logger log=Logger.getLogger("customRule4");
+  boolean eventTriggerFlg = false;
+
+  
+
+  
+
+  if(null != newIdentity &amp;&amp; newIdentity.getAttribute("disabledDate") == null &amp;&amp; newIdentity.getAttribute("isContractor") != null &amp;&amp;  newIdentity.getAttribute("isContractor").equalsIgnoreCase("Disabled")){
+
+
+
+
+
+   // logger.debug("newIdentity status : "+newIdentity.getAttribute("status"));
+    //logger.debug("newIdentity revokeUserAccess : "+newIdentity.getAttribute("revokeUserAccess"));
+
+
+
+    
+
+        IdentityService isr = new IdentityService(context);
+        List links = isr.getLinks(newIdentity, context.getObjectByName(Application.class, "AD Contractors"));
+        log.debug(" links : "+links);
+        if(Util.nullSafeSize(links) &gt; 0){
+          String userAdDn = links.get(0).getAttribute("distinguishedName");
+          log.debug(" userAdDn : "+userAdDn);
+          String masterDisabledOU = "";
+       
+ masterDisabledOU = "OU=Disabled Contractors,OU=Americana Office,DC=Americana,DC=global";	
+          log.debug(" masterDisabledOU : "+masterDisabledOU);
+
+          boolean isInMaterDisabledOU = Pattern.compile(Pattern.quote(masterDisabledOU), Pattern.CASE_INSENSITIVE).matcher(userAdDn).find();
+          if(isInMaterDisabledOU){
+            log.debug("User is Alredy in Master Disabled OU");
+            //user alredy moved to master disabled OU
+            return false;
+          }
+
+          boolean isInCountryDisabledOU = Pattern.compile(Pattern.quote("OU=Disabled Accounts"), Pattern.CASE_INSENSITIVE).matcher(userAdDn).find();
+          log.debug("isInCountryDisabledOU : "+isInCountryDisabledOU);
+          if(!isInCountryDisabledOU){
+            // user is not in country specific disabled OU
+            return false;
+          }
+
+          eventTriggerFlg = true;
+        }
+      }
+  
+  log.debug(" eventTriggerFlg : "+eventTriggerFlg);
+  log.debug("End Americana-Rule-IdentityTrigger-MasterDisabledOUMove");
+  return eventTriggerFlg;</Source>
+</Rule>
+
+</sailpoint>

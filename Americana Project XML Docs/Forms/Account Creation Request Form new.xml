@@ -1,0 +1,2889 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Account Creation Request Form new" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Account Creation Request Form" />
+    </Map>
+  </Attributes>
+  <Section columns="3" label="Provide Account Options">
+    <Field columnSpan="1" displayName="Select the Account" displayType="radio" dynamic="true" name="selectingAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Domain Account</String>
+            <String>Service Account</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field columnSpan="1" displayName="Select the User Type" displayType="radio" dynamic="true" name="userSelection" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Existing User</String>
+            <String>New User</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;      
+				 
+				 String selectingAccount;
+                 if (null != form.getField("selectingAccount")) {				 
+					selectingAccount = form.getField("selectingAccount").getValue(); 
+                 }				 
+				 if(Util.isNullOrEmpty(selectingAccount) || selectingAccount.contains("Service Account")){
+					return true ;
+                 }else{                      
+					return false;
+                 }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Select the User Type" displayType="radio" dynamic="true" name="userSelectionforServiceAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Existing User</String>
+            <String>New User</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String selectingAccount;
+				  if (null != form.getField("selectingAccount")) {
+                  selectingAccount = form.getField("selectingAccount").getValue();	
+                  }				  
+                  if(Util.isNullOrEmpty(selectingAccount) || selectingAccount.contains("Domain Account")){
+					return true ;
+                  }
+				  else{
+					return false;
+                  }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Region" displayType="combobox" dynamic="true" name="newuserRegion" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List Regionlist=new ArrayList();    
+            Custom reg = null;
+              try{
+                  reg=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(reg != null){
+                  	Regionlist = reg.getList("Region");					
+                  }                                 
+                  return Regionlist;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+					String userSelection;
+					if (null != form.getField("userSelection")) {
+						userSelection = form.getField("userSelection").getValue();
+					}
+					if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+						return true ;
+					}
+					else{
+						return false;
+                    }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Region" displayType="combobox" dynamic="true" name="servicenewuserRegion" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List Regionlist=new ArrayList();    
+            Custom reg = null;
+              try{
+                  reg=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(reg != null){
+                  	Regionlist = reg.getList("Region");
+                  }                                 
+                  return Regionlist;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+					userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+				  if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+					return true ;
+                  }
+                  else{
+					return false;
+                  }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Select Type of Account" displayType="combobox" dynamic="true" name="genericAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Named</String>
+            <String>Generic</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+				 String userSelection;
+				 if (null != form.getField("userSelection")) {
+                 userSelection = form.getField("userSelection").getValue();	
+                 }				 
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }       
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Select Type of Account" displayType="combobox" dynamic="true" name="servicegenericAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Named</String>
+            <String>Generic</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;    
+                String userSelectionforServiceAccount;
+				if (null != form.getField("userSelectionforServiceAccount")) {
+		        userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				}
+                if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section columns="2">
+    <Field displayName="Prefix" dynamic="true" name="preferredAccountNameStartsWith" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+				/*
+                import sailpoint.tools.Util;
+                String genericAccount;	
+                if (null != form.getField("genericAccount")) {				
+				genericAccount = form.getField("genericAccount").getValue();	
+                }				
+                if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Named")){                               
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+				*/
+				return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;				        	                  	     
+		    String accountName=null;	           	  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+			accountName="amd.ae.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Qatar")){	
+			accountName="amd.qa.";		
+			return accountName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Egypt")){	
+			accountName="amd.eg.";		
+			return accountName;
+			}
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Oman")){	
+			accountName="amd.om.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Morocco")){	
+			accountName="amd.mo.";		
+			return accountName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Bahrain")){	
+			accountName="amd.bh.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Lebanon")){	
+			accountName="amd.lb.";		
+			return accountName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Iraq")){	
+			accountName="amd.iq.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kuwait")){	
+			accountName="amd.kw.";		
+			return accountName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Jordan")){	
+			accountName="amd.jo.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kazakhstan")){	
+			accountName="amd.kz.";		
+			return accountName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+			accountName="amd.ksa.";		
+			return accountName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("global")){	
+			accountName="amd.gl.";		
+			return accountName;
+			}  
+        </Source>
+      </Script>
+    </Field>
+    <Field displayName="Insert your preferred account name" dynamic="true" helpKey="Length should be less than 12 characters." name="preferredAccountNameExtended" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;  
+				String genericAccount;
+				if (null != form.getField("genericAccount")) {
+				genericAccount = form.getField("genericAccount").getValue();
+                }				
+                if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Named")){                               
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity; 
+		  import sailpoint.tools.Message;   
+
+          List messages = new ArrayList();
+		  
+          int requiredlength = 12;
+          if(null != value &amp;&amp; value.length() &gt; 12){          	
+	      Message charMessage = new Message();
+	      charMessage.setKey("Please ensure that the maximum length is 12 characters, this account name is " + value.length() + " characters long");
+		  
+	      messages.add(charMessage);
+          }
+//return messages;
+		  
+          String accountName;
+		  if (null != form.getField("preferredAccountNameStartsWith") @and null != form.getField("preferredAccountNameExtended")) {
+          accountName = form.getField("preferredAccountNameStartsWith").getValue() + form.getField("preferredAccountNameExtended").getValue();
+		  }
+            	          
+          Identity id=context.getObjectByName(Identity.class,accountName);
+          if (id != null){  
+          Message idMessage = new Message();		  
+          idMessage.setKey("Please type in a different name");
+		  messages.add(idMessage);
+        }
+		  List list = new ArrayList();
+          list.add("_");
+          list.add("-");
+          list.add("&amp;");
+          list.add(" ");
+          list.add("\\n");
+          list.add("!");
+          list.add("~");
+          list.add("#");
+          list.add("$");
+          list.add("*");
+          list.add("%");
+          list.add("/");
+          list.add("\\");
+          list.add("+");
+          list.add("^");
+          list.add("`");
+          list.add("=");
+          list.add("(");
+          list.add(")");
+          list.add("\'");
+          list.add("\"");
+          list.add(";");
+          list.add(":");
+          list.add(".");
+          list.add("{");
+          list.add("}");
+          list.add("[");
+          list.add("]");
+          list.add(",");
+          list.add("&lt;");
+          list.add("&gt;");
+          list.add(",");
+          list.add("?");
+          list.add("|");
+		    list.add("@");
+		    list.add("@americana");
+		    list.add("americana");
+		    list.add("amd.");
+        list.add("amd.ae.");
+        list.add("amd.qa.");
+        list.add("amd.eg.");
+        list.add("amd.om.");
+        list.add("amd.mo.");
+        list.add("amd.bh.");
+        list.add("amd.lb.");
+        list.add("amd.iq.");
+        list.add("amd.kw.");
+        list.add("amd.jo.");
+        list.add("amd.kz.");
+        list.add("amd.ksa.");
+        list.add("amd.gl.");
+        list.add("ams.");		
+        list.add("ams.ae");
+		    list.add("ams.qa.");
+        list.add("ams.eg.");
+        list.add("ams.om.");
+        list.add("ams.mo.");
+        list.add("ams.bh.");
+        list.add("ams.lb.");
+        list.add("ams.iq.");
+        list.add("ams.kw.");
+        list.add("ams.jo.");
+        list.add("ams.kz.");
+        list.add("ams.ksa.");
+        list.add("ams.gl."); 
+        list.add("@americana-food.com");
+        list.add("@americana.global");
+        
+        for(String str1 : list) {
+            if(value.contains(str1)) {
+              //  str = str.replace(str1,"");
+			  Message invalidStringMessage = new Message();
+          if (str1 == " ")
+          invalidStringMessage.setKey("Your account name has &lt;space&gt; .Please remove it and retype your account name.");
+          else
+			  invalidStringMessage.setKey("Your account name has "+ str1 + " .Please remove it and retype your account name.");
+			  
+			  messages.add(invalidStringMessage);
+			  break;
+			  }
+        }
+		  
+		  return messages;
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field displayName="Generic account email ends with" dynamic="true" name="preferredAccountNameEmail" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+				/*
+                import sailpoint.tools.Util;  
+				String genericAccount;
+				if (null != form.getField("genericAccount")) {
+				genericAccount = form.getField("genericAccount").getValue();
+				}				
+                if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Named")){                               
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+				*/
+				return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            return "@americana-food.com"  
+        </Source>
+      </Script>
+    </Field>
+    <Field displayName="Your account name will look like:" dynamic="true" name="preferredAccountName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;   
+				String genericAccount;
+				if (null != form.getField("genericAccount")) {
+				genericAccount = form.getField("genericAccount").getValue();
+				}				
+                if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Named")){                               
+                  return true ;
+                  }
+                      else if (null == preferredAccountNameStartsWith || null == preferredAccountNameExtended){
+                        return true;
+                        }
+						            else 
+						             return false;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+	        if (null != preferredAccountNameStartsWith &amp;&amp; null != preferredAccountNameExtended) {
+	        return form.getField("preferredAccountNameStartsWith").getValue() + form.getField("preferredAccountNameExtended").getValue();
+          }
+	  </Source>
+      </Script>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;      
+          String accountName;
+		  if (null != form.getField("preferredAccountNameStartsWith") @and null != form.getField("preferredAccountNameExtended")) {
+          accountName = form.getField("preferredAccountNameStartsWith").getValue() + form.getField("preferredAccountNameExtended").getValue();
+		  }
+                    
+          Identity id=context.getObjectByName(Identity.class,accountName);
+          
+          if (id != null){          
+          return "Named Domain Account already exists !!";
+          } 
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Named Account that will be created :" dynamic="true" name="namedAccount" postBack="true" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;     
+				String genericAccount;
+				if (null != form.getField("genericAccount")) {
+				genericAccount = form.getField("genericAccount").getValue();
+				}				
+				if(Util.isNullOrEmpty(genericAccount) || genericAccount.contains("Generic")){  
+					return true ;				 
+				}                
+                else{      
+                    return false;
+                    }	
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;	
+          String userName = context.getUserName();  
+          Identity idObj = context.getObjectByName(Identity.class, userName);
+          String samName = idObj.getAttribute("adLogOnName");
+          String accountName=null;	     
+          
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+          if (null != samName)
+          accountName="amd.ae."+samName;    
+          else if (null != userName)
+          accountName="amd.ae."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Qatar")){	
+          if (null != samName)
+          accountName="amd.qa."+samName;    
+          else if (null != userName)
+          accountName="amd.qa."+userName;		
+          return accountName;
+          }   
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Egypt")){	
+          if (null != samName)
+          accountName="amd.eg."+samName;    
+          else if (null != userName)
+          accountName="amd.eg."+userName;		
+          return accountName;
+          }
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Oman")){	
+          if (null != samName)
+          accountName="amd.om."+samName;    
+          else if (null != userName)
+          accountName="amd.om."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Morocco")){	
+          if (null != samName)
+          accountName="amd.mo."+samName;    
+          else if (null != userName)
+          accountName="amd.mo."+userName;		
+          return accountName;
+          }   
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Bahrain")){	
+          if (null != samName)
+          accountName="amd.bh."+samName;    
+          else if (null != userName)
+          accountName="amd.bh."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Lebanon")){	
+          if (null != samName)
+          accountName="amd.lb."+samName;    
+          else if (null != userName)
+          accountName="amd.lb."+userName;		
+          return accountName;
+          }   
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Iraq")){	
+          if (null != samName)
+          accountName="amd.iq."+samName;    
+          else if (null != userName)
+          accountName="amd.iq."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kuwait")){	
+          if (null != samName)
+          accountName="amd.kw."+samName;    
+          else if (null != userName)
+          accountName="amd.kw."+userName;	
+          return accountName;
+          }   
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Jordan")){	
+          if (null != samName)
+          accountName="amd.jo."+samName;    
+          else if (null != userName)
+          accountName="amd.jo."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kazakhstan")){	
+          if (null != samName)
+          accountName="amd.kz."+samName;    
+          else if (null != userName)
+          accountName="amd.kz."+userName;		
+          return accountName;
+          }  
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+          if (null != samName)
+          accountName="amd.ksa."+samName;    
+          else if (null != userName)
+          accountName="amd.ksa."+userName;		
+          return accountName;
+          }   
+          if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("global")){	
+          if (null != samName)
+          accountName="amd.gl."+samName;    
+          else if (null != userName)
+          accountName="amd.gl."+userName;		
+          return accountName;
+          }    
+        </Source>
+      </Script>
+      <ValidationScript>
+        <Source>
+          import java.util.List;            
+          import sailpoint.object.Custom;
+          import sailpoint.object.Identity;
+		  String accountName;		  
+          if (null != form.getField("namedAccount")) {
+		  accountName = form.getField("namedAccount").getValue(); 
+		  }		  
+          List adminAccountList=new ArrayList();    
+          Custom adminAct=context.getObjectByName(Custom.class,"Americana-Account-Attributes");         
+          adminAccountList = adminAct.getList("AdminAccounts");	
+          if (adminAccountList.contains(accountName)){
+          	return "Named Domain Account already exists !!";
+            }    
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Generic Account Name Starts With" dynamic="true" name="servicepreferredAccountNameStartsWith" postBack="true" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+				/*
+                import sailpoint.tools.Util;  
+				String servicegenericAccount;	
+				if (null != form.getField("servicegenericAccount")) {
+			    servicegenericAccount = form.getField("servicegenericAccount").getValue();	
+				}				
+                if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Named")){   
+                 return true ;
+                  }
+                 else{
+                        return false;
+                        }
+				*/
+				return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;	
+		    String accountName=null;	           	  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+			accountName="ams.ae.";		
+			return accountName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Qatar")){	
+			accountName="ams.qa.";		
+			return accountName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Egypt")){	
+			accountName="ams.eg.";		
+			return accountName;
+			} 
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Oman")){	
+			accountName="ams.om.";		
+			return accountName;
+			} 
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Morocco")){	
+			accountName="ams.mo.";		
+			return accountName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Bahrain")){	
+			accountName="ams.bh.";		
+			return accountName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Lebanon")){	
+			accountName="ams.lb.";		
+			return accountName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Iraq")){	
+			accountName="ams.iq.";		
+			return accountName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kuwait")){	
+			accountName="ams.kw.";		
+			return accountName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Jordan")){	
+			accountName="ams.jo.";		
+			return accountName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kazakhstan")){	
+			accountName="ams.kz.";		
+			return accountName;
+			}   			
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+			accountName="ams.ksa.";		
+			return accountName;
+			}       
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("global")){	
+			accountName="ams.gl.";		
+			return accountName;
+			} 
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Insert your preferred account name" dynamic="true" helpKey="Length should be less than 12 characters." name="servicepreferredAccountNameExtended" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;  
+				String servicegenericAccount;		
+				if (null != form.getField("servicegenericAccount")) {
+			    servicegenericAccount = form.getField("servicegenericAccount").getValue();	
+				}				
+                if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Named")){   
+                 return true ;
+                  }
+                 else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity; 
+		  import sailpoint.tools.Message;   
+
+          List messages = new ArrayList();
+		  
+          int requiredlength = 12;
+          
+          if(null != value &amp;&amp; value.length() &gt; 12){          	
+	      Message charMessage = new Message();
+	      charMessage.setKey("Please ensure that the maximum length is 12 characters, this account name is " + value.length() + " characters long");
+		  
+	      messages.add(charMessage);
+          }
+//return messages;
+		  
+          String accountName;
+		  
+		  if (null != form.getField("servicepreferredAccountNameStartsWith") @and null != form.getField("servicepreferredAccountNameExtended")) {
+          accountName = form.getField("servicepreferredAccountNameStartsWith").getValue() + form.getField("servicepreferredAccountNameExtended").getValue();
+		  }
+		  
+		  /*
+		  if (null != servicepreferredAccountNameStartsWith @and void != servicepreferredAccountNameStartsWith @and null != servicepreferredAccountNameExtended @and void != servicepreferredAccountNameExtended) {
+		  accountName = servicepreferredAccountNameStartsWith + servicepreferredAccountNameExtended;
+		  }
+		  */
+             	          
+          Identity id=context.getObjectByName(Identity.class,accountName);
+          if (id != null){  
+          Message idMessage = new Message();		  
+          idMessage.setKey("Please type in a different name");
+		  
+		  messages.add(idMessage);
+        }
+		  List list = new ArrayList();
+		  list.add("@");
+		  list.add("@americana");
+		  list.add("americana");
+		  list.add("amd.");
+        list.add("amd.ae.");
+        list.add("amd.qa.");
+        list.add("amd.eg.");
+        list.add("amd.om.");
+        list.add("amd.mo.");
+        list.add("amd.bh.");
+        list.add("amd.lb.");
+        list.add("amd.iq.");
+        list.add("amd.kw.");
+        list.add("amd.jo.");
+        list.add("amd.kz.");
+        list.add("amd.ksa.");
+        list.add("amd.gl.");
+        list.add("ams.");		
+        list.add("ams.ae");
+		list.add("ams.qa.");
+        list.add("ams.eg.");
+        list.add("ams.om.");
+        list.add("ams.mo.");
+        list.add("ams.bh.");
+        list.add("ams.lb.");
+        list.add("ams.iq.");
+        list.add("ams.kw.");
+        list.add("ams.jo.");
+        list.add("ams.kz.");
+        list.add("ams.ksa.");
+        list.add("ams.gl."); 
+        list.add("@americana-food.com");
+        list.add("@americana.global");
+        
+        for(String str1 : list) {
+            if(value.contains(str1)) {
+              //  str = str.replace(str1,"");
+			  Message invalidStringMessage = new Message();
+			  invalidStringMessage.setKey("Your account name has "+ str1 + " .Please remove it and retype your account name.");
+			  
+			  messages.add(invalidStringMessage);
+			  break;
+			  }
+        }
+		  
+		  return messages;
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Generic Account Email Ends With" dynamic="true" name="servicepreferredAccountNameEmail" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+				/*
+                import sailpoint.tools.Util;   
+				String servicegenericAccount;
+				if (null != form.getField("servicegenericAccount")) {
+			    servicegenericAccount = form.getField("servicegenericAccount").getValue();	
+				}				
+                if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Named")){   
+                 return true ;
+                  }
+                 else{
+                        return false;
+                        }
+				*/
+				return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            return "@americana-food.com"  
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Account name is: " dynamic="true" name="servicepreferredAccountName" postBack="true" readOnly="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;          
+				String servicegenericAccount;
+				if (null != form.getField("servicegenericAccount")) {
+				servicegenericAccount = form.getField("servicegenericAccount").getValue();		
+				}				
+                if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Named")){   
+                 return true ;
+                  }
+                      else if (null == servicepreferredAccountNameStartsWith || null == servicepreferredAccountNameExtended){
+                        return true;
+                        }
+						            else 
+						             return false;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+	        if (null != servicepreferredAccountNameStartsWith &amp;&amp; null != servicepreferredAccountNameExtended) {
+	        return form.getField("servicepreferredAccountNameStartsWith").getValue() + form.getField("servicepreferredAccountNameExtended").getValue();
+          }
+	  </Source>
+      </Script>
+      <ValidationScript>
+        <Source>
+          import sailpoint.object.Identity;      
+          String accountName;
+		  if (null != form.getField("servicepreferredAccountNameStartsWith") @and null != form.getField("servicepreferredAccountNameExtended")) {
+          accountName = form.getField("servicepreferredAccountNameStartsWith").getValue() + form.getField("servicepreferredAccountNameExtended").getValue();
+		  }
+             	          
+          Identity id=context.getObjectByName(Identity.class,accountName);
+          
+          if (id != null){          
+          return "Named Service Account already exists !!";
+          } 
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Named Account that will be created :" dynamic="true" name="servicenamedAccount" postBack="true" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;   
+				String servicegenericAccount;
+				if (null != form.getField("servicegenericAccount")) {				
+				servicegenericAccount = form.getField("servicegenericAccount").getValue();	
+				}
+				if(Util.isNullOrEmpty(servicegenericAccount) || servicegenericAccount.contains("Generic")){  
+                 return true ;				 
+				}                
+                else {      
+                      return false;
+                     }	
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+           import sailpoint.object.Identity;	
+          String userName = context.getUserName();  
+          Identity idObj = context.getObjectByName(Identity.class, userName);
+          String samName = idObj.getAttribute("adLogOnName");
+          String accountName=null;	     
+          
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+          if (null != samName)
+          accountName="ams.ae."+samName;    
+          else if (null != userName)
+          accountName="ams.ae."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Qatar")){	
+          if (null != samName)
+          accountName="ams.qa."+samName;    
+          else if (null != userName)
+          accountName="ams.qa."+userName;		
+          return accountName;
+          }   
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Egypt")){	
+          if (null != samName)
+          accountName="ams.eg."+samName;    
+          else if (null != userName)
+          accountName="ams.eg."+userName;		
+          return accountName;
+          }
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Oman")){	
+          if (null != samName)
+          accountName="ams.om."+samName;    
+          else if (null != userName)
+          accountName="ams.om."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Morocco")){	
+          if (null != samName)
+          accountName="ams.mo."+samName;    
+          else if (null != userName)
+          accountName="ams.mo."+userName;		
+          return accountName;
+          }   
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Bahrain")){	
+          if (null != samName)
+          accountName="ams.bh."+samName;    
+          else if (null != userName)
+          accountName="ams.bh."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Lebanon")){	
+          if (null != samName)
+          accountName="ams.lb."+samName;    
+          else if (null != userName)
+          accountName="ams.lb."+userName;		
+          return accountName;
+          }   
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Iraq")){	
+          if (null != samName)
+          accountName="ams.iq."+samName;    
+          else if (null != userName)
+          accountName="ams.iq."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kuwait")){	
+          if (null != samName)
+          accountName="ams.kw."+samName;    
+          else if (null != userName)
+          accountName="ams.kw."+userName;	
+          return accountName;
+          }   
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Jordan")){	
+          if (null != samName)
+          accountName="ams.jo."+samName;    
+          else if (null != userName)
+          accountName="ams.jo."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kazakhstan")){	
+          if (null != samName)
+          accountName="ams.kz."+samName;    
+          else if (null != userName)
+          accountName="ams.kz."+userName;		
+          return accountName;
+          }  
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+          if (null != samName)
+          accountName="ams.ksa."+samName;    
+          else if (null != userName)
+          accountName="ams.ksa."+userName;		
+          return accountName;
+          }   
+          if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("global")){	
+          if (null != samName)
+          accountName="ams.gl."+samName;    
+          else if (null != userName)
+          accountName="ams.gl."+userName;		
+          return accountName;
+          } 
+        </Source>
+      </Script>
+      <ValidationScript>
+        <Source>
+          import java.util.List;            
+          import sailpoint.object.Custom;
+          import sailpoint.object.Identity; 
+		  String serviceaccountName;
+		  if (null != form.getField("servicenamedAccount")) {
+          serviceaccountName = form.getField("servicenamedAccount").getValue(); 
+		  }		  
+          List adminAccountList=new ArrayList();    
+          Custom adminAct=context.getObjectByName(Custom.class,"Americana-Account-Attributes");         
+          adminAccountList = adminAct.getList("AdminAccounts");	
+          if (adminAccountList.contains(serviceaccountName)){
+          	return "Named Service Account already exists !!";
+            }  
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Section columns="3">
+    <Field columnSpan="1" displayName="Temporary Account" displayType="radio" dynamic="true" name="tempAccountB" postBack="true" type="boolean">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+				 String userSelection;
+				 if (null != form.getField("userSelection")) {
+                 userSelection = form.getField("userSelection").getValue();	
+				 }				 
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Temporary Account" dynamic="true" hidden="true" name="tempAccount" postBack="true" type="string">
+      <Script>
+        <Source>
+        String tempAccountBln=null;
+        if(form.getField("tempAccountB").getValue()!=null){
+        tempAccountBln=form.getField("tempAccountB").getValue().toString();
+        }
+        return tempAccountBln;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Start Date" dynamic="true" name="startDate" postBack="true" required="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>    
+                String strTempAccount=form.getField("tempAccount").getValue();
+                if(strTempAccount==null || (strTempAccount!=null &amp;&amp; strTempAccount.equalsIgnoreCase("false"))){                
+                return true;
+                 }
+                if(strTempAccount!=null){                
+                if(strTempAccount.equalsIgnoreCase("true")){
+                return false;
+                } 
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationRule>
+        <Reference class="sailpoint.object.Rule" name="Americana_AccountStartDateValidationRule" />
+      </ValidationRule>
+    </Field>
+    <Field columnSpan="1" displayName="End Date" dynamic="true" name="endDate" postBack="true" required="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>    
+                String strTempAccount=form.getField("tempAccount").getValue();
+                if(strTempAccount==null || (strTempAccount!=null &amp;&amp; strTempAccount.equalsIgnoreCase("false"))){                
+                return true;
+                 }
+                if(strTempAccount!=null){                
+                if(strTempAccount.equalsIgnoreCase("true")){
+                return false;
+                } 
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationRule>
+        <Reference class="sailpoint.object.Rule" name="Americana_AccountEndDateValidationRule" />
+      </ValidationRule>
+    </Field>
+    <Field columnSpan="1" displayName="Temporary Account" displayType="radio" dynamic="true" name="tempServiceAccountB" postBack="true" type="boolean">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+                 String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();				         			 
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Temporary Account" dynamic="true" hidden="true" name="tempServiceAccount" postBack="true" type="string">
+      <Script>
+        <Source>
+        String tempServiceAccountB=null;
+        if(form.getField("tempServiceAccountB").getValue()!=null){
+        tempServiceAccountB=form.getField("tempServiceAccountB").getValue().toString();
+        }
+        return tempServiceAccountB;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Start Date" dynamic="true" name="startDateService" postBack="true" required="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>    
+                String strtempServiceAccount=form.getField("tempServiceAccount").getValue();
+                if(strtempServiceAccount==null || (strtempServiceAccount!=null &amp;&amp; strtempServiceAccount.equalsIgnoreCase("false"))){                
+                return true;
+                 }
+                if(strtempServiceAccount!=null){                
+                if(strtempServiceAccount.equalsIgnoreCase("true")){
+                return false;
+                } 
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationRule>
+        <Reference class="sailpoint.object.Rule" name="Americana_AccountStartDateServiceValidationRule" />
+      </ValidationRule>
+    </Field>
+    <Field columnSpan="1" displayName="End Date" dynamic="true" name="endDateService" postBack="true" required="true" type="date">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>    
+                String strtempServiceAccount=form.getField("tempServiceAccount").getValue();
+                if(strtempServiceAccount==null || (strtempServiceAccount!=null &amp;&amp; strtempServiceAccount.equalsIgnoreCase("false"))){                
+                return true;
+                 }
+                if(strtempServiceAccount!=null){                
+                if(strtempServiceAccount.equalsIgnoreCase("true")){
+                return false;
+                } 
+                }
+                return true;
+              </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationRule>
+        <Reference class="sailpoint.object.Rule" name="Americana_AccountEndDateServiceValidationRule" />
+      </ValidationRule>
+    </Field>
+    <Field columnSpan="1" displayName="Email Access" dynamic="true" name="assignAzureLicenses" postBack="true" type="boolean">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+				 String userSelectionforServiceAccount;
+				 if (null != form.getField("userSelectionforServiceAccount")) {
+                 userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();	
+				 }				 
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }                  
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section columns="3" label="Provide Account Details">
+    <Field columnSpan="1" displayName="Email ID of Requester" dynamic="true" name="requesterEmailId" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{                      
+                          return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;				
+        		String userName = context.getUserName();                     	     
+		    		String emailID=null;							
+          	Identity id=context.getObjectByName(Identity.class, userName);                  	  
+						if(id !=null){
+						emailID=id.getStringAttribute("email");				          
+						return emailID;
+						}      
+						else{
+						return null;
+						}			
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Existing Admin Account" displayType="comboBox" dynamic="true" name="exestingAdminAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List adminAccountList=new ArrayList();    
+            Custom adminAct = null;
+              try{
+                  adminAct=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(adminAct != null){
+                  	adminAccountList = adminAct.getList("AdminAccounts");					
+                  }                                 
+                  return adminAccountList;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util; 
+				 String userSelection;
+				 if (null != form.getField("userSelection")) {
+                 userSelection = form.getField("userSelection").getValue();
+				 }
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){    
+                  return true ;
+                  }
+                      else{                      
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Region" displayType="combobox" dynamic="true" name="region" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;            
+            List Regionlist=new ArrayList();        
+            Custom reg = null;
+              try{
+                  reg=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(reg != null){
+                  	Regionlist = reg.getList("Region");
+					        }                                 
+                  return Regionlist;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+				 String userSelection;
+				 if (null != form.getField("userSelection")) {
+                 userSelection = form.getField("userSelection").getValue();
+				 }
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Server that Require Access" displayType="combobox" dynamic="true" multi="true" name="requestforServerAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+						import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List serverList=new ArrayList(); 
+            Custom server = null;
+              try{
+			      server=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(server != null){
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("United Arab Emirates")){	
+                  	serverList = server.getList("UAE-Servers");					
+                  }     
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Qatar")){	
+                  	serverList = server.getList("Qatar-Servers");					
+                  } 	
+        if(region !=null &amp;&amp; region.equalsIgnoreCase("Morocco")){	
+                  	serverList = server.getList("Morocco-Servers");					
+                  }    
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+                  	serverList = server.getList("KSA-Servers");					
+                  } 
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Bahrain")){	
+                  	serverList = server.getList("Bahrain-Servers");					
+                  } 
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Oman")){	
+                  	serverList = server.getList("Oman-Servers");					
+                  } 
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Kuwait")){	
+                  	serverList = server.getList("Kuwait-Servers");					
+                  } 	
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Kazakhstan")){	
+                  	serverList = server.getList("Kazakhstan-Servers");					
+                  } 				  
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Egypt")){	
+                  	serverList = server.getList("Egypt-Servers");					
+                  } 				  
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Jordan")){	
+                  	serverList = server.getList("Jordan-Servers");					
+                  } 
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Lebanon")){	
+                  	serverList = server.getList("Lebanon-Servers");					
+                  }  
+				if(region !=null &amp;&amp; region.equalsIgnoreCase("Iraq")){	
+                  	serverList = server.getList("Iraq-Servers");					
+                  }  
+        if(region !=null &amp;&amp; region.equalsIgnoreCase("global")){	
+                  	serverList = server.getList("Global-Servers");					
+                  }           
+                  return serverList;
+				  }
+              		}catch(Exception e){
+                throw e;
+              }  
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" dynamic="true" name="deptnTeam" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="First Name" dynamic="true" name="requesterFirstName" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+      import sailpoint.object.Identity;	
+
+			String firstName = null;
+			
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+			firstName="amd.ae";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Qatar")){	
+			firstName="amd.qa";		
+			return firstName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Egypt")){	
+			firstName="amd.eg";		
+			return firstName;
+			}
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Oman")){	
+			firstName="amd.om";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Morocco")){	
+			firstName="amd.mo";		
+			return firstName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Bahrain")){	
+			firstName="amd.bh";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Lebanon")){	
+			firstName="amd.lb";		
+			return firstName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Iraq")){	
+			firstName="amd.iq";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kuwait")){	
+			firstName="amd.kw";		
+			return firstName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Jordan")){	
+			firstName="amd.jo";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kazakhstan")){	
+			firstName="amd.kz";		
+			return firstName;
+			}  
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+			firstName="amd.ksa";		
+			return firstName;
+			}   
+			if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("global")){	
+			firstName="amd.gl";		
+			return firstName;
+			}  	
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last Name" dynamic="true" name="requesterlastName" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;	  
+          String userName = context.getUserName(); 
+          Identity idObj = context.getObjectByName(Identity.class, userName);
+		      if (null != idObj.getAttribute("adLogOnName"))
+		      return idObj.getAttribute("adLogOnName");
+		      else
+          return userName;    
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Display Name" dynamic="true" helpKey="Display Name should be combination of Firstname and Lastname. Edit the Firstname or Lastname if change required" name="domaindisplayname" postBack="true" readOnly="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User") || Util.isNullOrEmpty(newuserRegion) ){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+          <entry key="readOnly" value="true" />
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+             import sailpoint.tools.Util;
+				  String requesterlastName;
+				  String requesterFirstName;
+				  String displayname;
+				  if (null != form.getField("requesterlastName") &amp;&amp; null != form.getField("requesterFirstName")) {
+                  displayname = form.getField("requesterFirstName").getValue() +" " +form.getField("requesterlastName").getValue();
+				  return displayname;
+				  }
+                 	
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Email ID of Requester" dynamic="true" name="newUserrequesterEmailId" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                import sailpoint.tools.Util;
+				String userSelection;
+				if (null != form.getField("userSelection")) {
+                userSelection = form.getField("userSelection").getValue();
+				}
+              	if(Util.isNullOrEmpty(userSelection) ||  userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;				
+        		String userName = context.getUserName();                     	     
+		    		String emailID=null;							
+          	Identity id=context.getObjectByName(Identity.class, userName);                  	  
+						if(id !=null){
+						emailID=id.getStringAttribute("email");				          
+						return emailID;
+						}      
+						else{
+						return null;
+						}			
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Server that Require Access" displayType="combobox" dynamic="true" multi="true" name="serverAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+						import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List serverList=new ArrayList();  
+            Custom server = null;
+              try{
+			      server=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(server != null){
+					if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+                  	serverList = server.getList("UAE-Servers");					
+                  }     
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Qatar")){	
+                  	serverList = server.getList("Qatar-Servers");					
+                  } 	
+        if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Morocco")){	
+                  	serverList = server.getList("Morocco-Servers");					
+                  } 	    
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+                  	serverList = server.getList("KSA-Servers");					
+                  } 
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Bahrain")){	
+                  	serverList = server.getList("Bahrain-Servers");					
+                  } 
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Oman")){	
+                  	serverList = server.getList("Oman-Servers");					
+                  } 
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kuwait")){	
+                  	serverList = server.getList("Kuwait-Servers");					
+                  } 	
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Kazakhstan")){	
+                  	serverList = server.getList("Kazakhstan-Servers");					
+                  } 				  
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Egypt")){	
+                  	serverList = server.getList("Egypt-Servers");					
+                  } 				  
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Jordan")){	
+                  	serverList = server.getList("Jordan-Servers");					
+                  } 
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Lebanon")){	
+                  	serverList = server.getList("Lebanon-Servers");					
+                  }  
+				if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("Iraq")){	
+                  	serverList = server.getList("Iraq-Servers");					
+                  }  
+        if(newuserRegion !=null &amp;&amp; newuserRegion.equalsIgnoreCase("global")){	
+                  	serverList = server.getList("Global-Servers");					
+                  }       
+                  return serverList;
+				  }
+              		}catch(Exception e){
+                throw e;
+              }  
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelection;
+				  if (null != form.getField("userSelection")) {
+                  userSelection = form.getField("userSelection").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Manager" dynamic="true" filterString="managerStatus == true" name="domainManager" required="true" type="sailpoint.object.Identity">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                  if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                  else{
+                      return false;
+                    }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" dynamic="true" name="newUserdeptnTeam" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Email ID of Requester" dynamic="true" name="servicerequesterEmailIdofExestinguser" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util;
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;				
+        	String userName = context.getUserName();                     	     
+		    String emailID=null;							
+          	Identity id=context.getObjectByName(Identity.class, userName);                  	  
+			if(id !=null){
+				emailID=id.getStringAttribute("email");				          
+				return emailID;
+			}      
+			else{
+				return null;
+				}			
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Existing Admin Account" displayType="comboBox" dynamic="true" name="serviceexestingAdminAccount" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List adminAccountList=new ArrayList();    
+            Custom adminAct = null;
+              try{
+                  adminAct=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(adminAct != null){
+                  	adminAccountList = adminAct.getList("AdminAccounts");					
+                  }                                 
+                  return adminAccountList;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                  else{
+                    return false;
+                  }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Region" displayType="combobox" dynamic="true" name="serviceregion" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List Regionlist=new ArrayList();    
+            Custom reg = null;
+              try{
+                  reg=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(reg != null){
+                  	Regionlist = reg.getList("Region");
+                  }                                 
+                  return Regionlist;
+              		}catch(Exception e){
+                throw e;
+              }             
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  import sailpoint.tools.Util; 
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue(); 
+				  }				  
+                  if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                  else{                       
+                    return false;
+                    }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Server that Require Access" displayType="combobox" dynamic="true" multi="true" name="servicerequestforServerAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+			import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List serverList=new ArrayList();   
+            Custom server = null;
+              try{
+			      server=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(server != null){
+					if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("United Arab Emirates")){	
+                  	serverList = server.getList("UAE-Servers");					
+                  }     
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Qatar")){	
+                  	serverList = server.getList("Qatar-Servers");					
+                  } 	
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Morocco")){	
+                  	serverList = server.getList("Morocco-Servers");					
+                  } 
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+                  	serverList = server.getList("KSA-Servers");					
+                  } 
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Bahrain")){	
+                  	serverList = server.getList("Bahrain-Servers");					
+                  } 
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Oman")){	
+                  	serverList = server.getList("Oman-Servers");					
+                  } 
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Kuwait")){	
+                  	serverList = server.getList("Kuwait-Servers");					
+                  } 	
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Kazakhstan")){	
+                  	serverList = server.getList("Kazakhstan-Servers");					
+                  } 				  
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Egypt")){	
+                  	serverList = server.getList("Egypt-Servers");					
+                  } 				  
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Jordan")){	
+                  	serverList = server.getList("Jordan-Servers");					
+                  } 
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Lebanon")){	
+                  	serverList = server.getList("Lebanon-Servers");					
+                  }  
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("Iraq")){	
+                  	serverList = server.getList("Iraq-Servers");					
+                  }  
+				if(serviceregion !=null &amp;&amp; serviceregion.equalsIgnoreCase("global")){	
+                  	serverList = server.getList("Global-Servers");					
+                  }               
+                  return serverList;
+				  }
+              		}catch(Exception e){
+                throw e;
+              }  
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                 import sailpoint.tools.Util;
+				 String userSelectionforServiceAccount;
+				 if (null != form.getField("userSelectionforServiceAccount")) {
+                 userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				 }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{  
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" dynamic="true" name="servicedeptnTeam" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+					String userSelectionforServiceAccount;	
+                  if (null != form.getField("userSelectionforServiceAccount")) {
+				  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="First Name" dynamic="true" name="servicerequesterFirstName" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+           import sailpoint.object.Identity;	
+		
+			String firstName = null;
+			
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+			firstName="ams.ae";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Qatar")){	
+			firstName="ams.qa";		
+			return firstName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Egypt")){	
+			firstName="ams.eg";		
+			return firstName;
+			}
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Oman")){	
+			firstName="ams.om";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Morocco")){	
+			firstName="ams.mo";		
+			return firstName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Bahrain")){	
+			firstName="ams.bh";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Lebanon")){	
+			firstName="ams.lb";		
+			return firstName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Iraq")){	
+			firstName="ams.iq";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kuwait")){	
+			firstName="ams.kw";		
+			return firstName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Jordan")){	
+			firstName="ams.jo";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kazakhstan")){	
+			firstName="ams.kz";		
+			return firstName;
+			}  
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+			firstName="ams.ksa";		
+			return firstName;
+			}   
+			if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("global")){	
+			firstName="ams.gl";		
+			return firstName;
+			}  	  
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Last Name" dynamic="true" name="servicerequesterlastName" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+					String userSelectionforServiceAccount;
+					if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;	  
+          String userName = context.getUserName(); 
+          Identity idObj = context.getObjectByName(Identity.class, userName);
+		      if (null != idObj.getAttribute("adLogOnName"))
+		      return idObj.getAttribute("adLogOnName");
+		      else
+          return userName;  
+      </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Display Name" dynamic="true" helpKey="Display Name should be combination of Firstname and Lastname.Edit the Firstname or Lastname if change required." name="servicedisplayname" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				String userSelectionforServiceAccount;
+				if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) ||  userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+          <entry key="readOnly" value="true" />
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+             import sailpoint.tools.Util;
+				  String servicerequesterFirstName;
+				  String servicerequesterlastName;
+				  String displayname;
+				  if (null != form.getField("servicerequesterFirstName") &amp;&amp; null != form.getField("servicerequesterlastName")) {
+                  displayname = form.getField("servicerequesterFirstName").getValue() +" " +form.getField("servicerequesterlastName").getValue();
+				  return displayname;
+				  }
+                 	
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Email ID of Requester" dynamic="true" name="servicerequesterEmailId" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				  String userSelectionforServiceAccount;
+				  if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                  if(Util.isNullOrEmpty(userSelectionforServiceAccount) ||  userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <Script>
+        <Source>
+            import sailpoint.object.Identity;				
+        		String userName = context.getUserName();                     	     
+		    		String emailID=null;							
+          	Identity id=context.getObjectByName(Identity.class, userName);                  	  
+						if(id !=null){
+						emailID=id.getStringAttribute("email");				          
+						return emailID;
+						}      
+						else{
+						return null;
+						}			
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Server that Require Access" displayType="combobox" dynamic="true" multi="true" name="serviceserverAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+		    		import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List serverList=new ArrayList();   
+            Custom server = null;
+              try{
+			      server=context.getObjectByName(Custom.class,"Americana-Account-Attributes");
+                  if(server != null){
+					if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("United Arab Emirates")){	
+                  	serverList = server.getList("UAE-Servers");					
+                  }     
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Qatar")){	
+                  	serverList = server.getList("Qatar-Servers");					
+                  } 
+        if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Morocco")){	
+                  	serverList = server.getList("Morocco-Servers");					
+                  }     
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kingdom of Saudi Arabia")){	
+                  	serverList = server.getList("KSA-Servers");					
+                  } 
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Bahrain")){	
+                  	serverList = server.getList("Bahrain-Servers");					
+                  } 
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Oman")){	
+                  	serverList = server.getList("Oman-Servers");					
+                  } 
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kuwait")){	
+                  	serverList = server.getList("Kuwait-Servers");					
+                  } 	
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Kazakhstan")){	
+                  	serverList = server.getList("Kazakhstan-Servers");					
+                  } 				  
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Egypt")){	
+                  	serverList = server.getList("Egypt-Servers");					
+                  } 				  
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Jordan")){	
+                  	serverList = server.getList("Jordan-Servers");					
+                  } 
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Lebanon")){	
+                  	serverList = server.getList("Lebanon-Servers");					
+                  }  
+				if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("Iraq")){	
+                  	serverList = server.getList("Iraq-Servers");					
+                  }  
+         if(servicenewuserRegion !=null &amp;&amp; servicenewuserRegion.equalsIgnoreCase("global")){	
+                  	serverList = server.getList("Global-Servers");					
+                  }        
+                  return serverList;
+				  }
+              		}catch(Exception e){
+                throw e;
+              }  	  
+      		  </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				String userSelectionforServiceAccount;	
+				if (null != form.getField("userSelectionforServiceAccount")) {				
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Manager" filterString="managerStatus == true" name="serviceManager" postBack="true" required="true" type="sailpoint.object.Identity">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				String userSelectionforServiceAccount;
+				if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User") ){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Department and Team" dynamic="true" name="servicerequesterdeptnTeam" postBack="true" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+				String userSelectionforServiceAccount;
+				if (null != form.getField("userSelectionforServiceAccount")) {
+                  userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+				  }
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Kind of Access Privilege" displayType="combobox" dynamic="true" name="privilaged" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Domain Admin</String>
+            <String>Domain Account with Local Admin Privileges in Server</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Specify the kind of access privilege" displayType="textarea" dynamic="true" name="otherKindOfPrivilege" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("privilaged") @and null != form.getField("privilaged").getValue() @and "Other".equalsIgnoreCase(form.getField("privilaged").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 30;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 30){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 30 characters, remaining characters "+(requiredlength-value.length())+"/30");
+	messages.add(message);
+}
+return messages;                     
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Kind of Access Privilege" displayType="combobox" dynamic="true" name="serviceprivilaged" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Mailbox Access</String>
+            <String>Service Account with Local Admin Privileges in Server</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Specify the kind of access privilege" displayType="textarea" dynamic="true" name="serviceotherKindOfPrivilege" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("serviceprivilaged") @and null != form.getField("serviceprivilaged").getValue() @and "Other".equalsIgnoreCase(form.getField("serviceprivilaged").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 30;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 30){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 30 characters, remaining characters "+(requiredlength-value.length())+"/30");
+	messages.add(message);
+}
+return messages;
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Justification for Account Access" displayType="combobox" dynamic="true" name="justificationforAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Account For an Application</String>
+            <String>Account For Call Center Agents</String>
+            <String>Account for Vendor(s)</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelection = form.getField("userSelection").getValue();
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" dynamic="true" name="otherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("justificationforAccess") @and null != form.getField("justificationforAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("justificationforAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;           
+				  </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;                  
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Justification for Account Access" displayType="combobox" dynamic="true" name="jstAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Account For an Application(s)</String>
+            <String>Account For Call Center Agents</String>
+            <String>Account for Vendors</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;                        
+                  String userSelection = form.getField("userSelection").getValue();                  
+                 if(Util.isNullOrEmpty(userSelection) || userSelection.contains("Existing User")){                  
+                  return true ;
+                  }
+                      else{                       
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" dynamic="true" name="otherjstAccessReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("jstAccess") @and null != form.getField("jstAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("jstAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Justification for Account Access" displayType="combobox" dynamic="true" name="servicejustificationforAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Account For an Application(s)</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("New User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" dynamic="true" name="serviceotherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  				  
+                  if(null != form.getField("servicejustificationforAccess") @and null != form.getField("servicejustificationforAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("servicejustificationforAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;
+
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Justification for Account Access" displayType="combobox" dynamic="true" name="servicejstAccess" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Value>
+          <List>
+            <String>Account For an application</String>
+            <String>Other</String>
+          </List>
+        </Value>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                        import sailpoint.tools.Util;
+                  String userSelectionforServiceAccount = form.getField("userSelectionforServiceAccount").getValue();
+                 if(Util.isNullOrEmpty(userSelectionforServiceAccount) || userSelectionforServiceAccount.contains("Existing User")){
+                  return true ;
+                  }
+                      else{
+                        return false;
+                        }
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+    <Field columnSpan="1" displayName="Justification Reason" displayType="textarea" dynamic="true" name="servicejstAccessReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  
+                  if(null != form.getField("servicejstAccess") @and null != form.getField("servicejstAccess").getValue() @and "Other".equalsIgnoreCase(form.getField("servicejstAccess").getValue())){
+                  	return false;
+                  }
+                  else
+                  return true;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="next" label="Submit" />
+  <Button action="cancel" label="Cancel" />
+</Form>
+
+</sailpoint>

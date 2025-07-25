@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Joiners-Leavers-Report" type="Validation">
+  <Source>
+  import java.io.*;
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+
+  StringBuilder stringbuilder = new StringBuilder();
+  stringbuilder.append("Person Number,Display Name,Email,Manager Person Number,Manager Display Name,Manager Email,Event Triggered Date");
+
+  File file = new File("C:\\Reports\\leavers.csv");
+  FileReader fr = new FileReader(file);
+  BufferedReader br = new BufferedReader(fr);
+
+  String currentLine;  String idName;
+  String triggerdDate;
+
+  Map map = new HashMap();
+
+  int iteration=0;
+  while((currentLine = br.readLine()) != null) {
+    if(iteration==0) {
+      iteration++;
+      continue;
+    }
+    String[] line  = currentLine.split(",");
+    idName=line[4].replace("Identity:","");
+    triggerdDate=line[1]+", "+line[2];
+    //iggerdDate=triggerdDate.replaceAll("\"", "");
+    map.put(idName,triggerdDate);
+  }
+  System.out.println("map:"+map);
+
+  for (Map.Entry entry : map.entrySet()){   
+
+    String key=entry.getKey();
+    Identity idObj = context.getObjectByName(Identity.class,key);
+
+    String name = idObj != null ? idObj.getName() :"";
+    String displayName = idObj != null ? idObj.getDisplayName() :"";
+    String email = idObj != null ? idObj.getEmail() :"";
+    String managerName = idObj.getManager() != null ? idObj.getManager().getName() :"";
+    String managerDisplayName = idObj.getManager() != null ? idObj.getManager().getDisplayName() :"";
+    String managerEmail = idObj.getManager() != null ? idObj.getManager().getEmail() :"";
+    String triggeredDate=entry.getValue();
+
+    stringbuilder.append("\n").append(name+","+displayName+","+email+","+managerName+","+managerDisplayName+","+managerEmail+","+triggeredDate);
+
+  }
+
+  Util.writeFile("C:\\Reports\\LeaversTrigger.csv",stringbuilder.toString());
+  return map;
+
+  </Source>
+</Rule>
+
+</sailpoint>

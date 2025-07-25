@@ -1,0 +1,306 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="ps_feTcH DISABLED UsERs">
+  <Source>
+   import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+  import sailpoint.object.*;
+
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Logger;
+  Logger log=Logger.getLogger("customRule4");
+
+
+  boolean leaverTriggerFlg = false;
+//Filter f = Filter.eq("application.name","AD Contractors");
+
+  QueryOptions qo= new QueryOptions();
+  //qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+String info;
+String idname;
+String linkstatus;
+String endDate;
+String ContractorCreation;
+Boolean disabled;
+  String IIQDisabled;
+  String Type;
+  String status;
+  String Country;
+  String disableddate;
+   String employeeNumber;
+   String email;
+   String endDate;
+   String peopleGroup;
+   String userType;
+  String Azure_AD;
+  String Crunch_Time;
+  String ManageEngine;
+  String Microsoft_Power_BI;
+  String Oracle_ERP;
+  String Oracle_Fusion_HCM;
+  String Oracle_BPM_IDCS;
+  String AD;
+  String iiqDisabled;
+  String hcmtermDate;
+   String hcmStatus;
+   String Status;
+ String BPMStatus;
+  String ADStatus;
+  String AzureStatus;
+  String ACrunchStatus;
+  String ManageStatus;
+  String powerBI;
+  String displayName;
+    
+   
+  
+List al=new ArrayList();
+
+
+for(Identity newIdentity :ids)
+{
+Azure_AD ="";
+Crunch_Time="";
+ManageEngine="";
+Microsoft_Power_BI="";
+Oracle_ERP="";
+Oracle_Fusion_HCM="";
+Oracle_BPM_IDCS="";
+ AD="";
+  iiqDisabled="";
+if(null != newIdentity){
+
+ if( null != newIdentity.getAttribute("disabledDate")&amp;&amp;!newIdentity.getAttribute("disabledDate").isEmpty()){
+   
+  disableddate= newIdentity.getAttribute("disabledDate");
+   idname=newIdentity.getName();
+   employeeNumber=idname=newIdentity.getAttribute("employeeNumber");
+    email=newIdentity.getAttribute("email");
+   endDate= newIdentity.getAttribute("endDate");
+   peopleGroup= newIdentity.getAttribute("peopleGroup");
+    userType=newIdentity.getAttribute("userType");
+    displayName=newIdentity.getAttribute("displayName");
+   
+   
+   
+ 
+   linkstatus = "inactive";
+   hcmtermDate="";
+   hcmStatus="";
+   Status="False";
+   BPMStatus="inactive";
+   ADStatus="inactive";
+   AzureStatus="inactive";
+   ACrunchStatus="inactive";
+   ManageStatus="inactive";
+     powerBI="inactive";
+   
+   
+   
+   
+     
+  List links =newIdentity.getLinks();
+  
+  for(Link link:links){
+  
+    if(link.getApplicationName().equalsIgnoreCase("Active Directory")){
+      
+  
+   AD="Active Directory"; 
+      disabled=link.isDisabled();
+   if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     ADStatus ="ACTIVE";
+   }
+   
+  
+  }
+  
+     if(link.getApplicationName().equalsIgnoreCase("Azure AD")){
+      
+  Azure_AD="Azure AD";
+       disabled=link.isDisabled();
+        if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     AzureStatus ="ACTIVE";
+   }
+        
+  
+  }
+  
+     if(link.getApplicationName().equalsIgnoreCase("Crunch Time")){
+      
+  
+   Crunch_Time="Crunch Time"; 
+       disabled=link.isDisabled();
+       if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     ACrunchStatus ="ACTIVE";
+   }
+        
+  
+  }
+  
+     if(link.getApplicationName().equalsIgnoreCase("ManageEngines")){
+      
+  ManageEngines="ManageEngines";
+   disabled=link.isDisabled();     
+   if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     ManageStatus ="ACTIVE";
+   }
+  }
+  
+     if(link.getApplicationName().equalsIgnoreCase("Microsoft Power BI")){
+      
+  
+  disabled=link.isDisabled();      
+  Microsoft_Power_BI="Microsoft Power BI";
+       
+         if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     powerBI ="ACTIVE";
+   }
+       
+  }
+  
+ if(link.getApplicationName().equalsIgnoreCase("Oracle ERP")){
+   // disabled=link.isDisabled();  
+  Oracle_ERP="Oracle ERP";
+        
+   
+   
+    disabled=link.isDisabled();
+   if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     Status ="TRUE";
+   }
+   
+   
+ 
+  }
+  
+
+     if(link.getApplicationName().equalsIgnoreCase("Oracle Fusion HCM")){
+      
+  Oracle_Fusion_HCM="Oracle Fusion HCM";
+     disabled=link.isDisabled();
+   if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     linkstatus ="active";
+   }
+     hcmStatus=link.getAttribute("ASSIGNMENT_STATUS"); 
+       
+  hcmtermDate=link.getAttribute("ASSIGNMENT_TERMINATION_DATE"); 
+  }
+  
+
+     if(link.getApplicationName().equalsIgnoreCase("Oracle BPM IDCS")){
+      
+  Oracle_BPM_IDCS="Oracle BPM IDCS";
+       disabled=link.isDisabled();
+         if(!disabled)
+   
+   {
+   
+   //linkstatus = String.valueOf(disabled);
+     BPMStatus ="ACTIVE";
+   }
+        
+  
+  }
+  
+
+        
+    }
+    
+    
+    
+  info=displayName+","+idname+","+employeeNumber+","+email+","+peopleGroup+","+userType+","+endDate+","+disableddate+","+Oracle_Fusion_HCM+","+linkstatus+","+Oracle_ERP+","+Oracle_BPM_IDCS+","+BPMStatus+","+Microsoft_Power_BI+","+powerBI+","+ManageEngines+","+ManageStatus+","+Crunch_Time+","+ACrunchStatus+","+Azure_AD+","+AzureStatus+","+AD+","+ADStatus+","+hcmtermDate+","+hcmStatus+","+Status;
+  al.add(info);  
+     
+  }
+  
+  
+  
+}
+}
+  
+
+
+
+ if (!al.isEmpty()&amp;&amp; al.size()&gt;0) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\WronglyDisabledUsersafterupdate1.csv", true);
+        for (String info : al) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    }
+  
+
+  
+  
+</Source>
+</Rule>
+
+</sailpoint>

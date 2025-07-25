@@ -1,0 +1,284 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Rule_PowerBI_Create_Provisioning_new_06052024" type="JDBCOperationProvisioning">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult" />
+  <Source>
+  
+  import java.lang.*;
+  import java.util.*;
+  import java.io.*;
+  import java.sql.ResultSet;
+  import java.sql.Statement;
+  import java.sql.Connection;
+  import java.sql.DriverManager;
+  import sailpoint.api.SailPointContext;  
+  import sailpoint.object.Identity;
+  import sailpoint.object.*;  
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.tools.Util;
+  import sailpoint.api.*;
+
+  ProvisioningResult provresult = new ProvisioningResult();
+
+  System.out.println("calling create ");
+  if ( plan != null ) {
+  System.out.println("Plan in Create Prov Rule:\n" + plan.toXml());
+  
+  String userName = plan.getNativeIdentity();
+  List accRequests = plan.getAccountRequests(); 
+  if ( ( accRequests != null ) &amp;&amp; ( accRequests.size() &gt; 0 ) ) {
+  for(AccountRequest accRequest : accRequests)
+  {
+    //String empID = accRequest.getNativeIdentity();
+	String email = accRequest.getNativeIdentity();
+   // Identity idObj = context.getObjectByName(Identity.class, empID);
+	Identity idObj = context.getObjectByName(Identity.class, userName);
+	
+    String displayName = idObj.getAttribute("displayName");
+    String empID = idObj.getAttribute("employeeNumber");
+     empID = (null == (String)idObj.getAttribute("employeeNumber")) ? "0" : (String)idObj.getAttribute("employeeNumber") ;
+	jobTitle = (String) idObj.getAttribute("jobTitle") == null ? "Not Available" : (String) idObj.getAttribute("jobTitle");
+
+    
+    //    String email = idObj.getAttribute("email");
+        String userStatus = "T"; 
+        List fnlAccess = new ArrayList();
+        List storeName = new ArrayList();
+        String costCenter = null;
+        String salesFlag = null;
+        String plFlag = null;
+        String marketingFlag = null;
+        String remQuery = null;
+        String query = null;
+        String query1 = null;
+        String updateQuery = null;
+        String insertQuery = null;
+        //String userTitle = empID+" - "+jobTitle;  
+		String userTitle = null;  
+		int provsize=0;		
+int count=0;
+
+    if ((accRequest.getApplicationName()).equalsIgnoreCase("Microsoft Power BI"))
+    {
+        try
+        {
+          if(AccountRequest.Operation.Create.equals(accRequest.getOperation())) 
+          {
+		    AttributeRequest atr1 = (AttributeRequest) accRequest.getAttributeRequest("addGroups");
+            AttributeRequest atr2 = (AttributeRequest) accRequest.getAttributeRequest("fnlAccess");
+            AttributeRequest atr3 = (AttributeRequest) accRequest.getAttributeRequest("COST_CENTER");
+			
+			if(atr2 != null &amp;&amp; atr2.getValue() != null)
+              {
+                System.out.println("atr2.getValue() is : " + atr2.getValue());
+
+                if (atr2.getValue() instanceof List)
+                { fnlAccess = atr2.getValue(); }
+                else if (atr2.getValue() instanceof String)
+                { fnlAccess.add(atr2.getValue()); }
+                
+                System.out.println("fnlAccess is : " + fnlAccess);
+
+              }
+
+              if (atr3 != null &amp;&amp; atr3.getValue() != null) {
+                costCenter = atr3.getValue();
+              }
+              if (null == costCenter)
+              costCenter = "0";
+            
+              System.out.println("costCenter is : " + costCenter);
+            
+/*
+              if (idObj.getAttribute("status").equalsIgnoreCase("ACTIVE")) 
+              {
+                userStatus = "T";
+              } 
+              else if (idObj.getAttribute("status").equalsIgnoreCase("INACTIVE")) 
+              {
+                userStatus = "F";
+              }
+              else if (null == idObj.getAttribute("status"))
+              {
+                userStatus = "T";
+              }
+              System.out.println("userStatus is : " + userStatus);
+*/			  
+			          if (atr1.getValue() instanceof List)
+                { storeName = atr1.getValue(); }
+                else if (atr1.getValue() instanceof String)
+                { storeName.add(atr1.getValue());
+				provsize==1;
+				}
+				
+			          if((Util.nullSafeSize(storeName) &gt; 0) &amp;&amp; ProvisioningPlan.Operation.Add.equals(atr1.getOperation())) {
+			            String storeID = null;
+                  String areaID = null;
+                  String chainIDLocal = null;
+                  String restNumber = null;
+                  String compNumber = null;
+				   provsize=storeName.size();
+                  
+                  for (int i=0; i &lt; storeName.size(); i++)
+                  {
+                    String value = storeName.get(i);
+                    
+                    if (value.contains("Unmapped"))
+                        {
+                          storeName.remove(value);
+                        }
+                  }
+          
+                for (String eachStoreName : storeName) {
+                   ///
+			  int rlength = eachStoreName.split("\\|")[0].split("\\#").length();
+		   
+			///
+                  
+				        String rName = eachStoreName.split("\\|")[0].trim();
+                    System.out.println("rName is : " + rName);
+                 
+                    String cDesc = eachStoreName.split("\\|")[2].trim();
+                    System.out.println("cDesc is : " + cDesc);
+                  
+ if(rlength==2){
+ 
+       
+			String storeid=rName.split("\\#")[1].trim(); 
+           query = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and StoreID=\'" + storeid + "\'";
+            System.out.println("query is : "  + query);
+        
+       }
+			if(rlength==1){
+         if (rName.contains("'"))
+                      rName = rName.replace("'", "''");
+			query = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+            System.out.println("query is : "  + query);
+      }
+                   
+                    Statement st = connection.createStatement();
+                    ResultSet rs = st.executeQuery(query);
+                  while (rs.next())
+                  {
+				              storeID = rs.getString("StoreID");
+                      areaID = rs.getString("AREA_ID");
+                      chainIDLocal = rs.getString("CHAIN_ID_LOCAL");
+
+                      if (storeID.length() &gt; 5) {
+                        restNumber = storeID.substring((storeID.length()-5),(storeID.length()));
+                        System.out.println("restNumber is :" + restNumber);
+                        if (storeID.length() == 6) {
+                          compNumber = storeID.substring(0,1);
+                          System.out.println("compNumber is :" + compNumber);
+                        } else if (storeID.length() == 7) {
+                          compNumber = storeID.substring(0,2);
+                          System.out.println("compNumber is :" + compNumber);
+                        }
+                      }
+					  
+					   if (fnlAccess.contains("Sales")) {
+                          salesFlag = "T";
+                        } else {
+                          salesFlag = "F";
+                        }
+                      if (fnlAccess.contains("P/L")) {
+                          plFlag = "T";
+                        } else {
+                          plFlag = "F";
+                        }
+                      if (fnlAccess.contains("Marketing")) {
+                          marketingFlag = "T";
+                        } else {
+                          marketingFlag = "F";
+                        }
+
+                        insertQuery = "INSERT INTO USERDB.User_Security VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        System.out.println("insertQuery is :" + insertQuery);
+                        PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                        insertStatement.setString(1, empID+" - "+displayName+" - ("+jobTitle+")");
+                        insertStatement.setString(2, "A");
+                        insertStatement.setString(3, "F");
+                        insertStatement.setString(4, email);
+                 
+                    insertStatement.setInt(5, Integer.parseInt(empID));
+                    
+                        insertStatement.setInt(6, Integer.parseInt(compNumber));
+                        insertStatement.setInt(7, Integer.parseInt(restNumber));
+                        insertStatement.setInt(8, Integer.parseInt(chainIDLocal));
+                        insertStatement.setInt(9, Integer.parseInt(areaID));
+                        insertStatement.setString(10, "F");
+                        insertStatement.setString(11, "F");
+                        insertStatement.setString(12, "F");
+                        insertStatement.setString(13, salesFlag);
+                        insertStatement.setString(14, plFlag);
+						            insertStatement.setString(15, marketingFlag);
+                        insertStatement.setString(16, "F");
+                        insertStatement.setString(17, "F");
+                        insertStatement.setString(18, userName+" - "+jobTitle);
+                   
+                        insertStatement.setInt(19, Integer.parseInt(empID));
+                    
+                        if (null != costCenter)
+                          insertStatement.setInt(20, Integer.parseInt(costCenter));
+                        insertStatement.setString(21, "T");
+                        int rows=insertStatement.executeUpdate();
+						 System.out.println("Number of Rows Affected: "+rows);
+                  
+      
+				count = count +rows; 
+				  }
+                 System.out.println("Number of Rows Count: "+count);
+				  }
+				}
+			  }
+		  
+	/*	 if(provsize==count){
+		System.out.println("Power BI Application- Create User Result is " +provresult);
+        provresult.setStatus(ProvisioningResult.STATUS_COMMITTED);
+        System.out.println("plan in create rule" + plan.toXml());
+		  }
+		  else{
+			  System.out.println("Power BI Application- CERT Create User Result is " +provresult);
+       provresult.setStatus(ProvisioningResult.STATUS_FAILED);
+		  }
+   */ 
+          	System.out.println("Power BI Application- Create User Result is " +provresult);
+        provresult.setStatus(ProvisioningResult.STATUS_COMMITTED);
+        
+		}
+		catch (Exception e) 
+		{
+            System.out.println("JDBCApplication Create Error e: " +e.getMessage()); 
+			provresult.setStatus(ProvisioningResult.STATUS_FAILED);			
+        }
+		finally 
+		{ 
+            try
+			{ 
+              if (connection != null) 
+                connection.close(); 
+            }
+			catch (SQLException e) 
+			{ 
+              e.printStackTrace(); 
+            } 
+        }
+	}
+          
+    }  
+    }
+  }
+
+  return provresult;
+  
+  </Source>
+</Rule>
+
+</sailpoint>

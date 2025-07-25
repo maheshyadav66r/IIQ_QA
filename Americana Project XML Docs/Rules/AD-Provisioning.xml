@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="AD-Provisioning">
+  <ReferencedRules>
+    <Reference class="sailpoint.object.Rule" name="TestRule-accountexpires" />
+  </ReferencedRules>
+  <Source>
+    import sailpoint.api.Provisioner;
+    import sailpoint.api.SailPointContext;
+    import sailpoint.object.*;
+    import sailpoint.object.Filter;
+    import sailpoint.object.QueryOptions;
+    import sailpoint.object.ProvisioningPlan;
+    import sailpoint.object.ProvisioningPlan.AccountRequest;
+    import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+import sailpoint.object.Identity;
+        import java.util.*;
+        import java.util.Date;
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+        import java.lang.String;
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+        import sailpoint.object.ProvisioningProject;
+        import sailpoint.api.IdentityService;
+        String identityName = "Asset Kunafin Kunafin(ServiceMax)";
+      //  log.error("inside setting date");
+        String idendDate=null;
+        DateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");	
+        String nedate1 = "2025-05-13";
+    
+  Date nedate = dateFormat.parse(nedate1);
+        String strnewEndDate = dateFormat.format(nedate);
+        String identity=identityName;
+        //log.error("id name  is:::"+identityName);
+        Identity userId=context.getObjectByName(Identity.class, identity);
+        //log.error("userId is:::"+userId);
+
+        if(userId!=null){
+       // log.error("userid not nulland end date is :::"+ strnewEndDate);
+				
+   //     String justification = identityModel.get("justification");
+    //    String otherJustificationReason = identityModel.get("otherJustificationReason");
+        String newDescription = "";
+        
+     //   if(null != justification @and !"".equalsIgnoreCase(justification)){
+      //  	if("Other".equalsIgnoreCase(justification) @and null != otherJustificationReason @and !"".equalsIgnoreCase(otherJustificationReason)){
+       // 		justification = otherJustificationReason;
+       // 	}
+       // 	newDescription = justification;
+       	//}
+        
+        userId.setAttribute("endDate",strnewEndDate);
+      userId.setAttribute("status","ACTIVE");
+     userId.setAttribute("disabledDate","");
+        context.saveObject(userId);
+        context.commitTransaction();
+        log.error("setting new end date");
+        idendDate=userId.getAttribute("endDate");
+        String accountExpDate=getAcccountExpiresValue(idendDate);
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(userId);
+				List accountRequestsList = new ArrayList();
+        //IdentityService identityService = new IdentityService(context);
+        //Application adAppObj = context.getObjectByName(Application.class,"AD Contractors");
+        if(null != userId.getLinks()){
+        List linksObject = userId.getLinks();
+        	//List linksObject = identityService.getLinks(userId,adAppObj);
+        	if(null != linksObject @and linksObject.size() &gt; 0){
+        		for(Link link :linksObject){
+        			String description = "";
+        			if(null != link){
+        				if("AD Contractors".equalsIgnoreCase(link.getApplicationName()) || "Active Directory".equalsIgnoreCase(link.getApplicationName())){
+     //   				 description = link.getAttribute("description");
+        				 if(link.isDisabled()){
+        						AccountRequest acr = new AccountRequest();
+        				 		acr.setApplication(link.getApplicationName());
+        				 		acr.setOperation(AccountRequest.Operation.Enable);
+        						acr.setNativeIdentity(link.getNativeIdentity());
+        				 		acr.add(new AttributeRequest("AC_NewParent",ProvisioningPlan.Operation.Set,"OU=Outsource,OU=Americana Office,DC=Americana,DC=global"));
+        						acr.add(new AttributeRequest("accountExpires", accountExpDate));
+        
+        
+       // 						if(null != description @and !"".equalsIgnoreCase(description) @and null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        //							String updatedDescription = newDescription+" || "+description;
+        	//						acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,updatedDescription));
+        		//				}else if(null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        			//				acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,newDescription));
+        				//		}
+        						accountRequestsList.add(acr);
+        				 }else{
+        						AccountRequest acr = new AccountRequest();
+        				 		acr.setApplication(link.getApplicationName());
+        				 		acr.setOperation(AccountRequest.Operation.Modify);
+        						acr.setNativeIdentity(link.getNativeIdentity());
+        				 		acr.add(new AttributeRequest("accountExpires", accountExpDate));
+        						if(null != description @and !"".equalsIgnoreCase(description) @and null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							String updatedDescription = newDescription+" || "+description;
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,updatedDescription));
+        						}else if(null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,newDescription));
+        						}
+										accountRequestsList.add(acr);        
+        				}
+        }
+        			}
+        		}
+        	}
+        }
+        
+       plan.setAccountRequests(accountRequestsList);
+        //log.error("plan is:"+plan.toXml());
+
+       // log.error("end of the plan");
+        //  return plan.toXml();
+        Provisioner prov=new Provisioner(context);
+        prov.setNoLocking(true);
+        prov.setOptimisticProvisioning(true);
+        ProvisioningProject project = prov.compile(plan);
+        prov.execute(plan);
+        }
+
+  </Source>
+</Rule>
+
+</sailpoint>

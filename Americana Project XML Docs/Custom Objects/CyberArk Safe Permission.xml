@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="CyberArk Safe Permission">
+  <Attributes>
+    <Map>
+      <entry key="Access Safe without confirmation" value="Allows members to access an account in the Safe without requesting confirmation" />
+      <entry key="Add Accounts" value="Onboard the accounts to PAM" />
+      <entry key="Back up Safe" value="Allows members to back up the Safe" />
+      <entry key="Confirm requests (authorize account requests) Level1" value="Allows members to confirm a request to access an account in the Safe" />
+      <entry key="Create Folders" value="Allows members to create folders in the Safe" />
+      <entry key="Delete Accounts" value="Allows members to delete accounts in the Safe" />
+      <entry key="Delete Folders" value="Allows members to delete folders in the Safe" />
+      <entry key="Initiate CPM account management operations" value="Allows members to trigger the CPM to change, verify or reconcile an account's secret" />
+      <entry key="List accounts" value="These permissions enable members to access accounts in the dashboard" />
+      <entry key="Manage Safe" value="Allows members to edit the Safe properties" />
+      <entry key="Manage Safe Members" value="Allows members to set permissions for Safe members" />
+      <entry key="Move Accounts/Folders" value="Allows members to move accounts and folders in the Safe" />
+      <entry key="Rename Accounts" value="Allows members to rename accounts in the Safe" />
+      <entry key="Retrieve Accounts" value="Allows members to show or copy an account's secret" />
+      <entry key="Specify the next account content" value="Allows members to set a specific secret for the next time the CPM changes the secret" />
+      <entry key="Unlock Accounts" value="Allows members to unlock accounts in the Safe that are locked by other users" />
+      <entry key="Update Account Content" value="Allows members to set the password in the Vault only" />
+      <entry key="Update Account Properties" value="Allows members to edit account properties" />
+      <entry key="Use Accounts" value="Allows members to use the accounts in the Safe to connect using PSM/PSMP" />
+      <entry key="View Audit Log" value="Allows members to view account activity in the Safe" />
+      <entry key="View Safe Members" value="Allows members to view the permissions of Safe members" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

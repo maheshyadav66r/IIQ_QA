@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<PasswordPolicy name="Americana-AD-HelpDeskpinverificationPolicy">
+  <PasswordConstraints>
+    <Map>
+      <entry key="checkPasswordsAgainstAccountAttributes" />
+      <entry key="checkPasswordsAgainstDictionary" />
+      <entry key="checkPasswordsAgainstIdentityAttributes" />
+      <entry key="multiConstraint" />
+      <entry key="passwordHistory" />
+      <entry key="passwordMaxLength" value="6" />
+      <entry key="passwordMinAlpha" value="2" />
+      <entry key="passwordMinNumeric" value="4" />
+    </Map>
+  </PasswordConstraints>
+</PasswordPolicy>
+
+</sailpoint>

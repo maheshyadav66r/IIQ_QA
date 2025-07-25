@@ -1,0 +1,463 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_ContractorRegistration_Form">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Americana User Registration Form" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="Enter the User Details">
+    <Field columnSpan="1" displayName="Select the appropriate user details" displayType="comboBox" dynamic="true" helpKey="For Contractor creation select respective vendor details , for Interim select Interim and for generic User select General Use" name="vendor" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            Custom ven=null;
+
+            List Vendorlist=new ArrayList();         
+
+            try{
+
+            ven=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+            if(ven != null){
+
+            Vendorlist = ven.getList("VendorDetails");
+            }                                 
+
+            return Vendorlist;
+
+            }
+            catch(Exception e){
+
+            throw e;
+            } 
+
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field columnSpan="1" displayName="Name of the User(as per the passport)" name="username" required="true" type="string" />
+    <Field columnSpan="1" displayName="First Name of the User" name="firstname" postBack="true" required="true" type="string">
+      <ValidationScript>
+        <Source>
+           import sailpoint.object.Identity; 
+		  import sailpoint.tools.Message;  
+ import java.util.*;		  
+
+         
+		  String value= form.getField("firstname").getValue();
+          String trimValue = (value != null) ? ((String)value).trim() : null;
+ if(trimValue.matches(".*\\d.*")){ 
+                   	
+	      return("Please ensure that the name doesn't contain numeric values");
+          }  
+         
+		 
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Last Name of the User" name="lastname" postBack="true" required="true" type="string">
+      <ValidationScript>
+        <Source>
+           import sailpoint.object.Identity; 
+		  import sailpoint.tools.Message;  
+ import java.util.*;		  
+
+         
+		  String value= form.getField("lastname").getValue();
+          String trimValue = (value != null) ? ((String)value).trim() : null;
+ if(trimValue.matches(".*\\d.*")){ 
+                   	
+	      return("Please ensure that the name doesn't contain numeric values");
+          }  
+         
+		 
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="DisplayName of the User" dynamic="true" name="displayName" readOnly="true" required="true" type="string">
+      <Script>
+        <Source>
+          import sailpoint.api.*;
+          import sailpoint.object.*;
+          import sailpoint.tools.*;
+          import sailpoint.api.*;
+
+          public String validateUserName(String  value){
+
+          QueryOptions qo = new QueryOptions();
+          String trimValue = (value != null) ? ((String)value).trim() : null;
+
+          Filter filter  = Filter.or(Filter.eq("id", trimValue), Filter.ignoreCase(Filter.eq("name", trimValue)));
+          qo.add(new Filter[]{filter});
+          qo.addFilter(ObjectUtil.buildWorkgroupInclusiveIdentityFilter());
+          int count = SailPointFactory.getCurrentContext().countObjects(Identity.class,qo);
+          if (count&gt;0) {
+          return "userNameExists";
+          }
+          if(count==0){
+          return "UserNotExist";
+          }        
+
+          }
+
+          String displayName="";
+          if(firstname!=null &amp;&amp; lastname!=null &amp;&amp; vendor!=null){
+          displayName=firstname+" "+lastname+"("+vendor+")";
+          log.error("DisplayName is::"+displayName);
+
+          }
+          String userName=null;
+          int i=1;
+
+          for(i=1;i&gt;=1;i++){
+          log.error("name is:::"+displayName);
+          userName=validateUserName(displayName);
+          if(userName.equalsIgnoreCase("userNotExist")){
+          return displayName;
+
+          }
+
+          if(userName.equalsIgnoreCase("userNameExists")){
+          displayName=displayName+i;
+          }
+
+          }
+
+          return displayName;
+        </Source>
+      </Script>
+      <ValidationRule>
+        <Reference class="sailpoint.object.Rule" name="LCM Validate Identity Name" />
+      </ValidationRule>
+    </Field>
+    <Field columnSpan="1" displayName="Department" displayType="comboBox" dynamic="true" name="department" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import sailpoint.object.Identity;
+
+            import sailpoint.object.Filter;
+
+            import sailpoint.object.QueryOptions;           
+
+            import java.util.List;
+
+            import java.util.ArrayList;
+            import sailpoint.object.Link;
+
+
+
+            /* QueryOptions qo = new QueryOptions();
+
+            List dept=new ArrayList();
+
+
+
+            Filter myFilter = Filter.eq("application.name","Oracle Fusion HCM");
+
+            qo.addFilter(myFilter);
+
+
+
+            Iterator itx = context.search(Link.class, qo);
+
+            while(itx.hasNext()){
+
+            String department=null;
+
+            id = (Link)itx.next();
+
+            if(id != null){
+
+            //return id.toXml();
+
+            Map att=new HashMap();
+
+            att=id.getAttributes();
+
+            if(att!=null){
+
+            department=att.get("Department_Name");
+
+            if(department!=null &amp;&amp; !dept.contains(department)){
+            //return department;
+            dept.add(department);
+
+            }
+            department1=att.get("Department_Name_Pending_worker");
+
+            if(department1!=null &amp;&amp; !dept.contains(department1)){
+            //return department;
+            dept.add(department1);
+
+            }
+
+            }
+
+            }
+            }
+
+            return dept;*/
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+
+
+            List Departmentlist=new ArrayList();         
+
+            try{
+
+            dept=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+            if(dept != null){
+
+            Departmentlist = dept.getList("Department");
+            }                                 
+
+            return Departmentlist;
+
+            }catch(Exception e){
+
+            throw e;
+            } 
+
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field columnSpan="1" displayName="Cost Center" dynamic="true" name="costcenter" readOnly="true" required="true" type="string">
+      <Script>
+        <Source>                       
+          import sailpoint.object.Custom;
+          Map cc = new HashMap();
+          String strCC=null;
+          String dept=form.getField("department").getValue();
+          if(dept!=null){
+          Custom custom=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+          if(custom != null){
+          cc =custom.get("CostCenter");
+          strCC = cc.get(dept);
+          }  
+          }				  
+          log.error("CostCenter is:::"+strCC);
+          return strCC;
+
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="Position" name="position" required="true" type="string" />
+    <Field columnSpan="1" displayName="Region" displayType="comboBox" name="region" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+
+
+            List Regionlist=new ArrayList();         
+
+            try{
+
+            reg=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+            if(reg != null){
+
+            Regionlist = reg.getList("Region");
+            }                                 
+
+            return Regionlist;
+
+            }catch(Exception e){
+
+            throw e;
+            } 
+
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+    </Field>
+    <Field columnSpan="1" displayName="Office Location" name="officeLocation" required="true" type="string" />
+    <Field columnSpan="1" displayName="Mobile Number" helpKey="Please enter mobile number along with countrycode for example:+971 for UAE" name="number" required="true" type="string">
+      <ValidationScript>
+        <Source>
+         
+          String workPhone = form.getField("number").getValue();
+       
+          if(workPhone!=null){
+
+            if( !workPhone.matches("\\+{0,1}[0-9]{10,18}")){
+                               
+             
+              return("Please enter a valid  phone number contains only numbers with + sign followed by country code and mobile number");
+            }         
+          }         
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Joining Date" name="jdate" postBack="true" required="true" type="date" />
+    <Field columnSpan="1" displayName="End Date" dynamic="true" name="cedate" required="true" type="date">
+      <ValidationScript>
+        <Source>
+          import java.util.Date;
+          
+          Date joiningDate = form.getField("jdate").getValue();
+          Date startDate = form.getField("csdate").getValue();
+          
+          if(null != joiningDate @and null != value){
+          	if(joiningDate.equals(value)){
+          		return("The end date and the joining date cannot be same");
+          	}else if(joiningDate.after(value)){
+          		return("The end date should be after the joining date");
+          	}
+          }
+          
+          if(null != startDate @and null != value){
+          	if(startDate.equals(value)){
+          		return("The end date and the Start date cannot be same");
+          	}else if(startDate.after(value)){
+          		return("The end date should be after the Start date");
+          	}
+          }
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+    <Field columnSpan="1" displayName="Start Date" name="csdate" postBack="true" required="true" type="date" />
+    <Field columnSpan="1" displayName="Reports to" name="manager" required="true" type="sailpoint.object.Identity" />
+  </Section>
+  <Section columns="2" label="Options to select access">
+    <Field columnSpan="1" displayName="AD Account" displayType="radio" name="ad" required="true" type="boolean" />
+    <Field columnSpan="1" displayName="VPN Access" displayType="radio" dynamic="true" name="vpn" postBack="true" type="boolean" />
+    <Field columnSpan="1" displayName="Email Access" displayType="radio" name="email" type="boolean" />
+    <Field columnSpan="1" displayName="Laptop" displayType="radio" name="laptop" type="boolean" />
+    <Field columnSpan="1" displayName="Immediate Joiner" displayType="radio" name="immediateJoiner" type="boolean" />
+    <Field columnSpan="1" displayName="Onsite Access Required" displayType="radio" name="wifiaccess" type="boolean" />
+    <Field columnSpan="1" displayName="VPN Access" dynamic="true" hidden="true" name="vpntest" postBack="true" type="string">
+      <Script>
+        <Source>
+
+          log.error("vpn test value from form11111::"+form.getField("vpn").getValue());
+          // boolean vpnlicense=(form.getField("vpn").getValue()!=null)? true:false;
+          // log.error("inside vpn servers:::::"+vpnlicense);
+          String strVpn=null;
+          if(form.getField("vpn").getValue()!=null){
+
+          strVpn=form.getField("vpn").getValue().toString();
+          }
+          log.error("vpntest is:::"+strVpn);
+          return strVpn;
+        </Source>
+      </Script>
+    </Field>
+    <Field columnSpan="1" displayName="VpnServers" displayType="comboBox" dynamic="true" multi="true" name="vpnServer" postBack="true" required="true" type="string">
+      <AllowedValuesDefinition>
+        <Script>
+          <Source>
+            import org.apache.log4j.Logger;            
+            import java.util.ArrayList;            
+            import java.util.List;            
+            import sailpoint.object.Custom;
+            List vpnList=new ArrayList();
+            String strreg = "Server-"+form.getField("region").getValue();
+            try{
+            log.error("region is"+form.getField("region").getValue());
+            Custom vpnser=context.getObjectByName(Custom.class,"Americana-Contractor-Attributes");
+            if(vpnser != null &amp;&amp; strreg!=null){
+
+            vpnList = vpnser.get(strreg);
+            } 
+
+
+            return vpnList;
+
+            }catch(Exception e){
+
+            throw e;
+            } 
+
+          </Source>
+        </Script>
+      </AllowedValuesDefinition>
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hidden = true;
+									String vpnValue = "";
+                  Object vpnObject=form.getField("vpn").getValue();
+                  if(null != vpnObject){
+                  	vpnValue = String.valueOf(vpnObject);
+                  	if(null != vpnValue @and !"".equalsIgnoreCase(vpnValue) @and "true".equalsIgnoreCase(vpnValue)){
+                  		hidden = false;
+                  	}
+                  }
+                  
+                  return hidden;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+    </Field>
+  </Section>
+  <Section>
+    <Field columnSpan="1" displayName="Business Justification" displayType="combobox" name="justification" postBack="true" required="true" type="string">
+      <AllowedValues>
+        <String>Onboarding a new contractor for the project </String>
+        <String>Other</String>
+      </AllowedValues>
+    </Field>
+    <Field columnSpan="1" displayName="Justificatiion Reason" displayType="textarea" dynamic="true" helpKey="Please enter a business justification ensuring that it's no less than 50 characters" name="otherJustificationReason" required="true" type="string">
+      <Attributes>
+        <Map>
+          <entry key="hidden">
+            <value>
+              <Script>
+                <Source>
+                  boolean hideField = true;
+                  if(null != form.getField("justification").getValue() @and "Other".equalsIgnoreCase(form.getField("justification").getValue())){
+                  	hideField = false;
+                  }
+                  
+                  return hideField;
+                </Source>
+              </Script>
+            </value>
+          </entry>
+        </Map>
+      </Attributes>
+      <ValidationScript>
+        <Source>
+// empty messages list
+
+import sailpoint.tools.Message;   
+
+List messages = new ArrayList();
+          int requiredlength = 50;
+          
+
+if(null != value &amp;&amp; value.length() &lt; 50){          	
+	Message message = new Message();
+	message.setKey("Please ensure that the minimum length is 50 characters, remaining characters "+(requiredlength-value.length())+"/50");
+	messages.add(message);
+}
+return messages;          
+          
+        </Source>
+      </ValidationScript>
+    </Field>
+  </Section>
+  <Button action="next" label="OK" />
+  <Button action="back" label="nav_cancel" />
+</Form>
+
+</sailpoint>

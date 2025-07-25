@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Test-Rule-To-Get-Leaver-Users-For-Today">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean" />
+  <Source>/*
+
+    Status is set to ‘Inactive’ and  
+
+    Trigger Date: is ‘End date +31’ (Last Working Day +31) in the HCM 
+
+    */
+
+  import sailpoint.object.Application;
+  import sailpoint.tools.Util;
+  import sailpoint.api.IdentityService;
+
+
+  import sailpoint.object.*;
+  import sailpoint.object.Custom;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+  import java.util.regex.Pattern;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+
+
+
+  Logger logger = Logger.getLogger("Americana.Rule.Test-PostLeavertrigger");
+  logger.setLevel(Level.DEBUG);
+
+  logger.debug("Start Americana-Rule-Test-PostLeavertrigger");
+
+
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.IdentityRequest;
+
+  List postLeaverUsers = new ArrayList();
+  Filter frsc = Filter.eq("peopleGroup", "RSC");
+
+  QueryOptions op = new QueryOptions();
+  op.addFilter(frsc);
+
+
+  List listIds = context.getObjects(Identity.class, op);
+
+
+  for(Identity newIdentity : listIds){
+    logger.debug("newIdentity : "+newIdentity);
+
+    logger.debug("newIdentity status : "+newIdentity.getAttribute("status"));
+    logger.debug("newIdentity revokeUserAccess : "+newIdentity.getAttribute("revokeUserAccess"));
+
+    boolean leaverTrigger = false;
+
+    if("I".equalsIgnoreCase(newIdentity.getAttribute("revokeUserAccess"))){
+      leaverTrigger = true;
+    }
+    else if(null != newIdentity &amp;&amp; newIdentity.getAttribute("endDate") != null &amp;&amp; "Inactive".equalsIgnoreCase(newIdentity.getAttribute("status"))){
+
+      String strEndDate = (String) newIdentity.getAttribute("endDate");
+      logger.debug(" strEndDate : "+strEndDate);
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+      Date endDate = sf.parse(strEndDate);
+
+      logger.debug(" endDate : "+endDate);
+
+
+      Date goLiveDate = sf.parse("2022-12-23");
+      if (Util.isDateAfter(endDate,goLiveDate)) {
+        log.debug("==============THE TRIGGER POINT IN IF endDate :"+endDate);
+
+
+        int diff = Util.getDaysDifference(new Date(), endDate);
+        logger.debug(" diff : "+diff);
+        if(diff &gt;= 0){
+          leaverTrigger = true;
+        }
+
+      }
+    }
+
+
+    if(leaverTrigger){
+
+      Filter typeF = Filter.eq("type", "Leaver");
+      Filter userF = Filter.eq("targetId", newIdentity.getId());
+
+      List cmpStatus = new ArrayList(Arrays.asList(IdentityRequest.CompletionStatus.Pending, IdentityRequest.CompletionStatus.Success));
+      Filter cmpllF = Filter.in("completionStatus", cmpStatus);
+
+      QueryOptions op = new QueryOptions();
+      op.add(typeF);
+      op.add(userF);
+      op.add(cmpllF);
+
+      int  count = context.countObjects(IdentityRequest.class, op);
+      if(count == 0){
+        postLeaverUsers.add(newIdentity.getName());
+      }
+      continue;
+
+    }
+
+
+  }
+
+
+  logger.debug(" postLeaverUsers : "+postLeaverUsers);
+  return postLeaverUsers;
+  </Source>
+</Rule>
+
+</sailpoint>

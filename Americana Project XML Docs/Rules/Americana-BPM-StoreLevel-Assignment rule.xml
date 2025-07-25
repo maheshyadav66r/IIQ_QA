@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-BPM-StoreLevel-Assignment rule" type="IdentitySelector">
+  <Description>This rule is used to select an Identity that is related to the given Identity</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="identity" type="Identity">
+        <Description>
+          The identity.
+        </Description>
+      </Argument>
+      <Argument name="roleName" type="String">
+        <Description>
+          The name of the sailpoint.object.Bundle (role) that is being selected for the Identity. 
+          If roles are not applicable to this Identity selection, this value will be void.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="success">
+        <Description>
+            True if the selection was successful; false otherwise.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.Identity;
+import sailpoint.object.Application;
+import java.util.List;
+import sailpoint.object.Link;
+  import sailpoint.api.IdentityService;
+  import sailpoint.object.Custom;
+  
+  Custom customObj = context.getObjectByName(Custom.class,"Americana-RBAC Attribute Mapping");
+  if(null != customObj){
+  	List listOfUsers = customObj.get("usersToBeExcluded");
+    if(null != listOfUsers @and listOfUsers.size() &gt; 0 @and null != identity.getEmail() @and !"".equalsIgnoreCase(identity.getEmail()) @and listOfUsers.contains(identity.getEmail())){
+    	return false;
+    }
+  }
+
+if(null != identity @and null != identity.getStringAttribute("peopleGroup") @and !"".equalsIgnoreCase(identity.getStringAttribute("peopleGroup")) @and "Store Level".equalsIgnoreCase(identity.getStringAttribute("peopleGroup")) @and null != identity.getStringAttribute("status") @and !"".equalsIgnoreCase(identity.getStringAttribute("status")) @and "ACTIVE".equalsIgnoreCase(identity.getStringAttribute("status")) ){
+// if(null != identity.getStringAttribute("storeincharge") @and "Y".equalsIgnoreCase(identity.getStringAttribute("storeincharge")) ){
+		Application applicationObj = context.getObjectByName(Application.class,"Oracle BPM IDCS");
+IdentityService identityService = new IdentityService(context);
+  if(null != identityService @and null != applicationObj){
+  	List linksList = identityService.getLinks(identity,applicationObj);
+    if(null != linksList @and linksList.size() &gt; 0){
+			if(null != identity.getEmail() @and !"".equalsIgnoreCase(identity.getEmail())){
+        System.out.println("character 0 "+identity.getEmail().charAt(0));
+				if(Character.isDigit(identity.getEmail().charAt(0)) || identity.getEmail().startsWith("AM_")){
+					return false;
+				}else{
+					return true;
+				}    
+    	}
+  	}
+//  }  
+  }
+}  
+
+return false;</Source>
+</Rule>
+
+</sailpoint>

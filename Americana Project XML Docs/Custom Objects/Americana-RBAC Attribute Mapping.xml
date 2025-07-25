@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="Americana-RBAC Attribute Mapping">
+  <Attributes>
+    <Map>
+      <entry key="Oracle BPM">
+        <value>
+          <Map>
+            <entry key="Business Role_DefaultValues">
+              <value>
+                <Map>
+                  <entry key="Application" value="Oracle BPM IDCS" />
+                  <entry key="Parent Role" value="Oracle BPM" />
+                  <entry key="Role Disabled" value="TRUE" />
+                  <entry key="Role Type" value="business" />
+                </Map>
+              </value>
+            </entry>
+            <entry key="IT Role_DefaultValues">
+              <value>
+                <Map>
+                  <entry key="Application" value="Oracle BPM IDCS" />
+                  <entry key="EntitlementAttribute" value="Group" />
+                  <entry key="Parent Role" value="Oracle BPM" />
+                  <entry key="Role Disabled" value="TRUE" />
+                  <entry key="Role Type" value="it" />
+                </Map>
+              </value>
+            </entry>
+            <entry key="businessRole_Headers">
+              <value>
+                <List>
+                  <String>Role Name</String>
+                  <String>Role Display Name</String>
+                  <String>Role Type</String>
+                  <String>IT Role</String>
+                  <String>Parent Role</String>
+                  <String>Role Description</String>
+                  <String>Role Disabled</String>
+                  <String>department</String>
+                  <String>country</String>
+                  <String>peopleGroup</String>
+                  <String>status</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="businessRole_defaultHeadersAndValues">
+              <value>
+                <Map>
+                  <entry key="EntitlementNames" />
+                  <entry key="Role Description" />
+                  <entry key="country" />
+                  <entry key="department" />
+                  <entry key="peopleGroup" value="RSC" />
+                  <entry key="status" value="ACTIVE" />
+                </Map>
+              </value>
+            </entry>
+            <entry key="itRole_Headers">
+              <value>
+                <List>
+                  <String>Role Name</String>
+                  <String>Role Display Name</String>
+                  <String>Role Type</String>
+                  <String>Application</String>
+                  <String>EntitlementNames</String>
+                  <String>EntitlementAttribute</String>
+                  <String>Parent Role</String>
+                  <String>Role Description</String>
+                  <String>Role Disabled</String>
+                </List>
+              </value>
+            </entry>
+            <entry key="usersToBeExcluded">
+              <value>
+                <List>
+                  <String>kabdallah@americana-food.com</String>
+                  <String>kmothukuri@americana-food.com</String>
+                  <String>fimam@americana-food.com</String>
+                  <String>amabdalla@americana-food.com</String>
+                  <String>amricana@americana-food.com</String>
+                  <String>apantanilla@americana-food.com</String>
+                  <String>auddin@americana-food.com</String>
+                  <String>eaali@americana-food.com</String>
+                  <String>aabouelez@americana-food.com</String>
+                  <String>aamericana@americana-food.com</String>
+                  <String>aashiesh@americana-food.com</String>
+                  <String>mcabral@americana-food.com</String>
+                  <String>meabdelsamad@americana-food.com</String>
+                  <String>mhabdelrahman@americana-food.com</String>
+                  <String>mkibrahim@americana-food.com</String>
+                  <String>msamohamed@americana-food.com</String>
+                  <String>skandil@americana-food.com</String>
+                  <String>smorgan@americana-food.com</String>
+                </List>
+              </value>
+            </entry>
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

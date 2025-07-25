@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="" name="PS_ClosingRule_cyberark" type="CertificationAutomaticClosing">
+  <Description>This rule is run when the certification is automatically closed.</Description>
+  <Signature returnType="void">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="certification">
+        <Description>
+          The sailpoint.object.Certification being certified.
+        </Description>
+      </Argument>
+    </Inputs>
+  </Signature>
+  <Source>import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.*;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Attributes;
+import sailpoint.object.Certification;
+import sailpoint.object.CertificationEntity;
+import sailpoint.object.CertificationItem;
+import sailpoint.object.EntitlementSnapshot;
+import sailpoint.object.Identity;
+import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+ 
+		  log.error("entering auto closing rule");
+			
+		  
+		  
+				List signoff=certification.getSignOffs();
+				
+				if(signoff.isEmpty())
+				{
+	 List certifiers = certification.getCertifiers();
+ if(!certifiers.isEmpty()&amp;&amp; certifiers.size()==1) {
+	  Identity certifier = context.getObjectByName(Identity.class,certifiers.get(0).toString());
+	  if(certifier!=null) {
+	  String certifierEmail=(String) certifier.getAttribute("email");
+	  //log.error("certifierEmail: "+certifierEmail);
+	  String certifierName=certifier.getName();
+       String certifierFirstName=certifier.getFirstname();
+       String certifierSecondName=certifier.getLastname();
+    
+	  //log.error("certifierName "+certifierName);
+	  String certifierDisplayName=certifier.getDisplayName();
+	  //log.error("certifierDisplayName "+certifierDisplayName);
+				//	log.error("send email");
+
+
+	if(certifierEmail!=null)
+	{
+
+
+	log.error(" send email to mangeremail"+certifierEmail); 
+				String templateName = "ps_Autoclosing_cyberark";
+
+
+		 EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, templateName); 
+		  template.setTo(certifierEmail);
+		 
+		EmailOptions options = new EmailOptions();
+		 
+		options.setVariable("manager", certifierName);
+    options.setVariable("managerFirstName", certifierFirstName);
+    options.setVariable("managerSecondName", certifierSecondName);
+		// options.setVariable("identityMap", certifierEmail); 
+
+		context.sendEmailNotification(template, options);
+
+	}
+				}
+else{
+//log.error("certifier object is null");
+}
+}
+}</Source>
+</Rule>
+
+</sailpoint>

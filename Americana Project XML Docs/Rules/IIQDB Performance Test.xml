@@ -1,0 +1,207 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="IIQDB Performance Test">
+  <Description>A rule to evaluate IdentityIQ database performance by generating a series of custom objects 1 KB (cert item), 4 KB (link), and 8 KB (identity) in size.</Description>
+  <Source>
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Level;
+//https://logging.apache.org/log4j/2.x/faq.html#reconfig_level_from_code
+import org.apache.logging.log4j.core.config.Configurator;
+
+import sailpoint.api.Meter;
+import sailpoint.api.Meter.MeterSet;
+import sailpoint.api.Terminator;
+import sailpoint.object.Custom;
+import sailpoint.object.Filter;
+import sailpoint.object.QueryOptions;
+import sailpoint.tools.Message;
+import sailpoint.tools.Util;
+import sailpoint.Version;
+
+//establish our logging
+String ruleNamespace = "com.sailpoint.IIQDBPerformanceTest";
+Logger log = LogManager.getLogger(ruleNamespace);
+https://logging.apache.org/log4j/2.x/faq.html#reconfig_level_from_code
+Configurator.setLevel(ruleNamespace, Level.DEBUG);
+
+// ------------------------------------------------------------------------------------------
+// Script methods
+// ------------------------------------------------------------------------------------------
+
+// Helper function to handle setting statuses of the TaskResult.
+void setProgress (String progMsg) {
+    log.debug(progMsg);
+    
+    if ( !inTaskContext ) {
+        return;  // Short circuit out of run from the console.
+    }
+    
+    taskResult.setProgress(progMsg);
+    context.saveObject(taskResult);
+    context.commitTransaction();
+}
+
+// Helper function to handle output of Info messages to the TaskResult, but only if not run in console.
+void logOutput (String msg) {
+    System.out.println(msg);
+    log.debug(msg);
+    
+    if (!inTaskContext) {
+        return;  // Short circuit out of run from the console.
+    }
+    
+    taskResult.addMessage(new Message(Message.Type.Info, msg , null));
+    context.saveObject(taskResult);
+}
+
+// Generate a pseudo-random string of a specified length.
+String generateString(int length) {
+    static Random r = new Random();
+    StringBuilder sb = new StringBuilder();
+    
+    for (int i=0; i&lt;length; i++) {
+        char c = 'x';
+        
+        // first character cannot be number;
+        int charTypeSeed = r.nextInt((i==0 ? 2 : 3));
+        switch (charTypeSeed) {
+            case 0:
+            // Generate a capital letter.
+            c = (char) (65 + r.nextInt(26));
+            break;
+            case 1:
+            // Generate a lower case letter
+            c = (char) (97 + r.nextInt(26));
+            break;
+            case 2:
+            // Generate a number character
+            c = (char) (48 + r.nextInt(10));
+            break;				
+        }
+        sb.append(c);
+    }
+    
+    return sb.toString();		
+}
+
+//creates our maps; name here is 1k, 4k, or 8k values
+HashMap generateMap(int numRecords, String name, int length) {
+    HashMap hm = new HashMap();
+    for (int i=0; i &lt; numRecords; i++) {
+        String key = hostName + "-record" + name + "-" + i;
+        String value = generateString(length);
+        hm.put(key, value);
+        log.trace("key:" + key + " -&gt; " + value);
+    }
+    return hm;
+}
+
+// pass in 1k, 4k, or 8k for name, then pass in hashmap to process
+void runTest(String name, HashMap dataSet) {
+    setProgress("Testing " + name + " data set...");
+    Meter.enterByName("IIQDB-Test-DataSet-" + name + "-All");
+    for (String k : dataSet.keySet()) {
+        Meter.enterByName("IIQDB-Test-DataSet-" + name + "-Item");
+        Custom dbCustom = new Custom();
+        dbCustom.setName(k);
+        dbCustom.put(k, dataSet.get(k));
+        context.saveObject(dbCustom);
+        context.commitTransaction();
+        Meter.exitByName("IIQDB-Test-DataSet-" + name + "-Item");
+    }
+    Meter.exitByName("IIQDB-Test-DataSet-" + name + "-All");
+    setProgress("Completed " + name + " data set.");
+}
+
+void report() {
+    //produces a csv output to log4j (sailpoint.api.Meter, info level) and stdout
+    MeterSet meterSet = null;
+    meterSet = Meter.getThreadMeters();
+    String results = meterSet.generateReport();
+    logOutput(results);
+}
+
+void cleanUp(String host) {
+    setProgress("Cleaning up test objects in the database...");
+    
+    Terminator t1000 = new sailpoint.api.Terminator(context);
+    QueryOptions opts = new QueryOptions();
+    Filter filterCustoms = Filter.like("name", host + "-record", Filter.MatchMode.START);
+    opts.addFilter(filterCustoms);
+    
+    long cleanupStart = System.currentTimeMillis();
+    t1000.deleteObjects(Custom.class, opts);
+    long cleanupDone = System.currentTimeMillis();
+    
+    long cleanupDuration = cleanupDone - cleanupStart;
+    
+    logOutput("Completed cleanup of DB Performance Test records: " + cleanupDuration + " milliseconds.");
+}
+
+// ------------------------------------------------------------------------------------------
+// Script body
+// ------------------------------------------------------------------------------------------
+
+//clear meters before test
+Meter.reset();
+
+// Release time/date stamp for feature tracking.
+String dbPerfTestVersion = "20190827";
+
+// The number of records to test each size transaction with. 1000 is recommended default.
+// Will create essentially 3000 custom objects, 1000 for each size 1k, 4k, 8k.
+int numRecords = 1000;
+
+// Keep a flag around to identify whether this rule is being run inside a Task
+// context or whether it is being run stand-alone from the console ore Debug 
+// page. For 6.3 and newer installs we can use the presence of the variable 
+// 'taskResult' to determine if we are running in task context.
+boolean inTaskContext = false;
+if ((void != taskResult) &amp;&amp; (null != taskResult)) {   
+    inTaskContext = true;    
+}
+
+//Get some metadata for the performance report.
+String hostName = Util.getHostName();
+Date nowDate = new Date();
+String nowTimeStamp = (new java.sql.Timestamp(nowDate.getTime())).toString();
+String iiqVersion = Version.getFullVersion();
+
+logOutput("IdentityIQ Database Performance Test starting");
+logOutput("IdentityIQ Version: " + iiqVersion);
+logOutput("DB Performance Test Rule version: " + dbPerfTestVersion);
+logOutput("Executed from Host: " + hostName);
+logOutput("Executed on Date: " + nowTimeStamp);
+
+//generate the data sets to load.  We randomly generate strings of 1k, 4k, 8k in length.
+setProgress("Populating 1k, 4k, 8k data set HashMaps for " + numRecords + " records...");
+Meter.enterByName("Generate-IIQDB-Test-DataSets");
+HashMap dataSet1k = generateMap(numRecords, "1k", 1024);
+HashMap dataSet4k = generateMap(numRecords, "4k", 4096);
+HashMap dataSet8k = generateMap(numRecords, "8k", 8192);
+Meter.exitByName("Generate-IIQDB-Test-DataSets");
+setProgress("Data set HashMaps populated.");
+
+//run the tests
+runTest("1k", dataSet1k);
+runTest("4k", dataSet4k);
+runTest("8k", dataSet8k);
+
+//output to log4j and stdout
+report();
+
+//delete the objects created for test
+cleanUp(hostName);
+
+logOutput("IdentityIQ Database Performance Test done");
+
+//necessary for task-driven rules
+return "Success";
+
+</Source>
+</Rule>
+
+</sailpoint>

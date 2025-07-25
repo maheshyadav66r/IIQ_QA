@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Work Item Report_csv_not_working Rule" type="AllowedValues">
+  <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+  <Signature returnType="ResourceObject">
+    <Inputs>
+      <Argument name="log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="object">
+        <Description>
+          The ResourceObject built by the connector.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+          Application that references the connector.
+        </Description>
+      </Argument>
+      <Argument name="connector">
+        <Description>
+          The connector object.
+        </Description>
+      </Argument>
+      <Argument name="state">
+        <Description>
+          A Map containing state information.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="resourceObject">
+        <Description>
+          The updated resource object.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>
+import org.apache.commons.lang.StringUtils;
+import sailpoint.api.SailPointContext;
+import sailpoint.api.SailPointFactory;
+import sailpoint.object.Filter;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.WorkItem;
+import sailpoint.tools.GeneralException;
+
+import javax.swing.text.Style;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.io.BufferedWriter;
+import java.util.List;
+  
+public static void writeRow(BufferedWriter writer, String[] datarow, String style) throws IOException {
+  StringBuilder csvRow = new StringBuilder();
+  for (String cell : datarow) {
+    csvRow.append(cell).append(",");
+  }
+  csvRow.deleteCharAt(csvRow.length() - 1);
+  csvRow.append("\n");
+  //writer.write("&lt;tr style=\""+(style != null ? style :"")+"\"&gt;"+csvRow.toString()+"&lt;/tr&gt;\n");
+  writer.write(csvRow.toString());
+ // writer.newLine();
+}  
+
+  Date todaydate = new Date();
+  SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy hh.mm aa");
+  SimpleDateFormat df = new SimpleDateFormat("M/dd/yy");
+  String reportdate = formatter.format(todaydate);
+  String csvfilepath = "E:\\WorkItemReportCSV\\WorkItemReport-" + reportdate + ".csv";
+
+  try {
+    FileWriter writer = new FileWriter(csvfilepath);
+    BufferedWriter bufferedWriter = new BufferedWriter(writer);
+    String[] header = {"Application", "Owner", "Requester First Name", "Requester Last Name", "Manager", "Second Level Approver", "Third Level Approver", "Store Access Request"};
+    writeRow(bufferedWriter,header,"background-color: blue;font-family:Arial;font-size:12;font-weight:bold;");
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    QueryOptions qo = new QueryOptions();
+    Filter filter = Filter.eq("WorkItem.type", "Form");
+    qo.addFilter(filter);
+    qo.addOrdering("WorkItem.created", false);
+    List workItemList = (List) context.getObjects(WorkItem.class, qo);
+
+    for (WorkItem wItem : workItemList) {
+      if (wItem != null) {
+        if (wItem.getDescription().contains("Power BI Access Request")) {
+          String appName = "Microsoft Power BI";
+          String Owner = wItem.getOwner().getDisplayName();
+          String requesterFirstName = (String) wItem.getAttribute("requesterFirstName");
+          String requesterLastName = (String) wItem.getAttribute("requesterLastName");
+          String managerName = (String) wItem.getAttribute("managerDisplayName");
+          String secondLevelApproverName = (String) wItem.getAttribute("secondLevelApproverName");
+          String thirdLevelApproverName = (String) wItem.getAttribute("thirdLevelApproverName");
+          List storeAccessRequest = wItem.getList("storesAR");
+          String storeAR = StringUtils.join(storeAccessRequest, "\n");
+          storeAR = "\""+storeAR+"\"";
+          String[] datarow = {appName + "," + Owner + "," + requesterFirstName + "," + requesterLastName + "," + managerName + "," + secondLevelApproverName + "," + thirdLevelApproverName + "," + storeAR};
+          writeRow(bufferedWriter,datarow,null);
+          
+        }
+      }
+    }
+    bufferedWriter.close();
+  } catch (GeneralException e) {
+    throw new RuntimeException(e);
+  } catch (IOException e) {
+    throw new RuntimeException(e);
+  }  
+  
+return "Exit with Success";
+</Source>
+</Rule>
+
+</sailpoint>

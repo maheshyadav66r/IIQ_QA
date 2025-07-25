@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="PS_Validate_nullManagers">
+  <Description>rule is used to send email reminders 1||7 days before accountExpiry(check against endadate) , so that contractors can extend their endDate by quicklink </Description>
+  <Source>
+ 
+  import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+import sailpoint.object.ResourceObject;
+import java.io.InputStreamReader;
+import java.util.*;
+import sailpoint.api.*;
+import sailpoint.api.PasswordGenerator;
+import sailpoint.api.SailPointContext;
+import sailpoint.object.Identity;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.ProvisioningPlan.ObjectOperation;
+import sailpoint.object.ProvisioningPlan.Operation;
+import sailpoint.object.ProvisioningPlan;
+import java.io.BufferedReader;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+import org.apache.log4j.Logger;
+import sailpoint.object.*;
+import java.lang.*;
+import java.time.format.DateTimeFormatter;
+import java.text.ParseException;
+import sailpoint.tools.GeneralException;
+  import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.QueryOptions;
+
+Logger log=Logger.getLogger("customRule4");
+
+  
+  
+ String app;
+  String dn;
+  String managername;
+  String manageremail;
+
+  
+  
+  
+  
+  
+ Filter f = Filter.eq("correlated",true);
+
+  QueryOptions qo= new QueryOptions();
+  qo.addFilter(f);
+				List ids = context.getObjects(Identity.class);
+ 
+  for(Identity id :ids)
+  {
+    
+    
+     String idName=id.getName();
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  
+    //if(idName.equalsIgnoreCase("Nirmal Chitlangi(Paramount)")){
+   if(id!=null){
+     
+     
+     
+     
+      String endDate = (String) id.getAttribute("endDate");
+      if(endDate!=null &amp;&amp; !endDate.equalsIgnoreCase("never"))
+     {
+      
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+ 
+        Date endDate = sf.parse(endDate);
+        log.error("endDate: " + endDate);
+        
+       
+       
+  
+        
+      
+            Date currentDate = new Date();
+            if (!(endDate.compareTo(currentDate) &lt;0 &amp;&amp;endDate.compareTo(currentDate) == 0)) {
+			
+			
+			
+			
+              
+    List links=id.getLinks();
+    
+   for(Link link:links)
+      
+    {
+      
+      
+      
+    if(link.getApplicationName().equalsIgnoreCase("AD Contractors")||link.getApplicationName().equalsIgnoreCase("Active Directory"))
+    {
+      
+      
+       if(link.getApplicationName().equalsIgnoreCase("AD Contractors"))
+       {
+         
+       app="AD Contractors";
+         dn=link.getAttribute("distinguishedName");
+         
+       }
+      if(link.getApplicationName().equalsIgnoreCase("Active Directory"))
+       {
+         
+         app="Active Directory";
+         dn=link.getAttribute("distinguishedName");
+       }
+   boolean disabled=link.isDisabled();
+   if(!disabled)
+   
+   {
+    
+    String passwordExpires=id.getAttribute("passwordExpires");
+      log.error("on demand......passwordExpires :"+passwordExpires);
+    String firstName=id.getAttribute("firstname");
+        String lastname=id.getAttribute("lastname");
+        
+        Identity manager=id.getManager();
+     
+    /* if(manager!=null)
+     {
+     managername=manager.getName();
+       managermail=manager.getAttribute("email");
+     }*/
+      	log.error("manager :"+manager);
+      String  managerEmail="";
+     List passwordExpires30=new ArrayList();
+     // if(manager==null){
+     if(manager!=null&amp;&amp; manager.getAttribute("email")==null){
+        info=idName +","+"\""+dn+"\""+","+app+","+manager.getName();
+           passwordExpires30.add(info);
+      
+         if (!passwordExpires30.isEmpty()) {
+       FileWriter writer = new FileWriter("C:\\Program Files\\Apache Software Foundation\\Tomcat 9.0\\logs\\managernull7.csv", true);
+        for (String info : passwordExpires30) {
+            writer.write(info + "\n");
+        }
+        writer.close();
+    } 
+      }
+     
+      
+     
+	
+		
+
+
+
+
+     
+    }
+	
+    }
+   }
+            }
+      }
+   }
+  }
+  
+
+  
+  
+  
+
+  
+
+
+</Source>
+</Rule>
+
+</sailpoint>

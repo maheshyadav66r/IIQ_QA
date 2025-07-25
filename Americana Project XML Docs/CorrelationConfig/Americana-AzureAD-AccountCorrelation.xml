@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sailpoint>
+<CorrelationConfig name="Americana-AzureAD-AccountCorrelation">
+  <AttributeAssignments>
+    <Filter operation="EQ" property="hcmUserName" value="mail" />
+    <Filter operation="EQ" property="adLogOnName" value="mailNickname" />
+    <Filter operation="EQ" property="displayName" value="displayName" />
+  </AttributeAssignments>
+</CorrelationConfig>
+
+</sailpoint>

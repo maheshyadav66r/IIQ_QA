@@ -1,0 +1,451 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Application connector="sailpoint.connector.DelimitedFileConnector" featuresString="DIRECT_PERMISSIONS, DISCOVER_SCHEMA" icon="enterpriseIcon" name="Crunch Time" profileClass="" type="DelimitedFile">
+  <AccountCorrelationConfig>
+    <Reference class="sailpoint.object.CorrelationConfig" name="crunch time correlation" />
+  </AccountCorrelationConfig>
+  <Attributes>
+    <Map>
+      <entry key="Concept.columnNames" />
+      <entry key="Concept.commentCharacter" />
+      <entry key="Concept.delimiter" value="," />
+      <entry key="Concept.file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Concept.csv" />
+      <entry key="Concept.fileEncoding" />
+      <entry key="Concept.filterEmptyRecords">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Concept.filterString" />
+      <entry key="Concept.hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="Concept.indexColumn" />
+      <entry key="Concept.isCaseInsensitiveMerge">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Concept.isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Concept.mergeColumns" />
+      <entry key="Concept.mergeRows">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Concept.numberOfLinesToSkip" />
+      <entry key="Concept.regularExpression" />
+      <entry key="Concept.stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Group.columnNames" />
+      <entry key="Group.commentCharacter" />
+      <entry key="Group.delimiter" value="," />
+      <entry key="Group.file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Group.csv" />
+      <entry key="Group.fileEncoding" />
+      <entry key="Group.filterEmptyRecords">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Group.filterString" />
+      <entry key="Group.hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="Group.indexColumn" />
+      <entry key="Group.isCaseInsensitiveMerge">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Group.isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Group.mergeColumns" />
+      <entry key="Group.mergeRows">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Group.numberOfLinesToSkip" />
+      <entry key="Group.regularExpression" />
+      <entry key="Group.stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.columnNames" />
+      <entry key="HIERARCHY_LOGICALNAME.commentCharacter" />
+      <entry key="HIERARCHY_LOGICALNAME.delimiter" value="," />
+      <entry key="HIERARCHY_LOGICALNAME.file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Logical Name.csv" />
+      <entry key="HIERARCHY_LOGICALNAME.fileEncoding" />
+      <entry key="HIERARCHY_LOGICALNAME.filterEmptyRecords">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.filterString" />
+      <entry key="HIERARCHY_LOGICALNAME.hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.indexColumn" />
+      <entry key="HIERARCHY_LOGICALNAME.isCaseInsensitiveMerge">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.mergeColumns" />
+      <entry key="HIERARCHY_LOGICALNAME.mergeRows">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="HIERARCHY_LOGICALNAME.numberOfLinesToSkip" />
+      <entry key="HIERARCHY_LOGICALNAME.regularExpression" />
+      <entry key="HIERARCHY_LOGICALNAME.stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Location.columnNames" />
+      <entry key="Location.commentCharacter" />
+      <entry key="Location.delimiter" value="," />
+      <entry key="Location.file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Location.csv" />
+      <entry key="Location.fileEncoding" />
+      <entry key="Location.filterEmptyRecords">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Location.filterString" />
+      <entry key="Location.hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="Location.indexColumn" />
+      <entry key="Location.isCaseInsensitiveMerge">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Location.isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Location.mergeColumns" />
+      <entry key="Location.mergeRows">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Location.numberOfLinesToSkip" />
+      <entry key="Location.regularExpression" />
+      <entry key="Location.stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Market.columnNames" />
+      <entry key="Market.commentCharacter" />
+      <entry key="Market.delimiter" value="," />
+      <entry key="Market.file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Market.csv" />
+      <entry key="Market.fileEncoding" />
+      <entry key="Market.filterEmptyRecords">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Market.filterString" />
+      <entry key="Market.hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="Market.indexColumn" />
+      <entry key="Market.isCaseInsensitiveMerge">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Market.isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Market.mergeColumns" />
+      <entry key="Market.mergeRows">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="Market.numberOfLinesToSkip" />
+      <entry key="Market.regularExpression" />
+      <entry key="Market.stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="PassphraseForPrivateKey" value="1:ACP:tmLBi7Q3MB7oHoRy1Z2oBooIFI6sDxcB/hoD/3IWhl8=" />
+      <entry key="PrivateKeyFilePath" />
+      <entry key="acctAggregationEnd">
+        <value>
+          <Date>1717027313289</Date>
+        </value>
+      </entry>
+      <entry key="acctAggregationStart">
+        <value>
+          <Date>1717027207216</Date>
+        </value>
+      </entry>
+      <entry key="afterProvisioningRule" />
+      <entry key="beforeProvisioningRule" />
+      <entry key="buildMapRule" value="Americana-CrunchTime buildmaprule" />
+      <entry key="compositeDefinition" />
+      <entry key="delimiter" value="," />
+      <entry key="file" value="/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/Application Users_new.csv" />
+      <entry key="filetransport" value="sftp" />
+      <entry key="filterEmptyRecords">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="ftpsAuthMethod" value="password" />
+      <entry key="ftpsClientCertificateFilePath" />
+      <entry key="ftpsClientCertificatePassphrase" value="1:ACP:ETq5vXO8OVJWlxqjSS6Fu4yS23eCNqVDckxZriPXYhs=" />
+      <entry key="group.filetransport" value="local" />
+      <entry key="group.filterEmptyRecords">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="group.partitionMode" value="auto" />
+      <entry key="hasHeader">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="host" value="129.148.208.34" />
+      <entry key="indexColumn" value="USER_ID" />
+      <entry key="isCaseInsensitiveMerge">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="isSortedByIndexColumn">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="mergeColumns">
+        <value>
+          <List>
+            <String>LOCATION_CODE</String>
+            <String>USER_GROUP_NAME</String>
+            <String>CONCEPT_CODE</String>
+            <String>MARKET_NAME</String>
+            <String>HIERARCHY_TYPE</String>
+            <String>LOGICAL_NAME</String>
+            <String>HIERARCHY_TYPE(LOGICAL_NAME)</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="mergeRows">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionAttributeScope" value="entitlements" />
+      <entry key="nativeChangeDetectionAttributes" />
+      <entry key="nativeChangeDetectionEnabled">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="nativeChangeDetectionOperations" />
+      <entry key="parseType" value="delimited" />
+      <entry key="partitionMode" value="auto" />
+      <entry key="port" value="5024" />
+      <entry key="sftpAuthMethod" value="password" />
+      <entry key="stopIfLineHasWrongColumnLength">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US" />
+          </Map>
+        </value>
+      </entry>
+      <entry key="templateApplication" value="DelimitedFile Template" />
+      <entry key="transportUser" value="amr_sftp_iam_intg_dev_user" />
+      <entry key="transportUserPassword" value="1:ACP:GURZWfyR//+kdnPOeaLQ+HDIbsjhQSaKJgMDKRprz5o=" />
+    </Map>
+  </Attributes>
+  <CustomizationRule>
+    <Reference class="sailpoint.object.Rule" name="Americana-CrunchTime-custamization rule" />
+  </CustomizationRule>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin" />
+  </Owner>
+  <Schemas>
+    <Schema displayAttribute="USER_ID(USER_GROUP_NAME)" identityAttribute="EMAIL" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="USER_PK" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LAST_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="FIRST_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_ID" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" name="USER_GROUP_NAME" schemaObjectType="Group" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="ACTIVE_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="NEW_HIRE_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_LANGUAGE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="EMAIL" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="TELEPHONE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="EXTENSION" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="HAND_HELD_USER_ID" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="HAND_HELD_ACTIVE_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="TEAMWORX_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="LOCATION_CODE" schemaObjectType="Location" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="MARKET_NAME" schemaObjectType="Market" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="HIERARCHY_TYPE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition multi="true" name="LOGICAL_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="CONSOLIDATED_DASHBOARD_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LIMIT_EXPORT_LOCATIONS_FLAG" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="CONCEPT_CODE" schemaObjectType="Concept" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="BIZIQ_ACCESS_LEVEL" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition entitlement="true" managed="true" multi="true" name="HIERARCHY_TYPE(LOGICAL_NAME)" schemaObjectType="HIERARCHY_LOGICALNAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_ID(USER_GROUP_NAME)" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="CONCEPT_NAME" identityAttribute="CONCEPT_CODE" instanceAttribute="" nativeObjectType="Concept" objectType="Concept" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="CONCEPT_CODE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="CONCEPT_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="USER_GROUP_NAME" identityAttribute="USER_GROUP_NAME" instanceAttribute="" nativeObjectType="Group" objectType="Group" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="USER_GROUP_PK" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="USER_GROUP_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="HIERARCHY(LOGICAL_NAME)" identityAttribute="HIERARCHY(LOGICAL_NAME)" instanceAttribute="" nativeObjectType="HIERARCHY_LOGICALNAME" objectType="HIERARCHY_LOGICALNAME" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="HIERARCHY_TYPE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LOGICAL_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="ROLE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="HIERARCHY(LOGICAL_NAME)" schemaObjectType="HIERARCHY_LOGICALNAME" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="MARKET_NAME" identityAttribute="MARKET_PK" instanceAttribute="" nativeObjectType="Market" objectType="Market" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="MARKET_PK" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="MARKET_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+    <Schema aggregationType="group" descriptionAttribute="" displayAttribute="LOCATION_NAME" identityAttribute="LOCATION_CODE" instanceAttribute="" nativeObjectType="Location" objectType="Location" permissionsRemediationModificationType="None">
+      <AttributeDefinition name="COUNTRY_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="MARKET_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="CONCEPT_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LOCATION_CODE" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LOCATION_NAME" type="string">
+        <Description />
+      </AttributeDefinition>
+      <AttributeDefinition name="LOCATION_ACTIVE" type="string">
+        <Description />
+      </AttributeDefinition>
+    </Schema>
+  </Schemas>
+  <ApplicationScorecard />
+</Application>
+
+</sailpoint>

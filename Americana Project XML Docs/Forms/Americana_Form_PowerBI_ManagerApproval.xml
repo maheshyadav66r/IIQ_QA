@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_ManagerApproval" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="Manager Approval Form for Power BI Access Request" />
+    </Map>
+  </Attributes>
+  <Section columns="2" label="Fetching User Details" name="Fetching User Details" type="datatable">
+    <Attributes>
+      <Map>
+        <entry key="readOnly" value="true" />
+      </Map>
+    </Attributes>
+    <Field displayName="First Name" name="requesterFirstName" />
+    <Field displayName="Last Name" name="requesterLastName" />
+    <Field displayName="Display Name" name="requesterName" />
+    <Field displayName="Email" name="requesterEmail" />
+  </Section>
+  <Section name="Accesses requested in:">
+    <Field displayName="Accesses requested in the following stores:" multi="true" name="storesAR" readOnly="true" type="string">
+      <Script>
+        <Source>
+		  import sailpoint.tools.Util;
+		  if(null != storesAR @and void != storesAR){
+          return storesAR;
+            }
+          </Source>
+      </Script>
+    </Field>
+    <Field displayName="Functions:" multi="true" name="functionalAccess" readOnly="true" type="string">
+      <Script>
+        <Source>
+		  import sailpoint.tools.Util;
+		  if(null != functionalAccess @and void != functionalAccess){
+          return functionalAccess;
+          
+            }
+          </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Section type="text">
+    <Field value="Approval Status" />
+    <Field value="1st Level Approval (Line Manager) - $(managerDisplayName) ($(managerEmail)) - Pending (Status)" />
+    <Field>
+      <Script>
+        <Source>
+          if (!(managerApprover.equals(financeDirector))) {
+          if (null != secondLevelApproverName &amp;&amp; void != secondLevelApproverName)
+          return "2nd Level Approval ($(secondLevelApproverJobTitle)) - $(secondLevelApproverName) ($(secondLevelApproverEmail)) - Pending (Status)";
+          }
+        </Source>
+      </Script>
+    </Field>
+    <Field>
+      <Script>
+        <Source>
+          if (!(managerApprover.equals(financeDirector))) {
+          if (null != thirdLevelApproverName &amp;&amp; void != thirdLevelApproverName)
+          return "3rd Level Approval ($(thirdLevelApproverJobTitle)) - $(thirdLevelApproverName) ($(thirdLevelApproverEmail)) - Pending (Status)";
+          }
+        </Source>
+      </Script>
+    </Field>
+  </Section>
+  <Button action="back" label="Reject" />
+  <Button action="next" label="Approve" />
+</Form>
+
+</sailpoint>

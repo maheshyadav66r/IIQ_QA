@@ -1,0 +1,330 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana_Rule_Get_PowerBI_ApprovalMatrix" type="Validation">
+  <Source>
+  import java.util.*;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.sql.*;
+  import java.io.*;
+  import sailpoint.tools.Util;
+
+  String url = "jdbc:sqlserver://americana-server.database.windows.net:1433;database=BI_UserDB";
+  String username = "BI_UserAccess";
+  String password = "Biuser!@123#";
+  Map approversMap = new HashMap ();
+  String query = null;
+  String slApprName = null;
+  String slApprEmail = null;
+  String slApprUserName = null;
+  String tlApprName = null;
+  String tlApprEmail = null;
+  String tlApprUserName = null;
+  /*
+  String flApprName = null;
+  String flApprEmail = null;
+  String flApprUserName = null;
+  */
+  String financeHeadName = "Ashwini Gupta";
+  String financeHeadEmail = "agupta@americana-food.com";
+  String financeHeadUserName = "27390";
+  /*
+  String corpITLeadName = "Mohamed Hassan Elnagar";
+  String corpITLeadEmail = "mhelnagar@americana-food.com";
+  String corpITLeadUserName = "42740";
+  */
+  String corpCFMName = "Mohamed Hamdy Mohamed";
+  String corpCFMEmail = "mhamohamed@americana-food.com";
+  String corpCFMUserName = "39733";
+  String storeID = null;
+  String restNumber = null;
+  String compNumber = null;
+
+  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+  Connection con = DriverManager.getConnection(url, username, password);
+  
+  //public Map getApproverMatrixMap(List countries, List stores, List function, boolean biLinks, Map itInfra, Map cfm)
+  public Map getApproverMatrixMap(List countries, List stores, List function, boolean biLinks, Map cfm)
+  {
+    System.out.println("Called getApproverMatrixMap");    
+    if (null != countries @and countries.size() == 1) // Access Requested in ONLY 1 Country
+	{
+      System.out.println("In countrysize == 1");    
+    try
+    {
+    if (Util.nullSafeSize(stores) &gt; 0) {
+      System.out.println("In try block");    
+		  for (String eachStoreName : stores) {
+			  ///
+			  int rlength = eachStoreName.split("\\|")[0].split("\\#").length();
+		   
+			///
+		    String rName = eachStoreName.split("\\|")[0].trim();
+            System.out.println("rName in custom rule is : " + rName);
+            String cDesc = eachStoreName.split("\\|")[2].trim();
+            System.out.println("cDesc in custom rule is : " + cDesc);
+			
+			
+			 if(rlength==2){
+ 
+       
+			String storeid=rName.split("\\#")[1].trim(); 
+           query = "SELECT StoreID from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and StoreID=\'" + storeid + "\'";
+            System.out.println("query in custom rule is : " + query);
+        
+       }
+			if(rlength==1){
+			query = "SELECT StoreID from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+            System.out.println("query in custom rule is : " + query);
+      }
+			
+
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(query);
+			while (rs.next())
+			{
+			  storeID = rs.getString("StoreID");
+
+                      if (storeID.length() &gt; 5) {
+                      restNumber = storeID.substring((storeID.length()-5),(storeID.length()));
+                      System.out.println("restNumber in custom rule is :" + restNumber);
+                      if (storeID.length() == 6) {
+                          compNumber = storeID.substring(0,1);
+                          System.out.println("compNumber is in custom rule :" + compNumber);
+                        } else if (storeID.length() == 7) {
+                          compNumber = storeID.substring(0,2);
+                          System.out.println("compNumber is in custom rule :" + compNumber);
+                        }
+                      }
+					  
+			}
+		  }
+		}
+		
+  }
+  catch (Exception e) 
+  {
+        System.out.println("Error e: " +e.getMessage());    
+  }
+  finally 
+  { 
+   try
+   { 
+      if (con != null) 
+        con.close(); 
+   }
+   catch (SQLException e) 
+   { 
+      e.printStackTrace(); 
+   } 
+  }
+	  if (null != function @and !function.contains("P/L")) //Functional access list does not contain P/L
+	  {
+      System.out.println("in fn doesnt contain PL - 1");  
+	  
+	    if (!biLinks) // New user
+		{
+        System.out.println("in false biLinks - 1");    
+    /*    
+		  approversMap.put("slApprName", itInfra.get(compNumber).get("apprName"));
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", itInfra.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", itInfra.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		*/	
+			approversMap.put("slApprName", cfm.get(compNumber).get("apprName"));
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", cfm.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", cfm.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		}
+		else if (biLinks) //Existing user
+		{
+      System.out.println("In true biLinks - 1");    
+      
+		    approversMap.put("slApprName", cfm.get(compNumber).get("apprName"));
+		    System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", cfm.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", cfm.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		}
+	  }
+	  else if (null != function @and function.contains("P/L")) //Functional access list contains P/L
+	  {
+      System.out.println("In fn contains PL - 1");    
+      
+	    if (!biLinks) //New user
+		{
+        System.out.println("In false biLinks - 2");    
+      /*  
+		  approversMap.put("slApprName", itInfra.get(compNumber).get("apprName"));
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", itInfra.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", itInfra.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			*/
+			approversMap.put("slApprName", cfm.get(compNumber).get("apprName"));
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", cfm.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", cfm.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			
+			approversMap.put("tlApprName", financeHeadName);
+			System.out.println("tlApprName is :" + approversMap.get("tlApprName"));
+			
+			approversMap.put("tlApprEmail", financeHeadEmail);
+			System.out.println("tlApprEmail is :" + approversMap.get("tlApprEmail"));
+			
+			approversMap.put("tlApprUserName", financeHeadUserName);
+			System.out.println("tlApprUserName is :" + approversMap.get("tlApprUserName"));
+		}
+		else if (biLinks) //Existing user
+		{
+      System.out.println("in true biLinks - 2");    
+      
+		    approversMap.put("slApprName", cfm.get(compNumber).get("apprName"));
+		    System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", cfm.get(compNumber).get("apprEmail"));
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", cfm.get(compNumber).get("apprUserName"));
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			
+			approversMap.put("tlApprName", financeHeadName);
+			System.out.println("tlApprName is :" + approversMap.get("tlApprName"));
+			
+			approversMap.put("tlApprEmail", financeHeadEmail);
+			System.out.println("tlApprEmail is :" + approversMap.get("tlApprEmail"));
+			
+			approversMap.put("tlApprUserName", financeHeadUserName);
+			System.out.println("tlApprUserName is :" + approversMap.get("tlApprUserName"));
+		}
+	  }
+	}
+	else if (null != countries @and countries.size() &gt; 1) // Access Requested in MORE THAN 1 Countries
+	{
+    System.out.println("In country size &gt; 1");    
+    
+	  if (null != function @and !function.contains("P/L")) //Functional access list does not contain P/L
+	  {
+      System.out.println("In fn doesnt contain PL - 2");    
+	    if (!biLinks) // New user
+		{
+        System.out.println("In false biLinks - 3");    
+      /*  
+		  approversMap.put("slApprName", corpITLeadName);
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpITLeadEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpITLeadUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			*/
+			approversMap.put("slApprName", corpCFMName);
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpCFMEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpCFMUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		}
+		else if (biLinks) //Existing user
+		{
+      System.out.println("In true biLinks - 3");    
+      
+		  approversMap.put("slApprName", corpCFMName);
+		  System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpCFMEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpCFMUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		}
+	  }
+	  else if (null != function @and function.contains("P/L")) //Functional access list contains P/L
+	  {
+      System.out.println("In fn contains PL - 2");    
+      
+	    if (!biLinks) //New user
+		{
+       System.out.println("In false biLinks - 4");     
+     /*   
+		  approversMap.put("slApprName", corpITLeadName);
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpITLeadEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpITLeadUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+		*/	
+			approversMap.put("slApprName", corpCFMName);
+			System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpCFMEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpCFMUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			
+			approversMap.put("tlApprName", financeHeadName);
+			System.out.println("tlApprName is :" + approversMap.get("tlApprName"));
+			
+			approversMap.put("tlApprEmail", financeHeadEmail);
+			System.out.println("tlApprEmail is :" + approversMap.get("tlApprEmail"));
+			
+			approversMap.put("tlApprUserName", financeHeadUserName);
+			System.out.println("tlApprUserName is :" + approversMap.get("tlApprUserName"));
+		}
+		else if (biLinks) //Existing user
+		{
+      System.out.println("In true biLinks - 4");    
+      
+		  approversMap.put("slApprName", corpCFMName);
+		  System.out.println("slApprName is :" + approversMap.get("slApprName"));
+			
+			approversMap.put("slApprEmail", corpCFMEmail);
+			System.out.println("slApprEmail is :" + approversMap.get("slApprEmail"));
+			
+			approversMap.put("slApprUserName", corpCFMUserName);
+			System.out.println("slApprUserName is :" + approversMap.get("slApprUserName"));
+			
+			approversMap.put("tlApprName", financeHeadName);
+			System.out.println("tlApprName is :" + approversMap.get("tlApprName"));
+			
+			approversMap.put("tlApprEmail", financeHeadEmail);
+			System.out.println("tlApprEmail is :" + approversMap.get("tlApprEmail"));
+			
+			approversMap.put("tlApprUserName", financeHeadUserName);
+			System.out.println("tlApprUserName is :" + approversMap.get("tlApprUserName"));
+		}
+	  }
+	}
+    System.out.println("approversMap in custom rule is: " + approversMap);
+	return approversMap;
+  }
+  
+  </Source>
+</Rule>
+
+</sailpoint>

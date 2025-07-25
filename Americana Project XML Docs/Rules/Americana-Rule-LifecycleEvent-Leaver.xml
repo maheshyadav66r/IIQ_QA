@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-Rule-LifecycleEvent-Leaver" type="IdentityTrigger">
+  <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+  <Signature returnType="boolean">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="previousIdentity">
+        <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+      </Argument>
+      <Argument name="newIdentity">
+        <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+          A boolean describing the result of the rule.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>/*
+
+Status is set to ‘Inactive’ and  
+
+Trigger Date: is ‘End date +1’ (Last Working Day +1) in the HCM 
+
+*/
+
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Custom;
+  import sailpoint.object.IdentityRequest;
+
+  import org.apache.log4j.Level;
+  import org.apache.log4j.Logger;
+
+  boolean leaverTriggerFlg = false;
+
+  Logger logger = Logger.getLogger("Americana.Rule.IdentityTrigger.Leaver");
+  logger.setLevel(Level.DEBUG);
+
+  logger.debug("Start Americana-Rule-IdentityTrigger-Leaver");
+
+
+  logger.debug("previousIdentity : "+previousIdentity);
+  logger.debug("newIdentity : "+newIdentity);
+
+  if(null != newIdentity &amp;&amp; previousIdentity != null){
+
+    Custom custom = context.getObject(Custom.class,"Americana-duplicateIdentities");
+    if(custom !=null){
+      Map map = custom.getAttributes().getMap();
+      if(map !=null){
+        List list =  map.get("duplicates");
+        if(list !=null){
+          if(list.contains(newIdentity.getName())){
+            return leaverTriggerFlg;
+          }
+        }
+      }
+    }
+
+
+
+    logger.debug(" previousIdentity revokeUserAccess : "+previousIdentity.getAttribute("revokeUserAccess"));
+    logger.debug("newIdentity revokeUserAccess : "+newIdentity.getAttribute("revokeUserAccess"));
+
+    logger.debug(" previousIdentity Status : "+previousIdentity.getAttribute("status"));
+    logger.debug("newIdentity status : "+newIdentity.getAttribute("status"));
+
+    //immediate Termination
+    if( !("I".equalsIgnoreCase(previousIdentity.getAttribute("revokeUserAccess"))) &amp;&amp; "I".equalsIgnoreCase(newIdentity.getAttribute("revokeUserAccess"))){
+      leaverTriggerFlg = true;
+    }
+    else if("Inactive".equalsIgnoreCase(newIdentity.getAttribute("status")) &amp;&amp; null != newIdentity.getAttribute("endDate")){
+
+      String strEndDate = (String) newIdentity.getAttribute("endDate");
+      logger.debug(" strEndDate : "+strEndDate);
+      SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+      Date endDate = sf.parse(strEndDate);
+      logger.debug(" endDate : "+endDate);
+
+      //check for is user end date is after Go-live or not
+      Date goLiveDate = sf.parse("2023-08-31");
+      if (Util.isDateAfter(endDate,goLiveDate)) {
+
+        int diff = Util.getDaysDifference(new Date(), endDate);
+        logger.debug(" diff : "+diff);
+        if(diff &gt;= 0){
+          leaverTriggerFlg = true;
+        }
+      }
+    }
+  }
+
+
+  logger.debug(" leaverTriggerFlg : "+leaverTriggerFlg);
+
+
+  if(leaverTriggerFlg){
+
+    //check for already same event got trigged in the past or not
+    Filter typeF = Filter.eq("type", "Leaver");
+    Filter userF = Filter.eq("targetId", newIdentity.getId());
+
+    //Date before3daysDate = Util.incrementDateByDays(new Date(), -3);
+    //Filter dateFilter = Filter.ge("created", before3daysDate);
+
+    List cmpStatus = new ArrayList(Arrays.asList(IdentityRequest.CompletionStatus.Pending, IdentityRequest.CompletionStatus.Success,IdentityRequest.CompletionStatus.Incomplete));
+    Filter cmpllF = Filter.in("completionStatus", cmpStatus);
+
+    QueryOptions op = new QueryOptions();
+    op.add(typeF);
+    op.add(userF);
+    op.add(cmpllF);
+    //op.add(dateFilter);
+
+    int  count = context.countObjects(IdentityRequest.class, op);
+    logger.debug(" count : "+count);
+    if(count &gt; 0){
+      leaverTriggerFlg = false;
+      logger.debug("Leaver event already processed/pending...!!");
+    }
+
+  }
+
+  logger.debug(" leaverTriggerFlg : "+leaverTriggerFlg);
+
+  return leaverTriggerFlg;</Source>
+</Rule>
+
+</sailpoint>

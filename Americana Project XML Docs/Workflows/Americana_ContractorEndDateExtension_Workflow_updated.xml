@@ -1,0 +1,877 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow configForm="Provisioning Workflow Config Form" handler="sailpoint.api.StandardWorkflowHandler" libraries="Identity,BatchRequest" name="Americana_ContractorEndDateExtension_Workflow_updated" taskType="LCM" type="LCMRegistration">
+  <Variable initializer="true" name="transient">
+    <Description>
+      Set to false to cause workflow-related objects, such as approval
+      work items, to be saved in the database even if they are only
+      viewed by the person registering.
+    </Description>
+  </Variable>
+  <Variable name="managerEmail" />
+  <Variable input="true" name="batchRequestItemId">
+    <Description>
+      Used by the batch interface to record back individual request item status. The specific item id for the individual request in the batch file.  
+    </Description>
+  </Variable>
+  <Variable name="csvData" />
+  <Variable name="primaryApprover" />
+  <Variable name="secondaryApprover" />
+  <Variable name="primaryApproverName" />
+  <Variable name="primaryApproverEmail" />
+  <Variable name="secondaryApproverName" />
+  <Variable name="secondaryApproverEmail" />
+  <Variable name="launcher" />
+  <Variable name="workItemNotificationTemplate" />
+  <Variable input="true" name="httpSession" transient="true" />
+  <Variable name="endDate" />
+  <Variable editable="true" initializer="true" name="optimisticProvisioning">
+    <Description>
+      Set to true to enable optimistic provisioning.  This will cause
+      changes to the entitlements compiled from role assignments to be 
+      applied immediately to the identity cube rather than waiting
+      for the next refresh/reaggregation after the provisioning system
+      completes the request.
+    </Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="foregroundProvisioning">
+    <Description>
+      Normally provisioning is done in a step that uses the "background"
+      option to force the workflow to be suspend and be resumed in a
+      background task thread.  This prevents the browser session from
+      hanging since provision can sometimes take a long time.  For demos
+      and testing it can be better to do this in the foreground so that
+      provisioning will have been performed when control is returned to the
+      user.  This prevents having to run the Perform Maintenance task to
+      see the results of the request.
+    </Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="doRefresh">
+    <Description>
+      Set to true to cause an identity refresh after the changes in the plan
+      have been provisioned.  This is normally off, you might want this on
+      if you want modification of identity or link attributes to result in
+      an immediate re-evaluation of assigned and detected roles.
+    </Description>
+  </Variable>
+  <Variable initializer="Normal" input="true" name="workItemPriority">
+    <Description>
+      The String version of a WorkItem.Priority. This variable is 
+      used to set the priority on all of the workitems generated 
+      as part of this workflow and also set on the IdentityRequest
+      object.
+    </Description>
+  </Variable>
+  <Variable initializer="requester" input="true" name="notificationScheme">
+    <Description>
+      A string that specifies who should be notified when the request has been complete.
+      The value can be null or a csv of one or more of the following options. 
+
+      none or null
+      disable notifications
+
+      user 
+      Identity that is registering will be notified.
+
+      manager
+      The manager of the Identity that is being updated will be notified.
+
+      securityOfficer
+      The identity named in the variable securityOfficerName will be notified.
+    </Description>
+  </Variable>
+  <Variable initializer="LCM Requester Notification" input="true" name="requesterEmailTemplate" />
+  <Variable initializer="LCM User Notification" input="true" name="userEmailTemplate">
+    <Description>
+      The email template to use for user notification.
+    </Description>
+  </Variable>
+  <Variable initializer="LCM Registration Manager Notification" input="true" name="managerEmailTemplate">
+    <Description>
+      The email template to use for manager notification.
+    </Description>
+  </Variable>
+  <Variable initializer="IdentityCreateRequest" input="true" name="flow" />
+  <Variable initializer="LCM Registration Security Officer Notification" input="true" name="securityOfficerEmailTemplate">
+    <Description>
+      The email template to use for security officer notification.
+    </Description>
+  </Variable>
+  <Variable initializer="serial" input="true" name="approvalMode">
+    <Description>
+      A string that specifies how we should handle the approvals.  
+
+      By default this is serial since most of these request with
+      the exception of manager transfers will have only one approver.
+
+      parallel
+      Approvals are processed concurrently and there must be consensus,
+      we wait for all approvers to approve.  The first approver that
+      rejects terminates the entire approval.
+
+      parallelPoll 
+      Approvals are processed concurrently but consensus is not required.
+      All approvals will be process, we don't stop if there any
+      rejections.  
+
+      serial
+      Approvals are processed one at a time and there must be consensus.
+      The first approver that rejects terminates the entire approval.
+
+      serialPoll
+      Approvals are processed in order but consensus is not required.
+      All approvals will be processed, we don't stop if there are any
+      rejections.  In effect we are "taking a poll" of the approvers.
+
+      any
+      Approvals are processed concurrently, the first approver to 
+      respond makes the decision for the group.
+    </Description>
+  </Variable>
+  <Variable initializer="securityOfficer" input="true" name="approvalScheme">
+    <Description>
+      A csv string that specifies how approvals should be generated for 
+      the incoming request.
+
+      The value can be any of the values below, combined together but
+      are always processed in this order:
+
+      1. manager
+      2. securityOfficer
+
+      Any rejected items from previous approvals will be omitted from the  
+      next phase of approvers.
+
+      none - disabled approvals
+
+      manager - The manager will get all approvals
+
+      securityOfficer - The identity named in the variable securityOfficerName.
+    </Description>
+  </Variable>
+  <Variable initializer="Americana-ContractorApprover-Notification" input="true" name="approvalEmailTemplate">
+    <Description>
+      The email template to use for approval notifications.
+    </Description>
+  </Variable>
+  <Variable initializer="Information Security Officer Group" input="true" name="securityOfficerName">
+    <Description>
+      The name of the identity that will be sent approvals 
+      during security officer approvals.
+    </Description>
+  </Variable>
+  <Variable initializer="Information Security Officer Group" input="true" name="fallbackApprover">
+    <Description>
+      A String that specifies the name of the Identity that will 
+      be assigned any approvals where the owner of the approver 
+      can't be resolved. Example if the scheme is "owner" and the 
+      application doesn't specify and owner.
+    </Description>
+  </Variable>
+  <Variable name="identityModel">
+    <Description>
+      The identity model that is used to represent the identity being created.
+    </Description>
+  </Variable>
+  <Variable initializer="continue" input="true" name="policyScheme">
+    <Description>
+      A String that specifies how policy checks effect the overall
+      process.
+
+      none - disabled policy checking
+
+      fail -  fail and exit the workflow if any policy violations are found
+
+      continue -  continue if policy violations are found
+    </Description>
+  </Variable>
+  <Variable input="true" name="ticketManagementApplication">
+    <Description>
+      Name of the application that can handle ticket requests.
+      When non-null the Manage Ticket Steps will be visited to open
+      tickets during the workflow lifecycle.      
+    </Description>
+  </Variable>
+  <Variable input="true" name="policiesToCheck">
+    <Description>
+      A List of policies that should be checked. If this list is
+      empty all violations will be checked. Used in combination
+      with policyScheme.
+    </Description>
+  </Variable>
+  <Variable initializer="LCM" input="true" name="source">
+    <Description>
+      String version of sailpoint.object.Source to indicate
+      where the request originated.  Defaults to LCM.
+    </Description>
+  </Variable>
+  <Variable initializer="true" name="trace">
+    <Description>
+      Used for debugging this workflow and when set to true trace
+      will be sent to stdout.
+    </Description>
+  </Variable>
+  <Variable input="true" name="approverElectronicSignature">
+    <Description>
+      The name of the electronic signature object that should be used when workitems 
+      are completed by the approver.
+    </Description>
+  </Variable>
+  <Variable name="identityName">
+    <Description>The name of the identity we're creating.</Description>
+  </Variable>
+  <Variable name="identityDisplayName">
+    <Description>
+      The displayName of the identity being updated.
+    </Description>
+  </Variable>
+  <Variable name="confirmationForm">
+    <Description>
+      A form that gets displayed for confirming the registration.
+    </Description>
+  </Variable>
+  <Variable input="true" name="plan">
+    <Description>
+      The ProvisioningPlan that gets generated from the form input.
+    </Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="identityModel">
+    <Description>
+      The identity model that is used to represent the identity being created.
+    </Description>
+  </Variable>
+  <Variable name="ticketId">
+    <Description>
+      The id of the ticket that is generated by the ticketingManagementApplication.
+      This is typically generated on the "open" call, and then used in subsequent 
+      calls.  It is also stored on the IdentityRequest object under the 
+      externalTicketId variable. 
+    </Description>
+  </Variable>
+  <Variable name="policyViolations">
+    <Description> 
+      List of policy violations that were found during our initial policy scan.
+      This list is passed into each work item so the approvers can see 
+      pending violations.
+    </Description>
+  </Variable>
+  <Variable name="endDate" />
+  <Variable name="user" />
+  <Variable name="justification" />
+  <Variable initializer="ref:currentUserName" input="true" name="requester" />
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="Approval Library" />
+    <Reference class="sailpoint.object.Rule" name="LCM Workflow Library" />
+    <Reference class="sailpoint.object.Rule" name="TestRule-accountexpires" />
+    <Reference class="sailpoint.object.Rule" name="Americana_Contractor_Rule_Library" />
+  </RuleLibraries>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="Initialize" />
+  </Step>
+  <Step action="call:getIdentityModel" name="Initialize" posX="98" posY="10" resultVariable="identityModel">
+    <Description>
+      Initialize the data for the identity that we are creating.
+    </Description>
+    <Transition to="Registration Form" />
+  </Step>
+  <Step icon="Approval" name="Registration Form" posX="358" posY="10">
+    <Approval mode="serial" owner="ref:launcher" return="identityModel">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemDescription" value="Self-service registration form" />
+      <Arg name="workItemForm" value="Americana_ContractorEndDateExtension_Form" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="Build Confirmation Form" />
+  </Step>
+  <Step action="call:buildReadOnlyForm" name="Build Confirmation Form" posX="524" posY="10" resultVariable="confirmationForm">
+    <Arg name="helpText" value="End date extension confirmation form" />
+    <Arg name="form" value="Americana_ContractorEndDateExtension_Form" />
+    <Arg name="nextButtonLabel" value="label_confirm" />
+    <Description>
+      Create the confirmation form to be displayed.
+    </Description>
+    <Transition to="Confirmation Form" />
+  </Step>
+  <Step icon="Approval" name="Confirmation Form" posX="738" posY="10">
+    <Approval mode="serial" owner="ref:launcher" return="identityModel">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemDescription" value="Confirmation form" />
+      <Arg name="workItemForm" value="ref:confirmationForm" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+    </Approval>
+    <Description>
+      Display the confirmation form to the registrant.
+    </Description>
+    <Transition to="InitializeModel" when="approved" />
+    <Transition to="Registration Form" when="!approved" />
+  </Step>
+  <Step name="InitializeModel" posX="208" posY="10" resultVariable="appModel">
+    <Description>
+      Initialize the data in the model.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.*;
+        import sailpoint.api.SailPointContext;
+        import sailpoint.transformer.IdentityTransformer;
+        import java.util.*;
+        import java.util.Date;
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
+        log.error("in the step InitializeModel:::::");
+        DateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");	
+        Date nedate =identityModel.get("newEndDate");
+        String newEndDate = dateFormat.format(nedate);
+        wfcontext.setVariable("newEndDate",newEndDate);
+        log.error("new end date is :::"+newEndDate);
+        //String just = identityModel.get("justification");
+        //wfcontext.setVariable("justification",just);
+        //log.error("justification is:::"+justification);
+        // Date startdate =identityModel.get("csdate");
+        // String csdate = dateFormat.format(startdate);
+        // wfcontext.setVariable("start date:",csdate);
+        // log.error("csdate:"+csdate);
+        IdentityTransformer transformer = new IdentityTransformer(context);
+        HashMap model = new HashMap();
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_CLASS, transformer.getClass().getName());
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_OPTIONS, "");
+        model.put("mNum","05");
+        model.put("user",identityModel.get("user"));
+        model.put("endDate",identityModel.get("endDate"));
+        model.put("newEndDate",newEndDate);
+        //model.put("justification",just);
+		
+		/* Added as a part of additional detail changes */
+        model.put("firstname",identityModel.get("firstname"));
+        model.put("lastname",identityModel.get("lastname"));
+        model.put("lastname",identityModel.get("lastname"));
+        model.put("jobTitle",identityModel.get("jobTitle"));
+        model.put("department",identityModel.get("department"));
+        model.put("manager",identityModel.get("manager"));
+      //  model.put("bpmApprovalID",identityModel.get("bpmApprovalID"));
+      //  String approvalLink = identityModel.get("approvalAttachmentLink");
+      //  String updatedAttachmentLink = "";
+      //  if(null != approvalLink @and !"".equalsIgnoreCase(approvalLink)){
+       // 	updatedAttachmentLink = "&lt;a href=\""+approvalLink+"\" target=\"_blank\"&gt;BPM Attachment Link&lt;/a&gt;";
+        //}
+       // model.put("approvalAttachmentLink",updatedAttachmentLink);
+        model.put("justification",identityModel.get("justification"));
+        model.put("otherJustificationReason",identityModel.get("otherJustificationReason"));
+		/* Changes Until Above */
+        workflow.put("identityModel",identityModel);
+        log.error("end of initialize step");
+
+        return model;
+      </Source>
+    </Script>
+    <Transition to="Verify" />
+  </Step>
+  <Step icon="Analysis" name="Verify" posX="904" posY="10">
+    <Arg name="identityName" value="ref:identityName" />
+    <Description>
+      This is a place-holder step where verification of the information could
+      occur before a creation request is launched.  This could potentially call
+      out to an external system to verify some unique information (eg - employeeId)
+      before continuing on.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        log.error("requester is:::"+requester);
+        // String requester=null;
+
+        log.error("user is::"+identityModel.get("user"));
+        Identity managerId=null;
+        Identity reqId=null;
+        String strManager=null;
+        if(requester!=null){
+        log.error("req is::"+requester);
+        reqId=context.getObjectByName(Identity.class, requester);
+        if(reqId!=null){
+        // log.eror("req id not null");
+        managerId=reqId.getManager();
+        if(managerId!=null){
+        strManager=managerId.getName();
+        log.error("strManager is:::"+strManager);
+        wfcontext.setVariable("primaryApprover",strManager);
+		
+		if(managerId.getDisplayName()!=null){
+        
+        wfcontext.setVariable("primaryApproverName",managerId.getDisplayName());
+        }
+        
+        if(managerId.getEmail()!=null){
+        
+        wfcontext.setVariable("primaryApproverEmail",managerId.getEmail());
+        
+        }
+		
+        }
+        }else{
+        wfcontext.setVariable("primaryApprover","spadmin");
+        log.error("entering into else condition");
+        }
+        }
+
+        String deptHead="37984";
+        wfcontext.setVariable("secondaryApprover",deptHead);
+		wfcontext.setVariable("secondaryApproverName","Georgios Perdikouris");
+         wfcontext.setVariable("secondaryApproverEmail","gperdikouris@americana-food.com");
+        log.error("primaryApprover is:::"+primaryApprover);
+        log.error("secondaryApprover is:::"+secondaryApprover);
+        wfcontext.setVariable("identityName",identityModel.get("user"));
+        wfcontext.setVariable("endDate",identityModel.get("endDate"));
+        wfcontext.setVariable("newEndDate",identityModel.get("newEndDate"));
+        log.error("inside workflow variable setting new end date is::::"+newEndDate);
+        wfcontext.setVariable("justification",identityModel.get("justification"));
+        String id =identityName;
+
+        if(identityModel.get("user") !=null) {
+
+
+        Identity ide = context.getObjectByName(Identity.class, identityModel.get("user"));
+        if(ide!=null){
+        Identity manager=ide.getManager();
+        if(manager!=null){
+        String managerEmail = manager.getEmail();
+        wfcontext.setVariable("managerEmail",managerEmail);
+        }
+        }
+        }
+
+      </Source>
+    </Script>
+    <Transition to="getCSV" />
+  </Step>
+  <Step name="getCSV" posX="738" posY="10">
+    <Script>
+      <Source>
+         import org.apache.log4j.Logger;
+
+         String csvData =getCSVFormat(primaryApproverName, primaryApproverEmail, secondaryApproverName, secondaryApproverEmail);
+        wfcontext.setVariable("csvData",csvData);
+      </Source>
+    </Script>
+    <Transition to="getCSVdeptHead" />
+  </Step>
+  <Step name="getCSVdeptHead" posX="738" posY="10">
+    <Script>
+      <Source>
+         import org.apache.log4j.Logger;
+         String csvDatadeptHead =getCSVFormatdeptHead(primaryApproverName, primaryApproverEmail, secondaryApproverName, secondaryApproverEmail);
+        wfcontext.setVariable("csvDatadeptHead",csvDatadeptHead);
+      </Source>
+    </Script>
+    <Transition to="Show Status Message for Approval" when="approved" />
+  </Step>
+  <Step name="Show Status Message for Approval" posX="1104" posY="122">
+    <Arg name="identityName" value="ref:identityName" />
+    <Script>
+      <Source>
+        import javax.faces.application.FacesMessage; 
+        import java.util.List;
+        List currentMessages = httpSession.getAttribute("sailpoint.web.PageCodeBase.sessionMessages");  
+        FacesMessage myMessage = new FacesMessage(FacesMessage.SEVERITY_INFO, "Your request has been submitted successfully.", "This is ignored");  
+        List myMessages = new ArrayList();  
+        myMessages.add(myMessage);  
+        // Overwrite current message list  
+        httpSession.setAttribute("sailpoint.web.PageCodeBase.sessionMessages", myMessages); 
+      </Source>
+    </Script>
+    <Transition to="IDRInitailize" />
+  </Step>
+  <Step icon="Default" name="IDRInitailize" posX="138" posY="13">
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="identityDisplayName" value="ref:identityName" />
+    <Arg name="optimisticProvisioning" value="ref:optimisticProvisioning" />
+    <Arg name="flow" value="AD Contractors EndDateExtension Approval Status" />
+    <Arg name="plan">
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+          import sailpoint.object.ProvisioningPlan.AccountRequest;
+          import sailpoint.object.ProvisioningPlan;
+          import sailpoint.api.Provisioner;
+          
+          Identity idObj =  context.getObjectByName(Identity.class,launcher);
+          
+          ProvisioningPlan plan = new ProvisioningPlan(); 
+          plan.setIdentity(idObj);
+          
+          AccountRequest accReq = new AccountRequest();
+          accReq.setApplication("AD Contractors");
+          accReq.setOp(ProvisioningPlan.ObjectOperation.Modify);
+          accReq.setNativeIdentity(idObj.getName());
+          plan.add(accReq);
+        //  plan = new ProvisioningPlan();
+          return plan;
+        </Source>
+      </Script>
+    </Arg>
+    <Return name="identityRequestId" to="identityRequestId" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Identity Request Initialize" />
+    </WorkflowRef>
+    <Transition to="Notify User1" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Notify User1" posX="1172" posY="184">
+    <Arg name="template" value="Americana-ContractorApprover-EnD Date Extention-userNotification1" />
+    <Arg name="managerEmail" value="ref:managerEmail" />
+    <Arg name="requesterName" value="ref:launcher" />
+    <Arg name="secondaryApproverName" value="ref:secondaryApproverName" />
+    <Arg name="managerDisplayName" value="ref:managerDisplayName" />
+    <Arg name="primaryApproverName" value="ref:primaryApproverName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Arg name="primaryApproverEmail" value="ref:primaryApproverEmail" />
+    <Arg name="secondaryApproverEmail" value="ref:secondaryApproverEmail" />
+    <Arg name="approverName" value="ref:managerDisplayName" />
+    <Transition to="line manager approval" />
+  </Step>
+  <Step icon="Approval" name="line manager approval" posX="738" posY="10">
+    <Approval mode="serial" owner="ref:primaryApprover" return="workItem,appModel" send="appModel,secondaryApprover,primaryApprover,primaryApproverName,secondaryApproverName,primaryApproverEmail,secondaryApproverEmail,csvData">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemDescription">
+        <Script>
+          <Source>
+            String idname= identityModel.get("user");
+            return "Contractor End Date Extension - Manager Approval Form for "+idname;
+
+          </Source>
+        </Script>
+      </Arg>
+      <Arg name="workItemForm" value="Americana_ContractorEndDateExtension_Approval_Form" />
+      <Arg name="workItemFormBasePath" value="appModel" />
+      <Arg name="workItemRequester" value="ref:launcher" />
+      <Arg name="plan" value="ref:plan" />
+      <Arg name="notificationScheme" value="requester" />
+      <Arg name="description" value="ref:workItemDescription" />
+      <Arg name="workItemNotificationTemplate" value="Americana-ContractorApprover-Notification-EndDateExtension-ManagerApprover" />
+    </Approval>
+    <Description>
+      Display the confirmation form to the registrant.
+    </Description>
+    <Transition to="SendRejectionEmail" when="!approved" />
+    <Transition to="user notify2" when="approved">
+      <Script>
+        <Source>
+          import sailpoint.object.Identity;
+          log.error("inside dept head transition");
+          log.error("identityName is:::"+identityName);
+          String id=identityName;
+          String strLicense=null;
+
+          if(id !=null) {
+
+
+          Identity ide = context.getObjectByName(Identity.class, id);
+          if(ide!=null){
+
+          strLicense=ide.getStringAttribute("ContractorLicense");
+          if(strLicense !=null &amp;&amp;(strLicense.contains("Laptop") || strLicense.contains("Email"))){
+          log.error("inside if loop");
+          return true;
+          }
+          }
+          }
+          return false;
+        </Source>
+      </Script>
+    </Transition>
+    <Transition to="SendApprovalEmail" when="approved" />
+    <Transition to="SendRejectionEmail" when="!approved" />
+  </Step>
+  <Step icon="Task" name="SendApprovalEmail">
+    <Arg name="managerEmail" value="ref:managerEmail" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the 
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.EmailOptions;
+        import sailpoint.object.EmailTemplate;
+        import sailpoint.object.*;
+        log.error("inside send Approval email step");
+        List toAddresses=new ArrayList();
+        EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-ContractorEndDateExtension-Approval Email");  
+        if (emailTemplate != null) {
+        try{
+        log.error("users manager email is:::::"+managerEmail);
+        toAddresses.add(managerEmail);
+
+
+        HashMap variables = null;
+        variables = new HashMap();
+variables.put("primaryApproverName",primaryApproverName);
+		variables.put("secondaryApproverName",secondaryApproverName);
+		variables.put("secondaryApproverEmail",secondaryApproverEmail);variables.put("primaryApproverEmail",primaryApproverEmail);
+        variables.put("secondaryApprover",secondaryApprover);
+          variables.put("primaryApprover",primaryApprover);
+        variables.put("newEndDate",newEndDate);
+        variables.put("identityName",identityName);
+        EmailOptions ops = new EmailOptions(toAddresses, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+        }
+        catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="updateEndDate" />
+  </Step>
+  <Step icon="Task" name="SendRejectionEmail">
+    <Arg name="managerEmail" value="ref:managerEmail" />
+    <Description>
+      Add arguments as necessary to enable refresh features.  Typically you only want this
+      to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there
+      are any provisioning forms to display we won't feed them directly to the 
+      current user, they'll have to return to the inbox.
+    </Description>
+    <Script>
+      <Source>
+        import sailpoint.object.EmailOptions;
+        import sailpoint.object.EmailTemplate;
+        import sailpoint.object.*;
+        log.error("inside send Approval email step");
+        List toAddresses=new ArrayList();
+        EmailTemplate emailTemplate = context.getObjectByName(EmailTemplate.class, "Americana-ContractorEndDateExtension-Rejection Email");  
+        if (emailTemplate != null) {
+        try{
+        log.error("users manager email is:::::"+managerEmail);
+        toAddresses.add(managerEmail);
+
+
+        HashMap variables = null;
+        variables = new HashMap();
+
+        variables.put("newEndDate",newEndDate);
+        variables.put("identityName",identityName);
+        EmailOptions ops = new EmailOptions(toAddresses, variables);
+        //ops.setCc("ccmailifany");
+        context.sendEmailNotification(emailTemplate, ops);
+        }
+        catch(Exception e){
+        log.error("Error while sending Mail"+e);  
+        throw new GeneralException(e);
+        }
+        }
+      </Source>
+    </Script>
+    <Transition to="closeIR" />
+  </Step>
+  <Step icon="Default" name="updateEndDate" posX="248" posY="10" resultVariable="identityName">
+    <Script>
+      <Source>
+        import sailpoint.object.Identity;
+        import java.util.*;
+        import java.util.Date;
+        import java.text.DateFormat;
+        import java.text.SimpleDateFormat;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.*;
+        import java.lang.String;
+        import sailpoint.api.Provisioner;
+        import sailpoint.api.*;
+        import sailpoint.object.ProvisioningProject;
+        import sailpoint.api.IdentityService;
+        
+        log.error("inside setting date");
+        String idendDate=null;
+        DateFormat dateFormat = new SimpleDateFormat ("yyyy-MM-dd");	
+        Date nedate =identityModel.get("newEndDate");
+        String strnewEndDate = dateFormat.format(nedate);
+        String identity=identityName;
+        log.error("id name  is:::"+identityName);
+        Identity userId=context.getObjectByName(Identity.class, identity);
+        log.error("userId is:::"+userId);
+
+        if(userId!=null){
+        log.error("userid not nulland end date is :::"+ strnewEndDate);
+				
+        String justification = identityModel.get("justification");
+        String otherJustificationReason = identityModel.get("otherJustificationReason");
+        String newDescription = "";
+        
+        if(null != justification @and !"".equalsIgnoreCase(justification)){
+        	if("Other".equalsIgnoreCase(justification) @and null != otherJustificationReason @and !"".equalsIgnoreCase(otherJustificationReason)){
+        		justification = otherJustificationReason;
+        	}
+        	newDescription = justification;
+       	}
+        
+        userId.setAttribute("endDate",strnewEndDate);
+      userId.setAttribute("status","ACTIVE");
+     userId.setAttribute("disabledDate","");
+        context.saveObject(userId);
+        context.commitTransaction();
+        log.error("setting new end date");
+        idendDate=userId.getAttribute("endDate");
+        String accountExpDate=getAcccountExpiresValue(idendDate);
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(userId);
+				List accountRequestsList = new ArrayList();
+        //IdentityService identityService = new IdentityService(context);
+        //Application adAppObj = context.getObjectByName(Application.class,"AD Contractors");
+        if(null != userId.getLinks()){
+        List linksObject = userId.getLinks();
+        	//List linksObject = identityService.getLinks(userId,adAppObj);
+        	if(null != linksObject @and linksObject.size() &gt; 0){
+        		for(Link link :linksObject){
+        			String description = "";
+        			if(null != link){
+        				if("AD Contractors".equalsIgnoreCase(link.getApplicationName()) || "Active Directory".equalsIgnoreCase(link.getApplicationName())){
+        				 description = link.getAttribute("description");
+        				 if(link.isDisabled()){
+        						AccountRequest acr = new AccountRequest();
+        				 		acr.setApplication(link.getApplicationName());
+        				 		acr.setOperation(AccountRequest.Operation.Enable);
+        						acr.setNativeIdentity(link.getNativeIdentity());
+        				 		acr.add(new AttributeRequest("AC_NewParent",ProvisioningPlan.Operation.Set,"OU=Outsource,OU=Americana Office,DC=Americana,DC=global"));
+        						acr.add(new AttributeRequest("accountExpires", accountExpDate));
+        
+        
+        						if(null != description @and !"".equalsIgnoreCase(description) @and null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							String updatedDescription = newDescription+" || "+description;
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,updatedDescription));
+        						}else if(null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,newDescription));
+        						}
+        						accountRequestsList.add(acr);
+        				 }else{
+        						AccountRequest acr = new AccountRequest();
+        				 		acr.setApplication(link.getApplicationName());
+        				 		acr.setOperation(AccountRequest.Operation.Modify);
+        						acr.setNativeIdentity(link.getNativeIdentity());
+        				 		acr.add(new AttributeRequest("accountExpires", accountExpDate));
+        						if(null != description @and !"".equalsIgnoreCase(description) @and null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							String updatedDescription = newDescription+" || "+description;
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,updatedDescription));
+        						}else if(null != newDescription @and !"".equalsIgnoreCase(newDescription)){
+        							acr.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set,newDescription));
+        						}
+										accountRequestsList.add(acr);        
+        				}
+        }
+        			}
+        		}
+        	}
+        }
+        
+       plan.setAccountRequests(accountRequestsList);
+        log.error("plan is:"+plan.toXml());
+
+        log.error("end of the plan");
+        //  return plan.toXml();
+        Provisioner prov=new Provisioner(context);
+        prov.setNoLocking(true);
+        prov.setOptimisticProvisioning(true);
+        ProvisioningProject project = prov.compile(plan);
+        prov.execute(plan);
+        }
+        return userId.getName();
+      </Source>
+    </Script>
+    <Transition to="closeIR" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="user notify2" posX="890" posY="224">
+    <Arg name="template" value="Americana-ContractorApprover-EnD Date Extention-userNotification2" />
+    <Arg name="managerEmail" value="ref:managerEmail" />
+    <Arg name="requesterName" value="ref:launcher" />
+    <Arg name="secondaryApproverName" value="ref:secondaryApproverName" />
+    <Arg name="managerDisplayName" value="ref:managerDisplayName" />
+    <Arg name="primaryApproverName" value="ref:primaryApproverName" />
+    <Arg name="to" value="script:getEmail(launcher)" />
+    <Arg name="primaryApproverEmail" value="ref:primaryApproverEmail" />
+    <Arg name="secondaryApproverEmail" value="ref:secondaryApproverEmail" />
+    <Arg name="approverName" value="ref:managerDisplayName" />
+    <Transition to="Department Head Approval" />
+  </Step>
+  <Step icon="Approval" name="Department Head Approval" posX="738" posY="10">
+    <Approval mode="serial" owner="ref:secondaryApprover" return="workItem,appModel" send="appModel,secondaryApprover,primaryApprover,primaryApproverName,secondaryApproverName,primaryApproverEmail,secondaryApproverEmail,csvDatadeptHead">
+      <Arg name="workItemDescription">
+        <Script>
+          <Source>
+            String idname= identityModel.get("user");
+            return "Contractor End Date Extension - Second Level Approval Form for "+idname;
+
+          </Source>
+        </Script>
+      </Arg>
+      <Arg name="workItemForm" value="Americana_ContractorEndDateExtension_Second_Level_Approval_Form" />
+      <Arg name="workItemFormBasePath" value="appModel" />
+      <Arg name="workItemRequester" value="ref:launcher" />
+      <Arg name="plan" value="ref:plan" />
+      <Arg name="notificationScheme" value="requester" />
+      <Arg name="description" value="ref:workItemDescription" />
+      <Arg name="workItemNotificationTemplate" value="Americana-ContractorApprover-Notification-EndDateExtension-DeptHeadApprover" />
+    </Approval>
+    <Description>
+      Display the confirmation form to the registrant.
+    </Description>
+    <Transition to="SendApprovalEmail" when="approved" />
+    <Transition to="SendRejectionEmail" when="!approved" />
+    <Transition to="closeIR" />
+  </Step>
+  <Step icon="Default" name="closeIR" posX="289" posY="37">
+    <Script>
+      <Source>
+        import sailpoint.object.*;
+        import sailpoint.object.IdentityRequestItem;
+        import sailpoint.object.TaskResult;
+        import sailpoint.object.ApprovalItem.ProvisioningState;
+        import sailpoint.object.WorkflowSummary.ApprovalSummary;
+
+        IdentityRequest reqId =  context.getObjectByName(IdentityRequest.class,identityRequestId);
+        String taskResultId = reqId.getTaskResultId();
+        TaskResult objectByName = context.getObjectById(TaskResult.class,taskResultId);
+        Object attribute = objectByName.getAttribute("workflowSummary");
+        List apSList = attribute.getInteractions();
+        for(ApprovalSummary apS : apSList){
+        if(null ==  apS.getState()){
+        apS.setEndDate(new Date());
+        if(approved){
+        apS.setState(sailpoint.object.WorkItem.State.Finished);
+        }
+        else {
+        apS.setState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        }
+        }
+        
+        List reqItems =  reqId.getItems();
+        for(IdentityRequestItem reqItem : reqItems){
+        if(approved){
+        reqItem.setProvisioningState(sailpoint.object.ApprovalItem.ProvisioningState.Finished);
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Finished);
+        }
+        else {
+        reqItem.setApprovalState(sailpoint.object.WorkItem.State.Rejected);
+        }
+        }
+        reqId.setApprovalSummaries(attribute.getInteractions());
+        reqId.setCompletionStatus(IdentityRequest.CompletionStatus.Success);
+        reqId.setExecutionStatus(IdentityRequest.ExecutionStatus.Completed);
+        reqId.setState("End");
+        context.saveObject(reqId);
+        context.commitTransaction();
+      </Source>
+    </Script>
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="646" posY="217" />
+</Workflow>
+
+</sailpoint>

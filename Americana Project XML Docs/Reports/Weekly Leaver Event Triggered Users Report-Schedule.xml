@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<TaskDefinition name="Weekly Leaver Event Triggered Users Report-Schedule" resultAction="Rename" subType="Custom Reports" type="LiveReport">
+  <Attributes>
+    <Map>
+      <entry key="TaskDefinition.runLengthAverage" value="11" />
+      <entry key="TaskDefinition.runLengthTotal" value="427" />
+      <entry key="TaskDefinition.runs" value="37" />
+      <entry key="TaskSchedule.host" />
+      <entry key="disableDetail" value="false" />
+      <entry key="disableHeader" value="false" />
+      <entry key="disableSummary" value="false" />
+      <entry key="dontEmailEmptyReport">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="emailFileFormat">
+        <value>
+          <List>
+            <String>PDF</String>
+            <String>CSV</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="emailIdentities">
+        <value>
+          <List>
+            <String>36336</String>
+          </List>
+        </value>
+      </entry>
+      <entry key="enableCsvHeader" value="false" />
+      <entry key="reportColumnOrder" value="PERSON_NUMBER, displayName, status, email, department, jobTitle, gradeCode, managerPersonNumber, managerDisplayName, managerEmail, created" />
+      <entry key="reportSortAsc">
+        <value>
+          <Boolean>true</Boolean>
+        </value>
+      </entry>
+      <entry key="reportSortBy" value="created" />
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="para_spadmin" />
+  </Owner>
+  <Parent>
+    <Reference class="sailpoint.object.TaskDefinition" name="Weekly Leaver Event Triggered Users Report" />
+  </Parent>
+</TaskDefinition>
+
+</sailpoint>

@@ -1,0 +1,446 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="CrunchTime_Provision">
+  <Source>
+  import java.io.BufferedWriter;
+  import java.io.File;
+  import java.io.FileWriter;
+  import java.util.ArrayList;
+  import java.util.List;
+
+
+  import sailpoint.connector.Connector;
+  import sailpoint.object.Application;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.Identity;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.object.Schema;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;  
+  import java.util.Date;  
+  import sailpoint.object.Identity;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Link;
+  import sailpoint.object.Attributes;
+
+  import com.jcraft.jsch.*; 
+  import  com.jcraft.jsch.Session;
+  
+  ProvisioningResult pr = new ProvisioningResult();
+
+
+
+
+
+
+
+  static  uploadToSftp(String localFile, String fileNames){
+    
+
+    String REMOTE_HOST = "129.148.208.34";  
+    String USERNAME = "amr_sftp_iam_intg_dev_user";  
+    String PASSWORD = "SftpIADU#49091";  
+    int REMOTE_PORT = 5024;  
+    int SESSION_TIMEOUT = 10000;  
+    int CHANNEL_TIMEOUT = 10000;  
+
+    // localFile = localFile+"//"+fileNames;
+    //localFile + "/home/users/amr_sftp_iam_intg_dev_user/IAM/Inbound/";
+    String remoteFile = "/IAM/Outbound/"+fileNames;  
+    Session jschSession = null;  
+
+    JSch jsch = new JSch();  
+    jsch.setKnownHosts(REMOTE_HOST);  
+    jschSession = jsch.getSession(USERNAME, REMOTE_HOST, REMOTE_PORT);
+    java.util.Properties config = new java.util.Properties(); 
+    config.put("StrictHostKeyChecking", "no");
+    jschSession.setConfig(config);
+    jschSession.setPassword(PASSWORD);  
+    jschSession.connect(SESSION_TIMEOUT);  
+    Channel sftp = jschSession.openChannel("sftp");  
+    sftp.connect(CHANNEL_TIMEOUT);  
+    ChannelSftp channelSftp = (ChannelSftp) sftp; 
+    
+    String  remoteFileName = channelSftp.getHome()+remoteFile;
+    
+    channelSftp.put(localFile, remoteFileName);  
+    
+    channelSftp.exit();
+  }
+
+
+  /* static  writeToFile(String filepath,String dataToWrite) throws Exception
+  {
+
+    File file = new File(filepath);
+    if(!file.exists()){ 
+      System.out.println(" file : ====="+file);
+      Util.writeFile(filepath,dataToWrite);
+    }
+    System.out.println(" file : ===== "+file);
+    uploadToSftp(filePath,file.getName());
+  }*/
+ System.out.println(" *******************Start CrunchTime_Provision Rule************************ ");
+  System.out.println(" crunchtime plan "+plan.toXml());
+  String filePath = configMap.get("filePath");
+  
+  List acctReqList = plan.getAccountRequests();
+
+  try{
+    boolean removeHierarchy = false;
+    if(Util.nullSafeSize(acctReqList) &gt; 0){
+
+      for(AccountRequest acctReq : acctReqList){
+
+        
+
+
+        Operation operation = acctReq.getOperation();
+
+        String newHireFlag = "";
+        String accReqOpFlag = "";
+        String entAddFlag = "Y";
+        String entRemoveFlag = "N";
+        String firstLine = "H	000000";
+        String saperator = "	";
+        String lineTypeIndicator = "1";
+        String mail = acctReq.getNativeIdentity();
+        String appName = acctReq.getApplicationName();
+        
+
+        Identity  idObj = null;
+        Attributes linkAttributes = null;
+        if(null != mail @and null != appName){
+          Filter filter = Filter.and(Filter.eq("application.name",appName),Filter.eq("nativeIdentity",mail));
+          QueryOptions qr = new QueryOptions();
+          qr.add(filter);
+          Iterator search =  context.search(Link.class,qr, "identity.id,attributes");
+
+          while(search.hasNext()){
+            Object object =  search.next();
+            String idenObjId =  object[0];
+            linkAttributes = object[1];
+            if(null != idenObjId){
+              idObj =  context.getObjectById(Identity.class,idenObjId);
+              System.out.println(" idObj : "+idObj.toXml());
+            }
+          }
+        }
+        
+        String linkLanguage = "";
+        String linkteamworks = "";
+        String linkgroup = "";
+        if(linkAttributes != null){
+           linkLanguage = linkAttributes.get("USER_LANGUAGE");
+           linkteamworks = linkAttributes.get("TEAMWORX_FLAG");
+           linkgroup = linkAttributes.get("USER_GROUP_NAME");
+        }
+		
+		String identityFirstName = "";
+		String identityLastName = "";
+		String identityMail = "";
+		if(idObj != null){
+           identityFirstName = idObj.getFirstname();
+           identityLastName = idObj.getLastname();
+           identityMail = idObj.getEmail();
+        }
+		
+        String[] usermail = mail.split("@");
+        String userId = usermail[0].toUpperCase();
+
+        String userID = acctReq.getAttributeRequest("DisplayName") != null ? acctReq.getAttributeRequest("DisplayName").getValue() : userId;
+        String lastName = acctReq.getAttributeRequest("LAST_NAME") != null ? acctReq.getAttributeRequest("LAST_NAME").getValue() : identityLastName;
+        String firstName = acctReq.getAttributeRequest("FIRST_NAME") != null ? acctReq.getAttributeRequest("FIRST_NAME").getValue() : identityFirstName ;
+        String email = acctReq.getNativeIdentity() != null ? acctReq.getNativeIdentity() : identityMail;
+        String userLanguage = acctReq.getAttributeRequest("USER_LANGUAGE") != null ? acctReq.getAttributeRequest("USER_LANGUAGE").getValue() : linkLanguage;
+        String teamWorkFlag= acctReq.getAttributeRequest("TEAMWORX_FLAG") != null ? acctReq.getAttributeRequest("TEAMWORX_FLAG").getValue() : linkteamworks;
+        
+        //String userLanguage = acctReq.getAttributeRequest("USER_LANGUAGE") != null ? acctReq.getAttributeRequest("USER_LANGUAGE").getValue() : "";
+        //String teamWorkFlag= acctReq.getAttributeRequest("TEAMWORX_FLAG") != null ? acctReq.getAttributeRequest("TEAMWORX_FLAG").getValue() : "";
+        
+        
+        
+        String userNameGroup =  acctReq.getAttributeRequest("USER_GROUP_NAME") != null ? acctReq.getAttributeRequest("USER_GROUP_NAME").getValue() :linkgroup;
+
+        List  locationGroupAdd = new ArrayList();
+        List  locationGroupRemove = new ArrayList();
+        List  marketGroupAdd = new ArrayList();
+        List  marketGroupRemove = new ArrayList();
+        List  conGroupAdd = new ArrayList();
+        List  conGroupRemove = new ArrayList();
+        List  hrtGroupAdd = new ArrayList();
+        List  hrtGroupRemove = new ArrayList();
+
+        List entLists = new ArrayList();
+        entLists.add("LOCATION_CODE");
+        entLists.add("MARKET_NAME");
+        entLists.add("CONCEPT_CODE");
+        entLists.add("HIERARCHY_TYPE(LOGICAL_NAME)");
+
+        for( String entitlement : entLists){
+          List attrReqList = acctReq.getAttributeRequests(entitlement);
+
+          for(AttributeRequest attrReq : attrReqList){
+            List tempEntitlement = new ArrayList();
+            Object  ObjValue =   attrReq.getValue();
+            if(ObjValue instanceof String){
+              tempEntitlement.add(ObjValue);
+            }
+            else  {
+              tempEntitlement = (List) ObjValue;
+            }
+
+            if(ProvisioningPlan.Operation.Remove.equals(attrReq.getOperation())){
+              if("LOCATION_CODE".equalsIgnoreCase(entitlement)){
+                locationGroupRemove.addAll(tempEntitlement);
+                
+              }
+              if("MARKET_NAME".equalsIgnoreCase(entitlement)){
+                System.out.println("MARKET_NAME == "+tempEntitlement);
+                marketGroupRemove.addAll(tempEntitlement);
+              }
+              if("CONCEPT_CODE".equalsIgnoreCase(entitlement)){
+                
+                conGroupRemove.addAll(tempEntitlement);
+              }
+              if("HIERARCHY_TYPE(LOGICAL_NAME)".equalsIgnoreCase(entitlement)){
+                
+                hrtGroupRemove.addAll(tempEntitlement);
+              }
+
+            }else{
+              if("LOCATION_CODE".equalsIgnoreCase(entitlement))
+                locationGroupAdd.addAll(tempEntitlement);
+              if("MARKET_NAME".equalsIgnoreCase(entitlement))
+                marketGroupAdd.addAll(tempEntitlement);
+              if("CONCEPT_CODE".equalsIgnoreCase(entitlement))
+                conGroupAdd.addAll(tempEntitlement);
+              if("HIERARCHY_TYPE(LOGICAL_NAME)".equalsIgnoreCase(entitlement)){
+
+                hrtGroupAdd.addAll(tempEntitlement);
+              }
+            }
+
+          }
+        }
+        if(AccountRequest.Operation.Create.equals(operation)){
+          
+          accReqOpFlag = "Y";
+          newHireFlag="Y";
+
+
+          
+        }
+
+        else if(AccountRequest.Operation.Modify.equals(operation)){
+          
+          accReqOpFlag = "Y";
+          newHireFlag="N";
+
+          
+        }
+        else if(AccountRequest.Operation.Disable.equals(operation)){
+          System.out.println(" **********Start Disable operation ************ ");
+          accReqOpFlag = "N";
+          newHireFlag="N";
+          
+        }
+
+
+        StringBuilder userSB = new StringBuilder();
+
+        userSB.append(firstLine).append("\n");
+        userSB.append(lineTypeIndicator);
+        userSB.append(saperator).append(lastName);
+        userSB.append(saperator).append(firstName);
+        userSB.append(saperator).append(userID);
+        userSB.append(saperator).append(userNameGroup);
+        userSB.append(saperator).append(accReqOpFlag);
+        userSB.append(saperator).append(newHireFlag);
+        userSB.append(saperator).append(userLanguage);
+        userSB.append(saperator).append(email);
+        userSB.append(saperator).append("");
+        userSB.append(saperator).append("");
+        userSB.append(saperator).append("");
+        userSB.append(saperator).append("");
+        userSB.append(saperator).append("");
+        userSB.append(saperator).append(teamWorkFlag);
+        if(AccountRequest.Operation.Disable.equals(operation)){
+            String  disableFullPath = filePath+"//264ApplicationUsers-"+Util.dateToString(new Date(), "yyyyMMddhhmmss")+".txt";
+            File disableFile = new File(disableFullPath);
+            Util.writeFile(disableFullPath,userSB.toString());
+            uploadToSftp(disableFullPath,disableFile.getName());
+            pr.setStatus(ProvisioningResult.STATUS_COMMITTED);
+            return pr;
+          
+        }
+
+        if(AccountRequest.Operation.Create.equals(operation)){
+          import sailpoint.api.PasswordGenerator;
+          import sailpoint.object.PasswordPolicy;
+
+
+          String policyName = "Americana-AD-PasswordPolicy";
+          PasswordPolicy policyAD = context.getObjectByName(PasswordPolicy.class, policyName);
+          String password = new PasswordGenerator(context).generatePassword(policyAD);
+          String temp = "2	"+userID+"	"+password;
+          userSB.append("\n").append(temp);
+        }
+
+        System.out.println(" locationGroupAdd : ===== "+locationGroupAdd);
+        if( Util.nullSafeSize(locationGroupAdd) &gt;0){
+          for(String eachlocationGroup : locationGroupAdd ){
+            String temp = "3	"+userID+"	"+eachlocationGroup+"	"+entAddFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+        
+        if( Util.nullSafeSize(locationGroupRemove) &gt;0){
+          for(String eachlocationGroup : locationGroupRemove ){
+            String temp = "3	"+userID+"	"+eachlocationGroup+"	"+entRemoveFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+        
+        if( Util.nullSafeSize(marketGroupAdd) &gt;0){
+          for(String eachMarketGroup : marketGroupAdd ){
+            String temp = "6	"+userID+"	"+eachMarketGroup+"	"+entAddFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+        
+        if( Util.nullSafeSize(marketGroupRemove) &gt;0){
+          for(String eachMarketGroup : marketGroupRemove ){
+            String temp = "6	"+userID+"	"+eachMarketGroup+"	"+entRemoveFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+        String substring1 = "";
+        String substring2 ="";
+
+        
+        if( Util.nullSafeSize(hrtGroupAdd) &gt;0){
+          for(String eachHrtGroup : hrtGroupAdd ){
+            substring1 = eachHrtGroup.substring(0,eachHrtGroup.indexOf("(")).trim();
+            substring2 = eachHrtGroup.substring(eachHrtGroup.indexOf("(")+1,eachHrtGroup.indexOf(")")).trim();
+
+            String temp = "7	"+userID+"	"+substring1+"	"+substring2+"	"+"	Y"+"	N	"+entAddFlag;
+            userSB.append("\n").append(temp);
+
+
+          }
+        }
+
+        StringBuilder hlSB = new StringBuilder();
+        hlSB.append(firstLine);
+        
+        if( Util.nullSafeSize(hrtGroupRemove) &gt;0){
+          removeHierarchy = true;
+          
+          for(String eachHrtGroup : hrtGroupRemove ){
+            substring1 = eachHrtGroup.substring(0,eachHrtGroup.indexOf("(")).trim();
+            substring2 = eachHrtGroup.substring(eachHrtGroup.indexOf("(")+1,eachHrtGroup.indexOf(")")).trim();
+
+            String temp = "7	"+userID+"	"+substring1+"	"+substring2+"	"+"	Y"+"	N	"+entRemoveFlag;
+
+            hlSB.append("\n").append(temp);
+          }
+        }
+
+        
+        if( Util.nullSafeSize(conGroupAdd) &gt;0){
+          for(String eachMarketGroup : conGroupAdd ){
+            String temp = "8	"+userID+"	"+eachMarketGroup+"	"+entAddFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+        
+        if( Util.nullSafeSize(conGroupRemove) &gt;0){
+          for(String eachMarketGroup : conGroupRemove ){
+            String temp = "8	"+userID+"	"+eachMarketGroup+"	"+entRemoveFlag;
+            userSB.append("\n").append(temp);
+          }
+        }
+
+
+
+
+        
+        String  fullPath = filePath+"//264ApplicationUsers-"+Util.dateToString(new Date(), "yyyyMMddhhmmss")+".txt";
+        
+
+        File file1 = new File(fullPath);
+        if(removeHierarchy){
+          
+          Util.writeFile(file1.getAbsolutePath(),hlSB.toString());
+          uploadToSftp(file1.getAbsolutePath(),file1.getName());
+          sailpoint.tools.Util.sleep(600000);
+          fullPath = filePath+"//264ApplicationUsers-"+Util.dateToString(new Date(), "yyyyMMddhhmmss")+".txt";
+          File file = new File(fullPath);
+          
+          Util.writeFile(file.getAbsolutePath(),userSB.toString());
+          uploadToSftp(file.getAbsolutePath(),file.getName());
+
+
+        }
+        else{
+
+          Util.writeFile(fullPath,userSB.toString());
+          uploadToSftp(fullPath,file1.getName());
+
+        }
+
+
+        /*  File file = new File(fullPath);
+        File file1 = new File(fullPath1);
+        if(!file.exists()){ 
+          System.out.println(" file : ====="+file);
+           System.out.println(" file name : ====="+file.getName());
+          if(removeHierarchy){
+             Util.writeFile(fullPath,hlSB.toString());
+            System.out.println(" hlsb  : ====="+hlSB.toString());
+             uploadToSftp(fullPath,file.getName());
+            System.out.println(" file Name : ====="+file.getName());
+             sailpoint.tools.Util.sleep(1000);
+             Util.writeFile(fullPath1,userSB.toString());
+            System.out.println(" userSb : ====="+userSB.toString());
+             uploadToSftp(fullPath1,file1.getName());
+            System.out.println(" after sleep fullPath : ====="+fullPath);
+          }
+          else{
+             Util.writeFile(fullPath,userSB.toString());
+             uploadToSftp(fullPath,file.getName());
+          }
+        }*/
+
+
+      }
+    }
+
+  }catch(Exception e){
+    System.out.println("  Error messsage  : ======"+e.getMessage());
+    pr.setStatus(ProvisioningResult.STATUS_FAILED);
+    pr.addError(e.getMessage());
+
+
+    return pr;
+  }
+
+  System.out.println(" *******************End CrunchTime_Provision Rule************************ ");
+
+  pr.setStatus(ProvisioningResult.STATUS_COMMITTED);
+  return pr;
+  </Source>
+</Rule>
+
+</sailpoint>

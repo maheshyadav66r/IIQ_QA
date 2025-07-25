@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Custom name="CyberArk-Api-Store-Prod">
+  <Attributes>
+    <Map>
+      <entry key="filterAccountApi" value="https://pam.americana-food.com/PasswordVault/API/Accounts?filter=safeName%20eq%20" />
+      <entry key="safeApi" value="https://pam.americana-food.com/PasswordVault/api/Safes/" />
+      <entry key="userDetailApi" value="https://pam.americana-food.com/PasswordVault/API/Users/" />
+    </Map>
+  </Attributes>
+</Custom>
+
+</sailpoint>

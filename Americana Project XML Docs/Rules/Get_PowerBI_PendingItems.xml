@@ -1,0 +1,191 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Get_PowerBI_PendingItems" type="Validation">
+  <Source>
+  import java.util.*;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.sql.*;
+  import java.io.*;
+  import sailpoint.tools.Util;
+  
+  String empID = "55035055";
+  String displayName = "Mohamed Fathy Nasr";
+  String jobTitle = "Operations Manager";
+  String email = "mfnasr@americana-food.com";
+  String salesFlag = "T";
+  String plFlag = "T" ;
+  String marketingFlag = "T";
+  String userStatus = "T";
+  String costCenter = "0";
+
+  String url = "jdbc:sqlserver://americana-server.database.windows.net:1433;database=BI_UserDB";
+  String username = "BI_UserAccess";
+  String password = "Biuser!@123#";
+  
+/*  
+  String idRName = "0000006202";
+  List idReqItemsList = new ArrayList();
+  List idReqValue = new ArrayList();
+  List removedList = new ArrayList();
+  List unmappedList = new ArrayList();
+  
+  IdentityRequest idReqObj = context.getObjectByName(IdentityRequest.class, idRName);
+ // idReqItemsList = idReqObj.getPendingProvisioning();
+  idReqItemsList = idReqObj.getItems();
+  
+  for (int i=0; i &lt; idReqItemsList.size(); i++)
+  {
+    if ("Microsoft Power BI". equalsIgnoreCase(idReqItemsList.get(i).getApplication())  &amp;&amp; "addGroups".equalsIgnoreCase(idReqItemsList.get(i).getName()))
+    {
+      idReqValue.add(idReqItemsList.get(i).getValue());
+    }
+  }
+*/  
+  
+  List idReqValue = new ArrayList();
+  List removedList = new ArrayList();
+  List unmappedList = new ArrayList();
+ 
+  
+  Custom cObj = context.getObjectByName(Custom.class, "Custom");
+  if (null != cObj)
+  {
+    idReqValue = cObj.getAttributes().get("mfnasr");
+  }
+  
+  Collections.sort(idReqValue);
+  
+    
+  for (int j=0; j &lt; idReqValue.size(); j++)
+  {
+    
+    String value = idReqValue.get(j);
+    
+    /*
+    if (value.contains("'"))
+    {
+      removedList.add(value);
+    }
+    */
+    
+    if (value.contains("Unmapped"))
+    {
+      unmappedList.add(value);
+    }
+  }
+  
+  /*
+  if (null != removedList)
+  idReqValue.removeAll(removedList);
+  */
+  
+  if (null != unmappedList)
+  idReqValue.removeAll(unmappedList);
+  
+  System.out.println("idReqValue size is : " + idReqValue.size());
+  
+    
+  Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+  Connection con = DriverManager.getConnection(url, username, password);
+  
+      
+  try
+  {
+    if(Util.nullSafeSize(idReqValue) &gt; 0) {
+			    String storeID = null;
+          String areaID = null;
+          String chainIDLocal = null;
+          String restNumber = null;
+          String compNumber = null;
+
+                for (int k=0; k &lt; idReqValue.size(); k++) {
+                  String eachStoreName = idReqValue.get(k);
+				            String rName = eachStoreName.split("\\|")[0].trim();
+                    System.out.println("rName is : " + rName);
+                  if (rName.contains("'"))
+                    rName = rName.replace("'", "''");
+                  System.out.println("rName after replace is : " + rName);
+                    String cDesc = eachStoreName.split("\\|")[2].trim();
+                    System.out.println("cDesc is : " + cDesc);
+
+                    query = "SELECT StoreID, AREA_ID, CHAIN_ID_LOCAL from USERDB.DimRestaurant where COUNTRY_DESC=\'"+ cDesc + "\' and [Restaurant Name]=\'" + rName + "\'";
+                    System.out.println("query is : " + query);
+
+                    Statement st = con.createStatement();
+                    ResultSet rs = st.executeQuery(query);
+                    while (rs.next())
+                    {
+				              storeID = rs.getString("StoreID");
+                      areaID = rs.getString("AREA_ID");
+                      chainIDLocal = rs.getString("CHAIN_ID_LOCAL");
+
+                      if (storeID.length() &gt; 5) {
+                        restNumber = storeID.substring((storeID.length()-5),(storeID.length()));
+                        System.out.println("restNumber is :" + restNumber);
+                        if (storeID.length() == 6) {
+                          compNumber = storeID.substring(0,1);
+                          System.out.println("compNumber is :" + compNumber);
+                        } else if (storeID.length() == 7) {
+                          compNumber = storeID.substring(0,2);
+                          System.out.println("compNumber is :" + compNumber);
+                        }
+                      }
+					  
+
+                        insertQuery = "INSERT INTO USERDB.User_Security VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                        System.out.println("insertQuery is :" + insertQuery);
+                        PreparedStatement insertStatement = con.prepareStatement(insertQuery);
+                        insertStatement.setString(1, empID+" - "+displayName+" - ("+jobTitle+")");
+                        insertStatement.setString(2, "A");
+                        insertStatement.setString(3, "F");
+                        insertStatement.setString(4, email);
+                        insertStatement.setInt(5, Integer.valueOf(empID));
+                        insertStatement.setInt(6, Integer.valueOf(compNumber));
+                        insertStatement.setInt(7, Integer.valueOf(restNumber));
+                        insertStatement.setInt(8, Integer.valueOf(chainIDLocal));
+                        insertStatement.setInt(9, Integer.valueOf(areaID));
+                        insertStatement.setString(10, "F");
+                        insertStatement.setString(11, "F");
+                        insertStatement.setString(12, "F");
+                        insertStatement.setString(13, salesFlag);
+                        insertStatement.setString(14, plFlag);
+						            insertStatement.setString(15, marketingFlag);
+                        insertStatement.setString(16, "F");
+                        insertStatement.setString(17, "F");
+                        insertStatement.setString(18, empID+" - "+jobTitle);
+                        insertStatement.setInt(19, Integer.valueOf(empID));
+                        if (null != costCenter)
+                          insertStatement.setInt(20, Integer.valueOf(costCenter));
+                        
+                        insertStatement.setString(21, userStatus);
+                        insertStatement.executeUpdate();
+				  }
+				}
+			  }
+    
+    return "success";
+  }
+  catch (Exception e) 
+  {
+        System.out.println("Val rule Get_PowerBI_PendingItems Error e: " +e.getMessage());    
+  }
+  finally 
+  { 
+   try
+   { 
+      if (con != null) 
+        con.close(); 
+   }
+   catch (SQLException e) 
+   { 
+      e.printStackTrace(); 
+   } 
+  }
+	  
+  
+  </Source>
+</Rule>
+
+</sailpoint>

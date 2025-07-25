@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Power BI_Provisioning">
+  <Source>
+           import sailpoint.api.Provisioner;
+    import sailpoint.api.SailPointContext;
+    import sailpoint.object.*;
+    import sailpoint.object.Filter;
+    import sailpoint.object.QueryOptions;
+    import sailpoint.object.ProvisioningPlan;
+    import sailpoint.object.ProvisioningPlan.AccountRequest;
+    import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+
+
+
+    ProvisioningPlan plan = new ProvisioningPlan();
+    plan.setIdentity(context.getObjectByName(Identity.class, "55034518"));
+    AccountRequest accountRequest = new AccountRequest(AccountRequest.Operation.Modify, "Active Directory", null, "CN=Pizza Hut Taiba Madina,OU=Pizza Hut,OU=Chains,OU=KSA-Office,OU=Americana Office,DC=Americana,DC=global");
+    accountRequest.add(new AttributeRequest("memberOf", ProvisioningPlan.Operation.Add, "CN=BIUserGroup,OU=Groups,OU=Users,OU=UAE-Office,OU=Americana Office,DC=Americana,DC=global"));
+    
+    plan.add(accountRequest);
+    Provisioner pv = new Provisioner(context);
+    pv.setNoCreateTemplates(true);
+    pv.execute(plan);
+
+    return pv.getProject();
+  </Source>
+</Rule>
+
+</sailpoint>

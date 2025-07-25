@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Form name="Americana_Form_PowerBI_HomePageOfOtherUser" type="Workflow">
+  <Attributes>
+    <Map>
+      <entry key="pageTitle" value="User Form for Power BI Access Request" />
+      <entry key="title" value="Provision Access For Power BI" />
+    </Map>
+  </Attributes>
+  <Section label="Choose User" name="Manager Requesting Access">
+    <Field displayName="Request Access For" name="otherUserId" required="true" type="sailpoint.object.Identity" />
+  </Section>
+  <Button action="back" label="Back" />
+  <Button action="next" label="Submit" />
+</Form>
+
+</sailpoint>

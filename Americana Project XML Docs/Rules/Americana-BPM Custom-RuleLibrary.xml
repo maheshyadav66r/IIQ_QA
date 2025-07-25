@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Rule language="beanshell" name="Americana-BPM Custom-RuleLibrary" type="FieldValue">
+  <Description>This rule can be used to generate a field value (eg - an account name) using data from the given Identity. If this rule is run in the context of a workflow step then the arguments passed into the step will also be available. Also, any field values that have been processed so far from the policy related to the Application/Role will be available.</Description>
+  <Source>import sailpoint.object.Identity;
+  import sailpoint.object.Custom;
+  import java.util.Map;
+  import java.util.HashMap;
+
+  
+  public Map getApprovalMap(String approvalLevel, String approver, String approvalStatus){
+	Map approvalMap = new HashMap();  
+    if(null != approvalLevel @and !"".equalsIgnoreCase(approvalLevel) @and null != approver @and !"".equalsIgnoreCase(approver) @and null != approvalStatus @and !"".equalsIgnoreCase(approvalStatus)){
+      if(null != approver){
+      	Identity identity = context.getObjectByName(Identity.class,approver);
+        Custom customObj = context.getObjectByName(Custom.class,"Americana-BPM Custom-Attributes");
+        if(null != identity @and null != customObj){
+        	List tableHeaders = customObj.get("approvalTableHeaders");
+          if(null != tableHeaders @and tableHeaders.size() &gt; 0){
+            for(String header : tableHeaders){
+              if(null != header){
+                if("Approval Level".equalsIgnoreCase(header)){
+                	approvalMap.put(header,approvalLevel);
+                }else if("Approver Name".equalsIgnoreCase(header)){
+                  String displayName = identity.getDisplayName();
+                	approvalMap.put(header,displayName);
+                }else if("Approver Email".equalsIgnoreCase(header)){
+                	String email = identity.getEmail();
+                	approvalMap.put(header,email);
+                }else if("Approval Status".equalsIgnoreCase(header)){
+                	approvalMap.put(header,approvalStatus);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return approvalMap;                   
+  }
+  
+  public String getFormTable(List dataList, List tableHeaders) {
+      if(null != dataList @and dataList.size() &gt; 0 @and null != tableHeaders @and tableHeaders.size() &gt; 0){
+      StringBuilder sb = new StringBuilder();
+    	if(null != tableHeaders @and tableHeaders.size() &gt; 0){
+        sb.append("&lt;table border='1' width='100%'&gt;");
+        sb.append("&lt;tr style='background-color:#E8E8E8;'&gt;");
+        for(String key: tableHeaders){
+          if(null != key){
+          	sb.append("&lt;th style='text-align: center;'&gt;");
+            sb.append(key);
+            sb.append("&lt;/th&gt;");
+          }
+        }
+        sb.append("&lt;/tr&gt;");
+        
+        for(Map approvalData: dataList){
+          sb.append("&lt;tr style='text-align: center;'&gt;");
+        	if(null != approvalData @and approvalData.size() &gt; 0){
+            for(String key : tableHeaders){
+            	sb.append("&lt;td&gt;");
+            sb.append(approvalData.get(key));
+            sb.append("&lt;/td&gt;");
+            }
+          }
+          sb.append("&lt;/tr&gt;");
+        }
+        
+        sb.append("&lt;/table&gt;");
+      }
+      if(null != sb){
+      	return sb.toString();
+      }
+    }
+    return "";
+    }
+  
+                     
+return;
+</Source>
+</Rule>
+
+</sailpoint>

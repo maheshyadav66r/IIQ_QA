@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<TaskDefinition name="Monthly Joiner(s) Report" resultAction="Rename" subType="Custom Reports" type="LiveReport">
+  <Attributes>
+    <Map>
+      <entry key="TaskDefinition.runLengthAverage" value="63" />
+      <entry key="TaskDefinition.runLengthTotal" value="508" />
+      <entry key="TaskDefinition.runs" value="8" />
+      <entry key="TaskSchedule.host" />
+      <entry key="disableDetail" value="false" />
+      <entry key="disableHeader" value="false" />
+      <entry key="disableSummary" value="false" />
+      <entry key="dontEmailEmptyReport">
+        <value>
+          <Boolean />
+        </value>
+      </entry>
+      <entry key="enableCsvHeader" value="false" />
+      <entry key="eventName" value="Americana - Lifecycle Event - Joiner" />
+      <entry key="reportColumnOrder" value="PERSON_NUMBER, displayName, status, email, department, jobTitle, gradeCode, managerPersonNumber, managerDisplayName, managerEmail, eventTriggered Date" />
+    </Map>
+  </Attributes>
+  <Description>Event Triggered User(s) Report</Description>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="americana_spadmin" />
+  </Owner>
+  <Parent>
+    <Reference class="sailpoint.object.TaskDefinition" name="Monthly Event Triggered Users Report" />
+  </Parent>
+</TaskDefinition>
+
+</sailpoint>

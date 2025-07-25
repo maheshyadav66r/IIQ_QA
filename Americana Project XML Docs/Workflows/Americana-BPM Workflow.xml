@@ -1,0 +1,1071 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE sailpoint PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<sailpoint>
+<Workflow configForm="Provisioning Workflow Config Form" explicitTransitions="true" handler="sailpoint.api.StandardWorkflowHandler" libraries="Identity,BatchRequest" name="Americana-BPM Workflow" taskType="LCM" type="LCMRegistration">
+  <Variable initializer="true" name="transient">
+    <Description>Set to false to cause workflow-related objects, such as approval
+      work items, to be saved in the database even if they are only
+      viewed by the person registering.</Description>
+  </Variable>
+  <Variable input="true" name="batchRequestItemId">
+    <Description>Used by the batch interface to record back individual request item status. The specific item id for the individual request in the batch file.</Description>
+  </Variable>
+  <Variable name="launcher" />
+  <Variable name="rejector" />
+  <Variable input="true" name="httpSession" transient="true" />
+  <Variable editable="true" initializer="false" name="optimisticProvisioning">
+    <Description>Set to true to enable optimistic provisioning.  This will cause
+      changes to the entitlements compiled from role assignments to be 
+      applied immediately to the identity cube rather than waiting
+      for the next refresh/reaggregation after the provisioning system
+      completes the request.</Description>
+  </Variable>
+  <Variable editable="true" initializer="false" name="foregroundProvisioning">
+    <Description>Normally provisioning is done in a step that uses the &amp;quot;background&amp;quot;
+      option to force the workflow to be suspend and be resumed in a
+      background task thread.  This prevents the browser session from
+      hanging since provision can sometimes take a long time.  For demos
+      and testing it can be better to do this in the foreground so that
+      provisioning will have been performed when control is returned to the
+      user.  This prevents having to run the Perform Maintenance task to
+      see the results of the request.</Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="doRefresh">
+    <Description>Set to true to cause an identity refresh after the changes in the plan
+      have been provisioned.  This is normally off, you might want this on
+      if you want modification of identity or link attributes to result in
+      an immediate re-evaluation of assigned and detected roles.</Description>
+  </Variable>
+  <Variable name="workItemNotificationTemplate" />
+  <Variable initializer="Normal" input="true" name="workItemPriority">
+    <Description>The String version of a WorkItem.Priority. This variable is 
+      used to set the priority on all of the workitems generated 
+      as part of this workflow and also set on the IdentityRequest
+      object.</Description>
+  </Variable>
+  <Variable initializer="none" input="true" name="notificationScheme">
+    <Description>A string that specifies who should be notified when the request has been complete.
+      The value can be null or a csv of one or more of the following options. 
+
+      none or null
+      disable notifications
+
+      user 
+      Identity that is registering will be notified.
+
+      manager
+      The manager of the Identity that is being updated will be notified.
+
+      securityOfficer
+      The identity named in the variable securityOfficerName will be notified.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Submission_EmailTemplate_User" name="requestSubmissionTemplateForUser" />
+  <Variable initializer="Americana_BPM_Requester_Submission_EmailTemplate" name="requestSubmissionTemplateForRequester" />
+  <Variable initializer="Americana_BPM_Manager_Approval_EmailTemplate" input="true" name="requestApprovalTemplateForManager" />
+  <Variable initializer="Americana_BPM_Manager_Approval_Completion_EmailTemplate" input="true" name="managerApprovalCompletionTemplateForUser">
+    <Description>The email template to use for user notification.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Manager_Approval_Completion_EmailTemplate" input="true" name="itHeadApprovalCompletionTemplateForUser">
+    <Description>The email template to use for manager notification.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Rejection_EmailTemplate" input="true" name="rejectionEmailTemplate">
+    <Description>The email template to use for manager notification.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Success_EmailTemplate" input="true" name="successEmailTemplate">
+    <Description>The email template to use for manager notification.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Manager_Approval_EmailTemplate" input="true" name="requestApprovalTemplateForITHead">
+    <Description>The email template to use for security officer notification.</Description>
+  </Variable>
+  <Variable initializer="Americana_BPM_Failure_EmailTemplate" input="true" name="oracleBPMStatusTemplate">
+    <Description>The email template to use for security officer notification.</Description>
+  </Variable>
+  <Variable initializer="BPM Request" input="true" name="flow" />
+  <Variable initializer="serial" input="true" name="approvalMode">
+    <Description>A string that specifies how we should handle the approvals.  
+
+      By default this is serial since most of these request with
+      the exception of manager transfers will have only one approver.
+
+      parallel
+      Approvals are processed concurrently and there must be consensus,
+      we wait for all approvers to approve.  The first approver that
+      rejects terminates the entire approval.
+
+      parallelPoll 
+      Approvals are processed concurrently but consensus is not required.
+      All approvals will be process, we don&amp;#39;t stop if there any
+      rejections.  
+
+      serial
+      Approvals are processed one at a time and there must be consensus.
+      The first approver that rejects terminates the entire approval.
+
+      serialPoll
+      Approvals are processed in order but consensus is not required.
+      All approvals will be processed, we don&amp;#39;t stop if there are any
+      rejections.  In effect we are &amp;quot;taking a poll&amp;quot; of the approvers.
+
+      any
+      Approvals are processed concurrently, the first approver to 
+      respond makes the decision for the group.</Description>
+  </Variable>
+  <Variable initializer="securityOfficer" input="true" name="approvalScheme">
+    <Description>A csv string that specifies how approvals should be generated for 
+      the incoming request.
+
+      The value can be any of the values below, combined together but
+      are always processed in this order:
+
+      1. manager
+      2. securityOfficer
+
+      Any rejected items from previous approvals will be omitted from the  
+      next phase of approvers.
+
+      none - disabled approvals
+
+      manager - The manager will get all approvals
+
+      securityOfficer - The identity named in the variable securityOfficerName.</Description>
+  </Variable>
+  <Variable input="true" name="securityOfficerName">
+    <Description>The name of the identity that will be sent approvals 
+      during security officer approvals.</Description>
+  </Variable>
+  <Variable initializer="spadmin" input="true" name="fallbackApprover">
+    <Description>A String that specifies the name of the Identity that will 
+      be assigned any approvals where the owner of the approver 
+      can&amp;#39;t be resolved. Example if the scheme is &amp;quot;owner&amp;quot; and the 
+      application doesn&amp;#39;t specify and owner.</Description>
+  </Variable>
+  <Variable name="identityModel">
+    <Description>The identity model that is used to represent the identity being created.</Description>
+  </Variable>
+  <Variable initializer="none" input="true" name="policyScheme">
+    <Description>A String that specifies how policy checks effect the overall
+      process.
+
+      none - disabled policy checking
+
+      fail -  fail and exit the workflow if any policy violations are found
+
+      continue -  continue if policy violations are found</Description>
+  </Variable>
+  <Variable input="true" name="ticketManagementApplication">
+    <Description>Name of the application that can handle ticket requests.
+      When non-null the Manage Ticket Steps will be visited to open
+      tickets during the workflow lifecycle.</Description>
+  </Variable>
+  <Variable input="true" name="policiesToCheck">
+    <Description>A List of policies that should be checked. If this list is
+      empty all violations will be checked. Used in combination
+      with policyScheme.</Description>
+  </Variable>
+  <Variable initializer="LCM" input="true" name="source">
+    <Description>String version of sailpoint.object.Source to indicate
+      where the request originated.  Defaults to LCM.</Description>
+  </Variable>
+  <Variable initializer="true" name="trace">
+    <Description>Used for debugging this workflow and when set to true trace
+      will be sent to stdout.</Description>
+  </Variable>
+  <Variable input="true" name="approverElectronicSignature">
+    <Description>The name of the electronic signature object that should be used when workitems 
+      are completed by the approver.</Description>
+  </Variable>
+  <Variable input="true" name="identityName">
+    <Description>The name of the identity we&amp;#39;re creating.</Description>
+  </Variable>
+  <Variable initializer="script:(identityDisplayName != void) ? identityDisplayName : resolveDisplayName(identityName)" input="true" name="identityDisplayName">
+    <Description>The displayName of the identity being updated.
+      Query for this using a projection query and fall back to the name.</Description>
+  </Variable>
+  <Variable initializer="script:(identityDisplayName != void) ? identityDisplayName : resolveDisplayName(launcher)" input="true" name="requesterDisplayName">
+    <Description>The displayName of the identity being updated.
+      Query for this using a projection query and fall back to the name.</Description>
+  </Variable>
+  <Variable name="confirmationForm">
+    <Description>A form that gets displayed for confirming the registration.</Description>
+  </Variable>
+  <Variable editable="true" initializer="true" name="identityModel">
+    <Description>The identity model that is used to represent the identity being created.</Description>
+  </Variable>
+  <Variable name="ticketId">
+    <Description>The id of the ticket that is generated by the ticketingManagementApplication.
+      This is typically generated on the &amp;quot;open&amp;quot; call, and then used in subsequent 
+      calls.  It is also stored on the IdentityRequest object under the 
+      externalTicketId variable.</Description>
+  </Variable>
+  <Variable name="policyViolations">
+    <Description>List of policy violations that were found during our initial policy scan.
+      This list is passed into each work item so the approvers can see 
+      pending violations.</Description>
+  </Variable>
+  <Variable name="manager" />
+  <Variable initializer="41601" name="ITHeadApprover" />
+  <Variable name="rejectedBy" />
+  <Variable initializer="ref:currentUserName" input="true" name="requester" />
+  <Variable initializer="ref:currentUserName" input="true" name="launcher" />
+  <Variable input="true" name="myAction" />
+  <Variable input="true" name="plan">
+    <Description>The provisioning plan ready to execute.</Description>
+  </Variable>
+  <Variable name="approvalSet">
+    <Description>This attributes is set during the &amp;quot;Build Approval Set&amp;quot; step,
+       which builds this list by going through the ProvisioningPlan
+       to build the line items that need to be approved,
+
+       This variable includes all ApprovalItems that are part of
+       the request process and is updated during the AfterScript
+       of the approval process by assimilating the decisions
+       and comments from the Approvals copy of the ApprovalItem.</Description>
+  </Variable>
+  <Variable name="project">
+    <Description>ProvisioningProject which is just a compiled version of the ProvisioningPlan.</Description>
+  </Variable>
+  <Variable name="identityRequestId" output="true">
+    <Description>The sequence id of the Identity request object which is stored in
+       the name field of the identity request and auto-incremented.</Description>
+  </Variable>
+  <Variable name="workItemComments">
+    <Description>Global comments accumulated during the workflow which should be shared
+      with other approvals. When a new approval is created, the comments in this
+      list will be added to the work item.</Description>
+  </Variable>
+  <Variable name="tableHeaders">
+    <Script>
+      <Source>import sailpoint.object.Custom;
+import java.util.List;
+
+Custom customObj = context.getObjectByName(Custom.class,"Americana-BPM Custom-Attributes");
+if(null != customObj){
+List tableHeaders  = customObj.get("approvalTableHeaders");
+if(null != tableHeaders){
+return tableHeaders;
+}
+}
+
+return "";</Source>
+    </Script>
+  </Variable>
+  <Variable input="true" name="approvalAt" />
+  <RuleLibraries>
+    <Reference class="sailpoint.object.Rule" name="Approval Library" />
+    <Reference class="sailpoint.object.Rule" name="LCM Workflow Library" />
+  </RuleLibraries>
+  <Step icon="Start" name="Start" posX="202" posY="126">
+    <Transition to="Initialize IdentityModel" />
+  </Step>
+  <Step action="call:getIdentityModel" name="Initialize IdentityModel" posX="272" posY="126" resultVariable="identityModel">
+    <Description>
+      Initialize the data for the identity that we are creating.
+    </Description>
+    <Transition to="Registration Form" />
+  </Step>
+  <Step icon="Approval" name="Registration Form" posX="494" posY="126">
+    <Approval mode="serial" name="Registration Form" owner="ref:launcher" return="identityModel,identityName" send="launcher,ITHeadApprover">
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemDescription" value="Oracle BPM - Requestor Form" />
+      <Arg name="workItemForm" value="Americana_BPM_Creation-Form" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="end" when="&quot;!approved&quot;.equals(lastApprovalState)" />
+    <Transition to="Build Confirmation Form" />
+  </Step>
+  <Step action="call:buildReadOnlyForm" name="Build Confirmation Form" posX="660" posY="242" resultVariable="confirmationForm">
+    <Arg name="helpText" value="Oracle BPM - Requestor Form" />
+    <Arg name="form" value="Americana_BPM_Creation-Form" />
+    <Arg name="nextButtonLabel" value="label_confirm" />
+    <Description>
+      Create the confirmation form to be displayed.
+    </Description>
+    <Transition to="Confirmation Form" />
+  </Step>
+  <Step icon="Approval" name="Confirmation Form" posX="874" posY="242">
+    <Approval mode="serial" name="Confirmation Form" owner="ref:launcher" return="identityModel" send="launcher,ITHeadApprover">
+      <AfterScript>
+        <Source>
+        	import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+import sailpoint.object.Identity;
+  import sailpoint.object.WorkItem.State;
+          import sailpoint.object.Custom;
+          
+  String requesterDisplayName = "";        
+try{
+   	if(null != item @and null != item.getState() @and WorkItem.State.Finished.equals(item.getState())){
+			if(null != requestSubmissionTemplateForRequester){
+         
+	  	EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, requestSubmissionTemplateForRequester); 
+         
+			EmailOptions options = new EmailOptions();
+      Identity requesterIdentity = context.getObjectByName(Identity.class,launcher);
+         
+      if(null != requesterIdentity){
+         
+      	options.setVariable("requesterDisplayName", requesterIdentity.getDisplayName());
+          requesterDisplayName = requesterIdentity.getDisplayName();
+         if(null != identityModel.get("approversList")){
+          if(null != tableHeaders){
+          	options.setVariable("tableHeaders",tableHeaders);
+          	options.setVariable("approversList",identityModel.get("approversList"));
+          }
+         
+         }
+      }
+         
+      Identity launcherIdentity = context.getObjectByName(Identity.class,identityModel.get("identityName"));
+      if(null != launcherIdentity){
+        options.setVariable("identityDisplayName", launcherIdentity.getDisplayName());
+      }
+          
+			options.setTo(launcherIdentity.getEmail());
+			context.sendEmailNotification(template, options);
+          
+    }
+          
+    if(null != requestSubmissionTemplateForUser @and null != identityModel.get("identityName") @and null != launcher @and !identityModel.get("identityName").equals(launcher)){
+      String requestFor = identityModel.get("identityName");
+      Identity identityObj = context.getObjectByName(Identity.class,requestFor);
+      if(null != identityObj){
+      	EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, requestSubmissionTemplateForUser); 
+				EmailOptions options = new EmailOptions();
+				options.setVariable("identityDisplayName", identityObj.getDisplayName());
+        options.setVariable("requesterDisplayName", requesterDisplayName);
+          if(null != identityModel.get("approversList")){
+          if(null != tableHeaders){
+          	options.setVariable("tableHeaders",tableHeaders);
+          	options.setVariable("approversList",identityModel.get("approversList"));
+          }
+          }
+				options.setTo(identityObj.getEmail());
+				context.sendEmailNotification(template, options);    
+      }          
+    }
+		}      
+}catch (Exception e) {
+	
+}
+        </Source>
+      </AfterScript>
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemDescription" value="Confirmation form" />
+      <Arg name="workItemForm" value="ref:confirmationForm" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+    </Approval>
+    <Description>
+      Display the confirmation form to the registrant.
+    </Description>
+    <Transition to="Registration Form" when="!approved" />
+    <Transition to="Update IdentityModel and Build Plan" />
+  </Step>
+  <Step name="Update IdentityModel and Build Plan" posX="1040" posY="242" resultVariable="plan">
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Script>
+      <Source>
+				import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.Identity;
+        import sailpoint.object.Filter;
+          import sailpoint.api.SailPointContext;
+          import sailpoint.object.QueryOptions;
+          import sailpoint.object.ManagedAttribute;
+          import java.util.List;
+          import java.util.ArrayList;
+        import sailpoint.object.Link;
+        
+        ProvisioningPlan plan = new ProvisioningPlan();
+        AccountRequest acctReq = new AccountRequest();
+        
+        if(null != identityModel){
+        	
+        	if(null != identityModel.get("identityName")){
+        		Object isRemoveRoles = identityModel.get("isRemoveRoles");
+        		if(void != isRemoveRoles @and null != isRemoveRoles @and !isRemoveRoles @and void != identityModel.get("removeRoles") @and null != identityModel.get("removeRoles")){
+        			identityModel.put("removeRoles",null);
+        		}
+        
+						String user = identityModel.get("identityName");
+        		wfcontext.setVariable("identityName",user);
+        		Identity identityObj = context.getObjectByName(Identity.class,user);
+        		if(null != identityObj){
+        				wfcontext.setVariable("identityDisplayName",identityObj.getDisplayName());
+        				if(null != launcher){
+        					Identity launcherCube = context.getObjectByName(Identity.class,launcher);
+        					if(null != launcherCube){
+        						wfcontext.setVariable("requesterDisplayName",launcherCube.getDisplayName());
+        						Identity managerCube = launcherCube.getManager();
+        					if(null != managerCube){
+        						wfcontext.setVariable("manager",managerCube.getName());
+        					}
+        					}
+      					  
+        				}
+        				
+        				
+        			 List links = identityObj.getLinks();
+        			 boolean oracleAccountExists = false;
+        			 String nativeIdentity = "";
+            	if(null != links @and links.size() &gt; 0) {
+              	for(Link link : links) {
+									if(null != link @and link.getApplicationName().equalsIgnoreCase("Oracle BPM IDCS")){
+        						oracleAccountExists = true;
+        						nativeIdentity = link.getNativeIdentity();
+        						break;
+        					}
+              	}
+            	}
+        
+        			if(oracleAccountExists){
+        				acctReq.setOperation(AccountRequest.Operation.Modify);
+        			}else{
+        				acctReq.setOperation(AccountRequest.Operation.Create);
+        			}	
+        					
+        			if(null != nativeIdentity @and !"".equalsIgnoreCase(nativeIdentity)){
+        				acctReq.setNativeIdentity(nativeIdentity);
+        			}
+        
+        			acctReq.setApplication("Oracle BPM IDCS");
+        			
+        			if(null != identityModel.get("removeRoles")){
+        				Object removedRoles = identityModel.get("removeRoles");
+        				if(null != removedRoles){
+        					List rolesTobeRemoved = new ArrayList();
+        					Filter removeRoleFilter = Filter.in("displayName",removedRoles);
+        					Filter applicationFilter = Filter.eq("application.name","Oracle BPM IDCS");
+        					Filter andFilter = Filter.and(applicationFilter,removeRoleFilter);
+        					QueryOptions qo = new QueryOptions();
+        					qo.addFilter(andFilter);
+        					qo.setCloneResults(true);
+        					Iterator iterator = context.search(ManagedAttribute.class,qo,"value");
+        					while(iterator.hasNext()){
+        						
+        						Object[] objectArray = iterator.next();
+        						if(null != objectArray){
+        							String value = objectArray[0];
+        							if(null != value @and !"".equalsIgnoreCase(value)){
+        							rolesTobeRemoved.add(value);
+        						}
+        						}
+        						
+        					}
+        					
+        					if(null != rolesTobeRemoved @and rolesTobeRemoved.size() &gt; 0){
+        						AttributeRequest removeAttributeRequest = new AttributeRequest("Group",ProvisioningPlan.Operation.Remove,rolesTobeRemoved);
+        						acctReq.add(removeAttributeRequest);
+        					}
+        				}
+        			}
+        
+        			if(null != identityModel.get("addRoles")){
+        				Object addRoles = identityModel.get("addRoles");
+        				if(null != addRoles){
+        					
+        					List rolesTobeAdded = new ArrayList();
+        					Filter addRoleFilter = Filter.in("displayName",addRoles);
+        					Filter applicationFilter = Filter.eq("application.name","Oracle BPM IDCS");
+        					Filter andFilter = Filter.and(applicationFilter,addRoleFilter);
+        					QueryOptions qo = new QueryOptions();
+        					qo.addFilter(andFilter);
+        					qo.setCloneResults(true);
+        					Iterator iterator = context.search(ManagedAttribute.class,qo,"value");
+        					while(iterator.hasNext()){
+        						
+        						Object[] objectArray = iterator.next();
+        						if(null != objectArray){
+        							String value = objectArray[0];
+        							if(null != value @and !"".equalsIgnoreCase(value)){
+        								rolesTobeAdded.add(value);
+        							}
+        						}
+        						
+        					}
+        					
+        					if(null != rolesTobeAdded @and rolesTobeAdded.size() &gt; 0){
+        						AttributeRequest addAttributeRequest = new AttributeRequest("Group",ProvisioningPlan.Operation.Add,rolesTobeAdded);
+        						acctReq.add(addAttributeRequest);
+        					}
+        				}
+        			}
+        
+        			if(null != acctReq){
+        				plan.add(acctReq);
+        				plan.setIdentity(identityObj);
+        			}
+        		}
+        	}
+        }
+       return plan;
+</Source>
+    </Script>
+    <Transition to="Initialize" />
+  </Step>
+  <Step icon="Task" name="Initialize" posX="1350" posY="242">
+    <Arg name="formTemplate" value="Identity Update" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="enableRetryRequest" />
+    <Arg name="allowRequestsWithViolations" />
+    <Arg name="endOnManualWorkItems" />
+    <Arg name="policiesToCheck" value="ref:policiesToCheck" />
+    <Arg name="workItemPriority" value="ref:workItemPriority" />
+    <Arg name="source" value="ref:source" />
+    <Arg name="policyScheme" value="ref:policyScheme" />
+    <Arg name="identityDisplayName" value="ref:identityDisplayName" />
+    <Arg name="requireViolationReviewComments" />
+    <Arg name="identityRequest" />
+    <Arg name="trace" value="ref:trace" />
+    <Arg name="enableApprovalRecommendations" />
+    <Arg name="asyncCacheRefresh" />
+    <Arg name="endOnProvisioningForms" />
+    <Arg name="optimisticProvisioning" value="ref:optimisticProvisioning" />
+    <Arg name="plan" value="ref:plan" />
+    <Arg name="flow" value="ref:flow" />
+    <Arg name="launcher" value="ref:launcher" />
+    <Description>
+      Call the standard subprocess to initialize the request, this includes
+      auditing, building the approvalset, compiling the plan into
+       project and checking policy violations.
+    </Description>
+    <Return name="project" to="project" />
+    <Return name="approvalSet" to="approvalSet" />
+    <Return name="policyViolations" to="policyViolations" />
+    <Return name="identityRequestId" to="identityRequestId" />
+    <Return name="violationReviewDecision" to="violationReviewDecision" />
+    <Return merge="true" name="workItemComments" to="workItemComments" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Identity Request Initialize" />
+    </WorkflowRef>
+    <Transition to="Launch Message" />
+  </Step>
+  <Step name="Launch Message" posX="1460" posY="242">
+    <Arg name="message" value="Request has been submitted" />
+    <Arg name="type" value="Info" />
+    <Description>
+      Display the Launch Message On UI
+    </Description>
+    <Transition to="Line Manager Approval" />
+  </Step>
+  <Step icon="Approval" name="Line Manager Approval" posX="1602" posY="242">
+    <Approval mode="serial" owner="ref:manager" return="myAction" send="identityModel,approvalSet,launcher,ITHeadApprover,myAction">
+      <AfterScript>
+        <Source>
+        	import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+import sailpoint.object.Identity;
+           import sailpoint.workflow.IdentityRequestLibrary;
+          import java.util.List;
+          import java.util.Map;
+          
+                    
+          if ( item == null ) 
+              return;
+
+		try{
+        
+        if(null != item @and null != item.getState() @and null != item.getState().toString()){
+          String workitemState = item.getState().toString();
+          if(null != managerApprovalCompletionTemplateForUser @and null != item.getState() @and "Finished".equalsIgnoreCase(workitemState)){
+          	if(null != identityModel @and null != identityModel.get("approversList")){
+          		List listOfApproversMap = identityModel.get("approversList");
+          		if(null != listOfApproversMap @and listOfApproversMap.size() &gt; 0){
+          			Map managerMap = listOfApproversMap.get(0);
+          			if(null != managerMap){
+          				String approvalStatus = managerMap.get("Approval Status");
+          				managerMap.put("Approval Status","Approved");
+          				listOfApproversMap.set(0,managerMap);
+          				identityModel.put("approversList",listOfApproversMap);
+          			}
+          		}
+          	}
+	  				EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, managerApprovalCompletionTemplateForUser); 
+						EmailOptions options = new EmailOptions();
+          	if(null != identityModel.get("approversList")){
+          	if(null != tableHeaders){
+          		options.setVariable("tableHeaders",tableHeaders);
+          		options.setVariable("approversList",identityModel.get("approversList"));
+          		options.setVariable("approvalLevel","Manager");
+          		options.setVariable("workItem",item);
+          	}
+         	
+         }
+          	if(null != identityName){
+          		Identity userCube = context.getObjectByName(Identity.class,identityName);
+          		if(null != userCube){
+          			options.setVariable("identityDisplayName", userCube.getDisplayName());
+								options.setTo(userCube.getEmail());
+          		}
+          		if(null != identityName @and null != launcher @and !launcher.equalsIgnoreCase(identityName)){
+          			Identity launcherCube = context.getObjectByName(Identity.class,launcher);
+          			options.setCc(launcherCube.getEmail());
+          		}
+          	}
+						
+						context.sendEmailNotification(template, options);
+    			}
+        }  
+		}catch (Exception e) {
+
+		}
+          
+       </Source>
+      </AfterScript>
+      <Arg name="launcher" value="$(launcher)" />
+      <Arg name="requesterDisplayName" value="$(requesterDisplayName)" />
+      <Arg name="workItemDescription" value="Manager Approval For Oracle BPM: $(identityDisplayName)" />
+      <Arg name="workItemRequester" value="$(launcher)" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_BPM_Approval-Form" />
+      <Arg name="workItemNotificationTemplate" value="ref:requestApprovalTemplateForManager" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+      <Arg name="approvalLevel" value="Manager" />
+      <Arg name="approversList" value="ref:identityModel.approversList" />
+      <Arg name="tableHeaders" value="ref:tableHeaders" />
+      <InterceptorScript>
+        <Source>
+            
+            import sailpoint.object.Workflow.Approval;
+            import sailpoint.object.ApprovalItem;
+            import sailpoint.object.ApprovalSet;
+            import sailpoint.object.Workflow;
+            import sailpoint.object.WorkItem;
+            import sailpoint.tools.Util;
+            import java.util.Iterator;
+            import java.util.ArrayList;
+            import java.lang.Boolean;
+
+            if (Workflow.INTERCEPTOR_PRE_ASSIMILATION.equals(method)) {
+                           import sailpoint.workflow.IdentityRequestLibrary;
+         
+                 String workItemStatus  = item.getState().toString();
+         
+          		if("rejected".equalsIgnoreCase(workItemStatus)){
+          			if(null != item.getOwner() @and null != item.getOwner().getDisplayName()){
+          	Identity rejecterIdentity = item.getNotificationOwner(context);
+          				wfcontext.setVariable("rejector",rejecterIdentity.getName());
+          				wfcontext.setVariable("rejectedBy",item.getCompleter());
+          				wfcontext.setVariable("approvalAt","manager");
+          			}
+          				ApprovalSet aset = item.getApprovalSet();
+                if (aset != null) {
+                    List items = aset.getItems();
+                    if (items != null) {
+                        int rejectCount = 0;
+                        for (ApprovalItem item : items) {
+                            // note that isRejected can't be used since that
+                            // assumes no answer means rejected
+          									item.setState(WorkItem.State.Rejected);
+                        }
+                    }
+                }
+         
+         
+        
+          			}else if("Finished".equalsIgnoreCase(workItemStatus)){
+          	ApprovalSet aset = item.getApprovalSet();
+                if (aset != null) {
+                    List items = aset.getItems();
+                    if (items != null) {
+                        int rejectCount = 0;
+                        for (ApprovalItem item : items) {
+                            // note that isRejected can't be used since that
+                            // assumes no answer means rejected
+          									item.setState(WorkItem.State.Finished);
+                        }
+                    }
+                }
+         
+          		}
+				IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+            } else if (Workflow.INTERCEPTOR_START_APPROVAL.equals(method)) {
+
+                ApprovalSet currentSet = approval.getApprovalSet();
+
+                if (currentSet != null &amp;&amp; !Util.isEmpty(currentSet.getItems())) {
+                    //If filterRejects is true, filter any rejected items in the master ApprovalSet from the currentSet
+                    if (Boolean.valueOf(filterRejects)) {
+                        filterRejectsFromApprovalSet(approvalSet, currentSet);
+                    }
+
+                    //We've filtered all items from the approval set
+                    if (Util.isEmpty(currentSet.getItems())) {
+                        //Complete the approval if it contains no ApprovalItems
+                        approval.setComplete(true);
+                    } else {
+
+                        if (Boolean.valueOf(setPreviousApprovalDecisions)) {
+                            // If setPreviousApprovalDecisions is enabled, set the decision
+                            // on the items to that of the global item.
+                            setPreviousDecisionsOnApprovalSet(approvalSet, currentSet);
+                        }
+                    }
+                }
+
+            } else if (Workflow.INTERCEPTOR_END_APPROVAL.equals(method)) {
+                // Owner children approvals need to propagate the rejection state if all children are rejected
+                Approval parentApp = approval.getParent();
+                // Never relay the state to the root approval
+                // If we don't have an approvalSet, must be a container approval
+                if (parentApp != null &amp;&amp; approval.getApprovalSet() == null) {
+                    boolean completeAndRejected = false;
+                    for (Approval child : Util.safeIterable(approval.getChildren())) {
+                        if (child.isComplete() &amp;&amp; child.getState() == WorkItem.State.Rejected) {
+                            completeAndRejected = true;
+                        } else {
+                            completeAndRejected = false;
+                            break;
+                        }
+                    }
+                    //If all children complete and rejected, set the status on the parent approval
+                    if (completeAndRejected) {
+                        approval.setState(WorkItem.State.Rejected);
+                    }
+                }
+            } else if (Workflow.INTERCEPTOR_OPEN_WORK_ITEM.equals(method)) {
+               import sailpoint.workflow.IdentityRequestLibrary;
+
+               //Sync IdentityRequestItems with the WorkItem
+               IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+            }
+            
+        </Source>
+      </InterceptorScript>
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="IT Head Approval" when="approved" />
+    <Transition to="Line Manager Rejection">
+      <Script>
+        <Source>if(!approved @and "Reject".equalsIgnoreCase(myAction)){
+return true;
+}
+return false;</Source>
+      </Script>
+    </Transition>
+  </Step>
+  <Step icon="Approval" name="IT Head Approval" posX="1800" posY="242">
+    <Approval mode="serial" owner="ref:ITHeadApprover" return="myAction" send="identityModel,approvalSet,launcher,ITHeadApprover,myAction">
+      <AfterScript>
+        <Source>
+        	import sailpoint.object.EmailOptions;
+import sailpoint.object.EmailTemplate;
+import sailpoint.object.Identity;
+          
+  
+try{
+		if(null != item @and null != item.getState() @and null != item.getState().toString()){
+          String workitemState = item.getState().toString();
+          if(null != itHeadApprovalCompletionTemplateForUser @and null != item.getState() @and "Finished".equalsIgnoreCase(workitemState)){
+          	if(null != identityModel @and null != identityModel.get("approversList")){
+          		List listOfApproversMap = identityModel.get("approversList");
+          		if(null != listOfApproversMap){
+          			if(listOfApproversMap.size() == 1){
+          				Map managerMap = listOfApproversMap.get(0);
+          				if(null != managerMap){
+          					String approvalStatus = managerMap.get("Approval Status");
+          					managerMap.put("Approval Status","Approved");
+          					listOfApproversMap.set(0,managerMap);
+          identityModel.put("approversList",listOfApproversMap);
+          				}
+          			}else if(listOfApproversMap.size() &gt; 1){
+          				Map managerMap = listOfApproversMap.get(1);
+          				if(null != managerMap){
+          					String approvalStatus = managerMap.get("Approval Status");
+          					managerMap.put("Approval Status","Approved");
+          					listOfApproversMap.set(1,managerMap);
+          identityModel.put("approversList",listOfApproversMap);
+          				}
+          		}
+          	}
+          
+          
+	  				EmailTemplate template = (EmailTemplate) context.getObject(EmailTemplate.class, itHeadApprovalCompletionTemplateForUser); 
+						EmailOptions options = new EmailOptions();
+          	if(null != identityModel.get("approversList")){
+          	if(null != tableHeaders){
+          		options.setVariable("tableHeaders",tableHeaders);
+          		options.setVariable("approversList",identityModel.get("approversList"));
+          		options.setVariable("approvalLevel","Application Owner");
+          		options.setVariable("workItem",item);
+          	}
+         	
+         }
+						if(null != identityName){
+          		Identity userCube = context.getObjectByName(Identity.class,identityName);
+          		if(null != userCube){
+          			options.setVariable("identityDisplayName", userCube.getDisplayName());
+          			options.setTo(userCube.getEmail());
+          		}
+          
+          		if(null != identityName @and null != launcher @and !launcher.equalsIgnoreCase(identityName)){
+          			Identity launcherCube = context.getObjectByName(Identity.class,launcher);
+          			options.setCc(launcherCube.getEmail());
+          		}
+          	}
+						context.sendEmailNotification(template, options);
+    			}
+        }
+          }	
+}catch (Exception e) {
+
+}
+        </Source>
+      </AfterScript>
+      <Arg name="launcher" value="$(launcher)" />
+      <Arg name="workItemDescription" value="Application Owner Approval For Oracle BPM: $(identityDisplayName)" />
+      <Arg name="workItemRequester" value="$(launcher)" />
+      <Arg name="requesterDisplayName" value="$(requesterDisplayName)" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_BPM_Approval-Form" />
+      <Arg name="workItemNotificationTemplate" value="ref:requestApprovalTemplateForITHead" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+      <Arg name="approvalLevel" value="Application Owner" />
+      <Arg name="approversList" value="ref:identityModel.approversList" />
+      <Arg name="tableHeaders" value="ref:tableHeaders" />
+      <InterceptorScript>
+        <Source>
+            
+            import sailpoint.object.Workflow.Approval;
+            import sailpoint.object.ApprovalItem;
+            import sailpoint.object.ApprovalSet;
+            import sailpoint.object.Workflow;
+            import sailpoint.object.WorkItem;
+            import sailpoint.tools.Util;
+            import java.util.Iterator;
+            import java.util.ArrayList;
+            import java.lang.Boolean;
+
+            if (Workflow.INTERCEPTOR_PRE_ASSIMILATION.equals(method)) {
+                           import sailpoint.workflow.IdentityRequestLibrary;
+         
+                 String workItemStatus  = item.getState().toString();
+         
+          		if("rejected".equalsIgnoreCase(workItemStatus)){
+          			if(null != item.getOwner() @and null != item.getOwner().getDisplayName()){
+          	Identity rejecterIdentity = item.getNotificationOwner(context);
+          				wfcontext.setVariable("rejector",rejecterIdentity.getName());
+          				wfcontext.setVariable("rejectedBy",item.getCompleter());
+          				wfcontext.setVariable("approvalAt","application owner");
+          			}
+          				ApprovalSet aset = item.getApprovalSet();
+                if (aset != null) {
+                    List items = aset.getItems();
+                    if (items != null) {
+                        int rejectCount = 0;
+                        for (ApprovalItem item : items) {
+                            // note that isRejected can't be used since that
+                            // assumes no answer means rejected
+          									item.setState(WorkItem.State.Rejected);
+                        }
+                    }
+                }
+         
+         
+        
+          			}else if("Finished".equalsIgnoreCase(workItemStatus)){
+          	ApprovalSet aset = item.getApprovalSet();
+                if (aset != null) {
+                    List items = aset.getItems();
+                    if (items != null) {
+                        int rejectCount = 0;
+                        for (ApprovalItem item : items) {
+                            // note that isRejected can't be used since that
+                            // assumes no answer means rejected
+          									item.setState(WorkItem.State.Finished);
+                        }
+                    }
+                }
+         
+          		}
+				IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+            } else if (Workflow.INTERCEPTOR_START_APPROVAL.equals(method)) {
+
+                ApprovalSet currentSet = approval.getApprovalSet();
+
+                if (currentSet != null &amp;&amp; !Util.isEmpty(currentSet.getItems())) {
+                    //If filterRejects is true, filter any rejected items in the master ApprovalSet from the currentSet
+                    if (Boolean.valueOf(filterRejects)) {
+                        filterRejectsFromApprovalSet(approvalSet, currentSet);
+                    }
+
+                    //We've filtered all items from the approval set
+                    if (Util.isEmpty(currentSet.getItems())) {
+                        //Complete the approval if it contains no ApprovalItems
+                        approval.setComplete(true);
+                    } else {
+
+                        if (Boolean.valueOf(setPreviousApprovalDecisions)) {
+                            // If setPreviousApprovalDecisions is enabled, set the decision
+                            // on the items to that of the global item.
+                            setPreviousDecisionsOnApprovalSet(approvalSet, currentSet);
+                        }
+                    }
+                }
+
+            } else if (Workflow.INTERCEPTOR_END_APPROVAL.equals(method)) {
+                // Owner children approvals need to propagate the rejection state if all children are rejected
+                Approval parentApp = approval.getParent();
+                // Never relay the state to the root approval
+                // If we don't have an approvalSet, must be a container approval
+                if (parentApp != null &amp;&amp; approval.getApprovalSet() == null) {
+                    boolean completeAndRejected = false;
+                    for (Approval child : Util.safeIterable(approval.getChildren())) {
+                        if (child.isComplete() &amp;&amp; child.getState() == WorkItem.State.Rejected) {
+                            completeAndRejected = true;
+                        } else {
+                            completeAndRejected = false;
+                            break;
+                        }
+                    }
+                    //If all children complete and rejected, set the status on the parent approval
+                    if (completeAndRejected) {
+                        approval.setState(WorkItem.State.Rejected);
+                    }
+                }
+            } else if (Workflow.INTERCEPTOR_OPEN_WORK_ITEM.equals(method)) {
+               import sailpoint.workflow.IdentityRequestLibrary;
+
+               //Sync IdentityRequestItems with the WorkItem
+               IdentityRequestLibrary.assimilateWorkItemApprovalSetToIdentityRequest(wfcontext, item.getApprovalSet(), false);
+            }
+            
+        </Source>
+      </InterceptorScript>
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="Provision" when="approved" />
+    <Transition to="Line Manager Rejection" when="!approved" />
+  </Step>
+  <Step icon="Provision" name="Provision" posX="2011" posY="243">
+    <Arg name="formTemplate" value="Identity Update" />
+    <Arg name="approvalScheme" value="string:none" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="fallbackApprover" value="ref:fallbackApprover" />
+    <Arg name="approvalSet" value="ref:approvalSet" />
+    <Arg name="manualActionsEmailTemplate" value="Pending Manual Changes" />
+    <Arg name="workItemComments" value="ref:workItemComments" />
+    <Arg name="workItemPriority" value="ref:workItemPriority" />
+    <Arg name="policyViolations" value="ref:policyViolations" />
+    <Arg name="project" value="ref:project" />
+    <Arg name="identityRequestId" value="ref:identityRequestId" />
+    <Arg name="policyScheme" value="ref:policyScheme" />
+    <Arg name="splitProvisioning" value="ref:splitProvisioning" />
+    <Arg name="saveUnmanagedPlan" />
+    <Arg name="foregroundProvisioning" value="ref:foregroundProvisioning" />
+    <Arg name="noTriggers" value="ref:noTriggers" />
+    <Arg name="identityDisplayName" value="ref:identityDisplayName" />
+    <Arg name="trace" value="ref:trace" />
+    <Arg name="saveUnmanagedPlan_WithProjectArgument" value="ref:saveUnmanagedPlan_WithProjectArgument" />
+    <Arg name="recompile" />
+    <Arg name="optimisticProvisioning" value="ref:optimisticProvisioning" />
+    <Arg name="plan" />
+    <Arg name="flow" value="ref:flow" />
+    <Arg name="launcher" value="ref:launcher" />
+    <Description>
+            Call the standard subprocess that will process the
+            approval decisions and do provisioning.  This
+            includes calling any configured provisioning
+            connectors and building manual actions.
+        </Description>
+    <Return name="project" to="project" />
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Identity Request Provision" />
+    </WorkflowRef>
+    <Transition to="Send Success Email" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Send Success Email" posX="317" posY="64">
+    <Arg name="template" value="ref:successEmailTemplate" />
+    <Arg name="cc">
+      <Script>
+        <Source>if(null != identityName @and null != launcher @and !launcher.equalsIgnoreCase(identityName)){
+getEmail(identityName);
+}
+</Source>
+      </Script>
+    </Arg>
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="to" value="script:getEmail(identityName)" />
+    <Transition to="end" />
+  </Step>
+  <Step icon="Approval" name="Line Manager Rejection" posX="1958" posY="358">
+    <Approval mode="serial" name="Line Manager Rejection" owner="ref:rejector" return="myAction,identityModel" send="identityModel,approvalSet,launcher,ITHeadApprover,myAction">
+      <Arg name="launcher" value="$(launcher)" />
+      <Arg name="requesterDisplayName" value="$(requesterDisplayName)" />
+      <Arg name="workItemDescription" value="Rejection For Oracle BPM: $(identityDisplayName)" />
+      <Arg name="workItemRequester" value="$(launcher)" />
+      <Arg name="workItemType" value="Form" />
+      <Arg name="workItemForm" value="Americana_BPM_Rejection-Form" />
+      <Arg name="workItemFormBasePath" value="identityModel" />
+      <Arg name="approversList" value="ref:identityModel.approversList" />
+      <Arg name="tableHeaders" value="ref:tableHeaders" />
+    </Approval>
+    <Description>
+      Display the registration form to collect information about the registrant.
+    </Description>
+    <Transition to="Line Manager Approval">
+      <Script>
+        <Source>if(!approved @and "manager".equalsIgnoreCase(approvalAt)){
+return true;
+}
+return false;</Source>
+      </Script>
+    </Transition>
+    <Transition to="IT Head Approval">
+      <Script>
+        <Source>if(!approved @and "application owner".equalsIgnoreCase(approvalAt)){
+return true;
+}
+return false;</Source>
+      </Script>
+    </Transition>
+    <Transition to="Send Rejection Email" />
+  </Step>
+  <Step action="call:sendEmail" icon="Email" name="Send Rejection Email" posX="2164" posY="358">
+    <Arg name="template" value="ref:rejectionEmailTemplate" />
+    <Arg name="cc">
+      <Script>
+        <Source>if(null != identityName @and null != launcher @and !launcher.equalsIgnoreCase(identityName)){
+getEmail(identityName);
+}
+</Source>
+      </Script>
+    </Arg>
+    <Arg name="rejectedBy" value="ref:rejectedBy" />
+    <Arg name="requestername" value="ref:launcher" />
+    <Arg name="rejectionComments" value="ref:identityModel.rejectionComments" />
+    <Arg name="to" value="script:getEmail(identityName)" />
+    <Transition to="end" />
+  </Step>
+  <Step catches="complete" icon="Catches" name="Finalize" posX="68" posY="10">
+    <Arg name="identityDisplayName" value="ref:identityDisplayName" />
+    <Arg name="trace" value="ref:trace" />
+    <Arg name="batchRequestItemId" value="ref:batchRequestItemId" />
+    <Arg name="identityName" value="ref:identityName" />
+    <Arg name="autoVerifyIdentityRequest" />
+    <Arg name="approvalSet" value="ref:approvalSet" />
+    <Arg name="ticketManagementApplication" value="ref:ticketManagementApplication" />
+    <Arg name="project" value="ref:project" />
+    <Arg name="workItemPriority" value="ref:workItemPriority" />
+    <Arg name="identityRequestId" value="ref:identityRequestId" />
+    <Arg name="ProvisioningStatusTemplate" value="ref:oracleBPMStatusTemplate" />
+    <Arg name="ticketDataGenerationRule" />
+    <Description>
+      Call the standard subprocess that can audit/finalize the request.
+    </Description>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="Americana-Identity Request Finalize" />
+    </WorkflowRef>
+    <Transition to="end" />
+  </Step>
+  <Step icon="Stop" name="end" posX="740" posY="126" />
+</Workflow>
+
+</sailpoint>
