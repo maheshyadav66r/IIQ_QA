@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doctor Registry</title>
+
+
+<script>
+// Function to save doctor data
+function saveDoctor() {
+  var doctorName = document.getElementById("doctorName").value;
+  var doctorQualification = document.getElementById("doctorQualification").value;
+  var yearsOfExperience = parseInt(document.getElementById("yearsOfExperience").value);
+
+  var doctorData = {
+    doctorName: doctorName,
+    doctorQualification: doctorQualification,
+    yearsOfExperience: yearsOfExperience
+  };
+
+  // Sending the data to the backend
+  fetch('/api/doctor', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(doctorData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Doctor saved successfully:', data);
+    retrieveDoctors(); // Refresh doctor list after saving
+  })
+  .catch(error => {
+    console.error('Error saving doctor:', error);
+  });
+}
+
+// Function to retrieve list of doctors
+function retrieveDoctors() {
+  fetch('/api/doctor')
+  .then(response => response.json())
+  .then(data => {
+    displayDoctors(data);
+  })
+  .catch(error => {
+    console.error('Error retrieving doctors:', error)
+  });
+}
+
+// Function to display list of doctors
+function displayDoctors(doctors) {
+  var doctorList = document.getElementById("doctorList");
+  doctorList.innerHTML = ''; // Clear previous list
+
+  doctors.forEach(function(doctor) {
+    var listItem = document.createElement("li");
+    listItem.textContent = `${doctor.doctorName} - ${doctor.doctorQualification} (${doctor.yearsOfExperience} years of experience)`;
+    doctorList.appendChild(listItem);
+  });
+}
+
+// Initial retrieval of doctors when the page loads
+retrieveDoctors();
+</script>
+</head>
+<body>
+	<h1>Doctor Registry</h1>
+	<h2>Doctor Registration Form</h2>
+	<form id="doctorForm">
+		<div>
+			<label for="doctorName">Doctor Name:</label> <input type="text"
+				id="doctorName" name="doctorName">
+		</div>
+		<div>
+			<label for="doctorQualification">Doctor Qualification:</label> <input
+				type="text" id="doctorQualification" name="doctorQualification">
+		</div>
+		<div>
+			<label for="yearsOfExperience">Years of Experience:</label> <input
+				type="number" id="yearsOfExperience" name="yearsOfExperience">
+		</div>
+		<button type="button" onclick="saveDoctor()">Save</button>
+	</form>
+
+
+</body>
+</html>
