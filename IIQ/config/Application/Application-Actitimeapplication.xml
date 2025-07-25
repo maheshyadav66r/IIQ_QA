@@ -1,0 +1,1609 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.webservices.WebServicesConnector" featuresString="PROVISIONING, ENABLE, PASSWORD, AUTHENTICATE, UNLOCK, ACCOUNT_ONLY_REQUEST" name="ActiTimeApplication" profileClass="" significantModified="1744808008178" type="Web Services">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="acctAggregationEnd">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1744800743184</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="acctAggregationStart">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1744800741571</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="afterProvisioningRule" value="AfterProvisioningRule"/>
+                              
+            
+            <entry key="aggregationPartitioned">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="aggregationType" value="account"/>
+                              
+            
+            <entry key="authenticationMethod" value="BasicLogin"/>
+                              
+            
+            <entry key="beforeProvisioningRule" value="BeforeProvisioningRule"/>
+                              
+            
+            <entry key="clientCertAuthEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="compositeDefinition"/>
+                              
+            
+            <entry key="connectionParameters">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users/me"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="GET"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Test Connection"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj"/>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="1"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="ActiTime Test Connection"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="GET"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Account Aggregation"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="active" value="active"/>
+                                                                                                    
+                                        
+                                        <entry key="canSubmitTimetrack" value="allowedActions.canSubmitTimetrack"/>
+                                                                                                    
+                                        
+                                        <entry key="departmentId" value="departmentId"/>
+                                                                                                    
+                                        
+                                        <entry key="email" value="email"/>
+                                                                                                    
+                                        
+                                        <entry key="firstName" value="firstName"/>
+                                                                                                    
+                                        
+                                        <entry key="fullName" value="fullName"/>
+                                                                                                    
+                                        
+                                        <entry key="hired" value="hired"/>
+                                                                                                    
+                                        
+                                        <entry key="id" value="id"/>
+                                                                                                    
+                                        
+                                        <entry key="lastName" value="lastName"/>
+                                                                                                    
+                                        
+                                        <entry key="username" value="username"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath" value="$.items[*]"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="2"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="ActiTime Account Aggrgation"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule" value="CreateAccount AfterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule" value="createAccount BeforeRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody" value="{&#13;&#10;  &quot;username&quot;:&quot;$plan.username$&quot;,&#13;&#10;  &quot;active&quot;:true,&#13;&#10;  &quot;firstName&quot;:&quot;$plan.firstName$&quot;,&#13;&#10;  &quot;lastName&quot;:&quot;$plan.lastName$&quot;,&#13;&#10;  &quot;email&quot;:&quot;$paln.email$&quot;,&#13;&#10;  &quot;password&quot;:&quot;Eshiam@1045&quot;&#13;&#10;}"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="POST"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Create Account"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="active" value="active"/>
+                                                                                                    
+                                        
+                                        <entry key="email" value="email"/>
+                                                                                                    
+                                        
+                                        <entry key="firstName" value="firstName"/>
+                                                                                                    
+                                        
+                                        <entry key="fullName" value="fullName"/>
+                                                                                                    
+                                        
+                                        <entry key="hired" value="hired"/>
+                                                                                                    
+                                        
+                                        <entry key="id" value="id"/>
+                                                                                                    
+                                        
+                                        <entry key="lastName" value="lastName"/>
+                                                                                                    
+                                        
+                                        <entry key="username" value="username"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath" value="$"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="3"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="ActiTime Account  create"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule" value="GetObj-ActiTime-BeforeOpRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users/$getobject.nativeIdentity$"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="GET"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Get Object"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="active" value="active"/>
+                                                                                                    
+                                        
+                                        <entry key="canSubmitTimetrack" value="allowedActions.canSubmitTimetrack"/>
+                                                                                                    
+                                        
+                                        <entry key="departmentId" value="departmentId"/>
+                                                                                                    
+                                        
+                                        <entry key="email" value="email"/>
+                                                                                                    
+                                        
+                                        <entry key="firstName" value="firstName"/>
+                                                                                                    
+                                        
+                                        <entry key="fullName" value="fullName"/>
+                                                                                                    
+                                        
+                                        <entry key="hired" value="hired"/>
+                                                                                                    
+                                        
+                                        <entry key="id" value="id"/>
+                                                                                                    
+                                        
+                                        <entry key="lastName" value="lastName"/>
+                                                                                                    
+                                        
+                                        <entry key="username" value="username"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath" value="$"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="4"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="ActiTime Single Account  Aggregation"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody" value="{&#13;&#10;&quot;active&quot;:true&#13;&#10;}"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users/$plan.nativeIdentity$"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="PATCH"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Enable Account"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="active" value="active"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="5"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="Actitime account enabling"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="afterRule"/>
+                                                                      
+                            
+                            <entry key="beforeRule"/>
+                                                                      
+                            
+                            <entry key="body">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormData"/>
+                                                                                                    
+                                        
+                                        <entry key="bodyFormat" value="raw"/>
+                                                                                                    
+                                        
+                                        <entry key="jsonBody" value="{&#13;&#10;&quot;active&quot;:false&#13;&#10;}"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="contextUrl" value="/users/$plan.nativeIdentity$"/>
+                                                                      
+                            
+                            <entry key="curlCommand"/>
+                                                                      
+                            
+                            <entry key="curlEnabled">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="customAuthUrl"/>
+                                                                      
+                            
+                            <entry key="header"/>
+                                                                      
+                            
+                            <entry key="httpMethodType" value="PATCH"/>
+                                                                      
+                            
+                            <entry key="operationType" value="Disable Account"/>
+                                                                      
+                            
+                            <entry key="paginationSteps"/>
+                                                                      
+                            
+                            <entry key="pagingInitialOffset">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>0</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="pagingSize">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Integer>50</Integer>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="parentEndpointName"/>
+                                                                      
+                            
+                            <entry key="resMappingObj">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="active" value="active"/>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="responseCode">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <List>
+                                                                                                    
+                                        
+                                        <String>200</String>
+                                                                                                  
+                                    
+                                    </List>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="rootPath"/>
+                                                                      
+                            
+                            <entry key="sequenceNumberForEndpoint" value="6"/>
+                                                                      
+                            
+                            <entry key="uniqueNameForEndPoint" value="Actitime account disabling"/>
+                                                                      
+                            
+                            <entry key="xpathNamespaces"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="createAccountWithEntReq">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="enableHasMore" value="true"/>
+                              
+            
+            <entry key="enableStatus" value="active=true"/>
+                              
+            
+            <entry key="encrypted" value="accesstoken,refresh_token,oauth_token_info,client_secret,private_key,private_key_password,clientCertificate,clientKeySpec,resourceOwnerPassword,custom_auth_token_info"/>
+                              
+            
+            <entry key="fixedPlanMultivaluedAttribute" value="true"/>
+                              
+            
+            <entry key="genericWebServiceBaseUrl" value="https://online.actitime.com/eshiam10/api/v1"/>
+                              
+            
+            <entry key="httpCookieSpecsStandard" value="true"/>
+                              
+            
+            <entry key="isGetObjectRequiredForPTA">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="lastAggregationDate_account" value="2025-04-16T10:52:23Z"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributes"/>
+                              
+            
+            <entry key="nativeChangeDetectionEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionOperations"/>
+                              
+            
+            <entry key="oAuthJwtHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="alg" value="RS256"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="oAuthJwtPayload">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="aud"/>
+                                                            
+                        
+                        <entry key="exp" value="15f"/>
+                                                            
+                        
+                        <entry key="iss"/>
+                                                            
+                        
+                        <entry key="sub"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="password" value="1:ACP:VpSt+UWCYULAXZQkTgBl5XCqYTEgMJPjVLR1M1yczfg="/>
+                              
+            
+            <entry key="private_key_to_update"/>
+                              
+            
+            <entry key="saml_assertion_url"/>
+                              
+            
+            <entry key="saml_request_body"/>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="templateApplication" value="Web Services"/>
+                              
+            
+            <entry key="throwProvAfterRuleException">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="throwProvBeforeRuleException">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="timeoutInSeconds"/>
+                              
+            
+            <entry key="username" value="mahesh.nattali1"/>
+                              
+            
+            <entry key="version" value="v2"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+          
+    
+    <ProvisioningForms>
+                    
+        
+        <Form name="ActiTimeCreateForm" objectType="account" type="Create">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="pageTitle" value="ActiTimeCreateForm"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Section name="Basic Credentials">
+                                        
+                
+                <Field displayName="username" name="username" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getDisplayName();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="fullName" name="fullName" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getFirstname()+" "+identity.getLastname();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="firstName" name="firstName" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getFirstname();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="lastName" name="lastName" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getLastname();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="departmentId" name="departmentId" type="string">
+                                                  
+                    
+                    <AllowedValuesDefinition>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[return identity.getAttribute("department");]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </AllowedValuesDefinition>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="hired" name="hired" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[String startDate=identity.getAttribute("JoiningDate");
+return startDate!=null?startDate:" ";]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="email" name="email" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getAttribute("email");]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="password" name="password" type="string" value="Eshiam@1045"/>
+                                        
+                
+                <Field displayName="active" name="active" type="string" value="true"/>
+                                      
+            
+            </Section>
+                            
+        
+        </Form>
+                  
+    
+    </ProvisioningForms>
+          
+    
+    <Schemas>
+                    
+        
+        <Schema displayAttribute="fullName" groupAttribute="" identityAttribute="id" instanceAttribute="" nativeObjectType="user" objectType="account" significantModified="1744808008178">
+                              
+            
+            <AttributeDefinition name="id" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="username" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="firstName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="lastName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="departmentId" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="email" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="hired" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="fullName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="canSubmitTimetrack" type="boolean">
+                                        
+                
+                <Description>canSubmitTimetrack</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="active" type="boolean">
+                                        
+                
+                <Description>active</Description>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema descriptionAttribute="" displayAttribute="" identityAttribute="" instanceAttribute="" nativeObjectType="group" objectType="group" significantModified="1744808008178"/>
+                  
+    
+    </Schemas>
+          
+    
+    <ApplicationScorecard significantModified="1744808008178"/>
+        
+
+</Application>

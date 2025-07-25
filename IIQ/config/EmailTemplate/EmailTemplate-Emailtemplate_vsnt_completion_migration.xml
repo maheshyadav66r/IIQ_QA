@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate bcc="idm.auto-mailer@nbcuni.com" name="EmailTemplate_VSNT_Completion_Migration" to="$ToAddress">
+          
+    
+    <Body>
+
+  
+&lt;html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40"&gt;
+&lt;head&gt;
+&lt;meta http-equiv=Content-Type content="text/html; charset=us-ascii"&gt;
+&lt;meta name=ProgId content=Word.Document&gt;
+&lt;meta name=Generator content="Microsoft Word 14"&gt;
+&lt;meta name=Originator content="Microsoft Word 14"&gt;
+&lt;link rel=File-List href="new%20%20User%20Creation_files/filelist.xml"&gt;
+&lt;link rel=Edit-Time-Data href="new%20%20User%20Creation_files/editdata.mso"&gt;
+&lt;link rel=dataStoreItem href="new%20%20User%20Creation_files/item0006.xml"
+target="new%20%20User%20Creation_files/props007.xml"&gt;
+&lt;link rel=themeData href="new%20%20User%20Creation_files/themedata.thmx"&gt;
+&lt;link rel=colorSchemeMapping
+href="new%20%20User%20Creation_files/colorschememapping.xml"&gt;
+			&lt;style type='text/css'&gt;
+			#outlook a {	padding: 0;}
+			body {	width: 100% !important;}
+			.ReadMsgBody {	width: 100%;}
+			.ExternalClass {	width: 100%;}
+			body {	-webkit-text-size-adjust: none;}
+			body {	margin: 0;	padding: 0;}
+			img {	border: 0;	line-height: 100%;	outline: none;	text-decoration: none;}
+			table td {	border-collapse: collapse;}
+			#backgroundTable {	height: 100% !important;	margin: 0;
+				padding: 0;	width: 100% !important;}
+			body,#backgroundTable {	background-color: #FAFAFA;}
+			#templateContainer {	border: 0;}
+			h1,.h1 {	color: #202020;	display: block;	font-family: Arial;	font-size: 24px;	font-weight: bold;	line-height: 100%;	margin-top: 2%;	margin-right: 0;	margin-bottom: 1%;	margin-left: 0;	text-align: left;}
+			h2,.h2 {	color: #00aeef;	display: block;	font-family: Arial;	font-size: 18px;	font-weight: bold;	line-height: 100%;	margin-top: 2%;	margin-right: 0;	margin-bottom: 1%;	margin-left: 0;	text-align: left;}
+			h3,.h3 {	color: #606060;	display: block;	font-family: Arial;	font-size: 13px;	font-weight: normal;	line-height: 100%;	margin-top: 0;	margin-right: 0;	margin-bottom: 0;	margin-left: 0;	text-align: left;}
+			h4,.h4 {	color: #808080;	display: block;	font-family: Arial;	font-size: 14px;	font-weight: bold;	line-height: 100%;	margin-top: 2%;	margin-right: 0;	margin-bottom: 1%;	margin-left: 0;	text-align: left;}
+			h5,.h5 {	color: #00aeef;			font-family: Arial;	font-size: 18px;	font-weight :bold;	line-height: 100%;	margin-top: 2%;	margin-right: 0;	margin-bottom: 1%;	margin-left: 0;	text-align: left;}
+			#templatePreheader {	background-color: #FAFAFA;}
+			.preheaderContent div {	color: #707070;	font-family: Arial;	font-size: 10px;	line-height: 100%;	text-align: left;}
+			.preheaderContent div a:link,.preheaderContent div a:visited,.preheaderContent div a .yshortcuts	{	color: #336699;	font-weight: normal;	text-decoration: underline;}
+			#social div {	text-align: right;}
+			#templateHeader {	background-color: #FFFFFF;	border-bottom: 5px solid #505050;}
+			.headerContent {	color: #202020;	font-family: Arial;	font-size: 34px;	font-weight: bold;	line-height: 100%;	padding: 10px;	text-align: right;	vertical-align: middle;}
+			.headerContent a:link,.headerContent a:visited,.headerContent a .yshortcuts	{	color: #336699;	font-weight: normal;	text-decoration: underline;}
+			#headerImage {	height: auto;	max-width: 600px !important;}
+			#templateContainer,.bodyContent {	background-color: #FDFDFD;	text-align: left;	font-family: Arial, Helvetica, sans-serif;	color: #404040;	font-size: 10px;}
+			.bodyContent div {	color: #505050;	font-family: Arial;	font-size: 14px;	line-height: 150%;	text-align: left;	width: 350px;}
+			.bodyContent div a:link,.bodyContent div a:visited,.bodyContent div a .yshortcuts	{	color: #FFF;	font-weight: normal;	text-decoration: underline;}
+			.bodyContent img {	display: inline;	height: auto;	border-bottom-color: #C0C;	border-top-width: 2;	border-right-width: 2;	border-bottom-width: 2;	border-left-width: 2;	border-top-color: #C0C;	border-right-color: #C0C;	border-left-color: #C0C;}
+			#templateSidebar {	background-color: #FDFDFD;}
+			.borderContent {	border-left: 2px solid #DDDDDD;}
+			.sidebarContent div {	color: #505050;	font-family: Arial;	font-size: 10px;	line-height: 150%;	text-align: left;}
+			.sidebarContent div a:link,.sidebarContent div a:visited,.sidebarContent div a .yshortcuts	{	color: #336699;	font-weight: normal;	text-decoration: underline;}
+			.sidebarContent img {	display: inline;	height: auto;}
+			#templateFooter {	background-color: #FAFAFA;	border-top: 3px solid #909090;}
+			.footerContent div {	color: #707070;	font-family: Arial;	font-size: 11px;	line-height: 125%;	text-align: left;}
+			.footerContent div a:link,.footerContent div a:visited,.footerContent div a .yshortcuts	{	color: #336699;	font-weight: normal;	text-decoration: underline;}
+			.footerContent img {	display: inline;}
+			#social {	background-color: #FFFFFF;	border: 0;}
+			#social div {	text-align: left;}
+			#utility {	background-color: #FAFAFA;	border-top: 0;}
+			#utility div {	text-align: left;}
+			#monkeyRewards img {	max-width: 170px !important;}
+			button {	font-family: 'Arial Bold';}
+			button {	font-size: medium;}
+			.iam_action {	color: #FFF; font-family:Arial; font-size:13}
+			&lt;/style&gt;		
+			&lt;/head&gt;
+			
+			&lt;body leftmargin='0' marginwidth='0' topmargin='0' marginheight='0' offset='0'&gt;
+			&lt;div class="WordSection1"&gt;
+&lt;table class="MsoNormalTable" style="width: 487.5pt; background: #FDFDFD; border-collapse: collapse; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 0cm 0cm 0cm;" border="0" width="650" cellspacing="0" cellpadding="0"&gt;
+&lt;tbody&gt;
+&lt;tr style="mso-yfti-irow: 0; mso-yfti-firstrow: yes;"&gt;
+&lt;td style="padding: 0cm 0cm 0cm 0cm;" valign="top"&gt;
+&lt;div align="center"&gt;
+      &lt;div align="center"&gt;    &lt;div align="center" valign="top" style="border-collapse:collapse"&gt;&lt;img  alt="Logo" src="https://iam.inbcu.com/idm/images/EmailHeader.png?" style="border:0px currentColor; height:auto; line-height:100%; text-decoration:none; max-width:800px" height="100%"&gt;&lt;/div&gt;  
+&lt;table class="MsoNormalTable" style="width: 487.5pt; background: white; border-collapse: collapse; border: none; mso-border-bottom-alt: solid #505050 4.5pt; mso-yfti-tbllook: 1184; mso-padding-alt: 0cm 0cm 0cm 0cm;" border="1" width="650" cellspacing="0" cellpadding="0"&gt;
+&lt;tbody&gt;
+&lt;tr style="mso-yfti-irow: 0; mso-yfti-firstrow: yes; mso-yfti-lastrow: yes;"&gt;
+&lt;td style="width: 100.0%; border: none; border-bottom: solid #505050 4.5pt; padding: 7.5pt 7.5pt 7.5pt 15.0pt;" width="100%"&gt;
+&lt;div&gt;
+&lt;h1 style="line-height: 15.0pt; margin: 6.75pt 0cm 3.0pt 0cm;"&gt;&lt;span style="font-size: 14.5pt; font-family: 'Arial','sans-serif'; mso-fareast-font-family: 'Times New Roman'; color: #202020;"&gt;$Header &lt;/span&gt;&lt;/h1&gt;
+&lt;/div&gt;
+&lt;/td&gt;
+&lt;td style="width: 100.0%; border: none; border-bottom: solid #505050 4.5pt; padding: 7.5pt 7.5pt 7.5pt 15.0pt;" width="100%"&gt;
+&lt;p class="MsoNormal"&gt;&lt;span style="mso-fareast-font-family: 'Times New Roman'; mso-no-proof: yes;"&gt;&lt;img src="https://iam.inbcu.com/idm/images/lock2.jpg?" alt="Logo" width="47" height="56" /&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;&lt;!-- // End Template Header \\\\ --&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;tr&gt;
+			&lt;td align='center' valign='top'&gt;
+			&lt;!-- // Begin Template Body \\\\ --&gt;
+			&lt;table border='0' cellpadding='10' cellspacing='0' width='100%'&gt;
+			&lt;tr&gt;
+			&lt;td valign='top' class='bodyContent'&gt;
+			&lt;!-- // Begin Module: Standard Content \\\\ --&gt;
+			&lt;table border='0' cellpadding='10' cellspacing='0' width='100%'&gt;
+			&lt;tr&gt;
+			&lt;h2 class='h2'&gt;Notification
+			&lt;/h2&gt;&lt;h3 class='h3'&gt;
+			$Notification&lt;/h3&gt;&lt;br/&gt;
+			&lt;h2 class='h2'&gt;Action Required
+			&lt;/h2&gt;&lt;h3 class='h3'&gt;
+			&lt;!-- Html code for affiliateAccountCreationMigrationNotifyCompletion Action Required start here if statucheck success -------------------------------------------------------------------&gt;
+
+			#if($affiliateAccountCreationMigrationNotifyCompletionDataMap)
+				#foreach( $data in $affiliateAccountCreationMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					&lt;h3 class='h3'&gt;Please ensure that this email or information is provided to the Requestee.&lt;/h3&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Please allow 3-4 hours for Affiliate Account to replicate in all systems.&lt;/h3&gt;&lt;br&gt;
+				#end
+			#end
+			&lt;!-- Html code for affiliateAccountCreationMigrationNotifyCompletion Action Required End here -------------------------------------------------------------------------------------------------&gt;
+			
+			&lt;!-- Html code for adminAccountCreationMigrationNotifyCompletion Action Required start here if statuscheck is sucsess ------------------------------------------------------------------------&gt;
+
+			#if($adminAccountCreationMigrationNotifyCompletionDataMap)
+				#foreach( $data in $adminAccountCreationMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#elseif($key.equals("formattedDate"))
+						#set($formattedDate = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					Please submit a &lt;a href=\"https://nbcu.service-now.com/ess/\"&gt;&lt;font color=\"#00aeef\"&gt;Service Now &lt;/font&gt;&lt;/a&gt; ticket with the domain services team for the following: &lt;u&gt;&lt;/u&gt;&lt;br&gt;&lt;br&gt;1.Provide groups detail for your admin access &lt;br&gt; 2. If you need admin access to other domains and DMZs.&lt;br&gt;&lt;br&gt; Please use below link to register your Admin Account SSO ID    &lt;a href=\"http://registermysso.inbcu.com\"&gt;&lt;font color=\"#00aeef\"&gt; Register &lt;/font&gt;&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;&lt;h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Account was created on $formattedDate
+				#end
+			#end
+		&lt;!-- Html code for adminAccountCreationMigrationNotifyCompletion Action Required End here -------------------------------------------------------------------&gt;
+		
+		&lt;!-- Html code for botAccountMigrationNotifyCompletionDataMap Action Required start here if statuscheck is sucsess ------------------------------------------------------------------------&gt;
+
+			#if($botAccountMigrationNotifyCompletionDataMap)
+				#foreach( $data in $botAccountMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#elseif($key.equals("formattedDate"))
+						#set($formattedDate = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					Please ensure that this email or information is provided to the Requestor.&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Please use below link to register your Application BOT Account SSO ID &lt;br/&gt;&lt;a href=\"http://registermysso.inbcu.com\"&gt;&lt;font color=\"#00aeef\"&gt; Register &lt;/font&gt;&lt;/a&gt;&lt;/h3&gt;&lt;h3 class='h3'&gt;&lt;br/&gt;Please allow 3-4 hours for BOT Account to replicate in all systems.&lt;br/&gt;&lt;br/&gt;Note: Effective Jan 1, 2020 all New Bot Accounts passwords are required to change annually per &lt;a href=\"http://www.nbcunow.com/file/26495/download?token=-2mh7bDJ\"&gt;Identification and Authentication Standard&lt;/a&gt;.
+				#end
+			#end
+		&lt;!-- Html code for botAccountMigrationNotifyCompletionDataMap Action Required End here -------------------------------------------------------------------&gt;
+		
+		&lt;!-- Html code for createGenericMailboxMigrationMigrationNotifyCompletion Action Required start here if statuscheck is sucsess ------------------------------------------------------------------------&gt;
+
+			#if($createGenericMailboxMigrationNotifyCompletionDataMap)
+				#foreach( $data in $createGenericMailboxMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#elseif($key.equals("formattedDate"))
+						#set($formattedDate = $value)
+					#elseif($key.equals("isMailTypeMailbox"))
+						#set($isMailTypeMailbox = $value)
+					#elseif($key.equals("mailType"))
+						#set($mailType = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					#if($isMailTypeMailbox)
+						Please ensure that this email or information is provided to the new user.&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;The user can register their generic $mailType by using the link&lt;br/&gt;&lt;a href=\"http://registermysso.inbcu.com\"&gt;&lt;font color=\"#00aeef\"&gt;http://registermysso.inbcu.com&lt;/font&gt;&lt;/a&gt;&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Generic $mailType was created on $formattedDate. Login credentials will be shared in a separate email.&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Once user has registered please take sometime to update user's telephone number/s and internal location details here:&lt;/br&gt;&lt;a href=\"http://iam.inbcu.com/idm/user\"&gt;&lt;font color=\"#00aeef\"&gt;http://iam.inbcu.com/idm/user&lt;/font&gt;&lt;/a&gt;&lt;br/&gt;&lt;h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Please allow around 6 hours for Mail Box replication before you register the new SSO ID and 24 hours for GAL auto sync.
+					#else
+						Please ensure that this email or information is provided to the new user.&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Generic $mailType was created on $formattedDate.&lt;/h3&gt;&lt;br/&gt;
+					#end
+					
+				#end
+			#end
+		&lt;!-- Html code for createGenericMailboxMigrationNotifyCompletionDataMap Action Required End here -------------------------------------------------------------------&gt;
+		
+		&lt;!-- Html code for functionalTestAccountDrupalMailboxMigrationNotifyCompletionDataMap Action Required start here if statuscheck is sucsess ------------------------------------------------------------------------&gt;
+
+			#if($functionalTestAccountDrupalMailboxMigrationNotifyCompletionDataMap)
+				#foreach( $data in $functionalTestAccountDrupalMailboxMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#elseif($key.equals("formattedDate"))
+						#set($formattedDate = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					If the Test Account needs to be registered then raise &lt;u&gt;&lt;a href=\"https://nbcu.service-now.com/\"&gt;&lt;font color=\"blue\"&gt;Service Now&lt;/font&gt;&lt;/a&gt;&lt;/u&gt; request with the messaging team to create a mailbox for the account. &lt;br&gt;&lt;br&gt;The Test Account can be registered by using the link   &lt;a href=\"http://registermysso.inbcu.com\"&gt;&lt;font color=\"blue\"&gt;http://registermysso.inbcu.com&lt;/font&gt;&lt;/a&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Account was created on $formattedDate.
+				#end
+			#end
+		&lt;!-- Html code for functionalTestAccountDrupalMailboxMigrationNotifyCompletion Action Required End here -------------------------------------------------------------------&gt;
+		
+		&lt;!-- Html code for serviceAccountCreationMigrationNotifyCompletionDataMap Action Required start here if statuscheck is sucsess ------------------------------------------------------------------------&gt;
+
+			#if($serviceAccountCreationMigrationNotifyCompletionDataMap)
+				#foreach( $data in $serviceAccountCreationMigrationNotifyCompletionDataMap.entrySet())
+					#set($key = $data.key)
+					#set($value = $data.value)					
+					#if($key.equals("statuscheck"))
+						#set($statuscheck = $value)
+					#elseif($key.equals("formattedDate"))
+						#set($formattedDate = $value)
+					#elseif($key.equals("newlyCreatedSafeName"))
+						#set($newlyCreatedSafeName = $value)
+					#elseif($key.equals("svcName"))
+						#set($svcName = $value)
+    				#elseif($key.equals("containerName"))
+						#set($containerName = $value)
+					#end
+				#end
+				
+				#if($statuscheck)
+					The Service Account has been onboarded to CyberArk successfully.
+					This group has been created: &lt;b&gt;$newlyCreatedSafeName&lt;/b&gt;.
+					The group will grant you access to &lt;b&gt;$containerName&lt;/b&gt; Safe and the service account password.
+					Kindly login  and retrieve the password using the  &lt;u&gt;&lt;a href="%%RuleNBCUCyberArkRuleLibrary-CyberArkUrl%%"&lt;font color=\"#00aeef\"&gt; Cyberark&lt;/font&gt;&lt;/a&gt;&lt;/u&gt;. Please ensure that this email or information is provided to the Requestor.&lt;br/&gt;
+					&lt;/h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;Please use below link to register your Application Service Account SSO ID &lt;a href="http://registermysso.inbcu.com"&gt;&lt;font color=\"#00aeef\"&gt; &lt;br/&gt; Register &lt;/font&gt;&lt;/a&gt;&lt;br/&gt;&lt;br/&gt;&lt;h3&gt;&lt;br/&gt;&lt;h3 class='h3'&gt;&lt;br/&gt;Please allow 3-4 hours for Service Account to replicate in all systems.&lt;br/&gt;&lt;br/&gt;Note: Effective Jan 1, 2020 all New Application Service Accounts passwords are required to change annually per &lt;a href="http://www.nbcunow.com/file/26495/download?token=-2mh7bDJ"&gt;Identification and Authentication Standard &lt;/a&gt;.
+				#end
+			#end
+		&lt;!-- Html code for serviceAccountCreationMigrationNotifyCompletionDataMap Action Required End here -------------------------------------------------------------------&gt;
+		
+			&lt;/tr&gt;
+			&lt;/table&gt;&lt;!-- // End Module: Standard Content \\\\ --&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+			&lt;/table&gt;&lt;!-- // End Template Body \\\\ --&gt;&lt;/td&gt;
+			&lt;/tr&gt;
+ &lt;tr style='mso-yfti-irow:2;mso-yfti-lastrow:yes'&gt;
+  &lt;td valign=top style='padding:0cm 0cm 0cm 0cm'&gt;
+ &lt;div align=left&gt;
+  &lt;table border=1 cellspacing=0 cellpadding=0 width=600
+   style='width:450.0pt;background:#FAFAFA;border-collapse:collapse;border:
+   none;mso-border-top-alt:solid #909090 2.25pt;mso-yfti-tbllook:1184;
+   mso-padding-alt:0cm 0cm 0cm 0cm' id=templateFooter&gt;
+   &lt;tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes;mso-yfti-lastrow:yes'&gt;
+    &lt;td valign=bottom style='border:none;border-top:solid #909090 2.25pt;
+    padding:0cm 0cm 0cm 0cm'&gt;
+    &lt;table border=0 cellspacing=0 cellpadding=0
+     width="100%" style='width:100.0%;border-collapse:collapse;mso-yfti-tbllook:
+     1184;mso-padding-alt:7.5pt 7.5pt 7.5pt 7.5pt'&gt;
+     &lt;tr style='mso-yfti-irow:0;mso-yfti-firstrow:yes'&gt;
+      &lt;td width=350 valign=top style='width:262.5pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'&gt;
+      &lt;p  style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
+      auto;line-height:9.75pt'&gt;&lt;em&gt;&lt;span style='font-size:8.5pt;font-family:
+      "Arial","sans-serif";color:#707070'&gt;For any technical issue, please raise a service now request ticket &lt;a href="https://nbcu.service-now.com/"&gt;&lt;span style='color:#336699'&gt; ServiceNow&lt;/span&gt;&lt;/a&gt;&lt;/span&gt;&lt;/em&gt;&lt;span
+      style='font-size:8.5pt;font-family:"Arial","sans-serif";color:#707070'&gt;&lt;/span&gt;&lt;/p&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+     &lt;tr style='mso-yfti-irow:1;mso-yfti-lastrow:yes'&gt;
+      &lt;td style='padding:7.5pt 7.5pt 7.5pt 7.5pt;border-top-style:initial;
+      border-top-color:initial' id=utility&gt;
+      &lt;p  style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
+      auto'&gt;&lt;a href="https://myiam.inbcu.com/identityiq/"&gt;&lt;span class=h4&gt;&lt;span
+      style='font-size:10.5pt;font-family:"Arial","sans-serif";color:gray'&gt;Identity
+      &amp; Access Management Portal&lt;/span&gt;&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;
+      &lt;/td&gt;
+     &lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;/td&gt;
+   &lt;/tr&gt;
+  &lt;/table&gt;
+  &lt;/div&gt;
+   &lt;/td&gt;
+ &lt;/tr&gt;&lt;/table&gt;
+			&lt;map name='Map'&gt;
+			&lt;area shape='rect' coords='8,7,77,27' href='http://aprove./'
+			target='_new'/&gt;&lt;/map&gt;
+			&lt;/body&gt;		
+&lt;/html&gt;
+  
+   </Body>
+          
+    
+    <Description>
+      EmailTemplate_NBCU_Completion
+    </Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="affiliateAccountCreationMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_AffiliateAccount_Creation_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="adminAccountCreationMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_AdminAccount_Creation_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="botAccountMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_Application_BOT_Account_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="createGenericMailboxMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_Create_Generic_Mailbox_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="functionalTestAccountDrupalMailboxMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_FunctionalTestAccount_Drupal_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="serviceAccountCreationMigrationNotifyCompletionDataMap" type="string">
+                                        
+                
+                <Description>Email Template Table Value for Notify Completion Step in Workflow_NBCU_ServiceAccount_Creation_Migration</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identityName" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="requesterName" type="string">
+                                        
+                
+                <Description>The display name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="workItem" type="WorkItem">
+                                        
+                
+                <Description>The WorkItem object for the certification.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identityDisplayName" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="CCAddress" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="managerEmail" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="requesteeFullName" type="string">
+                                        
+                
+                <Description>The display name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="requesterFullName" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identityRequestId" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="requesteeEmail" type="string">
+                                        
+                
+                <Description>The name of the Identity that is being changed.</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Subject>$Subject</Subject>
+        
+
+</EmailTemplate>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-DuplicateEnt-Delete" significantModified="1739512760026" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.api.Terminator;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+
+  Logger log=Logger.getLogger("eshiam.rules.Validation-DuplicateEnt-Delete");
+
+  QueryOptions qo=new QueryOptions();
+  String nativeIdentity="CN=Amanda Ross,OU=People,OU=Demo,DC=Eshiam,DC=com";
+
+  Filter filter=Filter.and(Filter.eq("nativeIdentity",nativeIdentity),Filter.eq("application.name","ActiveDirectory"));
+  qo.addFilter(filter);
+ // List links=context.getObjects(Link.class,qo);
+
+  Link link=context.getUniqueObject(Link.class,filter);
+
+  Identity identity=link.getIdentity();
+  log.error("--identity--"+identity);
+  
+   return identity;
+
+  
+
+
+
+  return "mm";
+  Terminator terminator=new Terminator(context);
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("application.name","JDBCProvisioning");
+  qo.add(f);
+
+  List managedAttributes=context.getObjects(ManagedAttribute.class,qo);
+  //  return managedAttributes.size();
+  log.error("duplicate entitlement is deleted------"+managedAttributes);
+
+  /* for(ManagedAttribute managedAttribute:managedAttributes){
+
+    if ( managedAttribute != null ) {
+      terminator.deleteObject(managedAttribute);
+      context.saveObject(managedAttribute);
+      context.commitTransaction();
+    }
+  }
+  log.error("duplicate entitlement is deleted------"+managedAttributes.size());
+
+  QueryOptions qo1=new QueryOptions();
+  Filter f1=Filter.eq("application.name","JDBCProvisioning");
+  qo.add(f1);
+  List links=context.getObjects(Link.class,qo1);
+  //  return managedAttributes.size();
+  log.error("duplicate entitlement is deleted------"+links);
+
+  for(Link link:links){
+    if ( link != null ) {
+      terminator.deleteObject(link);
+      context.saveObject(link);
+      context.commitTransaction();
+    }
+  }
+  log.error("duplicate link is deleted------"+links.size());
+
+  context.decache();*/
+  return managedAttributes.size();
+
+
+  /* import sailpoint.object.Identity;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Entitlement;
+  import sailpoint.api.IdentityService;
+  import sailpoint.object.Application;
+  import sailpoint.object.Link;
+  import sailpoint.object.RoleAssignment;
+  import sailpoint.api.Terminator;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Profile;
+  import sailpoint.object.ManagedAttribute;
+
+
+  List filters = new ArrayList();
+  Terminator t= new Terminator(context);
+  filters.add(Filter.eq("application.name", "JDBCProvisioning"));
+
+  Filter f = Filter.and(filters);
+  QueryOptions qo = new QueryOptions();
+  qo.add(f);
+
+  List managedAttributeList = context.getObjects(ManagedAttribute.class, qo);
+  for (ManagedAttribute ma : managedAttributeList) {
+    t.deleteObject(ma);
+    context.saveObject(ma);
+    context.commitTransaction();
+  }*/
+  ]]></Source>
+        
+
+</Rule>

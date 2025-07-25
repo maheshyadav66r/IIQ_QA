@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.DelimitedFileConnector" featuresString="DIRECT_PERMISSIONS, NO_RANDOM_ACCESS, DISCOVER_SCHEMA, PROVISIONING" icon="enterpriseIcon" name="IntConApplication" profileClass="" significantModified="1741351512066" type="DelimitedFile">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="PassphraseForPrivateKey"/>
+                              
+            
+            <entry key="PrivateKeyFilePath"/>
+                              
+            
+            <entry key="acctAggregationEnd">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1741351512052</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="acctAggregationStart">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1741351511811</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="afterProvisioningRule"/>
+                              
+            
+            <entry key="aggregationPartitioned">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="aggregationType" value="account"/>
+                              
+            
+            <entry key="beforeProvisioningRule"/>
+                              
+            
+            <entry key="compositeDefinition"/>
+                              
+            
+            <entry key="delimiter" value=","/>
+                              
+            
+            <entry key="file" value="D:\csv files\UsersData-IntCon.txt"/>
+                              
+            
+            <entry key="filetransport" value="local"/>
+                              
+            
+            <entry key="filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="ftpsAuthMethod" value="password"/>
+                              
+            
+            <entry key="ftpsClientCertificateFilePath"/>
+                              
+            
+            <entry key="ftpsClientCertificatePassphrase"/>
+                              
+            
+            <entry key="group.delimiter" value=","/>
+                              
+            
+            <entry key="group.file" value="D:\csv files\GroupsUsersData-intCon.txt"/>
+                              
+            
+            <entry key="group.filetransport" value="local"/>
+                              
+            
+            <entry key="group.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.partitionMode" value="auto"/>
+                              
+            
+            <entry key="group.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributes"/>
+                              
+            
+            <entry key="nativeChangeDetectionEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionOperations"/>
+                              
+            
+            <entry key="parseType" value="delimited"/>
+                              
+            
+            <entry key="partitionMode" value="auto"/>
+                              
+            
+            <entry key="port"/>
+                              
+            
+            <entry key="preIterateRule" value="Rule-PreIteartor-IntConfig"/>
+                              
+            
+            <entry key="sftpAuthMethod" value="password"/>
+                              
+            
+            <entry key="stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="templateApplication" value="DelimitedFile Template"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+          
+    
+    <ProvisioningForms>
+                    
+        
+        <Form name="createIC" objectType="account" type="Create">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="pageTitle" value="createIC"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Section label="IntegrationConfigCreateform" name="create">
+                                        
+                
+                <Field displayName="EmployeeId" name="EmployeeId" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getStringAttribute("employeeId");]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="Name" name="Name" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[if(identity!=null)
+return identity.getName();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="FirstName" name="FirstName" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getFirstname();]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="LastName" name="LastName" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getLastname()]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="Department" name="Department" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[return identity.getStringAttribute("department");]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="Email" name="Email" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[
+String email;
+email=identity.getEmail();
+if(email==null)
+email=identity.getName()+"@eshiam.com";
+return email ;]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="manager" name="manager" type="string">
+                                                  
+                    
+                    <Script>
+                                                            
+                        
+                        <Source><![CDATA[String manager;
+if(identity.getManager()!=null){
+manager=identity.getManager().getName();
+}else{
+manager="Mahesh Nattali";
+}
+return manager;]]></Source>
+                                                          
+                    
+                    </Script>
+                                                
+                
+                </Field>
+                                      
+            
+            </Section>
+                            
+        
+        </Form>
+                  
+    
+    </ProvisioningForms>
+          
+    
+    <Schemas>
+                    
+        
+        <Schema displayAttribute="Name" identityAttribute="EmployeeId" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None" significantModified="1741098282813">
+                              
+            
+            <AttributeDefinition name="EmployeeId" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Name" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="FirstName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="LastName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Department" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Email" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="manager" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="GroupId" schemaObjectType="group" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema descriptionAttribute="" displayAttribute="GroupName" identityAttribute="GroupId" instanceAttribute="" nativeObjectType="group" objectType="group" permissionsRemediationModificationType="None" significantModified="1741098282813">
+                              
+            
+            <AttributeDefinition name="EmployeeId" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="GroupId" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="GroupName" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                  
+    
+    </Schemas>
+          
+    
+    <ApplicationScorecard significantModified="1741098282813"/>
+        
+
+</Application>

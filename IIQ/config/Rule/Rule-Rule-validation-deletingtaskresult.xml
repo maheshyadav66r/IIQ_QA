@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-deletingTaskResult" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+
+
+  TaskManager taskManager=new TaskManager(context);
+
+  boolean isTaskRunning=taskManager.isTaskRunning("HR2AccountAggregation","HR2AccountAggregation");
+  TaskResult taskResult=context.getObjectByName(TaskResult.class,"HR2AccountAggregation");
+  
+  if(isTaskRunning @and taskResult!=null){
+
+    	taskManager.terminate(taskResult);
+  }
+
+  return "wile";
+
+
+  ]]></Source>
+        
+
+</Rule>

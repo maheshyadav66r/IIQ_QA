@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-fetchingLinkDetails" significantModified="1739336226218" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  
+  
+  
+  Application application=context.getObjectByName(Application.class,"ActiveDirectory");
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(Filter.eq("application", application));
+  if(application==null){
+    log.error("--could not find application--"); 
+    return "n";
+  }
+  int i=1;
+  Iterator it=context.search(Link.class,qo);
+  while(it.hasNext()){
+    Link link=it.next();
+    Identity id=link.getIdentity();
+    String applicatioName=link.getApplication().getName();
+    String name=link.getNativeIdentity();
+    log.error("application:  "+applicatioName+"    "+i+"   id  identityName:  "+id.getName()+"  identityName:  "+name);
+    i++;
+  }
+
+
+  return "wile";
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+/*  
+  Identity newIdentity=context.getObjectByName(Identity.class,"Adam Kennedy");
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(Filter.eq("identity", newIdentity));
+  if(newIdentity==null){
+    log.error("--could not find identity--"); 
+    return "n";
+  }
+  int i=1;
+  Iterator it=context.search(Link.class,qo);
+  while(it.hasNext()){
+    Link link=it.next();
+    String applicatioName=link.getApplication().getName();
+    String name=link.getNativeIdentity();
+    log.error("application:  "+applicatioName+"    "+i+"    identityName:  "+name);
+    i++;
+  }
+
+
+  return "wile";*/
+  ]]></Source>
+        
+
+</Rule>

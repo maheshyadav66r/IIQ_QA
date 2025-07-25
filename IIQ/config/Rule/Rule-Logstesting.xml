@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="LogsTesting" significantModified="1747143648092" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import org.apache.commons.logging.Logger;
+ // import java.util.logging.Logger;
+
+  Logger logs=Logger.getLogger("secondaryIdCreation.eshiam.assam");
+
+  logs.info("my rule my rules 111---");
+
+  logs.info("my rule my rules---");
+  return "bababa";
+
+
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="sample-AuditEventDataReportWf12345" type="">
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="GatheringData"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="GatheringData" posX="319" posY="100">
+                    
+        
+        <Approval name="AET" owner="$(launcher)" return="auditEvent,fromDate,toDate,department" send="">
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                              
+            
+            <Form name="AuditEventReportInputForm">
+                                        
+                
+                <Section name="ReportInputs">
+                                                  
+                    
+                    <Field displayName="LCEvent" dynamic="true" name="auditEvent" postBack="true" type="IdentityTrigger"/>
+                                                  
+                    
+                    <Field displayName="FromDate" dynamic="true" name="fromDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Field displayName="ToDate" dynamic="true" name="toDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Field displayName="Department" dynamic="true" name="department" postBack="true">
+                                                            
+                        
+                        <AllowedValues>
+                                                                      
+                            
+                            <String>Executive Management</String>
+                                                                      
+                            
+                            <String>Information Technology</String>
+                                                                      
+                            
+                            <String>Engineering</String>
+                                                                      
+                            
+                            <String>Accounting</String>
+                                                                      
+                            
+                            <String>Finance</String>
+                                                                      
+                            
+                            <String>Human Resources</String>
+                                                                      
+                            
+                            <String>Inventory</String>
+                                                                      
+                            
+                            <String>Regional Operations</String>
+                                                                    
+                        
+                        </AllowedValues>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="SendingToTaskDefinition"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="SendingToTaskDefinition" posX="319" posY="100">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        for(int i=0;i @lt this.variables.length;i++){
+        log.error("variables in workflow===="+this.variables[i]);
+        }
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

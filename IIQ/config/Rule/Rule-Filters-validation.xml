@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Filters-validation" significantModified="1721975956412" type="Validation">
+          
+    
+    <Source><![CDATA[
+
+  // import sailpoint.connector.*;
+  import sailpoint.object.*;
+  import java.util.*;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Application;
+  
+    QueryOptions qo=new QueryOptions();
+
+  
+  Filter f=Filter.join("department","Application.name");
+  log.error("-------join filter----"+f.toXml());
+  qo.add(f);
+  List list=context.getObjects(Identity.class,qo);
+  return list.size();
+  
+  
+  
+  
+  
+  
+ // return context.decrypt("1:ACP:i/mYFDSWFZQfBar6YOaT0SCxebTZHJge15CfG7o7SsU=");
+
+  QueryOptions qo=new QueryOptions();
+  List listOfApplication=new ArrayList();
+  List list=new ArrayList();
+  listOfApplication.add(Filter.eq("application.name","HR-Application"));
+  listOfApplication.add(Filter.eq("application.name","ActiveDirectory"));
+  Filter filter = Filter.collectionCondition("links",Filter.and(listOfApplication));
+  qo.add(filter);
+  Iterator it=context.search(Identity.class,qo);
+  if(it!=null)
+  {
+    while(it.hasNext())
+    {
+      list.add(it.next());
+    }
+  }
+  System.out.println(list);
+  return list.size();
+
+  //property name should not be case insensitive  and ignoreCase() is applicable only for values but not for properties
+  //here the proprty "name " exist in Identity.class ,similarly for any other sailpoint extended objects we use their corresponding .class variable names
+
+  Filter filter1=Filter.eq("name","HR-Application");
+  Application app=context.getUniqueObject(Application.class,filter1);
+  return app;
+
+  //return app.getType();
+
+
+  Filter filter=Filter.eq("name","1A");       
+  filter=Filter.ignoreCase(filter);
+  Identity id=context.getUniqueObject(Identity.class,filter);
+  if(id!=null){
+    return id.getFirstname();
+
+  }
+
+
+
+
+
+  //To fetch Identities of specified application   (identity-->links(link)-->application-->name)
+  List list=new ArrayList();
+  Filter f=Filter.eq("links.application.name","HR-Application");
+  QueryOptions qo=new QueryOptions();
+  qo.add(f);
+  List obs=context.getObjects(Identity.class,qo);
+  for(Identity identity:obs){
+    list.add(identity);
+  }
+  return  list;
+
+
+
+
+
+
+  //Map map=DelimitedFileConnector.defaultBuildMap(cols,record);
+  //String fName=map.get("FirstName");
+  //String lName=map.get("LastName");
+
+  //if(map.get("Email")==null){
+  //String mail=fName+"."+lName+"@eshiam.com";
+  //map.put("Email",mail);
+  //}
+  //if(map.get("status").equalsIgnoreCase("inactive")){
+  //map.put("status","active");
+
+  //map.replace("status","active");
+  //}
+  //System.out.println(map);
+
+  //return map; 
+  ]]></Source>
+        
+
+</Rule>

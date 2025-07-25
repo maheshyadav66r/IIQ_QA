@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ABMB-JobTitle-AttributeChange-Rule" significantModified="1724650589374" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[import sailpoint.object.Custom;
+  log.error("---------------------JobTitle-Atrr-Sync-transRule entry--------------------");
+
+  Custom custom=context.getObjectByName(Custom.class,"ABMB-AttributeChange-CustomObject");
+  log.error("--TargetLink  lane  attributes---"+link.getAttributes().get("jobTitle"));
+  if(custom == null){
+    custom=new Custom();
+    custom.setName("ABMB-AttributeChange-CustomObject");
+  }
+  Map jobTitleMap=new HashMap();
+  jobTitleMap.put("attributeName",target.getName());
+  jobTitleMap.put("oldValue",link.getAttribute(target.getName()));
+  jobTitleMap.put("newValue",value);
+  Map map = custom.get(identity.getName());
+  if(null != map)
+  {
+    map.put("jobTitle",jobTitleMap);
+    custom.put(identity.getName(),map);
+  }
+  else
+  {
+    Map attributeMap = new HashMap();
+    attributeMap.put("jobTitle",jobTitleMap);
+    custom.put(identity.getName(),attributeMap);
+  }
+ // log.error("-------custom object  in jobtitle rule ----"+custom.toXml());
+    log.error("---------------------JobTitle-Atrr-Sync-transRule exit--------------------");
+  return value;
+  ]]></Source>
+        
+
+</Rule>

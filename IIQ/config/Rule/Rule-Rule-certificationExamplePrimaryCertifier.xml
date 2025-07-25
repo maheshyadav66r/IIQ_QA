@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-certification Example Primary Certifier" significantModified="1739438904213" type="Certifier">
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="context" type="SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query
+          the system or execute other SailPointContext services.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="certification">
+                                        
+                
+                <Description>
+          The root sailpoint.object.Certification being created.
+          At the point this rule is run, there wont be any entities or items in this certtification yet,
+          it is a stub that is used for various things while we are partitioning work to construct entities and
+          assign them to other certifications in the campaign.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="definition">
+                                        
+                
+                <Description>
+          The sailpoint.object.CertificationDefinition for the certification.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="entity">
+                                        
+                
+                <Description>
+          The sailpoint.object.CertificationEntity to assign a certifier to
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="state">
+                                        
+                
+                <Description>
+          A map object that can be used to store data during the iteration process.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="certifiers">
+                                        
+                
+                <Description>
+          A String or List&lt;String&gt;
+          When returning strings, the string must be the name
+          of an Identity. A single string is for a single certifier, or a List of Strings can be multiple certifiers.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+
+  import sailpoint.object.CertificationItem;
+  import sailpoint.object.EntitlementSnapshot;
+  import sailpoint.object.Filter;
+  import sailpoint.object.EntitlementSnapshot;
+  import sailpoint.object.Link;
+
+
+  log.error("--certificatio rule entry--");
+  // Identity identity=entity.getIdentity(context);
+
+  String applicationId;
+  String nativeIdentity;
+  CertificationItem ci=entity.getItems().get(0);
+  String identityId=entity.getTargetId();
+
+
+  if(ci!=null){
+
+    EntitlementSnapshot es=ci.getExceptionEntitlements();
+
+    if(es!=null){
+
+      applicationId=es.getApplicationObject(context).getId();
+
+      nativeIdentity=es.getNativeIdentity();
+
+      if(applicationId!=null && nativeIdentity!=null){
+
+        Filter f=Filter.and(Filter.eq("identity.id",identityId),Filter.eq("nativeIdentity",nativeIdentity),Filter.eq("application.id",applicationId));
+
+        Link link=context.getUniqueObject(Link.class,f);
+
+        if(link!=null){
+
+          //log.error("   applicationId   "+applicationId+"  nativeIdentity  "+ nativeIdentity+"  identityId   "+identityId+"   certifier   "+link.getAttribute("Certifier Name")); 
+
+          return link.getAttribute("Certifier Name");
+
+        }else{
+
+          return "spadmin";
+
+        }
+
+      }
+
+    }
+
+  }
+
+
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="WorkItemArchive_Approvals-Data_csvFile_Email_Template">
+          
+    
+    <Body>
+    Dear Sir/Madam,
+
+    This email contains a csv file of approval items from SailPoint IdentityIQ. The attached file includes the detailed approval items data report.
+    If you have any questions or  further assistance, do not hesitate to contact the Eshiam IAM Team.
+
+     Thanks, 
+
+  </Body>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="file" type="string">
+                                        
+                
+                <Description>The name of the Identity that launched the workflow.</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Subject>Changes requested to $identityDisplayName need approval </Subject>
+        
+
+</EmailTemplate>

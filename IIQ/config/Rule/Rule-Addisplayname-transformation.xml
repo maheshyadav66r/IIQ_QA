@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ADDisplayName-Transformation" significantModified="1735749858536" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[String[] disName=value.split(" ");
+if(disName.length>=2){
+
+disName=disName[1]+"."+disName[0];
+}else{
+disName=disName;
+}
+return disName;]]></Source>
+        
+
+</Rule>

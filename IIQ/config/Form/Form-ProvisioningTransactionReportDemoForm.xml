@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="Provisioning Transaction Report Demo Form" significantModified="1728019041837" type="Report">
+          
+    
+    <Section columns="3" label="report_provisioning_transaction_form" name="customProperties">
+                    
+        
+        <Field displayName="report_provisioning_application" helpKey="help_report_provisioning_application" multi="true" name="applications" type="ProvisioningTransaction" value="ref:applications">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="objectColumn" value="applicationName"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_identity" helpKey="help_report_provisioning_identity" multi="true" name="identities" type="Identity" value="ref:identities">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="valueProperty" value="name"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_integration" helpKey="help_report_provisioning_integration" multi="true" name="integration" type="ProvisioningTransaction" value="ref:integration">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="objectColumn" value="integration"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_native_identity" helpKey="help_report_provisioning_account_display_name" name="accountDisplayName" type="string" value="ref:accountDisplayName"/>
+                    
+        
+        <Field displayName="report_provisioning_operation" helpKey="help_report_provisioning_operation" multi="true" name="operation" type="string" value="ref:operation">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            String[] operations = {
+            "Create",
+            "Delete",
+            "Disable",
+            "Enable",
+            "Lock",
+            "Modify",
+            "Unlock"
+            };
+
+            List values = new ArrayList();
+            for (String operation : operations) {
+            List value = new ArrayList();
+            value.add(operation);
+            value.add(operation);
+
+            values.add(value);
+            }
+
+            return values;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_source" helpKey="help_report_provisioning_source" multi="true" name="source" type="string" value="ref:source">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            String[] sources = {
+            "Batch",
+            "Certification",
+            "GroupManagement",
+            "IdentityRefresh",
+            "LCM",
+            "PAM",
+            "PolicyViolation",
+            "RapidSetup",
+            "RoleChangePropagation",
+            "Rule",
+            "UI",
+            "Unknown",
+            "WebService",
+            "Workflow"
+            };
+
+            List values = new ArrayList();
+            for (String source : sources) {
+            List value = new ArrayList();
+            value.add(source);
+            value.add(source);
+
+            values.add(value);
+            }
+
+            return values;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_status" helpKey="help_report_provisioning_status" multi="true" name="status" type="string" value="ref:status">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.*;
+            List enums = new ArrayList();
+            for(ProvisioningTransaction.Status enumItem : ProvisioningTransaction.Status.values()) {
+            List item = new ArrayList();
+            item.add(enumItem.toString());
+            item.add(enumItem.getLocalizedMessage());
+            enums.add(item);
+            }
+            return enums;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="report_provisioning_type" helpKey="help_report_provisioning_type" multi="true" name="type" type="string" value="ref:type">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.*;
+            List enums = new ArrayList();
+            for(ProvisioningTransaction.Type enumItem : ProvisioningTransaction.Type.values()) {
+            List item = new ArrayList();
+            item.add(enumItem.toString());
+            item.add(enumItem.getLocalizedMessage());
+            enums.add(item);
+            }
+            return enums;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="report_provisioning_forced" helpKey="help_report_provisioning_forced" name="forced" type="boolean" value="ref:forced"/>
+                    
+        
+        <Field displayName="Start Date" name="startDate" type="date" value="ref:startDate">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="100"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="Hour" name="startHours" type="string" value="ref:startHours">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.Custom;
+            
+            Custom customObj = context.getObject(Custom.class,"PTO Report Form-HoursMintues customObject");
+            List customObjList = customObj.getList("hours");
+            return customObjList;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="75"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="Mintues" name="startMintues" type="string" value="ref:startMintues">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.Custom;
+            
+            Custom customObj = context.getObject(Custom.class,"PTO Report Form-HoursMintues customObject");
+            List customObjList = customObj.getList("mintues");
+            return customObjList;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="75"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="End Date" name="endDate" type="date" value="ref:endDate">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="100"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="Hour" name="endHours" type="string" value="ref:endHours">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.Custom;
+            
+            Custom customObj = context.getObject(Custom.class,"PTO Report Form-HoursMintues customObject");
+            List customObjList = customObj.getList("hours");
+            return customObjList;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="75"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                    
+        
+        <Field displayName="Mintues" name="endMintues" type="string" value="ref:endMintues">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            import sailpoint.object.Custom;
+            
+            Custom customObj = context.getObject(Custom.class,"PTO Report Form-HoursMintues customObject");
+            List customObjList = customObj.getList("mintues");
+            return customObjList;
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="height" value="50"/>
+                                                  
+                    
+                    <entry key="width" value="75"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+        
+
+</Form>

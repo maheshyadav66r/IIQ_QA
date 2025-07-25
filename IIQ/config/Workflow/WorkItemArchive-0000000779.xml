@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE WorkItemArchive PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<WorkItemArchive archived="1747313706782" completer="The Administrator" handler="sailpoint.api.Workflower" level="Normal" name="0000000779" ownerName="spadmin" renderer="workflow.xhtml" requester="spadmin" state="Finished" type="Form" workItemId="c0a8003d96cf19858196d403255906cf">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="formModel">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="transformerClass" value="sailpoint.transformer.IdentityTransformer"/>
+                                                            
+                        
+                        <entry key="transformerOptions"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="launcher" value="spadmin"/>
+                              
+            
+            <entry key="primaryAccount" value="c0a81d898f331f7b818f3404b43a0038"/>
+                              
+            
+            <entry key="secondaryIdType" value="ADAdmin"/>
+                              
+            
+            <entry key="workItemForm">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Form name="SecodaryIdRegistrationForm">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="pageTitle" value="SecodaryIdRegistrationForm"/>
+                                                                                
+                                
+                                <entry key="title" value="SecodaryIdRegistrationFormTitle"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Section name="userInstructions" type="text">
+                                                                      
+                            
+                            <Field value="This form is to create an Admin Account for AD and CloudAD"/>
+                                                                    
+                        
+                        </Section>
+                                                            
+                        
+                        <Section name="IdType">
+                                                                      
+                            
+                            <Field displayName="SecondaryIdType" name="secondaryIdType" postBack="true" required="true" type="string" value="ADAdmin">
+                                                                                
+                                
+                                <AllowedValuesDefinition>
+                                                                                          
+                                    
+                                    <Value>
+                                                                                                    
+                                        
+                                        <List>
+                                                                                                              
+                                            
+                                            <String>ADAdmin</String>
+                                                                                                              
+                                            
+                                            <String>CloudAdmin</String>
+                                                                                                              
+                                            
+                                            <String>WireLessAdmin</String>
+                                                                                                            
+                                        
+                                        </List>
+                                                                                                  
+                                    
+                                    </Value>
+                                                                                        
+                                
+                                </AllowedValuesDefinition>
+                                                                              
+                            
+                            </Field>
+                                                                      
+                            
+                            <Field displayName="PrimaryAccount" displayType="radio" dynamic="true" helpKey="Must be an active employee" name="primaryAccount" postBack="true" required="true" type="sailpoint.object.Identity" value="c0a81d898f331f7b818f3404b43a0038">
+                                                                                
+                                
+                                <Attributes>
+                                                                                          
+                                    
+                                    <Map>
+                                                                                                    
+                                        
+                                        <entry key="hidden">
+                                                                                                              
+                                            
+                                            <value>
+                                                                                                                        
+                                                
+                                                <Script>
+                                                                                                                                  
+                                                    
+                                                    <Source><![CDATA[
+                        log.error("second field"+formModel);
+                        if((secondaryIdType!=null) @and (secondaryIdType.equalsIgnoreCase("ADAdmin") @or secondaryIdType.equalsIgnoreCase("CloudAdmin")))
+                        return false;
+                        return true;
+                      ]]></Source>
+                                                                                                                                
+                                                
+                                                </Script>
+                                                                                                                      
+                                            
+                                            </value>
+                                                                                                            
+                                        
+                                        </entry>
+                                                                                                  
+                                    
+                                    </Map>
+                                                                                        
+                                
+                                </Attributes>
+                                                                                
+                                
+                                <ValidationScript>
+                                                                                          
+                                    
+                                    <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.api.IdentityService;
+                import sailpoint.object.Application;
+                import sailpoint.object.Link;
+                import sailpoint.tools.Message;
+
+                Message msg = new Message();
+
+                Identity identity=context.getObjectById(Identity.class,primaryAccount);
+                IdentityService identityService = new IdentityService(context);
+
+                if(identity!=null){
+
+                if(secondaryIdType.equalsIgnoreCase("ADAdmin")){
+                Application adApp=context.getObjectByName(Application.class,"ActiveDirectory");
+
+                if(adApp!=null){
+                List adLinks=identityService.getLinks(identity,adApp);
+
+                if(adLinks!=null @and !adLinks.isEmpty()){
+
+                }else{
+                msg.setKey("Identity doesn't have Account in AD select existed identity");
+                }
+                }
+                }
+                else if(secondaryIdType.equalsIgnoreCase("CloudAdmin"))
+                {
+                Application ldapApp=context.getObjectByName(Application.class,"LDAPApplication");
+                if(ldapApp!=null){
+                List ldapLinks=identityService.getLinks(identity,ldapApp);
+
+                if(ldapLinks!=null @and !ldapLinks.isEmpty()){
+
+                }else{
+                msg.setKey("Identity doesn't have Account in LDAP select existed identity");
+                }
+                }
+                }
+                }
+                // log.error(formModel);
+
+                return msg;
+              ]]></Source>
+                                                                                        
+                                
+                                </ValidationScript>
+                                                                              
+                            
+                            </Field>
+                                                                    
+                        
+                        </Section>
+                                                            
+                        
+                        <Button action="next" label="Submit"/>
+                                                            
+                        
+                        <Button action="back" label="Cancel"/>
+                                                          
+                    
+                    </Form>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Description>SecodaryIdRegistrationForm</Description>
+        
+
+</WorkItemArchive>

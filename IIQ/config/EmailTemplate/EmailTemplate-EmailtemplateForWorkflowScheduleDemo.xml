@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="emailTemplate for Workflow schedule Demo" significantModified="1729160311551">
+          
+    
+    <Body>Dear $identityName,
+   
+   Your  $!emailTemplateName  emailtemplate is triggered 
+  
+   For any queries please contact your Manager.
+  </Body>
+          
+    
+    <Description>
+    Email Template for notifying approvers of a new entitlement update.
+    Note that in addition to the declared arguments, all workflow variables,
+    Step arguments, and Approval arguments defined in the Workflow are
+    also available.
+  </Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="identityName" type="string">
+                                        
+                
+                <Description>identityName </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="emailTemplateName" type="string"/>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+        
+
+</EmailTemplate>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-WritingDataIntoFile11" significantModified="1739516379778" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+
+
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("capabilities.name","SystemAdministrator");
+  qo.addFilter(f);
+  //qo.setCloneResults(true);
+  List identities=context.getObjects(Identity.class,qo);
+
+  
+  
+  
+   // String querry=
+  return identities;
+
+  ]]></Source>
+        
+
+</Rule>

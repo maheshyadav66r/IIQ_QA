@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-TaskOne Rule" significantModified="1721968209276" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.api.*;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  Filter f=Filter.eq("department","Engineering");
+  // Filter f=Filter.and(Filter.eq("department","Engineering"),Filter.eq("location","Hyderabad"));
+
+
+  QueryOptions qo=new QueryOptions();
+  qo.add(f);
+  BufferedWriter bw=new BufferedWriter();
+ 
+  Iterator it=context.search(Identity.class,qo,"firstname,lastname,displayname,links.application.name");
+ // List idntyList=context.getObjects(Identity.class,qo);
+  
+  while(it.hasNext()){
+
+  for(Identity identity:idntyList)
+  { 
+    String firstname=identity.getFirstname();
+    String firstname=identity.getLastname();
+    String firstname=identity.getDisplayName();
+
+    List linksList=context.getLinks();
+    StringBuilder  applicationLinks=new  StringBuilder();  
+
+      // for(Link link:linksList){
+
+
+      // }
+
+
+  }
+  }
+
+
+  //return idntyList.size();
+
+
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation DummyJoiningDate Rule111" significantModified="1736068808082" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+  import java.util.Date;
+
+  Identity newIdentity=context.getObjectByName(Identity.class,"Valemoni Laxmikanth");
+  Date createddate=newIdentity.getCreated();
+  
+  try {
+    Date currentdate = new Date();
+    if (!currentdate.before(createddate)) { 
+      log.error("Current date is greater than or equal to created date."+"--createddate--"+createddate+"   ---currentdate--"+currentdate);
+      return true;
+    } else
+
+    {
+      log.error("Current date is less than created date."+"--createddate--"+createddate+"   ---currentdate--"+currentdate);
+      return false;
+    }
+
+  } catch (Exception e) {
+    e.printStackTrace();
+    log.error("-----dates are invalid--");
+
+  }
+
+
+
+
+
+
+
+
+  /* if(sCurrentDate.equalsIgnoreCase(ed))
+  {
+    log.error("identityDate is matched to currentdate");
+    if(currentdate.getHours() <= 18 && (currentdate.getHours()  <= 23 && currentdate.getMinutes() <=  59 && currentdate.getSeconds() <= 59))
+    {     
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*QueryOptions qo=new QueryOptions();
+Filter f1=Filter.eq("links.application.name","JDBCProvisioning");
+  qo.add(f1);
+
+  List identities=context.getObjects(Identity.class,qo);
+  if(identities!=null){
+    log.error("----identities---"+identities.size());
+  }
+  return "nnn";*/
+
+
+  ]]></Source>
+        
+
+</Rule>

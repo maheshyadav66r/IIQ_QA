@@ -1,0 +1,611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-IntegrationConfig" significantModified="1742404203191">
+          
+    
+    <Signature returnType="ProvisioningResult">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description> The Provisioning Plan </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  import java.io.BufferedReader;
+  import java.io.BufferedWriter;
+  import java.io.File;
+  import java.io.FileNotFoundException;
+  import java.io.FileOutputStream;
+  import java.io.FileReader;
+  import java.io.FileWriter;
+  import java.io.IOException;
+  import java.io.OutputStreamWriter;
+  import java.sql.*;
+  import java.util.Date;
+  import sailpoint.tools.*;
+  import sailpoint.object.*;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AbstractRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.Identity;
+  import sailpoint.object.TaskDefinition;
+  import sailpoint.tools.Message;
+
+
+
+  log.error("====Provisioning Plan in DelimitedIntegrationConfigRule====="+plan.toXml());
+
+  ProvisioningResult provisioningResult = new ProvisioningResult();
+  BufferedWriter bufferedWriter;
+  String accountResult;
+  String groupResult;
+  String header;
+  String applicationName;
+  Application application;
+
+  String finalUserLine;
+  String finalGroupData;
+  List userDataList=new ArrayList();
+  List groupDataList=new ArrayList();
+
+  String nativeIdentity;
+  String line;
+  String fileData;
+  String[] record;
+  BufferedReader reader;
+  boolean flag;
+  boolean userCheck;
+
+
+
+  //------------------------Redundancy  Methods for Create Operation---------------------------
+
+  private String writeLine( String filepath,  String line, ProvisioningPlan.AccountRequest.Operation operation) throws Exception {
+
+    try{
+      if(filepath != null @and line != null){
+
+        if(ProvisioningPlan.AccountRequest.Operation.Create.equals(operation)){
+          bufferedWriter  = new BufferedWriter(new FileWriter(new File(filepath), true));
+          // bufferedWriter.newLine();
+          bufferedWriter.write(line);
+          bufferedWriter.close();
+          log.error("Create ---------Line has been written successfully!!");
+          return "success";
+        } else if(ProvisioningPlan.AccountRequest.Operation.Modify.equals(operation)){
+
+          bufferedWriter = new BufferedWriter(new FileWriter(new File(filepath)));
+          bufferedWriter.write(line);
+          bufferedWriter.close();
+          log.error("Modify ---------Line has been written successfully!!");
+          return "success";
+        }else{
+          return "failed";
+          //Operation not exits
+        }
+      }
+
+      else
+      {
+        return "failed";
+        //either filepath or line are empty
+      }
+    }
+    catch(Exception e){
+      provisioningResult.addError(e.toString());
+    }
+  }
+
+
+
+  public boolean existinceChecking(String filePath,String nativeIdentity){
+
+    // Message message=new Message();
+    String line;
+    boolean result;
+    log.error("  existinceChecking filePath   =="+filePath);
+
+    //String[] parts=finalLine.split(",");
+    String empId=nativeIdentity.trim();
+    try{
+
+      BufferedReader br=new BufferedReader(new FileReader(new File(filePath)));
+
+      String header=br.readLine();
+
+      while((line=br.readLine())!=null){
+        String[] lineParts=line.split(",");
+        String fileEmpId=lineParts[0].trim();
+        
+        if(fileEmpId.equalsIgnoreCase(empId)){
+          log.error("Account already existed !!!");
+
+          //provisioningResult.addError("Account already existed in file !!! but not updated in Sailpoint, Do AccountAggregation ");
+          result=true;
+
+        }else{
+
+          result=false;
+          // writeLine(filePath,finalLine,operation);
+        }
+      }
+
+    }catch(Exception e){
+
+      log.error(e.toString());
+
+    }
+    return result;
+  }
+
+
+
+
+  public Map addingDataToMap(Map operations,List finalDataToRemove,AccountRequest accReq,AttributeRequest attrReq){
+
+    List dataOfIdenToEnt = new ArrayList();
+    dataOfIdenToEnt.add(accReq.getNativeIdentity());
+    dataOfIdenToEnt.add(attrReq.getValue());
+    finalDataToRemove.add(dataOfIdenToEnt);
+    operations.put(ProvisioningPlan.Operation.Remove,finalDataToRemove);
+    return operations;
+  }
+
+
+
+
+  public String buildFinalStringForGroups(String groupFilePath,Map operations){
+    //String to store the final String
+    String finalString = "";
+
+    try{
+      //Reading the file using Bufferedreader and Adding the values to a final String Object
+      BufferedReader userBufferedReader = new BufferedReader(new FileReader(groupFilePath));
+
+      header = userBufferedReader.readLine();
+      finalString = finalString+header+"\n";
+      String entLine = "";
+
+      while ((entLine = userBufferedReader.readLine()) != null) {
+        if( !entLine.equals("")){
+
+          String[] groupData = entLine.split(",");
+          List lineList = Util.arrayToList(groupData);
+          //Checking groupData to remove
+          List removeEntsList = operations.get(ProvisioningPlan.Operation.Remove);
+
+          if(Util.nullSafeSize(removeEntsList) > 0){
+            for(List listToRemove:removeEntsList){
+              if(lineList.containsAll(listToRemove)){
+                log.error("skip this line coz this is group to remove");
+              }
+              else{
+                finalString = finalString+entLine+"\n";
+              }
+            }
+          }
+          else{
+            finalString = finalString+entLine+"\n";
+          }
+        }
+      }
+      userBufferedReader.close();
+    }
+    catch(FileNotFoundException fnfe){
+      log.error("File not found"+fnfe);
+    }
+    //Adding Add Operation groups to the final String
+    List addEntsList = operations.get(ProvisioningPlan.Operation.Add);
+    if(Util.nullSafeSize(addEntsList) > 0){
+      for(String input:addEntsList){
+        finalString = finalString+input+"\n";
+      }
+    }
+    //return
+    return finalString;  
+  }
+
+
+
+
+
+
+  public String  buildFinalStringForModifyUser(String userFilePath,List finalDataList){
+    //String to store the final String
+    String finalString = "";
+
+    try{
+      //Reading the file using Bufferedreader and Adding the values to a final String Object
+      BufferedReader userBufferedReader = new BufferedReader(new FileReader(userFilePath));
+      header = userBufferedReader.readLine();
+      finalString = finalString+header+"\n";
+      String empLine = "";
+
+      while ((empLine = userBufferedReader.readLine()) != null) {
+        if( !empLine.equals("")){
+          String[] empArray = empLine.split(",");
+          List oriData = Util.arrayToList(empArray);
+          for(List data:finalDataList){
+            if(data.get(0).equals(oriData.get(0))){
+
+              int num = data.get(1);
+              log.error(num);
+              oriData.remove(num);
+              log.error("===oriData after remove==="+oriData);
+              oriData.add(data.get(1),data.get(2));
+              log.error("===oriData after add==="+oriData);
+              empLine = Util.listToCsv(oriData);
+              empLine = empLine.replaceAll(", ",",");
+              log.error("======final line====="+empLine);
+            }
+          }
+          finalString = finalString+empLine+"\n";
+        }
+      }
+      userBufferedReader.close();
+    }
+    catch(FileNotFoundException fnfe){
+      log.error("File not found"+fnfe);
+    }
+
+    return finalString;
+
+  }
+
+
+
+  public String operationDelete(String fileName, int indexValue, String nativeIdentity) throws Exception {
+
+    StringBuilder sb = new StringBuilder();
+    reader = new BufferedReader(new FileReader(fileName));
+    if(application.getAttributes().get("header")){
+      header = reader.readLine();
+    }
+    else
+    {
+      //get the columns names from the textarea from the application object
+    }//header will skip--line 1
+    while( (line = reader.readLine()) != null ){
+      record = line.split(",");
+      if(!nativeIdentity.equalsIgnoreCase(record[indexValue])){
+        sb.append(line+"\n");
+      }else{
+        log.error("delete the record or Skip the record");
+      }
+      //write to file
+    }
+    reader.close();
+    log.error("logic code executed successfully");
+    fileData = sb.toString();
+    log.error("fileData :"+fileData);
+    String statusOfoverRideExistingFileMethod = overRideExistingFile(fileName, fileData, header);
+
+    return statusOfoverRideExistingFileMethod;
+  }
+
+
+
+
+
+  public String overRideExistingFile(String fileName,String data,String header)throws Exception {
+    //Util.writeFile(fileName, header+"\n"+data);
+    BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName,false));
+    bufferedWriter.write(header+"\n"+data);
+    bufferedWriter.close();
+    return "success";
+  }
+
+  public void runAggregationTask(){
+    TaskDefinition task = context.getObjectByName(TaskDefinition.class,"IntConfiAccoutAggregation");
+    TaskManager taskManager = new TaskManager(context);
+    taskManager.run(task,null);
+  }
+
+
+  public void setProvisiongStatus(){
+    if(Boolean.FALSE.equals(userCheck) @and Boolean.FALSE.equals(userGroupCheck)){
+      if(flag == false){
+        if(!Util.isAnyNullOrEmpty(accountResult,groupResult) @and accountResult.equalsIgnoreCase("success") @and groupResult.equalsIgnoreCase("success")){
+          log.error(" account creation with the entitlements");
+          provisioningResult.setStatus("committed!!!");
+        }
+        else
+        {
+          log.error(" account creation with the entitlements and it failed");
+          provisioningResult.setStatus("failed!!!");
+        }
+      }
+      else{
+        if(!Util.isAnyNullOrEmpty(accountResult)){
+          log.error("only account creationv");
+          provisioningResult.setStatus("committed!!!");
+        }
+        else
+        {
+          log.error("only account creation  and it failed");
+          provisioningResult.setStatus("failed!!!");
+        }
+      }
+    }else{
+      
+      log.error("  ---- Account Already Existed but not updated in SailPoint!!! ----");
+      provisioningResult.addError(" Account Already Existed but not updated in SailPoint!!! ");
+      //runAggregationTask();
+    }
+
+  }
+
+
+
+  //-------------------------------------Operations in Files Based On AccountRequest Operation   MAIN CODE------------------------------------------
+  //=================================================================================================================================================
+  //=================================================================================================================================================
+
+  List listOfAccountRequest = plan.getAccountRequests();
+
+  if(Util.nullSafeSize(listOfAccountRequest) > 0 ){
+
+    for(AccountRequest accountRequest : listOfAccountRequest){
+
+      applicationName = accountRequest.getApplicationName();
+      application = context.getObjectByName(Application.class,applicationName);
+
+      nativeIdentity=accountRequest.getNativeIdentity();
+      
+      
+      if(application != null ){
+
+        String userFilePath = application.getAttributes().get("file");
+        String groupFilePath = application.getAttributes().get("group.file");
+        Schema accountSchema = application.getSchema("account");
+        Schema groupSchema = application.getSchema("group");
+
+        if(accountSchema != null @and groupSchema != null ){
+
+          List accountAttributes = accountSchema.getAttributeNames();
+          List groupAttributes = groupSchema.getAttributeNames();
+
+          if(Util.nullSafeSize(accountAttributes) >0 @and Util.nullSafeSize(groupAttributes) >0 ) {
+
+            ProvisioningPlan.AccountRequest.Operation accReqOperation = accountRequest.getOperation();
+
+
+            if(accReqOperation.equals(ProvisioningPlan.AccountRequest.Operation.Create)){
+
+              StringBuilder stringBuilder = new StringBuilder();
+
+              //adding EnployeeId column value from the accountRequest nativeidentity(IdentityAttribute) since it's not available in attributeRequest
+              userDataList.add(accountRequest.getNativeIdentity());
+              List listOfAttributeRequest = accountRequest.getAttributeRequests();
+
+              if(Util.nullSafeSize(listOfAttributeRequest) > 0 ){
+                log.error("---attReqsList null check ---");
+
+                for(AttributeRequest attributeRequest : listOfAttributeRequest){
+
+                  log.error("---AttributeRequest loop ---");
+                  ProvisioningPlan.Operation attReqOp=attributeRequest.getOp();
+                  boolean isEntitlement=accountSchema.getAttributeDefinition(attributeRequest.getName()).isEntitlement();
+                  boolean isManaged=accountSchema.getAttributeDefinition(attributeRequest.getName()).isManaged();
+
+                  // group(entitlements) attributes will have entitlement="true" managed="true" multi="true" in its attributeDefinition(of schema)
+                  if(attReqOp!=null @and isEntitlement  @and isManaged){
+
+                    log.error("index position if native identity :");
+
+                    //Adding group file column values to groupDataList based on their indexes fetching from groupAttributes list
+                    groupDataList.add(accountRequest.getNativeIdentity());            
+                    groupDataList.add(groupAttributes.indexOf(attributeRequest.getName()),attributeRequest.getValue().trim());
+                    groupDataList.add(groupAttributes.indexOf("GroupName"),attributeRequest.getDisplayValue().trim());          
+
+
+                    stringBuilder.append("\n"+Util.listToCsv(groupDataList));
+                    groupDataList.clear();
+
+                  }else {
+
+                    log.error("====userDataList===="+userDataList);
+
+                    log.error("---account AttributeRequest block userColumnIndex ---"+accountAttributes.indexOf(attributeRequest.getName()));
+                    int userColumnIndex=accountAttributes.indexOf(attributeRequest.getName());
+                    userDataList.add(userColumnIndex,attributeRequest.getValue());
+                  }
+                }
+
+              }
+
+              //writing the data into files by calling writeLine() for every AccountRequest create Operation**********
+
+              finalUserLine=Util.listToCsv(userDataList);
+              
+              userCheck=existinceChecking(userFilePath,nativeIdentity);
+               userGroupCheck=existinceChecking(groupFilePath,nativeIdentity);
+              
+              if(Boolean.FALSE.equals(userCheck) @and Boolean.FALSE.equals(userGroupCheck)){
+
+                log.error("----usercheck value==="+userCheck);
+                log.error("----userGroupCheck value==="+userGroupCheck);
+                
+                accountResult = writeLine(userFilePath, "\n"+finalUserLine, accReqOperation);
+
+                if(stringBuilder.length() > 0){
+                  log.error("stringBuilder  is not null"+stringBuilder+"  userGroupcheck    "+userGroupcheck);
+                  flag = false;
+                  groupResult = writeLine(groupFilePath, stringBuilder.toString(), accReqOperation);
+                }
+
+              }
+
+              log.error("accountResult : "+accountResult);
+
+              // boolean userGroupcheck=existinceChecking(groupFilePath,stringBuilder);
+
+
+              runAggregationTask();
+              setProvisiongStatus();
+
+            }else if(accReqOperation.equals(ProvisioningPlan.AccountRequest.Operation.Modify)){
+
+              //Getting List of attributeRequests form AccountRequest Object
+              List attrReqs = accountRequest.getAttributeRequests();
+
+              Map operations = new HashMap();
+
+              //To store Set operation of attributeRequest
+              List finalDataList = new ArrayList();
+
+              //Iterating the AttributeRequests List
+              for(AttributeRequest attrReq:attrReqs){
+
+                //Add operation of attributeRequest
+                if(attrReq.getOperation().equals(ProvisioningPlan.Operation.Add)){
+
+                  if(operations.get(attrReq.getOperation()) == null){
+                    List addEntList = new ArrayList();
+
+                    line = accountRequest.getNativeIdentity()+","+attrReq.getValue()+","+attrReq.getDisplayValue();
+                    addEntList.add(line);
+                    operations.put(ProvisioningPlan.Operation.Add,addEntList);
+                  }
+                  else{
+                    List entList = operations.get(attrReq.getOperation());
+
+                    line = accountRequest.getNativeIdentity()+","+attrReq.getName()+","+attrReq.getDisplayValue();
+                    entList.add(line);
+                    operations.put(ProvisioningPlan.Operation.Add,entList);
+                  }
+                }
+                //Remove operation of attributeRequest
+                else if(attrReq.getOperation().equals(ProvisioningPlan.Operation.Remove)) {
+
+                  log.error("entered attributeRequest remove operation");
+
+                  if(operations.get(attrReq.getOperation()) == null){
+
+                    List finalDataToRemove = new ArrayList();
+
+                    operations = addingDataToMap(operations,finalDataToRemove,accReq,attrReq);
+
+
+                  }
+                  else{
+                    List finalDataToRemove = operations.get(attrReq.getOperation());
+
+                    operations = addingDataToMap(operations,finalDataToRemove,accReq,attrReq);
+
+                  }
+
+                }
+
+                //Set operation of attributeRequest
+                else if(attrReq.getOperation().equals(ProvisioningPlan.Operation.Set)){
+
+                  //Creatinng a list to store the data of attribute request
+                  List data = new ArrayList();
+                  data.add(accountRequest.getNativeIdentity());
+
+                  //passing attreq.getName() and getting index of particular attribute from accountattributes list from schema
+                  int index = accountAttributes.indexOf(attrReq.getName());
+                  data.add(index);
+                  data.add(attrReq.getValue());
+
+                  //Adding the final data to the final Data List
+                  finalDataList.add(data);
+                }
+                else{
+                  log.error("for future updations");
+                }
+              }
+
+              //Condition to check wheather any operation of add or remove is present in attribute request to perform write operation
+              if(!(operations.get(ProvisioningPlan.Operation.Add) == null @and operations.get(ProvisioningPlan.Operation.Remove) == null)){
+                String finalGroupString = buildFinalStringForGroups(groupFilePath,operations);
+                groupResult = writeLine(groupFilePath, finalGroupString, ProvisioningPlan.AccountRequest.Operation.Modify);
+              }      
+
+              //condition to check wheather the set operation is present in attribute request to perform write operation
+              if(Util.nullSafeSize(finalDataList) > 0){
+
+                //passing to buildFinalStringForModifyUser and getting final string as output
+                String finalUserString = buildFinalStringForModifyUser(userFilePath,finalDataList);
+
+                log.error("=====Final user String===="+finalUserString);
+
+                //reWriting the file
+                accountResult =  writeLine(userFilePath, finalUserString, ProvisioningPlan.AccountRequest.Operation.Modify);
+              }
+            }else if(accReqOperation.equals(ProvisioningPlan.AccountRequest.Operation.Delete)){
+
+              //Op Operation
+
+              nativeIdentity = accountRequest.getNativeIdentity();
+              int accountIndex=accountAttributes.indexOf(nativeIdentity);
+              int groupIndex=groupAttributes.indexOf(nativeIdentity);
+
+              accountResult = operationDelete(groupFilePath, groupIndex,nativeIdentity);
+              groupResult = operationDelete(userFilePath, accountIndex,nativeIdentity);
+            }
+            else
+            {
+              // no operation
+            }
+
+          }
+
+
+        }
+      }
+
+    }
+
+  }
+
+
+
+
+  //=================================================================================================================================
+  //==============================================================================================================================================
+
+
+
+
+  // ------------------------------------------
+
+  return provisioningResult;
+
+
+
+  //Set the provisiongresult based on the success or failed
+
+  /* if(!Util.isAnyNullOrEmpty(accountResult,groupResult) @and accountResult.equalsIgnoreCase("success") @and groupResult.equalsIgnoreCase("success")){
+    TaskDefinition task = context.getObjectByName(TaskDefinition.class,"IntConfiAccoutAggregation");
+    TaskManager taskManager = new TaskManager(context);
+    taskManager.run(task,null);
+    provisioningResult.setStatus("committed");
+  }
+  else
+  {
+    provisioningResult.setStatus("failed");
+  }
+  return provisioningResult; */
+  ]]></Source>
+        
+
+</Rule>

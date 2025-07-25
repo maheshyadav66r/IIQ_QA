@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-SQL Querries" significantModified="1740622275108" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.api.Terminator;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+
+  
+//Identitie who have  SystemAdministrator capability/privillages
+  /*SELECT 
+    i.name AS identity_name, 
+    c.name AS capability_name
+FROM spt_identity i
+JOIN spt_identity_capabilities ic ON i.id = ic.identity_id
+JOIN spt_capability c ON ic.capability_id = c.id
+WHERE c.name = 'SystemAdministrator';*/
+  
+  
+  //Bundle Objects which have specific entitlements
+  /*
+SELECT spt_bundle.name as RoleName
+FROM spt_bundle
+LEFT JOIN spt_profile ON spt_bundle.id = spt_profile.bundle_id
+LEFT JOIN spt_profile_constraints ON spt_profile.id = spt_profile_constraints.profile
+WHERE  spt_profile_constraints.elt like '%CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com%';*/
+  
+  
+  //SELECT * FROM identityiq.spt_audit_event ae where ae.action='HR Source Joiner event' and ae.target in (select i.name from spt_identity i where i.department='Engineering'); 
+  
+  
+  /*SELECT * FROM identityiq.spt_identity where name='Axar Patel';
+SELECT * FROM identityiq.spt_audit_event ae where ae.action='HR Source Joiner event' and ae.target in (select i.name from spt_identity i where i.department='Engineering'); */
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  Logger log=Logger.getLogger("eshiam.rules.Validation-DuplicateEnt-Delete");
+
+  QueryOptions qo=new QueryOptions();
+  String nativeIdentity="CN=Amanda Ross,OU=People,OU=Demo,DC=Eshiam,DC=com";
+
+  Filter filter=Filter.and(Filter.eq("nativeIdentity",nativeIdentity),Filter.eq("application.name","ActiveDirectory"));
+  qo.addFilter(filter);
+ // List links=context.getObjects(Link.class,qo);
+
+  Link link=context.getUniqueObject(Link.class,filter);
+
+  Identity identity=link.getIdentity();
+  log.error("--identity--"+identity);
+  
+   return identity;
+
+  
+
+
+
+  return "mm";
+  Terminator terminator=new Terminator(context);
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("application.name","JDBCProvisioning");
+  qo.add(f);
+
+  List managedAttributes=context.getObjects(ManagedAttribute.class,qo);
+  //  return managedAttributes.size();
+  log.error("duplicate entitlement is deleted------"+managedAttributes);
+
+ 
+  ]]></Source>
+        
+
+</Rule>

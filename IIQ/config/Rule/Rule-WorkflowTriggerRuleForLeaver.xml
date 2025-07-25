@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Workflow Trigger Rule for Leaver" significantModified="1718186068199">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.api.Workflower;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Workflow;
+  import sailpoint.api.sailpointContext;
+  import sailpoint.object.WorkflowLaunch;
+  import sailpoint.integration.ProvisioningPlan;
+  import sailpoint.integration.ProvisioningPlan.AccountRequest;
+  import sailpoint.integration.ProvisioningPlan.AttributeRequest;
+
+
+  //Create WorkflowLaunch and set values
+  WorkflowLaunch wflaunch = new WorkflowLaunch();
+
+  String  workflowName = "HR Source Lifecycle Event - LeaverWorkFlow";
+  HashMap launchArgsMap = new HashMap();
+  launchArgsMap.put("identityName","Mahesh Nattali");
+  //launchArgsMap.put("identityName",identityName);
+
+  Workflow wf = (Workflow) context.getObjectByName(Workflow.class, workflowName);
+
+  wflaunch.setWorkflowName(wf.getName());
+  wflaunch.setWorkflowRef(wf.getName());
+  wflaunch.setVariables(launchArgsMap);
+
+  //Create Workflower and launch workflow from WorkflowLaunch
+  Workflower workflower = new Workflower(context);
+  WorkflowLaunch launch = workflower.launch(wflaunch);
+
+  return launch;
+
+
+ /* WorkflowLaunch wfLaunch=new WorkflowLaunch();
+
+  Workflow wf=context.getObjectByName(Workflow.class,"HR Source Lifecycle Event - Joiner");
+  HashMap launchArgsMap=new HashMap();
+  launchArgsMap.put("identityName",identityName);
+
+
+  wfLuanch.setWorkflowName(wf.getName());
+  wfLaunch.setWorkflowRef(wf.getName());
+  wfLaunch.setWorkflowRef(launchArgsMap);
+
+
+  Workflower wFlower=new Workflower();
+  
+  Workflow wflow=wFlower.lauch(wf);
+  return wfLaunch;*/
+  
+
+
+]]></Source>
+        
+
+</Rule>

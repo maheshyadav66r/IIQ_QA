@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="CF-LeaverTrigger-Rule" significantModified="1737714049025" type="IdentityTrigger">
+          
+    
+    <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+          
+    
+    <Signature returnType="boolean"/>
+          
+    
+    <Source><![CDATA[import sailpoint.tools.Util;
+  import java.text.*;
+  import java.util.Calendar;
+  import java.util.Date;
+  import java.time.LocalDateTime;
+  import java.time.format.DateTimeFormatter;
+
+  SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+  Date currentDate = new Date();
+  String currentDateString= sdf.format(currentDate);
+  Date actualCurrentDate= sdf.parse(currentDateString);
+
+  log.error("---currentDateString---"+currentDateString+"    ----actualCurrentDate--"+actualCurrentDate+"   ----currentDate--"+currentDate);
+
+  try{
+
+    if(newIdentity.getName().equals("85345678905730")){
+      System.out.println("[CF-Mover-Rule] : inside third if block : returning true and exiting.");
+      return true;
+    }
+
+    String strAction_old = previousIdentity.getAttribute(ATR_ACTION) != null ? previousIdentity.getAttribute(ATR_ACTION) : "";
+    String strEmpStatus_old = previousIdentity.getAttribute(ATR_HRSTATUS) != null ? previousIdentity.getAttribute(ATR_HRSTATUS) : "";
+    String strAction = newIdentity.getAttribute(ATR_ACTION) != null ? newIdentity.getAttribute(ATR_ACTION) : "";
+    String actionDate = newIdentity.getAttribute(ATR_ENDDATE) != null ? newIdentity.getAttribute(ATR_ENDDATE) : "";
+    String strEmpStatus = newIdentity.getAttribute(ATR_HRSTATUS) != null ? newIdentity.getAttribute(ATR_HRSTATUS) : "";
+    SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+    String termDate=newIdentity.getAttribute("termdate");
+    Date actualTermDatee= sdf.parse(termDate);
+
+
+    System.out.println("CF-LeaverTrigger-Rule: new action, emp status "+strAction+" , "+strEmpStatus+" , "+actualTermDatee);
+
+    if(newIdentity != null && previousIdentity != null && Util.isNotNullOrEmpty(strAction) && Util.isNotNullOrEmpty(actionDate) && Util.isNotNullOrEmpty(strEmpStatus) ) {
+
+      Date actDate = new SimpleDateFormat("dd-MMM-yy").parse(actionDate);
+      Date cDate = new Date();
+      SimpleDateFormat simpleDT= new SimpleDateFormat("dd-MMM-yy");
+      String currentDateString=simpleDT.format(cDate);
+      Date currentDate =simpleDT.parse(currentDateString);
+      System.out.println("[CF-LeaverTrigger-Rule] : currentDate = " + currentDate);
+      SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+      Date triggerTime = sdf.parse("18:00");
+      Date date = new Date();
+      Date time = sdf.parse(sdf.format(date));
+      if(actualTermDatee.compareTo(currentDate)<0){
+        //to check if the user's previous ACTION and hrStatus should NOT be any of the following
+        //if (!strEmpStatus_old.equalsIgnoreCase(STR_HRSTATUS_I)) { // uncomment this line
+        if (newIdentity.isInactive() && ((actualTermDatee != null) && (strEmpStatus.equalsIgnoreCase(STR_HRSTATUS_I)))) {
+          return true;
+
+        }
+        //}
+      }
+      // **** Check the variable names and syntax in the below condition ****
+      else if(actualTermDatee.compareTo(currentDate)==0 && time.after(triggerTime)){
+        if (newIdentity.isInactive() && ((actualTermDatee != null) && (strEmpStatus.equalsIgnoreCase(STR_HRSTATUS_I)))) {
+          if((newIdentity.getAttribute("isLeaverProcessed") == null) ||(!newIdentity.getAttribute("isLeaverProcessed").equalsIgnoreCase("true"))){
+            // **** check and initialize the variables ****
+            previousIdentity.setAttribute("isLeaverProcessed","true");
+            newIdentity.setAttribute("isLeaverProcessed","true");
+            context.startTransaction();
+            context.saveObject(newIdentity);
+            context.commitTransaction();
+            context.attach(newIdentity);
+            log.info("[CF-LeaverTrigger-Rule]: inside else if block : returning true and exiting.");
+            return true;
+          }
+        }
+
+      }
+    }
+    log.info("[CF-LeaverTrigger-Rule]: outisde if block : returning false and exiting.");
+    return false;
+  } catch (Exception e) {
+    log.error("[CF-LeaverTrigger-Rule] : inside catch block : returning false and exiting : exception = " +e);
+    return false;
+  }]]></Source>
+        
+
+</Rule>

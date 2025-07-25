@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="AliasTask" significantModified="1732523507708" type="">
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="Alias Form"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Alias Form" posX="319" posY="100">
+                    
+        
+        <Approval name="AliasForm" owner="$(launcher)" return="operation,alias,email,owner" send="">
+                              
+            
+            <Form name="AliasForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="hideIncompleteFields">
+                                                                      
+                            
+                            <value>
+                                                                                
+                                
+                                <Boolean/>
+                                                                              
+                            
+                            </value>
+                                                                    
+                        
+                        </entry>
+                                                            
+                        
+                        <entry key="includeHiddenFields">
+                                                                      
+                            
+                            <value>
+                                                                                
+                                
+                                <Boolean/>
+                                                                              
+                            
+                            </value>
+                                                                    
+                        
+                        </entry>
+                                                            
+                        
+                        <entry key="pageTitle" value="AliasForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section name="Alias Task">
+                                                  
+                    
+                    <Field displayName="operation" name="operation" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>Add</String>
+                                                                                          
+                                    
+                                    <String>Remove</String>
+                                                                                          
+                                    
+                                    <String>Modify</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Alias" name="alias" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[ 
+                        if (form.getField("operation").getValue() == null){
+                        return true;
+                        }
+                        else{
+                        return !(form.getField("operation").getValue().equals("Add")|| form.getField("operation").getValue().equals("Remove"));
+                        }]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <ValidationScript>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import java.sql.Connection;
+                import java.sql.DriverManager;
+                import java.sql.PreparedStatement;
+                import java.sql.SQLException;
+                import sailpoint.object.*;
+                import sailpoint.tools.Message;  
+
+                if("Add".equals(form.getField("operation").getValue())){
+
+                String dbUrl = "jdbc:mysql://localhost/iiqPractice"; 
+                String dbUsername = "root"; 
+                String dbPassword = "root"; 
+
+                Connection connection = null;
+                PreparedStatement preparedStatement = null;
+
+                try {
+
+                Class.forName("com.mysql.cj.jdbc.Driver");
+
+                connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+                String sql = "SELECT Alias FROM Users WHERE Alias = ?";
+                preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, alias);
+
+                resultSet = preparedStatement.executeQuery();
+
+                List messages = new ArrayList();
+
+                log.error("before storing");
+                log.error(resultSet.next());
+
+                //log.error(existing);
+                if(existing != null ){
+
+                log.error("entered");
+
+                Message msg = new Message();
+                msg.setKey("alias name: " + value + " already exists enter unique alias name");
+                messages.add(msg);
+                return messages;
+                }
+                return messages;
+
+                } catch (Exception e) {
+
+                e.printStackTrace();
+                return false;
+
+                } finally {
+                if (resultSet != null) {
+                try {
+                resultSet.close();
+                } catch (SQLException e) {
+                e.printStackTrace();
+                }
+                }
+                if (preparedStatement != null) {
+                try {
+                preparedStatement.close();
+                } catch (SQLException e) {
+                e.printStackTrace();
+                }
+                }
+                if (connection != null) {
+                try {
+                connection.close();
+                } catch (SQLException e) {
+                e.printStackTrace();
+                }
+                }
+                }
+                }
+              ]]></Source>
+                                                                    
+                        
+                        </ValidationScript>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Email" name="email" required="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[                       
+                        if (form.getField("operation").getValue() == null){
+                        return true;
+                        }
+                        else{
+                        return !form.getField("operation").getValue().equals("Add");
+                        }]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Owner" name="owner" required="true" type="sailpoint.object.Identity">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[
+                        if (form.getField("operation").getValue() == null){
+                        return true;
+                        }
+                        else{
+                        return !form.getField("operation").getValue().equals("Add");
+                        }]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Alias Details" displayOnly="true" name="aliasDetails" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[ 
+                        if (form.getField("operation").getValue() == null) {
+                        return true;
+                        } else {
+                        return !(form.getField("operation").getValue().equals("Remove") && form.getField("alias").getValue() != null);
+                        }
+
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                                
+                                
+                                <entry key="readOnly" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[ 
+                import sailpoint.object.Identity;
+                import sailpoint.api.SailPointContext;
+                import sailpoint.tools.GeneralException;
+
+                // This method will be triggered when the form is posted back on alias field change
+                void fetchAliasDetails() {
+                String alias = form.getField("alias").getValue();
+                String operation = form.getField("operation").getValue();
+
+                if ("Remove".equals(operation) && alias != null && !alias.isEmpty()) {
+                try {
+                // Fetch alias details from backend (adjust according to your actual backend implementation)
+                Identity identity = context.getObjectByName(Identity.class, alias);
+
+                if (identity != null) {
+                String email = identity.getAttribute("email");
+                String owner = identity.getAttribute("owner");
+
+                // Populate the form fields
+                form.getField("email").setValue(email);
+                form.getField("owner").setValue(owner);
+
+                // Set alias details
+                String aliasDetails = "Email: " + email + "\nOwner: " + owner;
+                form.getField("aliasDetails").setValue(aliasDetails);
+                } else {
+                // Clear fields if alias is not found
+                form.getField("email").setValue("");
+                form.getField("owner").setValue("");
+                form.getField("aliasDetails").setValue("");
+                form.addError("Invalid alias entered. Please try again.");
+                }
+                } catch (GeneralException e) {
+                form.addError("Error fetching details: " + e.getMessage());
+                }
+                }
+                }
+
+                // Call the method on postBack for alias field
+                fetchAliasDetails();]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="JDBC Connection"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+          
+    
+    <Step icon="Default" name="JDBC Connection" posX="510" posY="98">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[import java.sql.Connection;
+        import java.sql.DriverManager;
+        import java.sql.PreparedStatement;
+        import java.sql.SQLException;
+
+        // JDBC connection details
+        String dbUrl = "jdbc:mysql://localhost/iiqPractice"; // Update with your database URL
+        String dbUsername = "root"; // Update with your database username
+        String dbPassword = "root"; // Update with your database password
+
+        // Initialize JDBC connection and prepared statement
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+        // Load the JDBC driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        // Establish the connection to the database
+        connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+        // Check if the operation is "Add" or "Remove"
+        if ("Add".equalsIgnoreCase(operation)) {
+
+        // SQL query for inserting a new alias
+        String sql = "INSERT INTO emailaliases (Alias, Email, Owner) VALUES (?, ?, ?)";
+        preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, alias);
+        preparedStatement.setString(2, email);
+        preparedStatement.setString(3, owner);
+
+        // Execute the INSERT operation
+        int result = preparedStatement.executeUpdate();
+
+        } else if ("Remove".equalsIgnoreCase(operation)) {
+
+        // SQL query for deleting an alias
+        String sql = "DELETE FROM Users WHERE Alias = ?";
+        preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, alias);
+
+        // Execute the DELETE operation
+        int result = preparedStatement.executeUpdate();
+
+        } 
+        } catch (Exception e) {
+        // Handle SQL or class loading errors
+        workflow.setVariable("dbResult", "Error: " + e.getMessage());
+
+        } finally {
+        // Clean up JDBC resources
+        if (preparedStatement != null) {
+        try { preparedStatement.close(); } catch (SQLException e) {}
+        }
+        if (connection != null) {
+        try { connection.close(); } catch (SQLException e) {}
+        }
+        }]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+        
+
+</Workflow>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="FirstForm" significantModified="1729251760656" type="Workflow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="pageTitle" value="FirstForm"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Description/>
+          
+    
+    <Section name="Basic Details">
+                    
+        
+        <Field displayName="FirstName" dynamic="true" name="firstName" postBack="true" required="true" type="string">
+                              
+            
+            <RuleRef>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Email Creationfrom sAMAccountName"/>
+                                      
+            
+            </RuleRef>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+          
+    
+    <Section name="AdditionalDetails">
+                    
+        
+        <Field displayName="EmailId" name="emailId" type="string"/>
+                  
+    
+    </Section>
+        
+
+</Form>

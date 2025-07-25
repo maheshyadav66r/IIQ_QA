@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-BSDG_7" significantModified="1736244741694" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Identity;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.tools.Util;
+  import sailpoint.object.TaskResult;
+  import sailpoint.tools.Message;
+   import sailpoint.object.QueryOptions;
+
+  for(int i=0;i < this.variables.length;i++){
+    log.error("--"+this.variables[i]);
+  }
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(Filter.eq("workgroup", false));
+  int numIdentities = context.countObjects(Identity.class, qo);
+
+  QueryOptions qo = new QueryOptions();
+  qo.addFilter(Filter.eq("workgroup", true));
+  int numWorkgroups = context.countObjects(Identity.class, qo);
+
+  List idList = context.getObjects(Identity.class);
+String trMsg = "numIdentities:" + numIdentities + " numWorkgroups:" + numWorkgroups+"   idList  "+idList.size();
+  log.error(trMsg);
+  if((taskResult==void) @and (taskResult==null)@and (!taskResult instanceof TaskResult)){
+    log.error("taskResult is void, null or not a handle to a sailpoint.object.TaskResult");
+    return;
+  }
+  
+  taskResult.addMessage(new Message(trMsg,null));
+  taskResult.setProgress("Done with Execution"+trMsg);
+  taskResult.	setCompletionStatus(TaskResult.CompletionStatus.Success);
+  
+  context.saveObject(taskResult);
+  context.commitTransaction();
+   log.error("  taskResult   "+taskResult.toXml());
+  
+
+  return "nnn";
+  ]]></Source>
+        
+
+</Rule>

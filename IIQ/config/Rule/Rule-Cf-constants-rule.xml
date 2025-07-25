@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="CF-Constants-Rule" significantModified="1738574507090">
+          
+    
+    <Source><![CDATA[
+
+// General Variables
+String STR_FEP_SALESFORCE = "FEP Salesforce";
+String STR_ONESTOPCLOUD = "OneStopCloud_SIT";
+String STR_ACTIVE_DIRECTORY = "Active Directory";
+String STR_SFHC360 = "HC360 SailPoint";
+
+String STR_CIAM_Role_Sync_VAULT = "CIAM-ROLE SYNC-Vault";
+String STR_Auth_App = "HR Application";
+String STR_Auth_App_Old ="";
+String STR_POWERSHELL_URL = "http://sv-exmail16-t1.carefirsttest.com/powershell";
+String STR_FEPOC_APP = "FEPOC AD DEV - Read Only";
+String ATR_COSTCENTER = "costcenter";
+String ATR_JOBCODE="jobcode";
+String ATR_POSITIONNUMBER="positionNumber";
+String ATR_EEOCODE = "eeojobgroup";
+
+String STR_ENVIRONMENT = "SIT";
+String STR_BIZAPP = "BizAppAD";
+String STR_ISAM_LDAP = "ISAM LDAP";
+String STR_JMS_REQ_VALUT_NAME = "JMS-Request-Vault";
+String STR_ONESTOP_SERVICENOW = "OneStopSand-ServiceNow";
+String STR_HR_APP = "HR Application";
+String STR_CIAM_USERS_VAULT = "CIAM-Users-Vault";
+
+String STR_SearchFilter = "(employeeID="+empID+")";
+String bizappDN="OU=Users,OU=Corporate,DC=bizappstest,DC=local";
+String bizappPrincipalName="@bizappstest.local";
+String STR_CREATE = "Create";
+String STR_DISABLE = "Disable";
+String STR_DELETE = "Delete";
+String STR_ENABLE = "Enable";
+String STR_ACTION_TER = "TER";
+String STR_ACTION_HIR = "HIR";
+String STR_ACTION_ADD = "ADD";
+String STR_ACTION_COM = "COM";
+String STR_HR_STATUS = "HR_STATUS";
+String STR_LAST_HIRE_DT = "LAST_HIRE_DT";
+String STR_TERMINATION_DT = "TERMINATION_DT";
+String STR_CAREFIRST_MAIL = "@carefirsttest.com";
+String STR_CCO_MAIL = "@cfcarecotest.com";
+String STR_TRU_MAIL = "@carefirstchpdctest.com";
+String STR_EPOCH_TIMESTAMP = "441482382000000000";
+String STR_O365_RETAIN_OU = "=O365";
+String STR_OU_SPLIT = ",OU";
+String STR_ADMIN_MAIL = "Admin@carefirst.com";
+String STR_PERFORMOPS_CSV_PATH = "/home/iqadmin/Data/HRFeed_Delete.csv";
+String STR_COMMA_DELIMITER = ",";
+String STR_PERFORMOPS_CUSTOMOBJ = "CF-PerformOperations-Custom";
+String STR_PERFORMOPS_EMAILTEMPLATE = "CareFirst-PerformUserOperations-EmailTemplate";
+String STR_WIL_MAIL = "@cfabluetest.com";
+String STR_SBP_MAIL = "@fepoctest.com";
+String STR_TERMDATE = "termdate";
+String STR_HIREDATE = "hireDate";
+String STR_IDENTITYNAME = "identityName";
+String STR_FEPOCCOMPANY_SBP = "SBP";
+String STR_DATE_FORMAT_SLASHES = "MM/dd/yyyy";
+String STR_DATE_FORMAT = "dd-MMM-yy";
+String STR_END_DATE_VALUE = "01-Jan-30";
+//String STR_END_DATE_VALUE ="01/01/2030";
+String ATR_START_DATE = "Start Date";
+String ATR_END_DATE = "End Date";
+String STR_DN = "distinguishedName";
+String STR_HOMEPAGECONSTANT = "https://mysite.carefirst.com/Person.aspx?accountname=BCBSMD\\";
+// CIAM Delta user rule update
+String STR_DBUNAME = "identityiq";
+//String STR_DBPASS = "Identityiq123$";
+String STR_DBPASS = "$ailPoin12020$test";
+String STR_URL = "jdbc:sqlserver://sv-spidsql-t1.carefirst.com";
+String STR_FILENAME = "//home//iqadmin//Data//CIAM-UserToRoleMapping//DailyRoleUpdate ";
+// Custom Objects
+String STR_USERID_CUSTOM_OBJ = "CF-UserIDGeneration-CustomObject";
+String STR_CUSTOM_VALUE = "Value";
+String STR_CUSTOM_CONSTANT = "constant";
+String ATR_ACTIVE = "Active";
+String ATR_ACTIVE_A = "A";
+String STR_IQServiceServer = "sv-spidsvc-t3.carefirsttest.com";
+String STR_IQServicePort = "5050";
+String STR_ADDomain_URL = "ldap://azw-adcftest-t1.carefirsttest.com:389";
+String STR_FUTUREHIREUSER_DELETION_EMAILTEMP = "CareFirst-UserDeletion-EmailTemplate";
+String STR_USERTYPE_ROLEMAPPING_CUSTOMOBJ = "CF-UserType-RoleMapping-Custom";
+String STR_ORACLE_EBS = "ORACLE EBS";
+String STR_ORACLEDB_CFUSERPROFILE = "CF_USER_PROFILE";
+String STR_ORACLEDB_RUBIPROFILE = "RUBIPROFILE";
+String STR_ORACLEDB_DEFAULTTABLESPACE = "USERS";
+String STR_ORACLEDB_TEMPORARYTABLESPACE = "TEMP";
+String STR_ORACLEDB_TEMPORARYTABLESPACE_RUBI = "RUBI_TEMP";
+String STR_ORACLEDB_AUTHENTICATIONTYPE = "PASSWORD";
+String STR_ADMIN_MAIL = "Admin@carefirst.com";
+String STR_ORACLEDB_RUBISUFFIX = "_RUBI";
+String STR_ORACLEDB_NEWACCOUNTNOTIFICATION_EMAILTEMPLATE="CF-OracleDBNewAccountCreationNotification-EmailTemplate";
+
+String STR_SALESFORCE_NEWACCOUNTNOTIFICATION_EMAILTEMPLATE="CF-SalesforceNewAccountCreationNotification-EmailTemplate";
+
+
+String STR_ISAMLDAP_GSOWIKIUSERNOPASSWORD_EMAILTEMPLATE = "CF-ISAMLDAPGSOWikiUserNoPasswordNotification-EmailTemplate";
+
+//CEO AccessReview Delegation Identity
+String ceoDelegationIdentity="007164";
+String evpforRemotePrintingReview="009864";
+
+
+// JMS Message Variables
+String ISAM_LDAP_QNAME = "TIBEMSQ.CIAM.ARIBA.PROVISIONING.RES";
+String ISAM_LDAP_TIBCO_Q_HOSTNAME = "svl-tibbwems-d5";
+String ISAM_LDAP_TIBCO_Q_PORT = "7333";
+String ISAM_LDAP_TIBCO_Q_USERNAME = "TIBEMS_JAVA_ARIBA_CIAM";
+String ISAM_LDAP_TIBCO_Q_PASSWORD = "JP4G1zXXf#YXEI8";
+String ISAM_LDAP_JMS_USER_CREDENTIALS = "admin@local:Cf1@m016t";
+String ISAM_LDAP_JMS_URL = "https://sal-isamprxe-tt1/isam/pdadmin";
+String ATR_AUTHERIZATION = "Authorization";
+String STR_POST = "POST";
+String ATR_CONTENT_TYPE = "Content-Type";
+String STR_CONTENT_VALUE = "application/x-www-form-urlencoded";
+String ATR_CONTENT_LANGUAGE = "Content-Language";
+String STR_LANGUAGE = "en-US";
+String ATR_ACCEPT = "Accept";
+String ATR_ACCEPT_VALUE = "application/json";
+String ATR_DELETE_WORKFLOWNAME = "CF-Delete-Workflow";
+String STR_USERSLIST = "usersList";
+
+// Identity Attrbibutes
+String ATR_USERID = "userid";
+String ATR_JOBTITLE = "jobtitle";
+String ATR_EMPLOYEETYPE = "employeetype";
+String ATR_MIDDLENAME = "middleName";
+String ATR_LOCATION = "location";
+String ATR_ACTION = "action";
+String ATR_ENDDATE = "enddate";
+String ATR_STARTDATE = "startdate";
+String ATR_DESCR = "descr";
+String ATR_COMPANY = "company";
+String ATR_EMAIL = "email";
+String ATR_NAME = "name";
+String ATR_DISPLAYNAME = "displayName";
+String ATR_MANAGERNAME = "managerName";
+String ATR_BUNDLE_LIST = "bundleList";
+String ATR_PASSWORD = "password";
+String ATR_LASTNAME = "LAST_NAME";
+String ATR_EFFECTIVE_DATE = "EFFDT";
+String ATR_HIREDATE = "HIRE_DT";
+String ATR_OBJ_ACTION = "ACTION";
+String ATR_OBJ_PER_ORG = "PER_ORG";
+String ATR_OBJ_EMP_STATUS = "EMPLOYEE_STATUS";
+String ATR_OBJ_EMPL_STATUS = "EMPL_STATUS";
+String STR_ACTIVE = "A";
+String STR_EMP = "EMP";
+String STR_CWR = "CWR";
+String STR_FEPOC_EMP = "FEPOC_EMP";
+String STR_FEPOC_CWR = "FEPOC_CWR";
+String ATR_FIRSTNAME = "firstname";
+String ATR_IDEN_LASTNAME = "lastname";
+String ATR_COSTCENTER = "costcenter";
+String ATR_EMPLOYEEID = "employeeid";
+String STR_REH = "REH";
+String ATR_DEPTID = "deptid";
+String ATR_DEPTNAME = "departmentName";
+String ATR_PHONE = "phone";
+String ATR_BUSINESSUNIT = "businessunit";
+String ATR_COUNTRY = "country";
+String ATR_VENDOR = "neeProviderId";
+
+
+//Password policies
+String STR_AD_PASSWORD_POLICY = "CF-ActiveDirectory-PasswordPolicy";
+
+
+// Joiner Variables
+
+String APP_IIQ = "IIQ";
+String STR_EMPLOYEE = "ASSOCIATE";
+//String STR_EMPLOYEE = "EMP";
+String STR_AFFILIATE = "AFFILIATE";
+String STR_FEPOCEMPLOYEE = "";
+String STR_FEPOCASSOCIATE = "FEPOC Associate";
+String STR_FEPOCCONTRACTOR = "FEPOC Contractor";
+String ATR_EMPLOYEESTATUS = "employeestatus";
+String ATR_HRSTATUS = "hrStatus";
+String STR_HRSTATUS_I = "I";
+String ATR_HIRE = "HIR";
+String ATR_PREHIRE = "Pre Hire";
+String ATR_ASSIGNEDROLES = "assignedRoles";
+String STR_ASSOCIATEBIZROLE = "Associate Biz Role";
+//String STR_ASSOCIATEBIZROLE = "Associate Biz Role Test";
+String STR_CONTRACTORBIZROLE = "Contractor Biz Role";
+String STR_KEYEDINROLE = "PRJ_COLLABORATOR";
+String STR_FEPOCASSOCIATEBIZROLE = "";
+String STR_FEPOCCONTRACTORBIZROLE = "";
+String STR_ATR_ASSOCIATE = "AssociateRoles";
+String STR_ATR_CONTRACTOR = "ContractorRoles";
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_JOINER = "CF-JoinerProvisioningSuccess-EmailTemplate";
+String STR_PROVISIONING_FAILURE_EMAIL_TEMPLATE = "CF-ProvisioningFailure-EmailTemplate";
+String STR_AUDIT_JOINER_SUCESS_NOTIFICATION = "CF-ProvisioingSuccess-Joiner";
+String STR_AUDIT_JOINER_FAILURE_NOTIFICATION = "CF-ProvisioingFailure-Joiner";
+String STR_DISABLE_EMAIL_TEMPLATE = "CF-DisableAccount-EmailTemplate";
+String STR_AUDIT_DISABLE_JOINER_NOTIFICATION = "Carefirst-JoinerDisable-ProvisioingSuccess";
+String STR_SKYPE_REGISTRARPOOL = "sfb.carefirst.com";
+
+String STR_AUDIT_DELETE_SUCCESS_NOTIFICATION = "Carefirst-Delete-ProvisioingSuccess";
+String STR_AUDIT_DELETE_FAILURE_NOTIFICATION = "Carefirst-Delete-ProvisioingFailure";
+String STR_AUDIT_CF_SP_CIAMSYNCFAILURE = "CF-SP-CiamSyncFailure";
+
+// Mover Varaibles
+String STR_CONTRACTOR = "CONTRACTOR";
+String STR_OLD_USER_TYPE = "OldUserType";
+String STR_NEW_USER_TYPE = "NewUserType";
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE = "CareFirst-EmailTemplate-ProvisioningSuccess";
+String STR_ADUIT_MOVER_SUCCESS_NOTIFICATION = "CF-ProvisioingSuccess-Mover";
+String STR_ADUIT_MOVER_FAILURE_NOTIFICATION = "Carefirst-Mover-ProvisioingFailure";
+
+String STR_ASOCIATES_ORG = "OU=Associates";
+String STR_CONTRACTOR_ORG = "OU=Contractors";
+// String STR_ASSOCIATE_OU = "OU=AzureUsers,OU=Associates,OU=Users,OU=Corporate,DC=carefirsttest,DC=com";
+String STR_ASSOCIATE_OU = "OU=Associates,OU=Users,OU=Corporate,DC=carefirsttest,DC=com";
+String ASSOCIATEOU = "OU=Associates,OU=Users,OU=Corporate,DC=carefirst,DC=com";
+// String STR_CONTRACTOR_OU = "OU=AzureUsers,OU=Contractors,OU=Users,OU=Corporate,DC=carefirsttest,DC=com";
+String STR_CONTRACTOR_OU = "OU=Contractors,OU=Users,OU=Corporate,DC=carefirsttest,DC=com";
+String STR_AFFILIATE_OU = "OU=NoEmail,OU=Contractors,OU=Users,OU=Corporate,DC=carefirst,DC=com";
+String CONTRACTOROU = "OU=Contractors,OU=Users,OU=Corporate,DC=carefirst,DC=com";
+String STR_FEPOCCONTRACTOR_OU = "";
+String STR_FEPOCASSOCIATE_OU = "";
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_MOVER = "CareFirst-MoverProvisioningSuccess-EmailTemplate";
+
+
+// Leaver Variables;
+
+String STR_TERMINATE = "T";
+String STR_EMPSTATUS_T = "T";
+
+String STR_ACTION_TWP = "TWP";
+String STR_EMPSTATUS_U = "U";
+
+String STR_ACTION_RET = "RET";
+String STR_EMPSTATUS_R = "R";
+
+String STR_ACTION_RWP = "RWP";
+String STR_EMPSTATUS_Q = "Q";
+
+
+String STR_ACTION_COM = "COM";
+
+String STR_ADUIT_LEAVER_SUCCESS_NOTIFICATION = "Carefirst-Leaver-ProvisioingSuccess";
+String STR_ADUIT_LEAVER_FAILURE_NOTIFICATION = "Carefirst-Leaver-ProvisioingFailure";
+String ATR_APPLICATION1 = "Application1";
+String ATR_APPLICATION2 = "Application2";
+String ATR_APPLICATION3 = "Application3";
+String ATR_APPLICATION4 = "Application4";
+
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_LEAVER = "CF-LeaverProvisioningSuccess-EmailTemplate";
+
+//Rehire Variables
+String ATR_REH = "REH";
+String STR_EMPSTATUS_A = "A";
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_REHIRE = "CF-RehireProvisioningSuccess-EmailTemplate";
+String STR_ADUIT_REHIRE_SUCCESS_NOTIFICATION = "Carefirst-Rehire-ProvisioingSuccess";
+String STR_ADUIT_REHIRE_FAILURE_NOTIFICATION = "Carefirst-Rehire-ProvisioingFailure";
+
+//LOA Variables
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_LOA = "CF-LOAProvisioningSuccess-EmailTemplate";
+String STR_ADUIT_LOA_SUCCESS_NOTIFICATION = "Carefirst-LOA-ProvisioingSuccess";
+String STR_ADUIT_LOA_FAILURE_NOTIFICATION = "Carefirst-LOA-ProvisioingFailure";
+
+//RLOA Variables
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_RLOA = "CF-RLOAProvisioningSuccess-EmailTemplate";
+String STR_ADUIT_RLOA_SUCCESS_NOTIFICATION = "Carefirst-ROA-ProvisioingSuccess";
+String STR_ADUIT_RLOA_FAILURE_NOTIFICATION = "Carefirst-RLOA-ProvisioingFailure";
+
+//User Types
+String STR_CAREFIRST_ASSOCIATE = "CareFierst Associate";
+String STR_CAREFIRST_CONTARCTOR = "CareFierst Contarctor";
+String STR_FEPOC_ASSOCIATE = "FEPOC Associate";
+String STR_FEPOC_CONTRACTOR = "FEPOC Contractor";
+
+
+String STR_ISAM_LDAP_DN = "ou=users,dc=carefirst,dc=com";
+
+String STR_DC_LDAP_DN="OU=Users,OU=Corporate,DC=cfportaltst,DC=com";
+
+// USer ID generate web service call argumnets
+
+String STR_USERID_REQUESTXML = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:uaas=\"http://www.carefirst.com/ciam/services/uaas\" xmlns:uaas1=\"http://associate.insidecarefirst.com/ciamservices/service/uaas_types\">" +
+" <soapenv:Header/> " +
+" <soapenv:Body> " +
+" <uaas:generateNextUserIDInput> " +
+" <uaas1:uaasAdminUserID>aac5790 </uaas1:uaasAdminUserID> " +
+" </uaas:generateNextUserIDInput> " +
+" </soapenv:Body> " +
+" </soapenv:Envelope>";
+// String STR_USERID_ENDPOINT = "http://associatedev.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+String STR_USERID_ENDPOINT = "http://associatett.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+
+//String STR_WEBSERVICE_ENDPOINT = "http://associatedev.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+String STR_WEBSERVICE_ENDPOINT = "http://associatett.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+// String STR_WEBSERVICE_ENDPOINT = "https://associate.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+
+String STR_CIAM_WE_FAILURE_NOTIFICATION = "CF-SP-CIAM-Integration-FailureNotification-EmailTemplate";
+
+ 
+
+String STR_ACTIVEDIRECTORY_TERMEDOU = "OU=Termed Users,OU=Users,OU=Corporate,DC=carefirsttest,DC=com ";
+String STR_ACTIVEDIRECTORY_AFFILIATE_OU = "OU=NoEmail,OU=Contractors,OU=Users,OU=Corporate,DC=carefirst,DC=com";
+String STR_ORGANIZATIONNAMETAXID_CUSTOM = "CF-OrganizationNameTaxID-Custom";
+String STR_PROVISIONING_SUCCESS_EMAIL_TEMPLATE_AFFILIATE_CREATE= "CF-AffiliateCreateProvisioningSuccess-EmailTemplate";
+String STR_PROVISIONING_EMAIL_TEMPLATE_AFFILIATE_TERMINATION= "CF-AffiliateTerminationSuccess-EmailTemplate";
+String STR_CREATEAFFILIATE_EMPID = "CF-CreateAffilateEmpID-Custom";
+
+
+//KeyedIN application attributes
+String resUrl="https://coreapi-sandbox.keyedinprojects.com/sbx/v7.0/Admin/Resource?https://coreapi-sandbox.keyedinprojects.com/sbx/v7.0/Admin/Login?https://sandbox.keyedinenterprise.com/sbox-1/api/reporting/v1.0/Report";
+String authKey="kip_int@carefitsy.hi:T0RQMjgxMTk0N3x6Vk1PZWZqQjRkY0wzY0FHb3BiZmlXbDNjNUxYMkg4MTR5eTdJcDJiSFFvPQ==";
+String hvalue="application/json";
+String keyValue="ODP2811947";
+String reportKey="898";
+String keyedinEmail="keyedin@carefirst.com";
+String exeTime="09:00 PM";
+
+UAAS_ENDPOINT_ADDRESS="http://associatedev.insidecarefirst.com/UAASCIAMWebServices/services/UAASPort";
+
+
+]]></Source>
+        
+
+</Rule>

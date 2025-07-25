@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="variablesCheckInNamespace-Validation" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+  Logger log = Logger.getLogger("eshiam.rules.variablesCheckInNamespace-Validation");
+  // TODO: Remove this forced log level set before checking in this Rule.
+  log.setLevel(Level.DEBUG);
+  log.debug("Listing Variables passed to Beanshell namespace:");
+
+  // BeanShell has a "this.variables" array that we can access.
+
+  for (int i = 0 ; i< this.variables.length ; i++) {
+    String varName = this.variables[i];
+
+    Object varValue = null;
+    try {
+      if ("transient".equals(varName)) {
+        varValue = "[reserved word]";
+      } else {
+        varValue = eval(varName);
+      } 
+    } catch (Exception ex) {
+      varValue = "[eval exception]";
+    }
+
+    String varClass = "void";
+    if ((void != varValue) && (null != varValue)) {
+      varClass = varValue.getClass().getSimpleName();
+    }
+
+    if (void == varValue) {
+      log.debug(varName + " = void");
+    } else if (null == varValue) {
+      log.debug(varName + " = null");
+    } else {
+      log.debug(varName + ": " + varClass + " = " + varValue);
+    }
+  }
+  return "nssns";
+
+  ]]></Source>
+        
+
+</Rule>

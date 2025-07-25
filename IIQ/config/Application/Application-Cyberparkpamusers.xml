@@ -1,0 +1,882 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application authoritative="true" connector="sailpoint.connector.DelimitedFileConnector" featuresString="DIRECT_PERMISSIONS, NO_RANDOM_ACCESS, DISCOVER_SCHEMA, ACCOUNT_ONLY_REQUEST, ADDITIONAL_ACCOUNT_REQUEST" icon="enterpriseIcon" name="CyberParkPAMUsers" profileClass="" significantModified="1740474759628" type="DelimitedFile">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="PassphraseForPrivateKey"/>
+                              
+            
+            <entry key="PrivateKeyFilePath"/>
+                              
+            
+            <entry key="SafeExtraPermissions.columnNames"/>
+                              
+            
+            <entry key="SafeExtraPermissions.commentCharacter"/>
+                              
+            
+            <entry key="SafeExtraPermissions.delimiter" value=","/>
+                              
+            
+            <entry key="SafeExtraPermissions.file" value="D:\csv files\CyberarkPAMUsers.csv"/>
+                              
+            
+            <entry key="SafeExtraPermissions.fileEncoding"/>
+                              
+            
+            <entry key="SafeExtraPermissions.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="SafeExtraPermissions.filterString"/>
+                              
+            
+            <entry key="SafeExtraPermissions.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="SafeExtraPermissions.indexColumn"/>
+                              
+            
+            <entry key="SafeExtraPermissions.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="SafeExtraPermissions.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="SafeExtraPermissions.mergeColumns"/>
+                              
+            
+            <entry key="SafeExtraPermissions.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="SafeExtraPermissions.numberOfLinesToSkip"/>
+                              
+            
+            <entry key="SafeExtraPermissions.regularExpression"/>
+                              
+            
+            <entry key="SafeExtraPermissions.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.columnNames"/>
+                              
+            
+            <entry key="VaultAuthorisation.commentCharacter"/>
+                              
+            
+            <entry key="VaultAuthorisation.delimiter" value=","/>
+                              
+            
+            <entry key="VaultAuthorisation.file" value="D:\csv files\CyberarkPAMUsers.csv"/>
+                              
+            
+            <entry key="VaultAuthorisation.fileEncoding"/>
+                              
+            
+            <entry key="VaultAuthorisation.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.filterString"/>
+                              
+            
+            <entry key="VaultAuthorisation.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.indexColumn"/>
+                              
+            
+            <entry key="VaultAuthorisation.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.mergeColumns"/>
+                              
+            
+            <entry key="VaultAuthorisation.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="VaultAuthorisation.numberOfLinesToSkip"/>
+                              
+            
+            <entry key="VaultAuthorisation.regularExpression"/>
+                              
+            
+            <entry key="VaultAuthorisation.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="acctAggregationEnd">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1725022805117</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="acctAggregationStart">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1725022804656</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="afterProvisioningRule"/>
+                              
+            
+            <entry key="aggregationPartitioned">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="aggregationType" value="account"/>
+                              
+            
+            <entry key="beforeProvisioningRule"/>
+                              
+            
+            <entry key="compositeDefinition"/>
+                              
+            
+            <entry key="delimiter" value=","/>
+                              
+            
+            <entry key="file" value="D:\csv files\CyberarkPAMUsers.csv"/>
+                              
+            
+            <entry key="filetransport" value="local"/>
+                              
+            
+            <entry key="filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="ftpsAuthMethod" value="password"/>
+                              
+            
+            <entry key="ftpsClientCertificateFilePath"/>
+                              
+            
+            <entry key="ftpsClientCertificatePassphrase"/>
+                              
+            
+            <entry key="group.filetransport" value="local"/>
+                              
+            
+            <entry key="group.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.partitionMode" value="auto"/>
+                              
+            
+            <entry key="hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="indexColumn" value="Account_ID"/>
+                              
+            
+            <entry key="isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.columnNames"/>
+                              
+            
+            <entry key="memberOf.commentCharacter"/>
+                              
+            
+            <entry key="memberOf.delimiter" value=","/>
+                              
+            
+            <entry key="memberOf.file" value="D:\csv files\CyberarkPAMUsers.csv"/>
+                              
+            
+            <entry key="memberOf.fileEncoding"/>
+                              
+            
+            <entry key="memberOf.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.filterString"/>
+                              
+            
+            <entry key="memberOf.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.indexColumn"/>
+                              
+            
+            <entry key="memberOf.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.mergeColumns"/>
+                              
+            
+            <entry key="memberOf.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="memberOf.numberOfLinesToSkip"/>
+                              
+            
+            <entry key="memberOf.regularExpression"/>
+                              
+            
+            <entry key="memberOf.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="mergeColumns">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>Entitlement_Type</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="mergeMapsRule" value="CyberParkMergeMap rule"/>
+                              
+            
+            <entry key="mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributes"/>
+                              
+            
+            <entry key="nativeChangeDetectionEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionOperations"/>
+                              
+            
+            <entry key="parseType" value="delimited"/>
+                              
+            
+            <entry key="partitionMode" value="auto"/>
+                              
+            
+            <entry key="port"/>
+                              
+            
+            <entry key="preIterateRule" value="Pre-Iterator sample"/>
+                              
+            
+            <entry key="sftpAuthMethod" value="password"/>
+                              
+            
+            <entry key="stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="templateApplication" value="DelimitedFile Template"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <CorrelationRule>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="CyberParkPAMUsersCorrelationRule"/>
+                  
+    
+    </CorrelationRule>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+          
+    
+    <Schemas>
+                    
+        
+        <Schema displayAttribute="Account_ID" identityAttribute="Account_ID" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None" significantModified="1739169477618">
+                              
+            
+            <AttributeDefinition name="Account_ID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Type" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Value" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Description" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="MemberOf" schemaObjectType="memberOf" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="Safe Extra Permissions" schemaObjectType="SafeExtraPermissions" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="Vault Authorisation" schemaObjectType="VaultAuthorisation" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="Entitlement_Type" identityAttribute="Entitlement_Type" instanceAttribute="" nativeObjectType="SafeExtraPermissions" objectType="SafeExtraPermissions" permissionsRemediationModificationType="None" significantModified="1739169477618">
+                              
+            
+            <AttributeDefinition name="Account_ID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Type" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Value" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Description" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="Entitlement_Type" identityAttribute="Entitlement_Type" instanceAttribute="" nativeObjectType="memberOf" objectType="memberOf" permissionsRemediationModificationType="None" significantModified="1739169477619">
+                              
+            
+            <AttributeDefinition name="Account_ID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Type" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Value" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Description" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="Entitlement_Type" identityAttribute="Entitlement_Type" instanceAttribute="" nativeObjectType="VaultAuthorisation" objectType="VaultAuthorisation" permissionsRemediationModificationType="None" significantModified="1739169477619">
+                              
+            
+            <AttributeDefinition name="Account_ID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Type" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Value" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Entitlement_Description" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                  
+    
+    </Schemas>
+          
+    
+    <ApplicationScorecard significantModified="1739169477617"/>
+        
+
+</Application>

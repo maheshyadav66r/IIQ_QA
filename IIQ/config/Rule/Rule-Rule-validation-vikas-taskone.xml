@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-Vikas-TaskOne" significantModified="1739336333648" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import java.util.Date;
+  import java.util.Calendar;
+  import sailpoint.object.*;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.tools.Util;
+  import sailpoint.api.Provisioner;
+  import java.text.SimpleDateFormat;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningProject;
+  import sailpoint.object.ProvisioningPlan.Operation;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+
+ 
+QueryOptions qo=new QueryOptions();
+ String attrName = "backLogs";
+String attrValue = "M1";
+Filter filter =Filter.and(Filter.join("id", "IdentityExternalAttribute.objectId"),Filter.eq("IdentityExternalAttribute.attributeName", attrName),Filter.ignoreCase(Filter.eq("IdentityExternalAttribute.value", attrValue)));
+  qo.add(filter);  
+  log.error("----filter printing----"+filter.toXml());
+  List list=context.getObjects(Identity.class,qo);
+    log.error("----Identities having multi valued attribute----"+list);
+
+  return list; 
+  
+  
+QueryOptions qo=new QueryOptions();
+ String attrName = "qualification";
+String attrValue = "BTech";
+Filter filter =Filter.and(Filter.join("id", "IdentityExternalAttribute.objectId"),Filter.eq("IdentityExternalAttribute.attributeName", attrName),Filter.ignoreCase(Filter.eq("IdentityExternalAttribute.value", attrValue)));
+  qo.add(filter);  
+  log.error("----filter printing----"+filter.toXml());
+  List list=context.getObjects(Identity.class,qo);
+    log.error("----Identities having multi valued attribute----"+list);
+
+  return list;
+
+  
+  
+  
+  
+  //Filter.eq("IdentityExternalAttribute.value", attrValue)
+
+  QueryOptions qo=new QueryOptions();
+ String attrName = "department";
+String attrValue = "Information Technology";
+Filter filter =Filter.and(Filter.join("id", "IdentityExternalAttribute.objectId"),Filter.eq("IdentityExternalAttribute.attributeName", attrName),Filter.ignoreCase(Filter.eq("IdentityExternalAttribute.value", attrValue)));
+  qo.add(filter);  
+  log.error("----filter printing----"+filter.toXml());
+  List list=context.getObjects(Identity.class,qo);
+    log.error("----Identities having multi valued attribute----"+list);
+
+  return list;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+
+  Provisioner pr=new Provisioner(context);
+  String department=identity.getAttribute("department");
+  ProvisioningPlan plan=new ProvisioningPlan();
+  AccountRequest accntReqForAD=new AccountRequest();
+  AccountRequest accntReqForLDAP=new AccountRequest();
+
+  Application adApplication=context.getObjectByName(Application.class,"ActiveDirectory");
+  Application ladpApplication=context.getObjectByName(Application.class,"LDAPApplication");
+
+
+  plan.setIdentity(identity);
+  accntReqForAD.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+  accntReqForLDAP.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+
+
+  if(department.equalsIgnoreCase("Engineering"))
+  {
+    accntReqForAD.setApplication(adApplication.getName());
+    accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=ENG_All,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+    accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=ENG_EastCoast,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+    accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+    accntReqList.add(accntReqForAD);
+
+    accntReqForLDAP.setApplication(ladpApplication.getName());
+    accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Employees,ou=Group,dc=my-domain,dc=com"));
+    accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Managers,ou=Group,dc=my-domain,dc=com"));
+    accntReqForLDAP.add(new AttributeRequest("businessCategory",ProvisioningPlan.Operation.Add,"Inactive"));
+    plan.add(accntReqForAD);
+    plan.add(accntReqForLDAP);
+
+  }
+  else if(department.equalsIgnoreCase("Finance"))
+  {
+    accntReqForAD.setApplication(adApplication.getName());
+    accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+    accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,	CN=Finance,OU=Groups,OU=Demo,DC=Eshiam,DC=com));   
+    accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+
+    accntReqForLDAP.setApplication(ladpApplication.getName());
+    accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Contractors,ou=Group,dc=my-domain,dc=com"));
+    accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=WebApplicationAccess,ou=Group,dc=my-domain,dc=com"));
+    accntReqForLDAP.add(new AttributeRequest("businessCategory","Inactive"));
+    plan.add(accntReqForAD);
+    plan.add(accntReqForLDAP);
+  }
+  else
+  {
+    accntReqForAD.setApplication(adApplication.getName());
+    accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=All_Users,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+    accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+
+    accntReqForLDAP.setApplication(ladpApplication.getName());
+    accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Users,ou=Group,dc=my-domain,dc=com"));
+    accntReqForLDAP.add(new AttributeRequest("businessCategory","Inactive"));
+
+    plan.add(accntReqForAD);
+    plan.add(accntReqForLDAP);
+
+  }
+
+  /* ProvisioningProject project= pr.compile(plan);
+        log.error("-----project--"+project.toXml());
+        pr.execute(project);
+
+       Attributes attrs =new Attributes();
+        attrs.put("ADAccntReq",accntReqForAD);
+        attrs.put("LDAPccntReq",accntReqForLDAP);
+        workflow.put("audit",attrs);
+        log.error("--------attrs----------------"+attrs);*/
+
+
+
+
+  AuditEvent auditEvent=new AuditEvent();
+
+  auditEvent.setAction("HR Source Joiner event");
+  auditEvent.setSource(launcher);
+  auditEvent.setTarget(identityName);
+  auditEvent.setApplication("ActiveDirectory");
+  auditEvent.setAttributeName("memberOf");
+
+  Attributes attrs1 =new Attributes();
+  attrs1.setMap(audit);
+  auditEvent.setAttributes(attrs1);
+  log.error("--------attrs1----------------"+attrs1);
+
+  context.saveObject(auditEvent);
+  log.error("-----auditEvent----------"+auditEvent.toXml());
+  context.commitTransaction();
+
+  return plan;
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

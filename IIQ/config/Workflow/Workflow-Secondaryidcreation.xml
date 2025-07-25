@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="SecondaryIdcreation" significantModified="1747296292498">
+          
+    
+    <Variable initializer="true" name="trace"/>
+          
+    
+    <Variable input="true" name="launcher"/>
+          
+    
+    <Variable name="formModel"/>
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable name="account_plan"/>
+          
+    
+    <Variable name="identity_plan"/>
+          
+    
+    <Variable name="identity"/>
+          
+    
+    <Variable name="identityName"/>
+          
+    
+    <Variable name="applicationName"/>
+          
+    
+    <RuleLibraries>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="AdminAccountCreationInDirectoriesRuleLibrary"/>
+                  
+    
+    </RuleLibraries>
+          
+    
+    <Step icon="Start" name="Start" posX="20" posY="41">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        log.error(" SecondaryIdcreation start step==");
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Initializer"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Initializer" posX="270" posY="31" resultVariable="formModel">
+                    
+        
+        <Description>
+      Initialize the data in the model.
+    </Description>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+        import java.util.HashMap;
+        import sailpoint.transformer.IdentityTransformer;
+
+        HashMap model = new HashMap();
+        IdentityTransformer transformer = new IdentityTransformer(context);
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_CLASS, transformer.getClass().getName());
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_OPTIONS, "");
+        return model;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="ApprovalStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Approval" name="ApprovalStep" posX="556" posY="37">
+                    
+        
+        <Approval name="SecodaryIdRegistrationForm" owner="script:return launcher;" return="formModel,secondaryIdType" send="launcher,formModel">
+                              
+            
+            <Form name="SecodaryIdRegistrationForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="SecodaryIdRegistrationForm"/>
+                                                            
+                        
+                        <entry key="title" value="SecodaryIdRegistrationFormTitle"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section name="userInstructions" type="text">
+                                                  
+                    
+                    <Field value="This form is to create an Admin Account for AD and CloudAD"/>
+                                                
+                
+                </Section>
+                                        
+                
+                <Section name="IdType">
+                                                  
+                    
+                    <Field displayName="SecondaryIdType" name="secondaryIdType" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>ADAdmin</String>
+                                                                                          
+                                    
+                                    <String>CloudAdmin</String>
+                                                                                          
+                                    
+                                    <String>WireLessAdmin</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Button action="back" label="Cancel"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Request CreateADAdminAccount" when="script:formModel.get(&quot;secondaryIdType&quot;).equalsIgnoreCase(&quot;ADAdmin&quot;)"/>
+                    
+        
+        <Transition to="Request CreateLADPAdminAccount" when="script:((formModel.get(&quot;secondaryIdType&quot;)).equalsIgnoreCase(&quot;CloudAdmin&quot;))"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:createADAdminAccount()" name="Request CreateADAdminAccount" posX="270" posY="31" resultVariable="account_plan">
+                    
+        
+        <Arg name="identityName">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          
+          log.error("  formModel in Request CreateADAdminAccount=="+formModel);
+          if(formModel!=null){
+          return formModel.get("secondaryIdType");
+
+          }
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Arg name="applicationName">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null){
+          return formModel.get("secondaryIdType");
+          }
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Transition to="terminatorStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="terminatorStep" posX="270" posY="31">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[ 
+        log.error(" applicationName in formModel  in terminatorStep=="+applicationName);
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="790" posY="40"/>
+        
+
+</Workflow>

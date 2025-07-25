@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Bean Shell Dev Guide - 002 Logging Example">
+          
+    
+    <Source><![CDATA[
+    
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+
+Logger log = Logger.getLogger("sailpoint.services.bshdemo");
+
+log.debug("hello debug world");
+log.info("hello info world");
+log.warn("hello warn world");
+log.error("hello error world");   
+
+return;    
+    
+  ]]></Source>
+        
+
+</Rule>

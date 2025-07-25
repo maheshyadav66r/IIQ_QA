@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ABMB-LocationTransformationRuleForAD" significantModified="1724650533449" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="value" type="Object">
+                                        
+                
+                <Description>
+          The value of the identity attribute.  Note that this could be single value or a list of values.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="sourceIdentityAttribute">
+                                        
+                
+                <Description>
+          The sailpoint.object.ObjectAttribute for this target.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="sourceIdentityAttributeName">
+                                        
+                
+                <Description>
+          The name of the identity attribute for this target.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="sourceAttributeRequest">
+                                        
+                
+                <Description>
+          The sailpoint.object.ProvisioningPlan.AttributeRequest that is
+          setting the attribute on the identity.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="target">
+                                        
+                
+                <Description>
+          The sailpoint.object.AttributeTarget that is being processed.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="link">
+                                        
+                
+                <Description>
+          The sailpoint.object.Link that is being processed.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identity">
+                                        
+                
+                <Description>
+          The sailpoint.object.Identity that is being processed.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="project">
+                                        
+                
+                <Description>
+          The sailpoint.object.ProvisioningProject that has the changes that
+          are being requested.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="attributeValue">
+                                        
+                
+                <Description>
+          The transformed value that will be pushed to the target.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.object.Custom;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.Operation;
+
+  log.error("-----------location transformation rule  Entry-------------");
+  Custom customObj=context.getObjectByName(Custom.class,"ABMB-AttributeChange-CustomObject");
+  log.error("-- AD TargetLink  lane  attributes---"+link.getAttribute("postalCode"));
+  if(customObj == null){
+    customObj=new Custom();
+    customObj.setName("ABMB-AttributeChange-CustomObject");
+  }
+  Map identityAttrMap=new HashMap();
+
+  String[] address = value.split("-");
+  String l=address[2];
+  String postalCode=address[3];
+  String st=address[0];
+  String streetAddress=address[0]+"-"+address[1];
+
+  List emailList=new ArrayList();
+  emailList.add(identity.getEmail());
+  emailList.add(identity.getManager().getEmail());
+
+  List plans=project.getPlans();
+  if(plans!=null)
+  {
+    for(ProvisioningPlan plan:plans)
+    {
+     // log.error("------------palns loop------------");
+      for(AccountRequest accReq:plan.getAccountRequests())
+      {
+       // log.error("------------AccountRequest loop------------");
+        if(accReq.getApplicationName().equalsIgnoreCase("ActiveDirectory"))
+        {
+          log.error("old value of location accreq loop :"+link.getAttribute("l"));
+          log.error("new value in accreq loop :"+l);
+          if(link.getAttribute("l") != null @and !link.getAttribute("l").equals(l)){
+            Map lMap=new HashMap();
+            lMap.put("attributeName","l");
+            lMap.put("oldValue",link.getAttribute("l"));
+            lMap.put("newValue",l);
+            Map map = customObj.get(identity.getName());
+            if(null != map){
+              map.put("l",lMap);
+              customObj.put(identity.getName(),map);
+            }
+            else{
+              Map attributeMap = new HashMap();
+              attributeMap.put("l",lMap);
+              customObj.put(identity.getName(),attributeMap);
+
+            }
+            accReq.add(new AttributeRequest("l",ProvisioningPlan.Operation.Set,l));
+           // log.error("---------lMap------------"+lMap);
+          }
+          else
+          {
+            accReq.add(new AttributeRequest("l",ProvisioningPlan.Operation.Add,l));
+          }
+
+          if(link.getAttribute("st") != null @and !link.getAttribute("st").equals(st)){
+            Map stMap=new HashMap();
+            stMap.put("attributeName","st");
+            stMap.put("oldValue",link.getAttribute("st"));
+            stMap.put("newValue",st);
+            Map map = customObj.get(identity.getName());
+            if(null != map){
+              map.put("st",stMap);
+              customObj.put(identity.getName(),map);
+            }
+            else{
+              Map attributeMap = new HashMap();
+              attributeMap.put("st",stMap);
+              customObj.put(identity.getName(),attributeMap);
+
+            }
+            accReq.add(new AttributeRequest("st",ProvisioningPlan.Operation.Set,st));
+           // log.error("---------stMap------------"+stMap);
+          }
+          else
+          {
+            accReq.add(new AttributeRequest("st",ProvisioningPlan.Operation.Add,st));
+          }
+
+          if(link.getAttribute("postalCode") != null @and (!link.getAttribute("postalCode").equals(postalCode))){
+            Map postalCodeMap=new HashMap();
+            postalCodeMap.put("attributeName",target.getName());
+            postalCodeMap.put("oldValue",link.getAttribute(target.getName()));
+            postalCodeMap.put("newValue",postalCode);
+            Map map = customObj.get(identity.getName());
+            if(null != map){
+              map.put("postalCode",postalCodeMap);
+              customObj.put(identity.getName(),map);
+            }
+            else{
+              Map attributeMap = new HashMap();
+              attributeMap.put("postalCode",postalCodeMap);
+              customObj.put(identity.getName(),attributeMap);
+
+            }
+            accReq.add(new AttributeRequest(target.getName(),ProvisioningPlan.Operation.Set,postalCode));
+            log.error("---------postalCodeMap------------"+postalCodeMap);
+          }
+          else
+          {
+            accReq.add(new AttributeRequest("postalCode",ProvisioningPlan.Operation.Add,postalCode));
+          }
+
+          if(link.getAttribute("streetAddress") != null @and !link.getAttribute("streetAddress").equals(streetAddress)){
+            Map streetAddressMap=new HashMap();
+            streetAddressMap.put("attributeName","streetAddress");
+            streetAddressMap.put("oldValue",link.getAttribute("streetAddress"));
+            streetAddressMap.put("newValue",streetAddress);
+            Map map = customObj.get(identity.getName());
+            if(null != map){
+              map.put("streetAddress",streetAddressMap);
+              customObj.put(identity.getName(),map);
+            }
+            else{
+              Map attributeMap = new HashMap();
+              attributeMap.put("streetAddress",streetAddressMap);
+              customObj.put(identity.getName(),attributeMap);
+
+            }
+            accReq.add(new AttributeRequest("streetAddress",ProvisioningPlan.Operation.Set,streetAddress));
+           // log.error("---------streetAddressMap------------"+streetAddressMap);
+          }
+          else
+          {
+            accReq.add(new AttributeRequest("streetAddress",ProvisioningPlan.Operation.Add,streetAddress));
+
+          }
+
+        }
+      }
+    }
+  }
+
+//  log.error("-------location map  -----"+location);
+  //log.error("-------project in transformation-----"+project.toXml());
+  identityAttrMap.put("emailList",emailList);
+  //customObj.put(identity.getName(),identityAttrMap);
+  log.error("-------custom object from location rule ----"+customObj.toXml());
+    log.error("------ location Transformation rule exit--------");
+
+  context.saveObject(customObj);
+  context.commitTransaction();
+  return postalCode;]]></Source>
+        
+
+</Rule>

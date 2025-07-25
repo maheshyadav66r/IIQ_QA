@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="first form in iiq" significantModified="1730477891847">
+          
+    
+    <Section name="Basic Deatils">
+                    
+        
+        <Field displayName="Name" type="String">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          import sailpoint.object.*;
+          import sailpoint.api.*;
+
+        /* // QueryOptions qo=new QueryOptions();
+          //Filter f=Filter.eq("links.application.name","ActiveDirectory");
+         // qo.add(f)
+          Iterator it=context.search(Identity.class);
+          String name;
+          while(it.hasNext()){
+          name=it.next().getName();
+          }*/
+          
+          List identity=context.getObjects(Identity.class);
+          for(Identity id:identity){
+          name=id.getName();
+          }
+          
+          return name;
+
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+        
+
+</Form>

@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="DBOrderCheckWFFinalClone" significantModified="1752403007514" type="">
+          
+    
+    <Variable name="formModel"/>
+          
+    
+    <Variable input="true" name="httpSession" transient="true"/>
+          
+    
+    <Variable initializer="true" name="transient"/>
+          
+    
+    <Variable initializer="true" name="trace"/>
+          
+    
+    <RuleLibraries>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="DB_Valuescheck_RuleLibrary"/>
+                  
+    
+    </RuleLibraries>
+          
+    
+    <Step icon="Start" name="Start" posX="25" posY="134" resultVariable="formModel">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+        import java.util.HashMap;
+        import sailpoint.transformer.IdentityTransformer;
+
+        HashMap model = new HashMap();
+        IdentityTransformer transformer = new IdentityTransformer(context);
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_CLASS, transformer.getClass().getName());
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_OPTIONS, "");
+        return model;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Operations"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Operations" posX="144" posY="129">
+                    
+        
+        <Approval name="Operations" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Form name="Operations">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="Operations"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section label="Operation Selection" name="operationSelection">
+                                                  
+                    
+                    <Field displayName="Operation" displayType="radio" name="operation">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>Create</String>
+                                                                                          
+                                    
+                                    <String>Modify</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Next"/>
+                                        
+                
+                <Button action="back" label="Cancel"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="createStep" when="script:formModel.get(&quot;operation&quot;).equalsIgnoreCase(&quot;Create&quot;)"/>
+                    
+        
+        <Transition to="readData" when="script:formModel.get(&quot;operation&quot;).equalsIgnoreCase(&quot;Modify&quot;)"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="createStep" posX="311" posY="48">
+                    
+        
+        <Approval name="createForm" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Form name="createForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="createForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section columns="3" name="dataCollection">
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C1" name="c1" postBack="true" required="true" type="string"/>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C2" name="c2" postBack="true" required="true" type="string"/>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C3" name="c3" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <ValidationScript>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import java.sql.Connection;
+                import java.sql.DriverManager;
+                import java.sql.PreparedStatement;
+                import java.sql.ResultSet;
+                import java.sql.SQLException;
+                import java.sql.SQLException;
+                import sailpoint.tools.Message;
+
+                int existcount = 0;
+                String c1value;
+                String c2value;
+                String c3value;
+
+
+                if(formModel != null){
+
+                c1value = formModel.get("c1");
+                c2value = formModel.get("c2");
+                c3value = formModel.get("c3");
+
+                }
+
+                Message msg = new Message();
+
+                Connection connection = null;
+                PreparedStatement preparedStatement = null;
+                ResultSet resultSet = null;
+
+                String dbUrl = "jdbc:mysql://localhost:3306/test"; 
+                String dbUsername = "root"; 
+                String dbPassword = "root"; 
+
+                try{
+
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+                String existanceCheckQuery="SELECT COUNT(*) FROM test.columns_data WHERE c1 = ? AND c2 = ? AND c3 = ?";
+
+                preparedStatement = connection.prepareStatement(existanceCheckQuery);
+                preparedStatement.setString(1, c1value);
+                preparedStatement.setString(2, c2value);
+                preparedStatement.setString(3, c2value);
+
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                existcount = resultSet.getInt(1);
+
+                }
+
+                formModel.put("existcount",existcount);
+
+                }catch (SQLException e) {
+                e.printStackTrace();
+                }finally {
+
+                try{
+
+                if (resultSet != null) resultSet.close();
+                if (preparedStatement != null)  preparedStatement.close();
+                if (connection != null)  connection.close();
+
+                } catch (SQLException e) {
+                log.error(e.getMessage());
+                }
+                }
+
+                if(existcount > 0){
+                msg.setKey("Duplicate combination exists.Enter new values.");
+                }
+                return msg;
+              ]]></Source>
+                                                                    
+                        
+                        </ValidationScript>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="3" displayName="Owner" filterString="type==&quot;employee&quot;" name="ownerr" type="sailpoint.object.Identity"/>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Button action="back" label="Back"/>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="DBValuesInsertion" when="script:formModel.get(&quot;existcount&quot;)==0"/>
+                    
+        
+        <Transition to="Stop" when="script:formModel.get(&quot;existcount&quot;)!=0"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:insertData()" icon="Default" name="DBValuesInsertion" posX="540" posY="23">
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="readData" posX="298" posY="202">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import java.sql.Connection;
+        import java.sql.DriverManager;
+        import java.sql.PreparedStatement;
+        import java.sql.ResultSet;
+        import java.sql.SQLException;
+        import sailpoint.tools.Message; 
+        import sailpoint.tools.Util;
+
+
+        List c1List = new ArrayList();
+        List c2List = new ArrayList();
+        List c3List = new ArrayList();
+
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+
+        String dbUrl = "jdbc:mysql://localhost:3306/test"; 
+        String dbUsername = "root"; 
+        String dbPassword = "root"; 
+
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection  connection = null;
+
+        log.error("  before try in readdata..");
+
+        try{
+
+        connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+        String existingCheckQuery="SELECT * FROM test.columns_data";
+
+        preparedStatement = connection.prepareStatement(existingCheckQuery);
+
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+
+        c1List.add(resultSet.getString(1));
+
+        c2List.add(resultSet.getString(2));
+
+        c3List.add(resultSet.getString(3));
+
+        }
+
+        }catch (SQLException e) {
+        log.error(e.getMessage());
+        } finally {
+
+        try {
+
+        if (resultSet != null) resultSet.close();
+        if (preparedStatement != null) preparedStatement.close();
+        if (connection != null) connection.close();
+
+        } catch (SQLException e) {
+        log.error(e.toString());
+        }
+        }
+
+        Util.	removeDuplicates(c1List);
+        Util.	removeDuplicates(c2List);
+        Util.	removeDuplicates(c3List);
+
+
+        formModel.put("c1",c1List);
+        formModel.put("c2",c2List);
+        formModel.put("c3",c3List);
+
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="modifyStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="modifyStep" posX="531" posY="253">
+                    
+        
+        <Approval name="ModifyForm" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Form name="ModifyForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="ModifyForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section columns="3" name="dataCollection">
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C1" displayType="combobox" name="c11" postBack="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  return formModel.get("c1");
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C2" displayType="combobox" name="c22" postBack="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  return formModel.get("c2");
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="C3" displayType="combobox" name="c33" postBack="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  return formModel.get("c3");
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="3" displayName="Owner" dynamic="true" filterString="type==&quot;employee&quot;" name="ownerr" type="Identity">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[
+                        import java.sql.Connection;
+                        import java.sql.DriverManager;
+                        import java.sql.PreparedStatement;
+                        import java.sql.ResultSet;
+                        import java.sql.SQLException;
+                        import sailpoint.tools.Message;
+
+                        if(c11 != null @and c22 != null @and c33!= null){
+
+                        log.error("all fields in modify form are not null");
+
+                        boolean ownerFlag;
+                        String owner = null;
+                        String oldOwner = null;
+
+                        ResultSet resultSet = null;
+                        PreparedStatement preparedStatement = null;
+                        Connection connection = null;
+
+                        String dbUrl = "jdbc:mysql://localhost:3306/test";
+                        String dbUsername = "root";
+                        String dbPassword = "root";
+
+                        int existCount = 0;
+
+
+                        try {
+
+                        Class.forName("com.mysql.cj.jdbc.Driver");
+                        connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+                        if (connection != null) {
+
+                        String existanceCheckQuery="SELECT COUNT(*) FROM test.columns_data WHERE c1 = ? AND c2 = ? AND c3 = ?";
+
+                        preparedStatement = connection.prepareStatement(existanceCheckQuery);
+                        preparedStatement.setString(1, c11);
+                        preparedStatement.setString(2, c22);
+                        preparedStatement.setString(3, c33);
+
+                        resultSet = preparedStatement.executeQuery();
+
+                        if (resultSet.next()) {
+
+                        existCount = resultSet.getInt(1);
+                        log.error("existCount :"+existCount);
+
+                        if(existCount ==0){
+
+                        //error will be displayed
+
+                        if(oldOwner != null @or oldOwner == null )
+                        form.getField("ownerr").setValue(" ");
+                        return false;
+                        formModel.put("ownerFlag",true);
+                        }
+                        else{
+                        //error wont be displayed
+
+                        String getOwnerQuery = "SELECT owner FROM test.columns_data WHERE c1 = ? AND c2 = ? AND c3 = ?";
+                        preparedStatement = connection.prepareStatement(getOwnerQuery);
+                        preparedStatement.setString(1, c11);
+                        preparedStatement.setString(2, c22);
+                        preparedStatement.setString(3, c33);
+
+                        ResultSet existCountresultSet = preparedStatement.executeQuery();
+
+                        if (existCountresultSet.next()) {
+
+                        oldOwner = existCountresultSet.getString("owner");
+
+                        formModel.put("oldOwner" , oldOwner);
+                        log.error("oldOwner :"+oldOwner);
+
+                        if(oldOwner != null){
+                        form.getField("ownerr").setValue(oldOwner);
+                        return true;
+                        formModel.put("ownerFlag",false);
+
+
+                        }
+                        }
+                        }//else condition
+                        }
+                        }//connection block
+                        }//try block
+                        catch (Exception e) {
+                        log.error("Exception occurred : errors in catch block");
+                        }finally{
+
+                        try{
+
+                        if(resultSet != null) resultSet.close();
+                        if(preparedStatement != null) preparedStatement.close();
+                        if(connection != null) connection.close();
+
+                        }catch(SQLException e){
+
+                        log.error(e.getMessage());
+
+                        }
+
+                        }
+                        }
+                        else
+                        return true;
+
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Section name="errorMessage" type="text">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="hidden">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Script>
+                                                                                                    
+                                        
+                                        <Source><![CDATA[
+
+                      if(formModel.get("ownerFlag") != null)
+                      return ownerFlag;
+                    ]]></Source>
+                                                                                                  
+                                    
+                                    </Script>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                  
+                    
+                    <Field filterString="htmlRender" value="Record doesnot exists">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="contentIsEscaped" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                return "<font color='#ff0000'><strong>Text in Red</strong></font>";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Button action="back" label="Back"/>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="changeOwner" when="approved"/>
+                    
+        
+        <Transition to="Add Cancel Message">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+
+          log.error("lastApprovalState  ...." + lastApprovalState);
+
+          log.error("approved ...... " + approved);
+
+          return !approved;
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Transition>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="changeOwner" posX="702" posY="123">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        log.error("entered into the readData step");
+        import java.sql.Connection;
+        import java.sql.DriverManager;
+        import java.sql.PreparedStatement;
+        import java.sql.ResultSet;
+        import java.sql.SQLException;
+        import sailpoint.tools.Message; 
+        import sailpoint.tools.Util;
+
+        Message msg = new Message();
+
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+
+        String dbUrl = "jdbc:mysql://localhost:3306/test"; 
+        String dbUsername = "root"; 
+        String dbPassword = "root"; 
+
+        String c1value = null;
+        String c2value = null;
+        String c3value = null;
+        String newOwner = null;
+        int rowsInserted = 0;
+
+        if(formModel != null){
+
+        c1value = formModel.get("c11");
+        c2value = formModel.get("c22");
+        c3value = formModel.get("c33");
+        newOwner = formModel.get("ownerr");
+
+        }
+
+        log.error(" new Owner  c1 c2 c3  ..."+newOwner +"   "+ c1value +"   "+c2value+"   "+c3value);
+
+        try{
+
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+        String insertQuery = "update test.columns_data set owner = ? where c1 = ? and c2 = ? and c3 = ?";
+
+
+        if(!newOwner.isEmpty() @and newOwner != null @and !c1value.isEmpty() @and c1value != null @and !c2value.isEmpty() @and c2value != null @and !c3value.isEmpty() @and c3value != null ){
+
+        preparedStatement = connection.prepareStatement(insertQuery);
+
+        preparedStatement.setString(1, newOwner);
+        preparedStatement.setString(2, c1value);
+        preparedStatement.setString(3, c2value);
+        preparedStatement.setString(4, c3value);
+
+
+        rowsInserted = preparedStatement.executeUpdate();
+
+        }
+        }catch (SQLException e) {
+        log.error(e.getMessage());
+
+        } finally {
+
+        try {
+
+        if (resultSet != null) resultSet.close();
+        if (preparedStatement != null) preparedStatement.close();
+        if (connection != null) connection.close();
+
+        } catch (SQLException e) {
+        log.error(e.getMessage());
+        }
+        }
+
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Add Cancel Message" posX="850" posY="206">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        return "<font color='#ff0000'><strong>Text in Red</strong></font>";
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="836" posY="82"/>
+        
+
+</Workflow>

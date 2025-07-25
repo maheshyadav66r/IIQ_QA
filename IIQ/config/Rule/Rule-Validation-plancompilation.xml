@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-plancompilation" significantModified="1738660377808" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Pat cummins");
+
+  ProvisioningPlan plan=new ProvisioningPlan();
+  plan.setIdentity(identity);
+  AccountRequest accReq=new AccountRequest(ProvisioningPlan.AccountRequest.Operation.Create,"ActiveDirectory",null,null);
+  plan.add(accReq);
+
+  Provisioner pr=new  Provisioner(context);
+  return pr.compile(plan).toXml();
+
+
+
+
+//ProvisioningProject
+
+
+
+
+
+  QueryOptions qo=new QueryOptions();
+  Filter f1=Filter.eq("links.application.name","JDBCProvisioning");
+  qo.add(f1);
+
+  List identities=context.getObjects(Identity.class,qo);
+  if(identities!=null){
+    log.error("----identities---"+identities.size());
+  }
+  return context.decrypt("1:ACP:kiiFlXS6DFbwxvYUcvt/ONTUvE2L2fDkrFI4+6BHwHU=");
+
+
+  ]]></Source>
+        
+
+</Rule>

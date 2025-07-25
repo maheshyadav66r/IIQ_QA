@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC Account creation Modified Rule" significantModified="1735282485415" type="JDBCOperationProvisioning">
+          
+    
+    <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+          
+    
+    <Signature returnType="ProvisioningResult"/>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import java.sql.*;  
+  import java.sql.ResultSet;
+  import java.sql.Connection;
+  import sailpoint.api.SailPointContext;  
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+  import sailpoint.object.ProvisioningResult;
+
+  ProvisioningResult pr = new ProvisioningResult();
+
+  String user=plan.getNativeIdentity();
+  log.error("--------------JDBC Create operation------------------" + plan.toXml());   
+  if(plan!=null){
+    int groupId;
+    String firstName;
+    String lastName;
+    String department;
+    String employeeID;
+    String emailAddress;
+    String name;
+    String networkID;
+    String managerID;
+    String groupName;
+
+    log.error("--------------------plan available in jdbc creation rule------------------"+plan.toXml());   
+    List groupIdList=new ArrayList();
+    List accReqs=plan.getAccountRequests();
+
+    for(AccountRequest accReq:accReqs){
+      Identity id=context.getObjectByName(Identity.class,user);
+      firstName=id.getAttribute("firstname");
+      lastName=id.getAttribute("lastname");
+      department=id.getAttribute("department");
+      employeeID=id.getAttribute("employeeId");
+      emailAddress=id.getAttribute("email");
+      name=id.getAttribute("displayName");
+      managerID=id.getManager().getAttribute("employeeId");
+      networkID=id.getAttribute("networkId");
+
+      ProvisioningPlan.AccountRequest.Operation op=accReq.getOperation();
+      List attrReqs=accReq.getAttributeRequests();
+      accReq.setNativeIdentity(user);
+
+      for(AttributeRequest attrReq:attrReqs){
+        if(attrReq.getName().equalsIgnoreCase("GroupName")){
+          // groupName=(String)attrReq.getDisplayValue();                //if groupname is DisplayAttribute and gid is identityAttribute in application group schema
+          groupId=Integer.parseInt((String)attrReq.getValue());          //if gid is DisplayAttribute and groupname is identityAttribute in application group schema
+          log.error("---------- parsed gid --------------"+groupId);
+          groupIdList.add(groupId);
+
+        }
+      }
+      log.error("----------groupIdlist oo--------------"+groupIdList);
+
+      String usersQuery="insert into jdbc.jdbc_user_data(id,Name,FirstName,LastName,Department,EmployeeID,EmailAddress,NetworkID,managerID) values(?,?,?,?,?,?,?,?,?)";
+      PreparedStatement userQueryStatement=connection.prepareStatement(usersQuery);
+
+      String maxIdQuery="select max(id) from jdbc.jdbc_user_data";
+      PreparedStatement maxIdStatement=connection.prepareStatement(maxIdQuery);
+      ResultSet rs=maxIdStatement.executeQuery();
+
+      int maxId;
+      if(rs.next()){
+        maxId=rs.getInt(1);
+      }
+      int userId=maxId+1;
+      log.error("--------------------userId------------------"+userId);   
+      log.error("--------------------name------------------"+accReq.getNativeIdentity());   
+
+      userQueryStatement.setInt(1,userId);
+      userQueryStatement.setString(2,accReq.getNativeIdentity());
+      userQueryStatement.setString(3,firstName);
+      userQueryStatement.setString(4,lastName);
+      userQueryStatement.setString(5,department);
+      userQueryStatement.setString(6,employeeID);
+      userQueryStatement.setString(7,emailAddress);
+      userQueryStatement.setString(8,networkID);
+      userQueryStatement.setString(9,managerID);
+      userQueryStatement.executeUpdate();
+
+      log.error("groupIdList------- " + groupIdList);
+
+      //Link Table Update
+      for(int k=0;k<groupIdList.size();k++){
+        log.error("--------------------entered into entitlement loop(Link Table Update)------------------"+groupIdList);   
+        String linkTableQuery="insert into jdbc.jdbc_user_groups_data(usersid,groupid) values(?,?)";
+        PreparedStatement linkTableStatement=connection.prepareStatement(linkTableQuery);
+        linkTableStatement.setInt(1,userId);
+        linkTableStatement.setInt(2,groupIdList.get(k));
+        log.error("----------groupIdlist--------------"+groupIdList.get(k));
+
+        linkTableStatement.executeUpdate();
+      }
+
+
+    }
+    connection.close();
+    pr.setStatus(ProvisioningResult.STATUS_COMMITTED);
+
+  }
+
+  return pr;
+  //From AttributeRequestfor loop block
+  /* String groupIdQuery="select gid from jdbc.jdbc_groups_data where GroupName='"+groupName+"'";
+          PreparedStatement groupIdStatement=connection.prepareStatement(groupIdQuery);
+          ResultSet rs=groupIdStatement.executeQuery();
+          if(rs.next()){
+            log.error("----------ResultSet rs.getInt(1)  in oo rs iteration loop groupId--------------"+rs.getInt(1));
+            groupId=rs.getInt(1);
+            groupIdList.add(groupId);
+
+             // groupIdStatement.close();
+          /*  try {
+              Object obj = attrReq.getValue();
+              // Ensure the object is a string before attempting to parse it
+              if (obj instanceof String) {
+                String groupNameStr = (String) obj;
+                groupId = Integer.parseInt(groupNameStr.trim()); // Use parseInt to handle conversion
+                groupIdList.add(groupId);
+              } else {
+                // Handle the case where obj is not a String, if necessary
+                System.err.println("Attribute value is not a String: " + obj);
+              }
+            } catch (NumberFormatException e) {
+              // Handle the case where the string is not a valid integer
+              System.err.println("Invalid GroupName format: " + obj);
+            }*/
+  /*
+            Object obj = attrReq.getValue();  
+            groupId = Integer.valueOf(obj);
+            groupIdList.add(groupId);
+            if(groupId instanceof Integer){
+            }
+            */
+  ]]></Source>
+        
+
+</Rule>

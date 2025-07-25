@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-ApprovalAssignment-Demo1" significantModified="1741588711100" type="ApprovalAssignment">
+          
+    
+    <Signature returnType="void">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="identityName" type="String"/>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.Util.*;
+
+
+  Identity targetUser = context.getObjectByName(Identity.class, identityName);
+  log.debug("Target user is : "+targetUser.getDisplayableName());
+
+  Map approvalMap = new HashMap();
+  List newApprovals = new ArrayList();
+
+  if (approvalSet.getItems() != null) {
+    List items = approvalSet.getItems();
+    log.debug("Items are : "+items);
+
+    for(ApprovalItem item : items){
+
+      if(item.getApplication().equalsIgnoreCase("Database"))
+      { 
+        log.debug("Expanded item plan : "+item.toXml());
+
+        ApprovalSet newSet = new ApprovalSet();
+        newSet.add(XMLObjectFactory.getInstance().clone(item, context));
+        log.debug("New approval set is : "+newSet.toXml());
+
+        String name = "UK"; //assuming target user's location is UK
+        Custom mappingCustom = context.getObjectByName(Custom.class, "test"); //Retrieving Regional Manager from a Custom Object
+        Attributes attr = mappingCustom.getAttributes();
+        String RegionalManager = attr.get(name);
+
+        approvalMap.put(RegionalManager, newSet);
+        log.debug("Approval map is : "+approvalMap);
+
+        IdentityApprovalGenerator iag = new IdentityApprovalGenerator(wfcontext);
+        newApprovals = iag.buildApprovalsFromMap(approvalMap, "Regional Manager"); 
+        log.debug("New approval list : "+newApprovals);
+
+        for ( Approval approval : newApprovals ) {
+          log.debug("Expanded new approval : "+approval.toXml());} 
+
+        return newApprovals; 
+      }
+      else{
+        log.debug("Old approval list : "+approvals);
+        for ( Approval approval : approvals ) {
+          log.debug("Expanded old approval : "+approval.toXml());
+        }
+        return approvals;
+      }
+    }
+  }
+  ]]></Source>
+        
+
+</Rule>

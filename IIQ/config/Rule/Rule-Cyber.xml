@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Cyber" significantModified="1738144396877" type="ResourceObjectCustomization">
+          
+    
+    <Description>This rule is configured on the application and is called after the connector has build a ResourceObject from the native application data.
+
+Initially designed for non-rule based connectors to add SPPrivileged flag to an object, but could be used to do any transformations.</Description>
+          
+    
+    <Signature returnType="ResourceObject">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="object">
+                                        
+                
+                <Description>
+          The ResourceObject built by the connector.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+          Application that references the connector.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="connector">
+                                        
+                
+                <Description>
+          The connector object.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="state">
+                                        
+                
+                <Description>
+          A Map containing state information.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="resourceObject">
+                                        
+                
+                <Description>
+          The updated resource object.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[/*String entValue=object.get("fullName")+"-"+object.get("location")+"-"+object.get("region");
+Schema schema=application.getAccountSchema();
+List entList=schema.getEntitlementAttributeNames();
+String entName=entList.get(0);
+object.put(entName,entValue);
+return object;*/
+
+import sailpoint.object.*;
+
+log.error("--resource object in cyber---"+object.toXml());
+
+String fullname=object.getStringAttribute("fullName");
+if(fullname.startsWith("*")){
+object=null;
+}
+return object;]]></Source>
+        
+
+</Rule>

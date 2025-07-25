@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE CertificationDefinition PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<CertificationDefinition name="CertificationTemplate-RapidSetup-Mover">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="activePeriodDurationAmount" value="1"/>
+                              
+            
+            <entry key="activePeriodDurationScale" value="Month"/>
+                              
+            
+            <entry key="allowCertificationEntityBulkAccountRevocation" value="true"/>
+                              
+            
+            <entry key="allowCertificationEntityBulkApprove" value="true"/>
+                              
+            
+            <entry key="allowCertificationEntityBulkClearDecisions" value="true"/>
+                              
+            
+            <entry key="allowCertificationEntityBulkRevocation" value="true"/>
+                              
+            
+            <entry key="allowListViewBulkApprove" value="true"/>
+                              
+            
+            <entry key="allowListViewBulkClearDecisions" value="true"/>
+                              
+            
+            <entry key="allowListViewBulkMitigate" value="false"/>
+                              
+            
+            <entry key="allowListViewBulkReassign" value="true"/>
+                              
+            
+            <entry key="allowListViewBulkRevoke" value="true"/>
+                              
+            
+            <entry key="allowProvisioningMissingRequirements" value="false"/>
+                              
+            
+            <entry key="allowSelfCertification" value="CertificationAdministrator"/>
+                              
+            
+            <entry key="automateSignOffOnReassignment" value="false"/>
+                              
+            
+            <entry key="automateSignoffPopup" value="true"/>
+                              
+            
+            <entry key="automaticClosingEnabled" value="false"/>
+                              
+            
+            <entry key="automaticClosingSigner" value="spadmin"/>
+                              
+            
+            <entry key="backupCertifier" value="spadmin"/>
+                              
+            
+            <entry key="bulkReassignmentEmailTemplate" value="Bulk Reassignment"/>
+                              
+            
+            <entry key="certOwner" value="spadmin"/>
+                              
+            
+            <entry key="certificationAutoApprove" value="false"/>
+                              
+            
+            <entry key="certificationDelegationReview" value="false"/>
+                              
+            
+            <entry key="certificationDisableDelegationForwarding" value="false"/>
+                              
+            
+            <entry key="certificationEmailTemplate" value="Certification"/>
+                              
+            
+            <entry key="certificationEntityDelegationEnabled" value="true"/>
+                              
+            
+            <entry key="certificationItemDelegationEnabled" value="false"/>
+                              
+            
+            <entry key="certificationLimitReassignments" value="false"/>
+                              
+            
+            <entry key="certificationMitigationEnabled" value="false"/>
+                              
+            
+            <entry key="certificationMitigationPopupEnabled" value="false"/>
+                              
+            
+            <entry key="certificationNameTemplate" value="RapidSetup Mover Targeted Certification [${fullDate}]"/>
+                              
+            
+            <entry key="certificationShowRecommendations" value="false"/>
+                              
+            
+            <entry key="certificationSignOffApprovalEmailTemplate" value="Certification Sign Off Approval"/>
+                              
+            
+            <entry key="certificationType" value="Focused"/>
+                              
+            
+            <entry key="certifierOwnerAccount" value="ApplicationOwner"/>
+                              
+            
+            <entry key="certifierOwnerEntitlement" value="ApplicationOwner"/>
+                              
+            
+            <entry key="certifierOwnerRole" value="RoleOwner"/>
+                              
+            
+            <entry key="certifierType" value="Manager"/>
+                              
+            
+            <entry key="certifyAccounts" value="false"/>
+                              
+            
+            <entry key="certifyEmptyAccounts" value="true"/>
+                              
+            
+            <entry key="challengePeriodEnabled" value="false"/>
+                              
+            
+            <entry key="completeCertificationHierarchyEnabled" value="false"/>
+                              
+            
+            <entry key="electronicSignatureRequired" value="false"/>
+                              
+            
+            <entry key="enablePartitioning" value="false"/>
+                              
+            
+            <entry key="entitlementGranularity" value="Value"/>
+                              
+            
+            <entry key="entitySelectionType" value="Filter"/>
+                              
+            
+            <entry key="excludeInactive" value="false"/>
+                              
+            
+            <entry key="filterLogicalEntitlements" value="false"/>
+                              
+            
+            <entry key="flattenManagerCertificationHierarchy" value="false"/>
+                              
+            
+            <entry key="includeAdditionalEntitlements" value="false"/>
+                              
+            
+            <entry key="includeCapabilities" value="false"/>
+                              
+            
+            <entry key="includePolicyViolations" value="false"/>
+                              
+            
+            <entry key="includeRoleHierarchy" value="false"/>
+                              
+            
+            <entry key="includeRoles" value="true"/>
+                              
+            
+            <entry key="includeScopes" value="false"/>
+                              
+            
+            <entry key="includeTargetPermissions" value="true"/>
+                              
+            
+            <entry key="mitigationDurationAmount" value="1"/>
+                              
+            
+            <entry key="mitigationDurationScale" value="Month"/>
+                              
+            
+            <entry key="mitigationExpirationEmailTemplate" value="Mitigation Expiration"/>
+                              
+            
+            <entry key="nameTemplate" value="Targeted Access Review [${fullDate}] for Identity [$targetEntityFullname]"/>
+                              
+            
+            <entry key="notifyRemediation" value="false"/>
+                              
+            
+            <entry key="processRevokesImmediately" value="false"/>
+                              
+            
+            <entry key="recommendationsGenerated" value="false"/>
+                              
+            
+            <entry key="remediationPeriodDurationAmount" value="1"/>
+                              
+            
+            <entry key="remediationPeriodDurationScale" value="Month"/>
+                              
+            
+            <entry key="remediationPeriodEnabled" value="true"/>
+                              
+            
+            <entry key="requireBulkCertifyConfirmation" value="false"/>
+                              
+            
+            <entry key="requireReassignmentCompletion" value="true"/>
+                              
+            
+            <entry key="saveExclusions" value="false"/>
+                              
+            
+            <entry key="sendPreDelegationCompleteEmails" value="false"/>
+                              
+            
+            <entry key="shortNameTemplate" value="Targeted Access Review [${fullDate}] for Identity [$targetEntityFullname]"/>
+                              
+            
+            <entry key="subordinateCertificationEnabled" value="true"/>
+                              
+            
+            <entry key="useApprovalRule">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Description>RapidSetup Mover Targeted Certification</Description>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+        
+
+</CertificationDefinition>

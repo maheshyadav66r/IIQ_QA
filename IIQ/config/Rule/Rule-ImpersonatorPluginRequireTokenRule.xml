@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Impersonator Plugin Require Token Rule">
+          
+    
+    <Description>This is an example rule for selecting who must supply a token to impersonate another identity.
+
+		</Description>
+          
+    
+    <Signature returnType="java.lang.Boolean">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log">
+                                        
+                
+                <Description>
+						The log object associated with the SailPointContext.
+					</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context">
+                                        
+                
+                <Description>
+						A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+					</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="impersonator">
+                                        
+                
+                <Description>
+						The name of the current identity, for which we need to evaluate whether or not a token is required. 
+					</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+// Expect: String impersonator
+
+import sailpoint.object.Capability;
+import sailpoint.object.Identity;
+import sailpoint.object.Identity.CapabilityManager;
+
+// ----------------------------------------------------------------------
+// Control variables
+// ----------------------------------------------------------------------
+
+// Set to true to allow System Administrator users to impersonate without a token.
+Boolean SYSTEM_ADMIN_NO_TOKEN = false;
+
+// Set to true to allow Help Desk employees users to impersonate without a token.
+Boolean HELPDESK_NO_TOKEN = false;
+
+// Default setting:
+// - true    - require
+// - false   - do not require
+// - null    - use fixed setting
+Boolean DEFAULT_REQUIRE_TOKEN = null;
+
+// ----------------------------------------------------------------------
+// Main rule: determine whether or not to require token.
+// ----------------------------------------------------------------------
+Identity impersonatorIdentity = context.getObjectByName(Identity.class, impersonator);
+if (impersonatorIdentity == null) {
+  log.error("Cannot find identity: " + impersonator);
+  return true;
+}
+CapabilityManager cm = impersonatorIdentity.getCapabilityManager();
+
+if (SYSTEM_ADMIN_NO_TOKEN) {
+  if (cm.hasCapability(Capability.SYSTEM_ADMINISTRATOR)) {
+    return false;
+  }
+}
+
+if (HELPDESK_NO_TOKEN) {
+  if (cm.hasCapability(Capability.HELP_DESK)) {
+    return false;
+  }
+}
+
+// Fall back
+return DEFAULT_REQUIRE_TOKEN;		
+		]]></Source>
+        
+
+</Rule>

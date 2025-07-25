@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="PostalCodeTransformationForAD" significantModified="1722929241499" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[/*log.error("-----------transformation rule =====");
+log.error("--sourceLocationvalue---"+value);
+log.error("--sourceIdentityAttribute---"+sourceIdentityAttribute);
+log.error("--sourceIdentityAttributeName---"+sourceIdentityAttributeName);*/
+
+
+  String[] address = value.split("-");
+String postalCode=address[3];
+  log.error("---postalCode address---"+postalCode);
+return postalCode;]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="STforAD" significantModified="1729848034712" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[//log.error("--sourceLocationvalue---"+value);
+  /* String[] address = value.split("-");
+  String st=address[0];
+  log.error("---st address---"+st);*/
+
+  log.error("---rulecunfig  bundle---"+config.get("bundle"));
+  log.error("---rulecunfig  identity---"+config.get("identityName"));
+   // log.error("---TR1  getDefinition()---"+taskResult.getDefinition().getName());
+  log.error("---TR1  getDefinition()---"+taskResult.getDefinition().toXml());
+  log.error("--- taskResult getProfile---"+taskResult.getProfile());
+
+  log.error("---taskResult object---"+taskResult.toXml());
+  //log.error("---rulecunfig  identity---"+config.get("identityName"));
+
+
+
+  return "st";
+  ]]></Source>
+        
+
+</Rule>

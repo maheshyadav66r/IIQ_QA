@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="HR-DummyADLinks-Correlation" significantModified="1736080860803" type="IdentityLifecycle">
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable input="true" name="event"/>
+          
+    
+    <Variable input="true" name="identityName"/>
+          
+    
+    <Variable input="true" name="trigger"/>
+          
+    
+    <Variable name="identity">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+        log.error("------------HR-DummyADLinks-Correlation wf event");
+        for(int i=0;i < this.variables.length;i++){
+        log.error("---variables-----"+this.variables[i]);
+        }
+
+
+        Identity identity=null;
+        identity=context.getObjectByName(Identity.class, identityName);
+        return identity;
+      ]]></Source>
+                            
+        
+        </Script>
+                  
+    
+    </Variable>
+          
+    
+    <Variable initializer="false" name="trace">
+                    
+        
+        <Description>Used for debugging this workflow and when set to true trace
+      will be sent to stdout.</Description>
+                  
+    
+    </Variable>
+          
+    
+    <Step icon="Start" name="Start" posX="23" posY="12">
+                    
+        
+        <Transition to="create provisioning plan"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="create provisioning plan" posX="325" posY="14" resultVariable="plan">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import java.util.Date;
+        import sailpoint.object.*;
+        import sailpoint.tools.Util;
+        import java.text.SimpleDateFormat;
+        import sailpoint.object.ProvisioningPlan.Operation;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+        log.error("------------HR-DummyADLinks-Correlation wf event");
+
+        for(int i=0;i< this.variables.length;i++){
+        log.error("---variables-----"+this.variables[i]);
+        }
+        ProvisioningPlan plan=new ProvisioningPlan();
+        plan.setIdentity(identity);
+        AccountRequest accntReq=new AccountRequest();
+
+        log.error("-------------just after plan object creation----------------");
+
+
+
+        return plan;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="stop" posX="694" posY="15">
+                    
+        
+        <Arg name="plan" value="ref:plan"/>
+                    
+        
+        <Arg name="identityName" value="ref:identityName"/>
+                    
+        
+        <WorkflowRef>
+                              
+            
+            <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+                            
+        
+        </WorkflowRef>
+                  
+    
+    </Step>
+        
+
+</Workflow>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation for attribute uniqueness" significantModified="1739337346168" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Application;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorFactory;
+  import sailpoint.object.Filter;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.CloseableIterator;
+
+  public static String generateUniqueSAM(SailPointContext context, String firstName, String lastName) {
+    try {
+      Application application = context.getObjectByName(Application.class, "ActiveDirectory");
+
+      if(application!=null){
+        Connector connector = ConnectorFactory.getConnector(application, "null");
+
+        int i = 1;
+        boolean isUnique = false;
+        String samAccountName;
+        // Generate base sAMAccountName
+        if (firstName.length() > 0 && lastName.length() >= 5) {
+          samAccountName = firstName.substring(0, 1) + lastName.substring(0, 5);
+        } else {
+          samAccountName = firstName.substring(0, 1) + lastName;
+        }
+
+        // Dynamically discover all domains from Active Directory
+        List allDomains = getAllActiveDirectoryDomains(connector);
+        if (allDomains.isEmpty()) {
+          System.out.println("No domains found in Active Directory.");
+          return null;
+        }
+
+        while (!isUnique) {
+          isUnique = true; // Assume it's unique unless found otherwise
+
+          for (String domain : allDomains) {
+            Filter filter = Filter.eq("sAMAccountName", samAccountName);
+
+            try (CloseableIterator iterator = connector.iterateObjects("account", filter, domain)) {
+              if (iterator.hasNext()) {
+                isUnique = false;  // Duplicate found, modify the username
+                samAccountName = firstName.substring(0, 1) + lastName.substring(0, 5) + i;
+                i++;
+                break; // No need to check further if a duplicate is found
+              }
+            }
+          }
+        }
+      }
+      return samAccountName;
+    } catch (GeneralException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  /**
+     * Retrieves all Active Directory domains, including non-configured ones.
+     */
+  private static List getAllActiveDirectoryDomains(Connector connector) {
+    List domainList = new ArrayList();
+
+    try (CloseableIterator iterator = connector.iterateObjects("domain", null, null)) {
+      while (iterator.hasNext()) {
+        Object domainObject = iterator.next();
+        if (domainObject instanceof Map) {
+          Map domainMap = (Map) domainObject;
+          String domainName = (String) domainMap.get("domainName");
+          if (domainName != null) {
+            domainList.add(domainName);
+          }
+        }
+      }
+    } catch (GeneralException e) {
+      e.printStackTrace();
+    }
+
+    return domainList;
+  }
+
+  public static void main(String[] args) {
+    // Example Usage
+    try {
+      SailPointContext context = // Obtain SailPoint Context
+        String firstName = "John";
+      String lastName = "Doe";
+
+      String uniqueSam = generateUniqueSAM(context, firstName, lastName);
+      System.out.println("Generated unique sAMAccountName across all AD domains: " + uniqueSam);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

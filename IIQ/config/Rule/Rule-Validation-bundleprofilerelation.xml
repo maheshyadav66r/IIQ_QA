@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-BundleProfileRelation" significantModified="1728986429312" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.object.BundleProfileRelation;
+
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.ne("BundleProfileRelation.appStatus","OK");
+  qo.add(f);
+
+  Iterator it=context.search(BundleProfileRelation.class,qo);
+
+  while(it.hasNext()){
+    //String id=it.next().getSourceProfileId ();
+    BundleProfileRelation bpr=it.next();
+    log.error(bpr.toXml());
+
+  }
+
+
+  ]]></Source>
+        
+
+</Rule>

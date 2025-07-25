@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="ModifyDBValues_Dateils_Form" significantModified="1752490165121" type="Workflow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="pageTitle" value="modifyOp"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Section columns="3" name="dataCollection">
+                    
+        
+        <Field columnSpan="1" displayName="C1" displayType="combobox" name="c11" postBack="true" required="true" type="string">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            return formModel.get("c1");
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="C2" displayType="combobox" name="c22" postBack="true" required="true" type="string">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            return formModel.get("c2");
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="C3" displayType="combobox" name="c33" postBack="true" required="true" type="string">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Script>
+                                                  
+                    
+                    <Source><![CDATA[
+            return formModel.get("c3");
+          ]]></Source>
+                                                
+                
+                </Script>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="3" displayName="Owner" dynamic="true" filterString="type==&quot;employee&quot;" name="ownerr" required="true" type="Identity"/>
+                  
+    
+    </Section>
+          
+    
+    <Section name="errorMessage" type="text">
+                    
+        
+        <Attributes>
+                              
+            
+            <Map>
+                                        
+                
+                <entry key="hidden">
+                                                  
+                    
+                    <value>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import java.sql.Connection;
+                import java.sql.DriverManager;
+                import java.sql.PreparedStatement;
+                import java.sql.ResultSet;
+                import java.sql.SQLException;
+                import sailpoint.tools.Message;
+
+                if(c11 != null @and c22 != null @and c33!= null){
+
+                log.error("all fields in modify form are not null");
+
+                String owner = null;
+                String oldOwner = null;
+
+                ResultSet resultSet = null;
+                PreparedStatement preparedStatement = null;
+                Connection connection = null;
+
+                String dbUrl = "jdbc:mysql://localhost:3306/test";
+                String dbUsername = "root";
+                String dbPassword = "root";
+
+                int existCount = 0;
+
+
+                try {
+
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                connection = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+
+                if (connection != null) {
+
+                String existanceCheckQuery="SELECT COUNT(*) FROM test.columns_data WHERE c1 = ? AND c2 = ? AND c3 = ?";
+
+                preparedStatement = connection.prepareStatement(existanceCheckQuery);
+                preparedStatement.setString(1, c11);
+                preparedStatement.setString(2, c22);
+                preparedStatement.setString(3, c33);
+
+                resultSet = preparedStatement.executeQuery();
+
+                if (resultSet.next()) {
+
+                existCount = resultSet.getInt(1);
+                log.error("existCount :"+existCount);
+
+                if(existCount ==0){
+
+                //error will be displayed
+
+                if(oldOwner != null @or oldOwner == null )
+                form.getField("ownerr").setValue(" ");
+                return false;
+                // return true; 
+
+                }
+                else{
+                //error wont be displayed
+
+                String getOwnerQuery = "SELECT owner FROM test.columns_data WHERE c1 = ? AND c2 = ? AND c3 = ?";
+                preparedStatement = connection.prepareStatement(getOwnerQuery);
+                preparedStatement.setString(1, c11);
+                preparedStatement.setString(2, c22);
+                preparedStatement.setString(3, c33);
+
+                ResultSet existCountresultSet = preparedStatement.executeQuery();
+
+                if (existCountresultSet.next()) {
+
+                oldOwner = existCountresultSet.getString("owner");
+
+                formModel.put("oldOwner" , oldOwner);
+                log.error("oldOwner :"+oldOwner);
+
+                if(oldOwner != null){
+                form.getField("ownerr").setValue(oldOwner);
+                return true;
+                // return false;
+                }
+                }
+                }//else condition
+                }
+                }//connection block
+                }//try block
+                catch (Exception e) {
+                log.error("Exception occurred : errors in catch block");
+                }finally{
+
+                try{
+
+                if(resultSet != null) resultSet.close();
+                if(preparedStatement != null) preparedStatement.close();
+                if(connection != null) connection.close();
+
+                }catch(SQLException e){
+
+                log.error(e.getMessage());
+
+                }
+
+                }
+                }
+                else
+                return true;
+
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </value>
+                                                
+                
+                </entry>
+                                      
+            
+            </Map>
+                            
+        
+        </Attributes>
+                    
+        
+        <Field value="Record doesnot exists"/>
+                  
+    
+    </Section>
+          
+    
+    <Button action="back" label="Back" value="Back"/>
+          
+    
+    <Button action="next" label="Submit" value="Submit"/>
+        
+
+</Form>

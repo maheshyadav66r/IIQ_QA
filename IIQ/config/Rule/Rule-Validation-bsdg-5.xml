@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-BSDG-5" significantModified="1736240070713" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+
+  QueryOptions qo=new QueryOptions();
+  qo.addFilter(Filter.eq("links.application.name", "ActiveDirectory"));
+  //qo.setOrderBy("firstname");
+
+  List propertyList=new ArrayList();
+  propertyList.add("firstname");
+  propertyList.add("lastname");
+  propertyList.add("email");
+  propertyList.add("department");
+  propertyList.add("displayName");
+
+  Iterator it=context.search(Identity.class,qo,propertyList);
+
+  while((it!=null) && (it.hasNext())){
+    log.error("----------------gdfjgg");
+    
+    Object[] thisRecord=it.next();
+    String fn=(String)thisRecord[0];
+    String ln=(String)thisRecord[1];
+    String email=(String)thisRecord[2];
+    String dept=(String)thisRecord[3];
+    String dName=(String)thisRecord[4];
+
+    //if(fn != null @and ln != null @and email != null @and dept != null @and dName != null)
+    log.error("  fn =  "+fn+"  ln = "+ln+"   email=   "+email+"   dept=   "+dept+"   dName=  "+dName);
+  }
+   return "nnn";
+
+  /* QueryOptions qo=new QueryOptions();
+  qo.addFilter(Filter.eq("workgroup", true));
+  qo.setOrderBy("firstname");
+  Iterator it=context.search(Identity.class,qo);
+  while((it!=null) &&(it.hasNext())){
+    Identity id= (Identity)it.next();
+    log.error("fn   :"+id.getFirstname()+" ln   :"+id.getLastname());
+  }
+
+    if(identities!=null){
+          log.error("----identities---"+identities.size());
+           }
+  //sailpoint.tools.Util.flushIterator(it);*/
+ 
+
+
+  ]]></Source>
+        
+
+</Rule>

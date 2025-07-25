@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-Rule IdentityUniversity1" significantModified="1726821091675" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.object.QueryOptions;
+
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("manager.name","Amanda Rose");
+  qo.addFilter(f);
+  List props=new ArrayList();
+  props.add("name");
+
+  Iterator user=context.search(Identity.class,qo,props);
+  if(null!=user){
+    while(user.hasNext()){
+      String name=user.next()[0];
+      Identity id=context.getObjectByName(Identity.class,name);
+    }
+  }
+  return id;
+
+  //-----------------------------------------------------------------------------------
+
+  int countObjects (class, QueryOptions)
+
+    int count = context.countObjects (Identity.class, qo);
+  if (count == 1)
+    //…
+    else if (count > 1)
+  {
+    Iterator users = context.search (Identity.class, qo, "name");
+    //…
+  }
+
+  ]]></Source>
+        
+
+</Rule>

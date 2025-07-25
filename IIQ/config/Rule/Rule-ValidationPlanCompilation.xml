@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation Plan compilation" significantModified="1747139943851" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import org.apache.commons.logging.Log;
+Logger logs=Logger.getLogger("secondaryIdCreation.eshiam.assam");
+  
+  Identity identity = context.getObjectByName(Identity.class,"Aaron Rivera");
+  ProvisioningPlan plan=new ProvisioningPlan();
+  plan.setIdentity(identity);
+  AccountRequest accountRequest =new AccountRequest();
+
+   logs.info("my rule my rules 111---");
+  //accountRequest.setNativeIdentity("CN="+"ADM-"+identity.getDisplayName()+",OU=People,OU=Demo,DC=Eshiam,DC=com");
+  accountRequest.setOp(ProvisioningPlan.ObjectOperation.Create);
+  accountRequest.setApplication("ActiveDirectory");
+  plan.add(accountRequest);
+
+  logs.info("my rule my rules---");
+  return accReq;
+  
+  Provisioner provisioner=new Provisioner(context);
+  ProvisioningProject proj= provisioner.compile(plan);
+
+  ProvisioningPlan plan2=proj.getPlan("ActiveDirectory");
+
+  AccountRequest accReq=plan2.getAccountRequest("ActiveDirectory");
+  //String nativeId=accReq.getNativeIdentity();
+
+  accReq.setNativeIdentity("CN="+"ADM-"+identity.getDisplayName()+",OU=People,OU=Demo,DC=Eshiam,DC=com");
+
+  accReq.getAttributeRequest("sAMAccountName").setValue("adm-"+identity.getDisplayName());
+return accReq;
+  ProvisioningPlan finalPlan = new ProvisioningPlan();
+  finalPlan.setIdentity(identity);
+  finalPlan.add(accReq);
+
+  provisioner.execute(finalPlan);
+  
+  return "";
+
+  //return plan2.toXml();
+  ]]></Source>
+        
+
+</Rule>

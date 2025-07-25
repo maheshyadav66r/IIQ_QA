@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="SendingDataToManager" significantModified="1747198149002" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+
+
+  Identity manager=context.getUniqueObject(Identity.class,Filter.eq("employeeId","1a2a3c"));
+
+  Filter filter=Filter.and(Filter.eq("department","Engineering"),Filter.eq("manager.name",manager.getName()));
+  QueryOptions qo=new QueryOptions();
+  qo.addFilter(filter);
+
+
+  String stringData="Name,EmployeeId,Email,NetworkId,Manager";
+  Iterator it=context.search(Identity.class,qo,Arrays.asList("name","employeeId","email","networkId"));
+
+  while(it.hasNext()){
+    Object[] values=it.next();
+
+    stringData=stringData+"\n"+values[0]+","+values[1]+","+values[2].toLowerCase()+","+values[3]+","+manager.getName();
+  }
+  log.error(stringData);
+
+  if(stringData!=null @and !stringData.isEmpty()){
+
+    byte[] attatchment=stringData.getBytes();
+    EmailTemplate template=context.getObjectByName(EmailTemplate.class,"SendingDataToManager_csvFile_Email_Template");
+
+    if(template!=null){
+      EmailOptions options=new EmailOptions();
+      options.setVariable("department","Engineering");
+      options.setVariable("manager",manager.getName());
+        options.setVariable("managerObject",manager);
+      options.setTo(manager.getEmail());
+      
+      options.addAttachment(new EmailFileAttachment("EmployeeDataFile",EmailFileAttachment.MimeType.MIME_CSV,attatchment));
+      context.sendEmailNotification(template,options);
+    }
+  }
+  return "mahesh";
+
+
+
+
+
+
+
+
+
+  //Using StringBuilder insteadof String
+
+  /* StringBuilder stringData = new StringBuilder("Name,EmployeeId,Email,NetworkId,Manager");
+  Iterator it=context.search(Identity.class,qo,Arrays.asList("name","employeeId","email","networkId"));
+  while(it.hasNext()){
+    Object[] values=it.next();
+
+    String manager=context.getObjectByName(Identity.class,values[0]).getManager().getName();
+
+    stringData.append("\n").append(values[0]).append(",").append(values[1]).append(",").append(values[2]).append(",").append(values[3]).append(",").append(manager);
+  }
+
+  String result = stringData.toString();*/
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

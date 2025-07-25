@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="DateConfigForLeaverEvent" significantModified="1719391085662" type="IdentityTrigger">
+          
+    
+    <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+          
+    
+    <Signature returnType="boolean">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="previousIdentity">
+                                        
+                
+                <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="newIdentity">
+                                        
+                
+                <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>
+          A boolean describing the result of the rule.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.object.*;
+  import sailpoint.api.*;
+  import java.text.SimpleDateFormat;
+  import java.util.Date;
+  import java.util.Calendar;
+  import java.text.DateFormat;
+  import sailpoint.tools.Util;
+
+  String ed=newIdentity.getStringAttribute("endDate");
+  Date currentdate=new Date();
+  String sCurrentDate=Util.dateToString(currentdate,"dd-MM-yyyy");
+  if(sCurrentDate.equalsIgnoreCase(ed))
+  {
+    log.error("identityDate is matched to currentdate");
+    if(currentdate.getHours() >= 18&& (currentdate.getHours() <= 23 &&currentdate.getMinutes() <= 59 && currentdate.getSeconds() <= 59))
+    {     
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
+  else
+  {
+    return false;
+  }]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="Form_VSNT_Create_New_Test_Account" type="Workflow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="isWizard" value="true"/>
+                              
+            
+            <entry key="pageTitle" value="Form_VSNT_Create_New_Test_Account"/>
+                              
+            
+            <entry key="title" value="Create New Test Account"/>
+                              
+            
+            <entry key="width" value="300"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Description>This form is used to create new test account</Description>
+          
+    
+    <Section columns="2" label="Request New Test Account" name="AccountUserDetails">
+                    
+        
+        <Attributes>
+                              
+            
+            <Map>
+                                        
+                
+                <entry key="width" value="300"/>
+                                      
+            
+            </Map>
+                            
+        
+        </Attributes>
+                    
+        
+        <Field columnSpan="1" displayName="Select Owner" displayType="radio" name="testAccountRequestFor" postBack="true" required="true" type="string">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>I am the Owner</String>
+                                                            
+                        
+                        <String>Select Another Owner</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </Value>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="Owner" displayType="combobox" dynamic="true" name="testAccountRequestOwner" required="true" type="sailpoint.object.Identity">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="hidden">
+                                                            
+                        
+                        <value>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+
+                  import sailpoint.tools.Util;
+                  import sailpoint.object.Field;
+
+                  boolean hidden=true;
+                  if(Util.nullSafeCaseInsensitiveEq("testAccountRequestOwner", field.getName())){   
+                  if(("Select Another Owner".equals(testAccountRequestFor))){  
+                  hidden = false;
+                  }
+                  return hidden;
+                  }
+
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </value>
+                                                          
+                    
+                    </entry>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+
+          import sailpoint.tools.Util;
+          import org.apache.log4j.Logger;
+          import org.apache.log4j.Level;
+          import sailpoint.object.Identity;
+          import sailpoint.object.Link;
+          import java.text.SimpleDateFormat;
+          import java.util.Date;
+          import sailpoint.tools.Util;
+
+          String NDI_APPLICATION_NAME = "Application_VSNT_LDAP_NDI";
+          fieldValue = null;
+          Identity identity = null;
+
+          if(testAccountRequestFor!=null){
+          if("Select Another Owner".equals(testAccountRequestFor)){ 
+          if( testAccountRequestOwner!=void && testAccountRequestOwner!=null){
+          identity =context.getObjectByName(Identity.class,testAccountRequestOwner);
+          }
+          }else{
+          identity =context.getObjectByName(Identity.class,requester);
+          formModel.put("managerId",identity.getName());
+          }
+          if(identity !=null) {
+          fieldValue = identity.getName();
+          return fieldValue;
+          }
+          }
+
+        ]]></Source>
+                                      
+            
+            </Script>
+                              
+            
+            <ValidationRule>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Rule_VSNT_Workflow_FormValidation_RuleLibrary"/>
+                                      
+            
+            </ValidationRule>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="First Name" displayType="combobox" helpKey="Enter First Name" name="firstNameTestUser" required="true" type="string">
+                              
+            
+            <ValidationRule>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Rule_VSNT_Workflow_FormValidation_RuleLibrary"/>
+                                      
+            
+            </ValidationRule>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="Middle Name" displayType="combobox" helpKey="Enter Middle Name" name="middleName" type="string"/>
+                    
+        
+        <Field columnSpan="1" displayName="Last Name" displayType="combobox" helpKey="Enter Last Name" name="lastNameTestUser" required="true" type="string">
+                              
+            
+            <ValidationRule>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Rule_VSNT_Workflow_FormValidation_RuleLibrary"/>
+                                      
+            
+            </ValidationRule>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="Start Date" helpKey="Start Date cannot be a past date" name="testAccountStartDate" required="true" type="date">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+
+          import java.util.Date;
+
+          Date date = new Date(System.currentTimeMillis());   
+          return date;
+
+        ]]></Source>
+                                      
+            
+            </Script>
+                              
+            
+            <ValidationRule>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Rule_VSNT_Workflow_FormValidation_RuleLibrary"/>
+                                      
+            
+            </ValidationRule>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="End Date" helpKey="Effective End Date can be at most 2 months from the Start Date" name="testAccountEndDate" required="true" type="date">
+                              
+            
+            <ValidationRule>
+                                        
+                
+                <Reference class="sailpoint.object.Rule" name="Rule_VSNT_Workflow_FormValidation_RuleLibrary"/>
+                                      
+            
+            </ValidationRule>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="Do you need an Active Directory Account" displayType="combobox" name="ADAccountOption" type="string">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>true</String>
+                                                            
+                        
+                        <String>false</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </Value>
+                                      
+            
+            </AllowedValuesDefinition>
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+
+          return "false";
+
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+          
+    
+    <Button action="back" label="Cancel" value="Cancel"/>
+          
+    
+    <Button action="next" label="Submit" value="Submit"/>
+        
+
+</Form>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Revocation Period Enter Rule" significantModified="1741933197292" type="CertificationPhaseChange">
+          
+    
+    <Description>This rule is run when the certification either enters or leaves a phase.</Description>
+          
+    
+    <Signature returnType="void">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="certification">
+                                        
+                
+                <Description>
+          The sailpoint.object.Certification being certified.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="certificationItem">
+                                        
+                
+                <Description>
+          The sailpoint.object.CertificationItem that is being certified.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="previousPhase">
+                                        
+                
+                <Description>
+          Certification.Phase (may be null) that is the previous phase.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="nextPhase">
+                                        
+                
+                <Description>
+          Certification.Phase (may be null) that is the next phase.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[log.error("Revocation Period Enter Rule START");
+
+log.error("certification--- " + certification.toXml());
+
+log.error("certificationItem--- " + certificationItem.toXml());
+
+log.error("previousPhase--- " + previousPhase);
+
+log.error("nextPhase--- " + nextPhase);
+
+log.error("Revocation Period Enter Rule END");]]></Source>
+        
+
+</Rule>

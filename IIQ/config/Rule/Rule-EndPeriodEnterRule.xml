@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="End Period Enter Rule" type="CertificationPhaseChange">
+          
+    
+    <Description>This rule is run when the certification either enters or leaves a phase.</Description>
+          
+    
+    <Signature returnType="void"/>
+          
+    
+    <Source><![CDATA[log.error("End Period Enter Rule START");
+
+log.error("certification--- " + certification.toXml());
+
+log.error("certificationItem--- " + certificationItem.toXml());
+
+log.error("previousPhase--- " + previousPhase);
+
+log.error("nextPhase--- " + nextPhase);
+
+log.error("End Period Enter Rule END");]]></Source>
+        
+
+</Rule>

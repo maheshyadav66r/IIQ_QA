@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-NYU-RuleLibrary-AssignRolesToSpecialAccounts" significantModified="1741875535055">
+          
+    
+    <Source><![CDATA[ 
+ 
+import sailpoint.object.*;	
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import sailpoint.object.Identity;
+import sailpoint.tools.Util;
+import sailpoint.api.Identitizer;
+import sailpoint.api.IdentityService;
+import sailpoint.object.Attributes;
+import sailpoint.api.Provisioner;
+import sailpoint.api.SailPointContext;
+import sailpoint.tools.GeneralException;
+import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.Filter;
+import sailpoint.tools.Util;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import sailpoint.object.Bundle;
+import sailpoint.object.Application;
+import sailpoint.object.Filter;
+import sailpoint.api.Provisioner;
+
+  
+//Log log = LogFactory.getLog("NYU-RuleLibrary-AssignRolesToSpecialAccounts");
+public void specialAccountRole(String netId, String type, Map formModel) throws Exception 
+   {
+     QueryOptions qo = new QueryOptions();
+     qo.addFilter(Filter.eq("netId", netId));
+     List identities = context.getObjects(Identity.class, qo);
+     if (identities != null && !identities.isEmpty()) 
+	     {		 
+          Identity identity = identities.get(0);                    
+	          try {
+				   //Setting Certifier identityAttribute which will be used while certifying every quarter for test/special accounts
+			       String certifierName = formModel.get("certifier");
+			       Identity certifier = context.getObjectByName(Identity.class,certifierName);
+			       if(certifier!=null){
+			         identity.setAttribute("Certifier",certifier);
+			       }
+			
+			        //Setting human/machine accounts
+			        if(formModel.get("humanORmachine")!=null @and formModel.get("humanORmachine")!=void) identity.setAttribute("humanORmachineAccount",formModel.get("humanORmachine"));
+			
+			        context.saveObject(identity);
+			        context.commitTransaction();
+
+                   ProvisioningPlan plan = new ProvisioningPlan(); 
+                   String msg = null;
+                   String guid = identity.getAttribute("guid");
+                   log.info("Before Plan Build: " + System.currentTimeMillis());
+                   plan.setIdentity(identity);
+                   plan.setNativeIdentity(guid);
+                   AccountRequest acr = new AccountRequest();
+                   acr.setOperation(Operation.Modify);
+                   acr.setNativeIdentity(identity.getName());
+                   acr.setApplication("IIQ");
+                   ProvisioningPlan.AttributeRequest userTypeAttribute = new ProvisioningPlan.AttributeRequest();
+                   userTypeAttribute.setOperation(ProvisioningPlan.Operation.Add);
+                   userTypeAttribute.setName("assignedRoles");
+				   
+				   // Removed "nyu_test_account" from the criteria for auto-assigning Roles . IAMR-2865 (No Auto-Assigning). Instead created below another method to assign only selected apps 
+				   if(type.equalsIgnoreCase("nyu_special_account") || type.equalsIgnoreCase("nyu_special_account_other")) 
+				     {  
+                      userTypeAttribute.setValue("LDAPUser");
+					 }
+                   if(type.equalsIgnoreCase("nyu_ad_service_account") || type.equalsIgnoreCase("nyu_ad_administrator_account")) 
+				     {  
+                      userTypeAttribute.setValue("ADUser");
+					 }					 
+                   acr.add(userTypeAttribute);
+                   plan.add(acr);	  	    
+	               log.debug("plan.toXml() " + plan.toXml());
+             // Provision the plan
+                   Provisioner p = new Provisioner(context);
+                   p.setNoLocking(false);
+                   p.execute(p.compile(plan));
+                   log.debug("After plan execution: " + System.currentTimeMillis());
+            //   Refresh the users
+                   Attributes args = new Attributes();
+                   args.put("enablePartitioning", "false");
+                   args.put("correlateEntitlements", "true");
+                   args.put("provision", "true");
+                   Identitizer identitizer = new Identitizer(context, args);
+	               identitizer.refresh(identity);
+                   msg = "Success";
+                   log.debug("Result" + msg);                      
+                   } catch (Exception e) {
+                                           log.error(e);
+                                         } 
+	      }
+	}
+	
+  
+  
+  /* ################ Assigning Roles to Test Accounts based on selected applications from 'Create Test NetId' quicklink (IAMR-2865)#################### */
+  public void assignSelectedRoles(String netId, Map formModel) throws Exception 
+  {
+    ProvisioningPlan plan = null;
+    if(netId != null){
+      //Getting Identity using NetId
+      Filter filter2 = Filter.eq("netId",netId);
+      Identity ide= context.getUniqueObject(Identity.class,filter2);
+      if(ide != null){
+        plan = new ProvisioningPlan();
+        String guid = ide.getAttribute("guid");
+        plan.setNativeIdentity(guid);
+        plan.setIdentity(ide); 
+
+        //Getting list of Applications selected in 'Create Test NetId' quicklink by the owner
+        AccountRequest accReq = new AccountRequest();
+        accReq.setNativeIdentity(ide.getName());
+        accReq.setApplication("IIQ");
+        accReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+
+		//Setting primarySite identityAttribute as selected in Create Test Account Form
+        String primarySite = formModel.get("primarySite");
+        accReq.add(new AttributeRequest("primarySite",ProvisioningPlan.Operation.Set,primarySite));
+        
+        //Setting shAdOu identityAttribute which will be used while creating ShanghaiAD account (if selected)
+        accReq.add(new AttributeRequest("shAdOu",ProvisioningPlan.Operation.Set,"NYUSH.NYUSH.NYUSH"));
+
+		//Setting Certifier identityAttribute which will be used while certifying every quarter for test/special accounts
+        String certifierName = formModel.get("certifier");
+        Identity certifier = context.getObjectByName(Identity.class,certifierName);
+        if(certifier!=null){
+          ide.setAttribute("Certifier",certifier);
+        }
+
+        //Setting human/machine accounts
+        if(formModel.get("humanORmachine")!=null @and formModel.get("humanORmachine")!=void) ide.setAttribute("humanORmachineAccount",formModel.get("humanORmachine"));
+
+        context.saveObject(ide);
+        context.commitTransaction();
+        
+		//Getting all apps selected in Create Test Account Form
+        List appNames = formModel.get("applications2");
+        if(appNames != null){
+          for(String appName : appNames){
+            Application app = context.getObjectByName(Application.class,appName);
+            if(app != null){
+              Bundle role = null ;
+
+              //Getting and Assigning the Roles using App-Name from selected-Apps-List
+              Filter filter = Filter.and(Filter.or(Filter.eq("inheritance.name",app.getName()),Filter.eq("inheritance.displayName",app.getName())),Filter.like("displayName","User"),Filter.eq("type","business"));
+              role = context.getUniqueObject(Bundle.class,filter);
+              if(role != null){
+                AttributeRequest attrReq = new AttributeRequest();
+                attrReq.setName("assignedRoles");
+                attrReq.setOperation(ProvisioningPlan.Operation.Add);
+                attrReq.setValue(role.getName());
+                accReq.add(attrReq);
+              }
+            }
+          }
+        }
+        plan.add(accReq);
+      }
+    }
+
+    //Provisioning to assign all the roles for selected apps
+    if(plan != null){
+      Provisioner provr = new Provisioner(context);
+      provr.execute(plan);
+    }
+  }
+  /* ################ Assigned Roles based on selected applications from 'Create Test NetId' quicklink #################### */
+  
+  
+   /* ################ Assigning Roles to Admin/Service Accounts based on selected Domain(Shanghai/NYC) from 'Create AD Service Account' OR 'Create AD Admin Account' quicklink (IAMR-2949)#################### */
+  public void assignADRoles(String netId, Map formModel) throws Exception 
+  {
+    ProvisioningPlan plan = null;
+    if(netId != null){
+      //Getting Identity using NetId
+      Filter filter2 = Filter.eq("netId",netId);
+      Identity ide= context.getUniqueObject(Identity.class,filter2);
+      if(ide != null){
+      	//Setting Certifier identityAttribute which will be used while certifying every quarter for test/special accounts
+        String certifierName = formModel.get("certifier");
+        Identity certifier = context.getObjectByName(Identity.class,certifierName);
+        if(certifier!=null){
+          ide.setAttribute("Certifier",certifier);
+        }
+        
+        //Setting human/machine accounts
+        if(formModel.get("humanORmachine")!=null @and formModel.get("humanORmachine")!=void) ide.setAttribute("humanORmachineAccount",formModel.get("humanORmachine"));
+        
+        context.saveObject(ide);
+        context.commitTransaction();
+
+        plan = new ProvisioningPlan();
+        String guid = ide.getAttribute("guid");
+        plan.setNativeIdentity(guid);
+        plan.setIdentity(ide); 
+
+        //Getting list of Applications selected in 'Create Test NetId' quicklink by the owner
+        AccountRequest accReq = new AccountRequest();
+        accReq.setNativeIdentity(ide.getName());
+        accReq.setApplication("IIQ");
+        accReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+
+        //Getting Domain selected in Create AD ADmin/Service Account Form
+        String domain = formModel.get("domain");
+        if(domain != null){
+          Application app = null;
+          if(domain.equalsIgnoreCase("Shanghai AD")){
+            app = context.getObjectByName(Application.class,"Shanghai AD");
+          }
+          else if(domain.equalsIgnoreCase("NYC AD")){
+            app = context.getObjectByName(Application.class,"AD");
+          }
+          if(app != null){
+            Bundle role = null ;
+
+            //Getting and Assigning the Roles using App-Name from selected-Apps-List
+            Filter filter = Filter.and(Filter.or(Filter.eq("inheritance.name",app.getName()),Filter.eq("inheritance.displayName",app.getName())),Filter.like("displayName","User"),Filter.eq("type","business"));
+            role = context.getUniqueObject(Bundle.class,filter);
+            if(role != null){
+              AttributeRequest attrReq = new AttributeRequest();
+              attrReq.setName("assignedRoles");
+              attrReq.setOperation(ProvisioningPlan.Operation.Add);
+              attrReq.setValue(role.getName());
+              accReq.add(attrReq);
+            }
+          }
+        }
+        plan.add(accReq);
+      }
+    }
+
+    //Provisioning to assign all the roles for selected apps
+    if(plan != null){
+      Provisioner provr = new Provisioner(context);
+      provr.execute(plan);
+    }
+  }
+  /* ################ Assigned Roles based on selected Domain from 'Create AD Admin/Service Account' quicklink #################### */
+	
+  
+  ]]></Source>
+        
+
+</Rule>

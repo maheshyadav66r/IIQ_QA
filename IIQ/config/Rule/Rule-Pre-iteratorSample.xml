@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Pre-Iterator sample" significantModified="1740070556331" type="PreIterate">
+          
+    
+    <Description>This rule is called before the connector processes the data in a file.</Description>
+          
+    
+    <Signature returnType="void"/>
+          
+    
+    <Source><![CDATA[import sailpoint.api.SailPointFactory;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.xml.XMLObjectFactory;
+  import sailpoint.object.Configuration;
+
+
+  log.error(" stats object---"+stats);
+//  log.error("   OUTPUT_FILE_NAME_SP   --"+stats.get("fileName"));
+//  log.error("  OUTPUT_FILEPATH_LOCATION   --"+stats.get("absolutePath"));
+
+
+
+
+ /* SailPointContext ctx = SailPointFactory.getCurrentContext();
+  if ( ctx == null ) {
+    throw new GeneralException("Unable to get sailpoint context.");
+  }
+  String name = application.getName() + "_aggregationStats";
+  Configuration config = ctx.getObject(Configuration.class,name);
+
+  if ( config != null ) {
+    if ( log.isDebugEnabled() ) {
+      log.debug("CurrentStats: \n" + XMLObjectFactory.getInstance().toXml(stats));
+      log.debug("Config : \n" + config.toXml());
+    }
+    String key = schema.getObjectType();
+    Map lastStats = (Map)config.get(key);
+    if ( lastStats != null ) {
+      Long lastMod = (Long)lastStats.get("lastModified");
+      Long currentMod = (Long)stats.get("lastModified");
+      if ( currentMod < lastMod ) {
+        throw new GeneralException("Last modification date is older than it was 
+                                   during the last aggregation!");
+                                   }
+                                   Long currentLength = (Long)stats.get("length");
+                                   Long lastLength = (Long)lastStats.get("length");
+                                   if ( currentLength < lastLength ) {
+                                     throw new GeneralException("The data file's length is less than it was during 
+                                                                the last aggregation!");
+                                                                }
+                                                                } else {
+                                                                  if ( log.isDebugEnabled() ) {
+                                                                    log.debug("Configuration for ["+key+"] was not found...Nothing checked.");
+                                                                  }
+                                                                }
+                                                                } else {
+                                                                  if ( log.isDebugEnabled() ) {
+                                                                    log.debug("Configuration ["+name+"] was not found...Nothing checked.");
+                                                                  }
+                                                                }*/
+log.error("----------CS Pre-iterator Rule--------");]]></Source>
+        
+
+</Rule>

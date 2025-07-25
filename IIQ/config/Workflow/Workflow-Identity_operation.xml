@@ -1,0 +1,898 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="Identity_operation" significantModified="1749814592942" type="">
+          
+    
+    <Variable input="true" name="launcher"/>
+          
+    
+    <Variable name="formModel"/>
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable name="event"/>
+          
+    
+    <Variable name="identityName"/>
+          
+    
+    <Variable name="identityRequestId"/>
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Variable initializer="AccountsRequest" name="flow">
+                    
+        
+        <Description>The name of the LCM flow that launched this workflow.
+      This is one of these three values:
+
+      AccountsRequest
+      EntitlementsRequest
+      RolesRequest
+      AttributeSync</Description>
+                  
+    
+    </Variable>
+          
+    
+    <RuleLibraries>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="Identity_operation_RuleLibrary"/>
+                  
+    
+    </RuleLibraries>
+          
+    
+    <Step icon="Start" name="Start" posX="3" posY="19">
+                    
+        
+        <Transition to="Initialize"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Initialize" posX="138" posY="18" resultVariable="formModel">
+                    
+        
+        <Description>
+      Initialize the data in the model.
+    </Description>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+        import java.util.HashMap;
+        import sailpoint.transformer.IdentityTransformer;
+
+        HashMap model = new HashMap();
+        IdentityTransformer transformer = new IdentityTransformer(context);
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_CLASS, transformer.getClass().getName());
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_OPTIONS, "");
+        return model;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Identity_Selection"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Identity_Selection" posX="289">
+                    
+        
+        <Approval name="IdentitySelectionForm" owner="$(launcher)" return="formModel" send="formModel,launcher">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="IdentitySelectionForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="IdentitySelectionForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section label="Selected Identity Must be an active Employee" name="SelectionPreview"/>
+                                        
+                
+                <Section columns="2" name="IdentitySelection">
+                                                  
+                    
+                    <Field columnSpan="1" displayName="IdentitySelection" name="assam" postBack="true" required="true" type="sailpoint.object.Identity"/>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Select Operation" dynamic="true" name="operation" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  import sailpoint.object.Identity;
+                  import sailpoint.api.IdentityService;
+                  import sailpoint.object.Application;
+                  import sailpoint.object.Link;
+                  import sailpoint.object.Filter;
+
+                  String idName=form.getField("assam").getValue();
+
+
+                  List ops=new ArrayList();
+
+                  if(idName!=null){
+
+                  Filter filter=Filter.or(Filter.eq("name",idName),Filter.eq("id",idName));
+                  Identity identity=context.getUniqueObject(Identity.class,filter);
+
+                  IdentityService identityService = new IdentityService(context);
+
+                  if(identity!=null){
+
+                  Application adApp=context.getObjectByName(Application.class,"ActiveDirectory");
+
+                  if(adApp!=null){
+
+                  List adLinks=identityService.getLinks(identity,adApp);
+
+                  if(adLinks!=null @and adLinks.size()>0){
+
+                  ops.add("Enable");
+                  ops.add("Disable");
+
+                  }else{
+
+                  ops.add("Create");
+
+                  }
+                  }
+                  }
+                  }
+                  log.error(" end of operation field in form formModel----"+formModel);
+                  return ops;
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="createAd_Account" when="script:formModel.get(&quot;operation&quot;).equals(&quot;Create&quot;)"/>
+                    
+        
+        <Transition to="EnableAd_AccountDataForm_Step" when="script:formModel.get(&quot;operation&quot;).equals(&quot;Enable&quot;)"/>
+                    
+        
+        <Transition to="DisableAd_AccountDataForm_Step" when="script:formModel.get(&quot;operation&quot;).equals(&quot;Disable&quot;)"/>
+                    
+        
+        <Transition to="Stop" when="!approved"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="DisableAd_AccountDataForm_Step" posX="593" posY="108">
+                    
+        
+        <Approval mode="string:serial" name="disable_AD_Account_Form" owner="$(launcher)" return="formModel" send="formModel,launcher">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="disable_AD_Account_Form">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="disable_AD_Account_Form"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section label="AccountSelection" name="accountSelection">
+                                                  
+                    
+                    <Field displayName="Select Account" dynamic="true" name="adAccount" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  import sailpoint.object.Identity;
+                  import sailpoint.object.Filter;
+                  import sailpoint.api.IdentityService;
+                  import sailpoint.object.Application;
+                  import sailpoint.object.Link;
+                  import sailpoint.object.QueryOptions;
+
+                  List natives=new ArrayList();
+
+                  if(formModel!=null){
+
+                  if(formModel.get("assam")!=null){
+
+                  String idName=formModel.get("assam");
+
+                  if(idName!=null){
+
+                  Filter filter=Filter.or(Filter.eq("name",idName),Filter.eq("id",idName));
+                  Identity identity=context.getUniqueObject(Identity.class,filter);
+
+                  QueryOptions qo=new QueryOptions();
+
+                  if(identity!=null){
+                  Filter f=Filter.and(Filter.eq("identity.id",identity.getId()),Filter.eq("application.name","ActiveDirectory"));
+                  qo.addFilter(f);
+
+                  List links=context.getObjects(Link.class,qo);
+                  for(Link link:links){
+
+                  log.error(" nativeidentity of link in while loop..."+link.getNativeIdentity());
+
+                  natives.add(link.getNativeIdentity());
+                  }
+                  }
+                  }
+                  log.error(" end of operation field in form formModel----"+formModel);
+                  log.error(" end of operation field in form natives----"+natives);
+                  }
+                  }
+                  return natives;
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Section columns="2" label="AD_Disable" name="ad_Disable">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="hidden">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Script>
+                                                                                                    
+                                        
+                                        <Source><![CDATA[
+                      if(adAccount!=null)
+                      return false;
+                      return true;
+                    ]]></Source>
+                                                                                                  
+                                    
+                                    </Script>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="sAMAccountName" dynamic="true" name="sAMAccountName" postBack="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="readOnly" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+                import sailpoint.object.Link;
+
+                String sAMAccountName;
+                log.error("----sAMAccountName formModel---"+formModel);
+
+                if(adAccount!=null){
+
+                log.error("   adAccount...."+adAccount);
+
+                Filter f= Filter.eq("nativeIdentity",adAccount);
+                Link link=context.getUniqueObject(Link.class,f);
+
+                sAMAccountName=link.getAttribute("sAMAccountName");
+
+                }
+                return sAMAccountName;
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="givenName" dynamic="true" name="givenName" postBack="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="readOnly" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+                import sailpoint.object.Link;
+
+                String givenName;
+                log.error("... givenName...");
+
+                if(adAccount!=null){
+
+                log.error("   adAccount  in givenName...."+adAccount);
+
+                Filter f= Filter.eq("nativeIdentity",adAccount);
+                Link link=context.getUniqueObject(Link.class,f);
+
+                givenName=link.getAttribute("givenName");
+
+                log.error("----givenName---"+givenName);
+
+                }
+                return givenName;
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="distinguishedName" dynamic="true" name="distinguishedName" postBack="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="readOnly" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+                import sailpoint.object.Link;
+
+                String distinguishedName;
+                log.error("   adAccount  in givenName....");
+
+                if(adAccount!=null){
+
+                Filter f= Filter.eq("nativeIdentity",adAccount);
+                Link link=context.getUniqueObject(Link.class,f);
+
+                distinguishedName=link.getAttribute("distinguishedName");
+
+                log.error("----distinguishedName---"+distinguishedName);
+
+                }
+                return distinguishedName;
+
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Email" dynamic="true" name="mail" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="readOnly" value="true"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+                import sailpoint.object.Link;
+
+                String mail;
+
+                if( adAccount!=null){
+
+                log.error("   adAccount  in givenName...."+adAccount);
+
+                Filter f= Filter.eq("nativeIdentity",adAccount);
+                Link link=context.getUniqueObject(Link.class,f);
+
+                mail=link.getAttribute("mail");
+
+                log.error("----mail---"+mail);
+
+                }
+                return mail;
+
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="DisableAd_AccountData_Step"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:disableAdAccountPlan(identityId)" name="DisableAd_AccountData_Step" posX="802" posY="111" resultVariable="plan">
+                    
+        
+        <Arg name="identityId">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null)
+          return formModel.get("assam");
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Transition to="Call_LCM_Workflow"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:enableAdAccountPlan(identityId)" name="EnableAd_AccountDataForm_Step" posX="478" posY="191" resultVariable="plan">
+                    
+        
+        <Arg name="identityId">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null)
+          return formModel.get("assam");
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Transition to="Call_LCM_Workflow"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:createAdAccountPlan(identityId)" name="createAd_Account" posX="362" posY="303" resultVariable="plan">
+                    
+        
+        <Arg name="identityId">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null)
+          return formModel.get("assam");
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Arg name="plan" value="ref:plan"/>
+                    
+        
+        <Transition to="Call_LCM_Workflow"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Call_LCM_Workflow" posX="861" posY="308">
+                    
+        
+        <Arg name="identityEmailTemplate"/>
+                    
+        
+        <Arg name="enableRetryRequest"/>
+                    
+        
+        <Arg name="securityOfficerElectronicSignature"/>
+                    
+        
+        <Arg name="fallbackApprover"/>
+                    
+        
+        <Arg name="endOnManualWorkItems"/>
+                    
+        
+        <Arg name="noCreateTemplates" value="true"/>
+                    
+        
+        <Arg name="userEmailTemplate"/>
+                    
+        
+        <Arg name="policiesToCheck"/>
+                    
+        
+        <Arg name="project"/>
+                    
+        
+        <Arg name="workItemComments"/>
+                    
+        
+        <Arg name="approvalSplitPoint"/>
+                    
+        
+        <Arg name="source"/>
+                    
+        
+        <Arg name="identityDisplayName"/>
+                    
+        
+        <Arg name="foregroundProvisioning"/>
+                    
+        
+        <Arg name="ownerElectronicSignature"/>
+                    
+        
+        <Arg name="batchRequestItemId"/>
+                    
+        
+        <Arg name="saveUnmanagedPlan_WithProjectArgument"/>
+                    
+        
+        <Arg name="splitPlans"/>
+                    
+        
+        <Arg name="doRefresh"/>
+                    
+        
+        <Arg name="plan" value="ref:plan"/>
+                    
+        
+        <Arg name="flow"/>
+                    
+        
+        <Arg name="identityElectronicSignature"/>
+                    
+        
+        <Arg name="identityName">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null)
+          return formModel.get("assam");
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Arg name="approvalSet"/>
+                    
+        
+        <Arg name="violationReviewDecision"/>
+                    
+        
+        <Arg name="filterRejects"/>
+                    
+        
+        <Arg name="splitProjects"/>
+                    
+        
+        <Arg name="requireCommentsForDenial"/>
+                    
+        
+        <Arg name="requesterEmailTemplate"/>
+                    
+        
+        <Arg name="approvalEmailTemplate"/>
+                    
+        
+        <Arg name="ticketManagementApplication"/>
+                    
+        
+        <Arg name="securityOfficerName"/>
+                    
+        
+        <Arg name="approvingIdentities"/>
+                    
+        
+        <Arg name="managerEmailTemplate"/>
+                    
+        
+        <Arg name="ticketId"/>
+                    
+        
+        <Arg name="approvalScheme"/>
+                    
+        
+        <Arg name="allowRequestsWithViolations"/>
+                    
+        
+        <Arg name="workItemPriority"/>
+                    
+        
+        <Arg name="managerElectronicSignature"/>
+                    
+        
+        <Arg name="requireViolationReviewComments"/>
+                    
+        
+        <Arg name="splitApprovalSet"/>
+                    
+        
+        <Arg name="approvalMode"/>
+                    
+        
+        <Arg name="trace" value="true"/>
+                    
+        
+        <Arg name="endOnProvisioningForms"/>
+                    
+        
+        <Arg name="splitWorkItemComments"/>
+                    
+        
+        <Arg name="requireCommentsForApproval"/>
+                    
+        
+        <Arg name="notificationScheme"/>
+                    
+        
+        <Arg name="policyViolations"/>
+                    
+        
+        <Arg name="policyScheme"/>
+                    
+        
+        <Arg name="setPreviousApprovalDecisions"/>
+                    
+        
+        <Arg name="optimisticProvisioning"/>
+                    
+        
+        <Arg name="securityOfficerEmailTemplate"/>
+                    
+        
+        <Return name="plan" to="plan"/>
+                    
+        
+        <Return name="identityRequestId" to="identityRequestId"/>
+                    
+        
+        <WorkflowRef>
+                              
+            
+            <Reference class="sailpoint.object.Workflow" name="Eshiam1045 LCM Provisioning"/>
+                            
+        
+        </WorkflowRef>
+                    
+        
+        <Transition to="createAd_AuditEvent"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:createAuditEvent(identityId,plan)" name="createAd_AuditEvent" posX="980" posY="126" resultVariable="event">
+                    
+        
+        <Arg name="identityId">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          if(formModel!=null)
+          return formModel.get("assam");
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Arg>
+                    
+        
+        <Arg name="plan" value="ref:plan"/>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="1053" posY="27"/>
+        
+
+</Workflow>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="HR Source Lifecycle Event - LeaverWorkFlow" significantModified="1718254848143" type="IdentityLifecycle">
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable input="true" name="event"/>
+          
+    
+    <Variable input="true" name="identityName"/>
+          
+    
+    <Variable input="true" name="trigger"/>
+          
+    
+    <Variable initializer="false" name="trace">
+                    
+        
+        <Description>
+      Used for debugging this workflow and when set to true trace
+      will be sent to stdout.
+    </Description>
+                  
+    
+    </Variable>
+          
+    
+    <Variable name="identity">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[import sailpoint.object.Identity;
+
+        Identity identity=null;
+        identity=context.getObjectByName(Identity.class, identityName);
+        return identity;]]></Source>
+                            
+        
+        </Script>
+                  
+    
+    </Variable>
+          
+    
+    <Step icon="Start" name="Start" posX="25" posY="10">
+                    
+        
+        <Transition to="create provisioning plan"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="create provisioning plan" posX="134" posY="10">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.Operation;
+        import sailpoint.object.Link;
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+
+        ProvisioningPlan plan=new ProvisioningPlan();
+        List accntReqList=new ArrayList();
+        AccountRequest accntReq=new AccountRequest();
+
+        plan.setIdentity(identity);
+
+        List linksList=identity.getLinks();
+        for(Link link:linksList){
+
+        String applicationName=link.getApplication();
+        Identity idnty=link.getIdentity();
+        String idntyName=idnty.getName();
+
+        accntReq.setApplication(applicationName);
+        accntReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Disable);
+        accntReq.setNativeIdentity("CN="+idntyName+",OU=People,OU=Demo,DC=Eshiam,DC=com");
+
+        accntReqList.add(accntReq);
+        plan.add(accntReqList);
+        }
+        return plan;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="stop" posX="335" posY="9" resultVariable="plan">
+                    
+        
+        <WorkflowRef>
+                              
+            
+            <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+                            
+        
+        </WorkflowRef>
+                  
+    
+    </Step>
+        
+
+</Workflow>

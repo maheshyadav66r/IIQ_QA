@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-PruningCertificationObjects2" significantModified="1742377773195" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.api.Terminator;
+  import java.io.*;
+  import java.sql.*;
+
+
+  boolean isString=false;
+  for(char ch:config.get("limit")){
+    if(Character.isLetter(ch))
+      isString=true;
+  }
+
+
+
+  if(!isString){
+
+    int limit=Integer.parseInt(config.get("limit"));
+    
+    if(limit @gt 0 @and limit @lteq 100){
+      log.error("  ruel entry task");
+
+      String objectType=config.get("certificationObject");
+
+      Terminator terminator=new Terminator(context);
+      log.error("before first CertificationEntity.id  ");
+
+
+      if(objectType.equalsIgnoreCase("CertificationItem")){
+        QueryOptions qo1=new QueryOptions();
+        qo1.addFilter(Filter.eq("parent.id","c0a8002394fb1f308194fe9f634b0726"));
+        int countBeforePrune=context.countObjects(CertificationItem.class,qo1);
+        log.error("before second CertificationEntity.id  countBeforePrune "+countBeforePrune);
+
+
+        if(countBeforePrune @gt 0){
+          if(limit!=null @and objectType!=null){
+            log.error("limit!=null objectType!=null check  ");
+
+            log.error("  objectType.equalsIgnoreCase if block  ");
+
+            taskResult.setAttribute("objectType",objectType);
+
+            //Get Database Connection and Execute Query
+            QueryOptions qo=new QueryOptions();
+            qo.addFilter(Filter.eq("parent.id","c0a8002394fb1f308194fe9f634b0726"));
+            qo.setResultLimit(limit);
+
+            terminator.deleteObjects(CertificationItem.class,qo);
+
+          }
+        }
+
+        log.error("  before countAfterPrune   ");
+        QueryOptions qo2=new QueryOptions();
+        qo2.addFilter(Filter.eq("parent.id","c0a8002394fb1f308194fe9f634b0726"));
+        int countAfterPrune=context.countObjects(CertificationItem.class,qo2);
+
+        taskResult.setAttribute("countBeforePrune",countBeforePrune);
+        taskResult.setAttribute("countAfterPrune",countAfterPrune);
+
+        log.error("  after countAfterPrune countAfterPrune  "+countAfterPrune);
+      }
+
+
+
+      if(objectType.equalsIgnoreCase("CertificationEntity")){
+
+        //getting no of objects before count
+        QueryOptions qo1=new QueryOptions();
+        qo1.addFilter(Filter.eq("certification.id","c0a800fb94691e9b81946f09c68402c4"));
+        int countBeforePrune=context.countObjects(CertificationEntity.class,qo1);
+
+        if(countBeforePrune @gt 0){
+          if(limit!=null @and objectType!=null){
+
+            //setting objectType to taskResult
+            taskResult.setAttribute("objectType",objectType);
+
+            QueryOptions qo=new QueryOptions();
+            qo.addFilter(Filter.eq("certification.id","c0a800fb94691e9b81946f09c68402c4"));
+            qo.setResultLimit(limit);
+
+            terminator.deleteObjects(CertificationEntity.class,qo);
+          }
+        }
+        //getting no of objects after count
+        QueryOptions qo2=new QueryOptions();
+        qo2.addFilter(Filter.eq("certification.id","c0a800fb94691e9b81946f09c68402c4"));
+        int countAfterPrune=context.countObjects(CertificationEntity.class,qo2);
+
+        //setting beforecount and aftercount to taskResult
+        taskResult.setAttribute("countAfterPrune",countAfterPrune);
+        taskResult.setAttribute("countBeforePrune",countBeforePrune);
+      }
+
+    }else{
+    taskResult.setAttribute("errorMessage", "Typed Limit value should be with in 1 to 100 range");
+    }
+  }else{
+
+    taskResult.setAttribute("errorMessage", "Typed Limit value should be integer");
+  }
+  return "mmm";
+
+
+  ]]></Source>
+        
+
+</Rule>

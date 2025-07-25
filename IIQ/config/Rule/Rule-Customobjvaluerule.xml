@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="CustomobjValueRule" significantModified="1722876493839" type="IdentityAttributeTarget">
+          
+    
+    <Description>This rule can be used when the ObjectAttribute being listened to has changed.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.object.Custom;
+  log.error("----oldValue------"+oldValue);
+  log.error("----newValue------"+newValue);
+
+  Custom custom1=context.getObjectByName(Custom.class,"Attribue Change Custom Object");
+  Map map=new HashMap();
+  Map newValue=new HashMap();
+  newValue.put("l","location1");
+  /*newValue
+newValue
+newValue
+newValue*/
+
+  Map oldValue=new HashMap();
+  oldValue.put("l","oldlocation");
+
+  custom1.put("identityName",map.put(newValue,oldValue));
+
+  log.error("---------costom object in valuechangerule-------"+custom1.toXml());]]></Source>
+        
+
+</Rule>

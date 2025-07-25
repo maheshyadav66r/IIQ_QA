@@ -1,0 +1,1506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.OpenConnectorAdapter" featuresString="PROVISIONING, SYNC_PROVISIONING, UNLOCK, ENABLE, SEARCH, PASSWORD, ACCOUNT_ONLY_REQUEST, ADDITIONAL_ACCOUNT_REQUEST" icon="internetIcon" name="ServiceNow-Application" profileClass="" significantModified="1740474759626" type="ServiceNow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="ManageRolesforGroup" value="true"/>
+                              
+            
+            <entry key="accountAggPartitions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>sys_idBETWEENa@m</String>
+                                                            
+                        
+                        <String>sys_idBETWEENm@z^ORsys_idSTARTSWITHz</String>
+                                                            
+                        
+                        <String>sys_idBETWEEN0@5</String>
+                                                            
+                        
+                        <String>sys_idBETWEEN5@9^ORsys_idSTARTSWITH9</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="accountFilterAttribute"/>
+                              
+            
+            <entry key="afterProvisioningRule"/>
+                              
+            
+            <entry key="authtype" value="Basic"/>
+                              
+            
+            <entry key="beforeProvisioningRule"/>
+                              
+            
+            <entry key="clientId"/>
+                              
+            
+            <entry key="clientSecret" value="1:ACP:l9grg2TyvZTsLXeYObIVHdddOjsBqCiQa3EOPq0YcU8="/>
+                              
+            
+            <entry key="compositeDefinition"/>
+                              
+            
+            <entry key="connectorClass" value="openconnector.connector.servicenow.ServiceNowConnector"/>
+                              
+            
+            <entry key="disableSysAuditDeleteTableRead">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="encrypted" value="clientSecret,refreshToken,access_token"/>
+                              
+            
+            <entry key="groupFilterAttribute"/>
+                              
+            
+            <entry key="manageInheritedRole">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributes"/>
+                              
+            
+            <entry key="nativeChangeDetectionEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionOperations"/>
+                              
+            
+            <entry key="pageSize" value="1000"/>
+                              
+            
+            <entry key="password" value="1:ACP:QPaAP537Cg4JgZ+p0I6wV85OJI4i+aCHkWjf65+A8xU="/>
+                              
+            
+            <entry key="refreshToken" value="1:ACP:Fon6puRuhuJ5sGMvZ2BjrvLz3qnJPwI2IRF2/1jt/YQ="/>
+                              
+            
+            <entry key="requestParamMap">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="sysparm_display_value" value="true"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="restEndPointMap">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="oauth_token" value="/oauth_token.do"/>
+                                                            
+                        
+                        <entry key="sys_group_has_role" value="sys_group_has_role"/>
+                                                            
+                        
+                        <entry key="sys_user" value="sys_user"/>
+                                                            
+                        
+                        <entry key="sys_user_grmember" value="sys_user_grmember"/>
+                                                            
+                        
+                        <entry key="sys_user_group" value="sys_user_group"/>
+                                                            
+                        
+                        <entry key="sys_user_has_role" value="sys_user_has_role"/>
+                                                            
+                        
+                        <entry key="sys_user_role" value="sys_user_role"/>
+                                                            
+                        
+                        <entry key="sys_user_role_contains" value="sys_user_role_contains"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysgrouphasrole" value="x_sapo_iiq_connect_sysgrouphasrole"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysgrouphasrole_d" value="x_sapo_iiq_connect_sysgrouphasrole_d"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysuser" value="x_sapo_iiq_connect_sysuser"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysuser_d" value="x_sapo_iiq_connect_sysuser_d"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysusergrmember" value="x_sapo_iiq_connect_sysusergrmember"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysusergrmember_d" value="x_sapo_iiq_connect_sysusergrmember_d"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysusergroup" value="x_sapo_iiq_connect_sysusergroup"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysusergroup_d" value="x_sapo_iiq_connect_sysusergroup_d"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysuserhasrole" value="x_sapo_iiq_connect_sysuserhasrole"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_sysuserhasrole_d" value="x_sapo_iiq_connect_sysuserhasrole_d"/>
+                                                            
+                        
+                        <entry key="x_sapo_iiq_connect_user_roles_and_group_deletes" value="x_sapo_iiq_connect_user_roles_and_group_deletes"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="retryableErrors">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>Unknown Host</String>
+                                                            
+                        
+                        <String>Service Unavailable</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="roleFilterAttribute"/>
+                              
+            
+            <entry key="serviceNowContextUrl" value="/api/now/"/>
+                              
+            
+            <entry key="serviceNowRestTableApi" value="/table/"/>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="templateApplication" value="ServiceNow"/>
+                              
+            
+            <entry key="unlockOnEnableAccount">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="url" value="https://dev286860.service-now.com"/>
+                              
+            
+            <entry key="username" value="admin"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+          
+    
+    <ProvisioningForms>
+                    
+        
+        <Form name="account" objectType="account" type="Create">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="pageTitle" value="account"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Section>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_userID" name="user_name" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_first_name" name="first_name" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_last_name" name="last_name" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_department" name="department" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_title" name="title" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_password" name="password" reviewRequired="true" type="secret"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_password_need_reset" name="password_needs_reset" reviewRequired="true" type="boolean"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_locked_out" name="locked_out" reviewRequired="true" type="boolean"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_active" name="active" reviewRequired="true" type="boolean"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_notifications" name="notification" reviewRequired="true" type="string">
+                                                  
+                    
+                    <AllowedValuesDefinition>
+                                                            
+                        
+                        <Value>
+                                                                      
+                            
+                            <List>
+                                                                                
+                                
+                                <String>Disable</String>
+                                                                                
+                                
+                                <String>Enable</String>
+                                                                              
+                            
+                            </List>
+                                                                    
+                        
+                        </Value>
+                                                          
+                    
+                    </AllowedValuesDefinition>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_calender_integration" name="calendar_integration" reviewRequired="true" type="string">
+                                                  
+                    
+                    <AllowedValuesDefinition>
+                                                            
+                        
+                        <Value>
+                                                                      
+                            
+                            <List>
+                                                                                
+                                
+                                <String>-- None --</String>
+                                                                                
+                                
+                                <String>Outlook</String>
+                                                                              
+                            
+                            </List>
+                                                                    
+                        
+                        </Value>
+                                                          
+                    
+                    </AllowedValuesDefinition>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_time_zone" name="time_zone" reviewRequired="true" type="string">
+                                                  
+                    
+                    <AllowedValuesDefinition>
+                                                            
+                        
+                        <Value>
+                                                                      
+                            
+                            <List>
+                                                                                
+                                
+                                <String>System (Americas/Los Angeles)</String>
+                                                                                
+                                
+                                <String>Canada/Atlantic</String>
+                                                                                
+                                
+                                <String>Canada/Central</String>
+                                                                                
+                                
+                                <String>Canada/Eastern</String>
+                                                                                
+                                
+                                <String>Canada/Mountain</String>
+                                                                                
+                                
+                                <String>Canada/Pacific</String>
+                                                                                
+                                
+                                <String>Europe/Amsterdam</String>
+                                                                                
+                                
+                                <String>Europe/Berlin</String>
+                                                                                
+                                
+                                <String>Europe/Brussels</String>
+                                                                                
+                                
+                                <String>Europe/Copenhagen</String>
+                                                                                
+                                
+                                <String>Europe/Dublin</String>
+                                                                                
+                                
+                                <String>Europe/London</String>
+                                                                                
+                                
+                                <String>Europe/Madrid</String>
+                                                                                
+                                
+                                <String>Europe/Paris</String>
+                                                                                
+                                
+                                <String>Europe/Rome</String>
+                                                                                
+                                
+                                <String>Europe/Stockhome</String>
+                                                                                
+                                
+                                <String>Europe/Zuric</String>
+                                                                                
+                                
+                                <String>GMT</String>
+                                                                                
+                                
+                                <String>HongKong</String>
+                                                                                
+                                
+                                <String>US/Arizona</String>
+                                                                                
+                                
+                                <String>US/Eastern</String>
+                                                                                
+                                
+                                <String>US/Central</String>
+                                                                                
+                                
+                                <String>US/Hawaii</String>
+                                                                                
+                                
+                                <String>US/Mountain</String>
+                                                                                
+                                
+                                <String>US/Pacific</String>
+                                                                              
+                            
+                            </List>
+                                                                    
+                        
+                        </Value>
+                                                          
+                    
+                    </AllowedValuesDefinition>
+                                                
+                
+                </Field>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_email" name="email" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_mobile_phone" name="mobile_phone" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_business_phone" name="phone" reviewRequired="true" type="string"/>
+                                      
+            
+            </Section>
+                            
+        
+        </Form>
+                    
+        
+        <Form name="create group" objectType="group" type="Create">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="pageTitle" value="create group"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Section>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_group_name" name="name" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_groupr_email" name="email" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_manager" name="manager" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_roles" filterString="type == &quot;role&quot;" multi="true" name="roles" reviewRequired="true" type="ManagedAttribute"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_parent" name="parent" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_group_active" name="active" reviewRequired="true" type="boolean"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_cost_centre" name="cost_center" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_default_asignee" name="default_assignee" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_description" name="description" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_exclude_manager" name="exclude_manager" reviewRequired="true" type="boolean"/>
+                                      
+            
+            </Section>
+                            
+        
+        </Form>
+                    
+        
+        <Form name="update group" objectType="group" type="Update">
+                              
+            
+            <Attributes>
+                                        
+                
+                <Map>
+                                                  
+                    
+                    <entry key="pageTitle" value="update group"/>
+                                                
+                
+                </Map>
+                                      
+            
+            </Attributes>
+                              
+            
+            <Section>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_group_name" name="name" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_groupr_email" name="email" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_manager" name="manager" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_roles" filterString="type == &quot;role&quot;" multi="true" name="roles" reviewRequired="true" type="ManagedAttribute"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_parent" name="parent" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_group_active" name="active" reviewRequired="true" type="boolean"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_cost_centre" name="cost_center" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_default_asignee" name="default_assignee" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_description" name="description" reviewRequired="true" type="string"/>
+                                        
+                
+                <Field displayName="con_prov_policy_servicenow_exclude_manager" name="exclude_manager" reviewRequired="true" type="boolean"/>
+                                      
+            
+            </Section>
+                            
+        
+        </Form>
+                  
+    
+    </ProvisioningForms>
+          
+    
+    <Schemas>
+                    
+        
+        <Schema displayAttribute="user_name" groupAttribute="role" identityAttribute="sys_id" instanceAttribute="" nativeObjectType="account" objectType="account" significantModified="1735886617158">
+                              
+            
+            <AttributeDefinition name="first_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>First name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="last_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Last name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="email" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Email ID of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="user_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="department" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The user's department name</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="title" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Title(designation) of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_id" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Unique ID generated by system for user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="phone" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Phone number of user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="calendar_integration" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines whether change requests assigned to that user are sent to their Outlook calendar</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_class_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Class name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="company" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The user's company</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="cost_center" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Cost centre of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Date this user is created in ServiceNow</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Administrator who created the user in ServiceNow</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="groups" remediationModificationType="None" schemaObjectType="group" type="string">
+                                        
+                
+                <Description>List of groups the user is part of</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="roles" remediationModificationType="None" schemaObjectType="role" type="string">
+                                        
+                
+                <Description>List of roles the user is part of</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="active" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines whether the user account has been staged for use</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="building" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The building of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="city" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The city of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="country" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The country of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="location" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The location of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="manager" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The manager of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="middle_name" remediationModificationType="None" type="string">
+                                        
+                
+                <Description>Middle name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Name of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="password_needs_reset" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines should the user be prompted to change password at next login</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="default_perspective" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Default perspective for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_domain" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Domain of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="employee_number" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Employee number of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="failed_attempts" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Number of login failed attempts</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="gender" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Gender of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="home_phone" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Home phone number of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="ldap_server" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>LDAP server the user has an account. Identifies which LDAP server authenticates the user when there are multiple LDAP servers</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="preferred_language" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Language spoken by the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="last_login" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Last login date of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="last_login_time" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Time of the last login time for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="locked_out" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines if user account is locked</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="mobile_phone" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Mobile number of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="notification" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines if the user should be notified for any changes made on his account.</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="schedule" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Schedule of the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="state" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The state for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="source" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Identifies whether LDAP is used to validate a user. If the Source field starts with ldap, then the user is validated via LDAP. If the Source field does not start with ldap, then the password on the user record is used to validate the user upon login</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="street" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The street for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="time_format" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Time format selected for user to display time fields</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="time_zone" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The timezone for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Last updated time for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The last update for the user occurred from</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_mod_count" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Number of updates for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="vip" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines if the user is treated as VIP</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="zip" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Zip for the user</Description>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="name" identityAttribute="sys_id" instanceAttribute="" nativeObjectType="role" objectType="role" significantModified="1735886617158">
+                              
+            
+            <AttributeDefinition name="sys_replace_on_upgrade" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Replace to out of box version during next upgrade</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>System name of the Role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Last updated</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_id" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Unique ID generated by system for role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="grantable" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Can be granted independently</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Created date and time</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="suffix" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Application scope</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Created by</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="can_delegate" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Can be delegated</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_policy" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Determines how application files are protected when downloaded or installed</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Updated by</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_tags" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Tags</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_package" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Application name</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="description" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Description of the role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Name of the role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_class_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Class name of the role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_update_name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>System updated name</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="elevated_privilege" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>This role is an elevated privilege</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_mod_count" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Number of updates for the role</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_customer_update" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Added or modified by customer</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_scope" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Scope Name</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="includes_roles" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Includes roles</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" multi="true" name="roles" remediationModificationType="None" required="true" schemaObjectType="role" type="string">
+                                        
+                
+                <Description>Contained roles</Description>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema descriptionAttribute="description" displayAttribute="name" featuresString="PROVISIONING" identityAttribute="sys_id" instanceAttribute="" nativeObjectType="group" objectType="group" significantModified="1735886617158">
+                              
+            
+            <AttributeDefinition name="name" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Name of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="email" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Email of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="manager" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Manager of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" multi="true" name="roles" remediationModificationType="None" required="true" schemaObjectType="role" type="string">
+                                        
+                
+                <Description>Roles the user group is having</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="parent" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Parent group of this user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="active" remediationModificationType="None" required="true" type="boolean">
+                                        
+                
+                <Description>Determines whether the user account has been staged for use</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="cost_center" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Cost centre of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="default_assignee" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Default assignee for the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="description" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Description of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="exclude_manager" remediationModificationType="None" required="true" type="boolean">
+                                        
+                
+                <Description>Determines if the manager should be excluded for the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Date the user group is created in ServiceNow</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_created_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Administrator who created the user in ServiceNow</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="source" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Source of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_id" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Unique ID generated by system for user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="type" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Type of the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_on" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Last updated time for the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_updated_by" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>The last update for the user group occurred from</Description>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="sys_mod_count" remediationModificationType="None" required="true" type="string">
+                                        
+                
+                <Description>Number of updates for the user group</Description>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                  
+    
+    </Schemas>
+          
+    
+    <ApplicationScorecard significantModified="1735886617158"/>
+        
+
+</Application>
