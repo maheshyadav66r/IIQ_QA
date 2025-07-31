@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-Wf,IdRqst, ApprovalSet, ApprovalItem Relationships" significantModified="1738068938694" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+
+  String iRName="349";
+
+  while(iRName.length() < 10){
+    iRName="0"+iRName;
+  }
+
+  IdentityRequest ir=context.getObjectByName(IdentityRequest.class,iRName);
+  if(ir==null){
+    log.error("IdentityRequest object not found");
+    return;
+  }
+  log.error("IdentityRequest object  found iRName :"+iRName+"  , requester  : "+ir.getRequesterDisplayName());
+
+  List iRItems=ir.getItems();
+  for(IdentityRequestItem irItem:iRItems){
+    String application=irItem.getApplication();
+    String approvalState=irItem.getApprovalState().toString();
+    String approverName=irItem.getApproverName();
+    String attName=irItem.getName();
+    String nativeIdentity=irItem.	getNativeIdentity();
+    String provisioningState=irItem.getProvisioningState().toString();
+    String attrValue=irItem.getValue();
+    String operation=irItem.getOperation();
+
+log.error(" application : "+ application +" approvalState :"+ approvalState + " approverName : "+ approverName + " attName : "+attName+" nativeIdentity : "+ nativeIdentity);
+    log.error(" provisioningState : "+  provisioningState +" attrValue : "+ attrValue +" operation : "+ operation);
+
+  }
+
+
+
+
+  QueryOptions qo=new QueryOptions();
+  Filter f1=Filter.eq("links.application.name","JDBCProvisioning");
+  qo.add(f1);
+
+  List identities=context.getObjects(Identity.class,qo);
+  /*  if(identities!=null){
+    log.error("----identities---"+identities.size());
+  }*/
+  return "nnn";
+
+
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ABMB AfterProvisioningRule" significantModified="1739265721249" type="AfterProvisioning">
+          
+    
+    <Description>An IdentityIQ server-side rule that is executed after the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan AFTER it has been sent out to the specific applications. 
+
+    This rule will be called for any application found in a plan that also has a configured 'afterProvisioningRule' configured.</Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+          The application object that references this before/after script.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>
+          The ProvisioningResult object returned by the connectors provision method. This can be null and in many cases the connector will  not return a result and instead will annotate the plan's ProvisioningResult either at the plan or account level.        
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.Custom;
+  import sailpoint.object.ProvisioningPlan;
+
+  log.erro("------------After provisioning rule entry-----------");
+  Custom customObj=context.getObjectByName(Custom.class,"ABMB-AttributeChange-CustomObject");
+  if(customObj == null){
+    customObj=new Custom();
+    customObj.setName("ABMB-AttributeChange-CustomObject");
+  }
+  Map identityDetailsMap=new HashMap(customObj.getAttributes().get(plan.getNativeIdentity()));
+  log.error("------------custom object in after provisioning rule----------"+identityDetailsMap);
+
+  log.error("---------newvalue in APRule from plan-----"+plan.getIdentity().getAttribute("location"));
+
+  log.error("---------After ProvisioningRule-----"+plan.toXml());
+  ProvisioningResult provisioningResult=plan.getResult();
+  if(provisioningResult!=null @and (provisioningResult.getStatus()).equalsIgnoreCase("committed") )
+  {
+    EmailTemplate template1=context.getObjectByName(EmailTemplate.class, "Attribute Update Demo");
+    EmailOptions eOption1=new EmailOptions();
+    Map emailOptionMap=new HashMap();
+      
+     emailOptionMap.put(("identityName",plan.getIdentity().getName());
+     emailOptionMap.put("application",plan.getApplicationDisplayName());
+
+     for(Map.Entry attrMapEntries:  identityDetailsMap.entrySet()){            
+     log.error("---outer Key-----"+attrMapEntries.getKey());
+       
+       Map nestedMap=attrMapEntries.getValue();
+       
+       for(Map.Entry  nestedEntry:nestedMap.entrySet()){
+
+  log.error("-----nested Key----"+nestedEntry.getKey()+"--------      -------"+"=====NestedEntry Value================"+nestedEntry.getValue());
+
+
+    /* emailOptionMap.put("oldValue",plan.getIdentity().getName());
+     emailOptionMap.put("newValue",plan.getIdentity().getName());*/
+       }
+                       }
+                       }
+
+                      
+
+
+
+
+
+
+
+
+
+
+
+                       /*  eOption1.setVariable("identityName",plan.getIdentity().getName());
+           eOption1.setVariable("application",plan.getApplicationDisplayName());
+           eOption1.setVariable("oldValue",plan.getIdentity().getName());
+           eOption1.setVariable("newValue",plan.getIdentity().getName());*/]]></Source>
+        
+
+</Rule>

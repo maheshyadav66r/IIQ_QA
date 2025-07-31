@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="SVB Rule Utils" significantModified="1738749953782">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.tools.GeneralException;
+  import java.io.FileInputStream;
+  import java.io.FileOutputStream;
+
+  //Method to copy file from source to destination
+
+  void copyFile(String sourcePath, String destinationPath) throws IOException {
+    File source = new File(sourcePath);
+
+    File dest = new File(destinationPath);
+    InputStream input = null;
+    OutputStream output = null;
+
+    try {
+
+      input = new FileInputStream(source);
+      output = new FileOutputStream(dest);
+      byte[] buf = new byte[1024];
+
+      int bytesRead;
+      while ((bytesRead = input.read(buf)) > 0) {
+        output.write(buf, 0, bytesRead);
+      }
+
+    } catch(Exception e) {
+      log.error(e.getMessage());
+    } finally {
+
+      input.close();
+      output.close();
+    }
+  }
+  //Method to delete file from source
+  void deleteFile(String sourcePath) throws IOException {
+    try{
+      File file = new File(sourcePath);
+
+      if(file.delete()) {
+        
+        log.debug(file.getName() + " is deleted!");
+        
+      } else {
+        
+        log.debug(file.getName() + " - Delete operation is failed.");
+      }
+    } catch(Exception e){
+
+      log.error(e.getMessage());
+
+    }
+
+  }
+
+  //Method to rename file
+
+  void renameFile(String oldFileName, String newFileName) throws IOException {
+
+    File oldfile =new File(oldFileName);
+
+    File newfile =new File(newFileName);
+
+    if(oldfile.renameTo(newfile)){
+
+      log.debug(oldfile + " file renamed to " + newfile);
+
+    }else{
+
+      log.debug("Sorry! the file can't be renamed");
+
+    }
+
+  }
+
+  void copyContent(String oldFileName, String newFileName) throws IOException
+
+  {
+
+    FileInputStream instream = null;
+
+    FileOutputStream outstream = null;
+
+
+
+    try{
+
+      File infile =new File(oldFileName);
+
+      File outfile =new File(newFileName);
+
+
+
+      instream = new FileInputStream(infile);
+
+      outstream = new FileOutputStream(outfile);
+
+
+
+      byte[] buffer = new byte[1024];
+
+
+
+      int length;
+
+      /*copying the contents from input stream to
+
+             * output stream using read and write methods
+
+             */
+
+      while ((length = instream.read(buffer)) > 0)
+
+      {
+
+        outstream.write(buffer, 0, length);
+
+      }
+
+
+
+      //Closing the input/output file streams
+
+      instream.close();
+
+      outstream.close();
+
+
+
+      System.out.println("File copied successfully!!");
+
+
+
+    }
+
+    catch(IOException ioe)
+
+    {
+
+      ioe.printStackTrace();
+
+    }
+
+  }
+
+  ]]></Source>
+        
+
+</Rule>

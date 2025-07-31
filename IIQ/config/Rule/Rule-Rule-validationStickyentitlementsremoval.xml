@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation stickyEntitlementsRemoval" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+
+
+  QueryOptions qo=new QueryOptions();
+  qo.addFilter(Filter.eq("aggregationState","Disconnected"));
+
+  List stickies=context.getObjects(IdentityEntitlement.class,qo);
+  return stickies.size();
+
+  ]]></Source>
+        
+
+</Rule>

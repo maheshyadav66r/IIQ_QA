@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="StandAlone Schedule EmailTemplate" significantModified="1729162487484">
+          
+    
+    <Description>A Rule to schedule a workflow to launch in the future.</Description>
+          
+    
+    <Signature returnType="Map">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  import java.util.Date;
+  import sailpoint.api.RequestManager;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Request;
+  import sailpoint.object.RequestDefinition;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+
+
+  //logger.debug("Start Step.ScheduleAzureADLicenseAssignmentWorkflow");
+
+  String identityName="Mahesh.Nattali";
+  String emailTemplateName="emailTemplate for Workflow schedule Demo";
+  String requesterId="spadmin";
+  String caseName="Run '"+emailTemplateName+" ' for:"+identityName;
+
+  // Ask the Request Processor to start the workflow 35 minutes from now.
+  // Append the time stamp to the workflow case name to ensure it's unique.
+  long launchTime=System.currentTimeMillis()+10*1000;
+  caseName=caseName+"("+launchTime+")";
+
+
+  EmailTemplate et=context.getObjectByName(EmailTemplate.class,emailTemplateName);
+  if(et==null){
+    log.error("---emailTemplate is not found with name---"+et);
+    throw new GeneralException("Invalid emailTemplate:"+et);
+
+  }
+
+
+  // Simulate the request being submitted by a user. Default: spadmin.
+  Identity id=context.getObjectByName(Identity.class,requesterId);
+  if(null==id){
+    log.error("---identity is not found with name---"+id);
+    throw new GeneralException("Invalid identity:"+id);
+  }
+
+  Attributes reqArgs=new Attributes();
+  reqArgs.put("EmailRequestExecutor.emailTemplate",emailTemplateName);
+
+
+
+  Request req=new Request();
+  RequestDefinition reqDef=context.getObjectByName(RequestDefinition.class,"Email Request");
+
+  Attributes rdArgs=new Attributes();
+  rdArgs.put("identityName",identityName);
+  rdArgs.put("emailTemplateName",emailTemplateName);
+  reqArgs.putAll(rdArgs);
+
+
+  req.setName(caseName);
+  req.setOwner(id);
+  req.setEventDate(new Date(launchTime));
+  req.setDefinition(reqDef);
+  req.setAttributes(reqDef,reqArgs);
+
+
+  Map args=new HashMap();
+  args.put("identityName",identityName);
+  args.put("emailTemplateName" ,emailTemplateName);
+  EmailOptions ops=new EmailOptions(identityName,args);
+  context.sendEmailNotification(et,ops);
+
+  RequestManager.addRequest(context,req);
+
+
+
+
+  /*
+  // Build out a map of arguments to pass to the Request Scheduler.
+  Attributes reqArgs = new Attributes();
+  reqArgs.put("RuleRequestExecutor.rule", ruleName);
+    //reqArgs.put(sailpoint.request.RuleRequestExecutor.ARG_RULE, ruleName);
+
+  //reqArgs.put(StandardWorkflowHandler.ARG_REQUEST_DEFINITION, sailpoint.request.WorkflowRequestExecutor.DEFINITION_NAME);
+  //reqArgs.put(sailpoint.workflow.StandardWorkflowHandler.ARG_REQUEST_NAME, caseName);
+  //  reqArgs.put( "requestName", caseName );      
+
+  // Build a map of arguments to pass to the Workflow case when it launches.
+  Attributes wfArgs = new Attributes();
+  wfArgs.put("identityName", identityName);
+  wfArgs.put("rule",  rule.getName());
+ // wfArgs.put("emailTemplateName","emailTemplate for Workflow schedule Demo");
+  reqArgs.putAll(wfArgs);
+
+  // Use the Request Launcher to schedule the workflow reqeust.  This requires
+  // a Request object to store the properties of the request item.
+  Request req = new Request();
+  RequestDefinition reqdef = context.getObject(RequestDefinition.class, "Rule Request");
+  req.setDefinition(reqdef);
+  req.setEventDate( new Date( launchTime ) );
+  req.setOwner(id);
+  req.setName(caseName);
+  req.setAttributes( reqdef, reqArgs );
+
+  // Schedule the work flow via the request manager.
+  RequestManager.addRequest(context, req);
+
+  //logger.debug("End Step.ScheduleAzureADLicenseAssignmentWorkflow");*/
+
+  ]]></Source>
+        
+
+</Rule>

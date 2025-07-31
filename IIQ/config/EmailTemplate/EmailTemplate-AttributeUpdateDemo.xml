@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="Attribute Update Demo" significantModified="1722858262627">
+          
+    
+    <Body>Dear $identityName,
+   
+   Your $!attributeName has been changed from $!oldValue to $!newValue in the $!applicationName application.
+  
+   For any queries please contact your Manager.
+
+  </Body>
+          
+    
+    <Description>
+    Email Template for notifying approvers of a new entitlement update.
+    Note that in addition to the declared arguments, all workflow variables,
+    Step arguments, and Approval arguments defined in the Workflow are
+    also available.
+  </Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="attributeName" type="string">
+                                        
+                
+                <Description>attributeName </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identityName" type="string">
+                                        
+                
+                <Description>identityName </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="oldValue" type="string"/>
+                              
+            
+            <Argument name="newValue" type="string"/>
+                              
+            
+            <Argument name="applicationName" type="string">
+                                        
+                
+                <Description>applicationName</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+        
+
+</EmailTemplate>

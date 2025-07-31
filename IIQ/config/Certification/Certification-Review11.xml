@@ -1,0 +1,1611 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Certification PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Certification activated="1745403700651" applicationId="c0a800fc94cb1e358194cc6fcd4826a9" certificationDefinitionId="c0a8000a961b152a8196622ae23c4b59" completedItems="32" creator="spadmin" entitlementGranularity="Value" expiration="1747995700651" itemPercentComplete="97" name="Review11" phase="End" shortName="ActiveDirectory Entitlement Owner Access Review" significantModified="1750675960259" taskScheduleId="Entitlement Owner Certification1 [4/23/25, 3:51 PM]" totalEntities="1" totalItems="33" type="DataOwner">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="autoSignOffWhenNothingToCertify" value="false"/>
+                              
+            
+            <entry key="automateSignOffOnReassignment" value="false"/>
+                              
+            
+            <entry key="certificationDelegationReview" value="false"/>
+                              
+            
+            <entry key="notifyRemediation">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="requireReassignmentCompletion" value="true"/>
+                              
+            
+            <entry key="suppressEmailWhenNothingToCertify" value="false"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <CertificationGroups>
+                    
+        
+        <Reference class="sailpoint.object.CertificationGroup" name="Entitlement Owner Certification1"/>
+                  
+    
+    </CertificationGroups>
+          
+    
+    <Certifiers>
+                    
+        
+        <String>Aaron Nichols</String>
+                  
+    
+    </Certifiers>
+          
+    
+    <PhaseConfig>
+                    
+        
+        <CertificationPhaseConfig enabled="true" phase="Active">
+                              
+            
+            <Duration>
+                                        
+                
+                <TimeDuration amount="1" scale="Month"/>
+                                      
+            
+            </Duration>
+                            
+        
+        </CertificationPhaseConfig>
+                    
+        
+        <CertificationPhaseConfig enabled="true" phase="Remediation">
+                              
+            
+            <Duration>
+                                        
+                
+                <TimeDuration amount="1" scale="Month"/>
+                                      
+            
+            </Duration>
+                              
+            
+            <NotificationConfig>
+                                        
+                
+                <Configs>
+                                                  
+                    
+                    <ReminderConfig before="true" emailTemplateName="Work Item Reminder" millis="1209600000" once="true"/>
+                                                  
+                    
+                    <EscalationConfig before="true" emailTemplateName="Work Item Escalation" maxReminders="5" millis="604800000"/>
+                                                
+                
+                </Configs>
+                                      
+            
+            </NotificationConfig>
+                            
+        
+        </CertificationPhaseConfig>
+                  
+    
+    </PhaseConfig>
+          
+    
+    <CertificationStatistics completedItems="32" exceptionsApproved="32" itemPercentComplete="97" totalEntities="1" totalExceptions="33" totalItems="33"/>
+          
+    
+    <CertificationEntity application="ActiveDirectory" identity="Value AccountingGeneral on memberOf" nativeIdentity="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" referenceAttribute="group" schemaObjectType="group" significantModified="1748269942860" summaryStatus="Open" targetDisplayName="AccountingGeneral" targetId="c0a8002394fb1f308194ff6478ff0a83" targetName="memberOf" type="DataOwner">
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898fc9197a8190074e5ccf2bd6" targetName="Mahesh Nattali" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942550" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Mahesh Nattali" nativeIdentity="CN=Mahesh Nattali,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404be850112" targetName="Benjamin Hicks" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930201" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Benjamin Hicks" nativeIdentity="CN=Benjamin Hicks,OU=Engineering,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1745403700487" subType="Entitlement" summaryStatus="Open" targetId="c0a81d898f331f7b818f3404c0cf0148" targetName="Aaron Nichols" type="DataOwner">
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Aaron Nichols" nativeIdentity="CN=Aaron Nichols,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269818996" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819127" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c21b016a" targetName="Alan Bradley" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818709" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Alan Bradley" nativeIdentity="CN=Alan Bradley,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269818997" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bebc0116" targetName="Amanda Ross" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818768" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Amanda Ross" nativeIdentity="CN=Amanda Ross,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269818999" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c6be01dc" targetName="Allen Burton" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818805" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Allen Burton" nativeIdentity="CN=Allen Burton,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819000" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bbab00ca" targetName="Alice Ford" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818835" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Alice Ford" nativeIdentity="CN=Alice Ford,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819000" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b90d0092" targetName="Amy Cox" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818739" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Amy Cox" nativeIdentity="CN=Amy Cox,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819001" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bc1d00d6" targetName="Albert Woods" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818862" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Albert Woods" nativeIdentity="CN=Albert Woods,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bb2000bc" targetName="Ann Alexander" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910785" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Ann Alexander" nativeIdentity="CN=Ann Alexander,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b5d3005e" targetName="Anthony Roberts" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910892" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Anthony Roberts" nativeIdentity="CN=Anthony Roberts,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c3cf0198" targetName="Antonio Franklin" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930286" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Antonio Franklin" nativeIdentity="CN=Antonio Franklin,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c1240150" targetName="Anne Arnold" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910834" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Anne Arnoldnew" nativeIdentity="CN=Anne Arnoldnew,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b9390096" targetName="Anna Ward" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910749" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Anna Ward" nativeIdentity="CN=Anna Ward,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c34d018c" targetName="Annie Chavez" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910868" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Annie Chavez" nativeIdentity="CN=Annie Chavez,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c343018a" targetName="Andrea Hudson" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910810" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Andrea Hudson" nativeIdentity="CN=Andrea Hudson,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b48e0040" targetName="Barbara Wilson" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930300" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Barbara Wilson" nativeIdentity="CN=Barbara Wilson,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c02b0138" targetName="Beverly Rice" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930139" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Beverly Rice" nativeIdentity="CN=Beverly Rice,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b43a0038" targetName="Betty Young" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930165" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Betty Young" nativeIdentity="CN=Betty Young,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bb0700ba" targetName="Arthur Bryant" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910915" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Arthur Bryant" nativeIdentity="CN=Arthur Bryant,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bef1011a" targetName="Bruce Henry" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930079" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Bruce Henry" nativeIdentity="CN=Bruce Henry,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930596" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b56b0054" targetName="Brian Nelson" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930106" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Brian Nelson" nativeIdentity="CN=Brian Nelson,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930467" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930598" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c2d6017e" targetName="Carlos Perkins" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930258" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Carlos Perkins" nativeIdentity="CN=Carlos Perkins,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404c64501d0" targetName="Carmen Hansen" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942600" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Carmen Hansen" nativeIdentity="CN=Carmen Hansen,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404b507004a" targetName="Carol Adams" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942576" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Carol Adams" nativeIdentity="CN=Carol Adams,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269930480" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269930598" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bae100b6" targetName="Carl Foster" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269930230" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Carl Foster" nativeIdentity="CN=Carl Foster,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a800fb94691e9b8194ab46b2de3825" targetName="Bhavya Virupaka" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942466" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Virupaka Bhavya" nativeIdentity="CN=Virupaka Bhavya,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269911068" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269911159" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d899029149f81902b382d5c0268" targetName="Aravindh Ramagani" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269910939" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Aravindh Ramagani" nativeIdentity="CN=Aravindh Ramagani,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f7b15ea818f7b640ad500ea" targetName="Travis head" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942491" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="travis head" nativeIdentity="CN=travis head,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819001" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f7b15ea818f7b640b6000f6" targetName="Abdul samad" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818591" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="abdul samad" nativeIdentity="CN=abdul samad,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269942766" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269942860" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f7b15ea818f7b640a1300e4" targetName="Pat cummins" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269942516" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="pat cummins" nativeIdentity="CN=pat cummins,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819002" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a800fb94ef10f68194efd24299007f" targetName="Abdul-Qawwee, Faiza" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818646" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Abdul-Qawwee Faiza" nativeIdentity="CN=Abdul-Qawwee Faiza,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                    
+        
+        <CertificationItem completed="1748269819003" exceptionApplication="ActiveDirectory" exceptionAttributeName="memberOf" exceptionAttributeValue="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com" significantModified="1748269819128" subType="Entitlement" summaryStatus="Complete" targetId="c0a81d898f331f7b818f3404bf3e0122" targetName="Adam Kennedy" type="DataOwner">
+                              
+            
+            <CertificationAction actorDisplayName="Aaron Nichols" actorName="Aaron Nichols" decisionCertificationId="c0a8000a961b152a8196622ae2eb4b5c" decisionDate="1748269818680" reviewed="true" status="Approved"/>
+                              
+            
+            <ApplicationNames>
+                                        
+                
+                <String>ActiveDirectory</String>
+                                      
+            
+            </ApplicationNames>
+                              
+            
+            <ExceptionEntitlements>
+                                        
+                
+                <EntitlementSnapshot application="ActiveDirectory" displayName="Adam Kennedynew" nativeIdentity="CN=Adam Kennedynew,OU=People,OU=Demo,DC=Eshiam,DC=com">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="memberOf" value="CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                
+                
+                </EntitlementSnapshot>
+                                      
+            
+            </ExceptionEntitlements>
+                            
+        
+        </CertificationItem>
+                  
+    
+    </CertificationEntity>
+        
+
+</Certification>

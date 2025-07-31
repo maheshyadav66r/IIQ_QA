@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Workflow Trigger Rule" significantModified="1747130335552">
+          
+    
+    <Source><![CDATA[
+  
+   import sailpoint.api.Workflower;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Workflow;
+  import sailpoint.object.Workflow;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import sailpoint.api.SailpointContext;
+  import sailpoint.object.WorkflowLaunch;
+  import sailpoint.integration.ProvisioningPlan;
+  import sailpoint.integration.ProvisioningPlan.AccountRequest;
+  import sailpoint.integration.ProvisioningPlan.AttributeRequest;
+
+  //Create WorkflowLaunch and set values
+  WorkflowLaunch wflaunch = new WorkflowLaunch();
+
+  String workflowName ="HR-DummyADLinks-Correlation";
+
+  HashMap launchArgsMap = new HashMap();
+
+  launchArgsMap.put("identityName","Valemoni LaxmiKanth");
+
+  Workflow wf = context.getObjectByName(Workflow.class,workflowName);
+  wflaunch.setWorkflowName(wf.getName());  
+  wflaunch.setWorkflowRef(wf.getName());
+  wflaunch.setVariables(launchArgsMap);
+
+  //Create Workflower and launch workflow from WorkflowLaunch
+  Workflower workflower = new Workflower(context);
+  WorkflowLaunch launch = workflower.launch(wflaunch);
+
+  return launch;
+  
+  
+  
+    
+ // launchArgsMap.put("identityName",identityName); // launchArgsMap.put("identityName",identityName);
+   
+  
+  
+  import java.util.Date;
+  import sailpoint.object.*;
+  import sailpoint.tools.Util;
+  import java.text.SimpleDateFormat;
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.ProvisioningPlan.Operation;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+  Provisioner prov = new Provisioner(context);
+  
+  Identity identity  = context.getObjectByName(Identity.class,"Nagaraj Kokku");
+  ProvisioningPlan plan=new ProvisioningPlan();
+  plan.setIdentity(identity);
+  AccountRequest accntReq=new AccountRequest();
+
+  String accountingPayable="CN=AccountsPayable,OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+  String accountingRecievable="CN=AccountsReceivable,OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+  String joiningDate=identity.getStringAttribute("joiningDate");
+
+  SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-YYYY");
+  Date jod=sdf.parse(joiningDate);
+  Date currentDate=new Date();
+  boolean dateTrigger=Util.isDateAfter(jod,currentDate);
+
+  if(dateTrigger==false){  
+    log.error("dateTrigger======"+dateTrigger);
+    accntReq.setApplication("ActiveDirectory");
+    accntReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+    accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingPayable));
+    accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingRecievable));
+    plan.add(accntReq);
+  }
+  else
+  {
+    accntReq.setApplication("ActiveDirectory");
+    accntReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+    accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingPayable));
+    accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingRecievable));   
+    accntReq.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+    plan.add(accntReq);
+  }
+  //return prov.compile(plan);
+  prov.execute(plan);
+  return true;
+
+
+ 
+
+
+  /* WorkflowLaunch wfLaunch=new WorkflowLaunch();
+
+  Workflow wf=context.getObjectByName(Workflow.class,"HR Source Lifecycle Event - Joiner");
+  HashMap launchArgsMap=new HashMap();
+  launchArgsMap.put("identityName",identityName);
+
+
+  wfLuanch.setWorkflowName(wf.getName());
+  wfLaunch.setWorkflowRef(wf.getName());
+  wfLaunch.setWorkflowRef(launchArgsMap);
+
+
+  Workflower wFlower=new Workflower();
+
+  Workflow wflow=wFlower.lauch(wf);
+  return wfLaunch;*/
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

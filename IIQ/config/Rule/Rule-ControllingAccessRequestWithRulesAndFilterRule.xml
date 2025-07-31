@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Controlling Access Request With Rules and Filter Rule" type="IdentityFilterGenerator">
+          
+    
+    <Description>Identity Filter Generator rules are used by the Quicklink DynamicScopes to determine the identities that a given user can act on behalf of.</Description>
+          
+    
+    <Signature returnType="sailpoint.object.Filter">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="requester" type="sailpoint.object.Identity">
+                                        
+                
+                <Description>
+            The identity that is accessing a Quicklink, and for whom the requestable members are being calculated.
+          </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="filter" type="sailpoint.object.Filter">
+                                        
+                
+                <Description>
+            A Filter object that will be used to search for requestable identities.
+          </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.object.Filter;
+return Filter.eq("department","Engineering");]]></Source>
+        
+
+</Rule>

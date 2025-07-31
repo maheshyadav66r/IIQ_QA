@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ServiceDefinition PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<ServiceDefinition hosts="global" interval="60" name="BundleProfileRelation" serviceType="DEFAULT" significantModified="1753159983860">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="cycleSeconds">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Integer>10</Integer>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="lockTimeout">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Integer>300</Integer>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Description>
+      Service definition for the BundleProfileRelationService.
+    </Description>
+        
+
+</ServiceDefinition>

@@ -1,0 +1,1501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-NYU-RuleLibrary-IDGeneration" significantModified="1741845274481">
+          
+    
+    <Source><![CDATA[
+ /**
+*    NYU-RuleLibrary-IDGeneration                                                                  
+*                                                                                    
+*    This library contains methods for creating a GUID, Unix ID, NetID and Universtiy ID.  The rules are intended to be
+*    used in IdentityCreation rules or any workflows that involve creating identities.                                                             
+*                                                                                                                                         
+ **/
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.CallableStatement;
+import java.sql.Types;
+import java.sql.Connection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import sailpoint.api.PersistenceManager;
+import sailpoint.api.PersistenceManager.LockParameters;
+import sailpoint.api.SailPointFactory;
+import sailpoint.api.Terminator;
+import sailpoint.api.Identitizer;
+import sailpoint.api.IdentityService;
+import sailpoint.api.Provisioner;
+import sailpoint.api.SailPointContext;
+import sailpoint.api.TaskManager;
+
+import sailpoint.object.Attributes;
+import sailpoint.object.EmailTemplate;
+import sailpoint.object.EmailOptions;
+import sailpoint.api.ObjectUtil;
+import sailpoint.object.Custom;
+import sailpoint.object.CustomGlobal;
+import sailpoint.object.Filter;
+import sailpoint.object.Identity;
+import sailpoint.object.Plugin;
+import sailpoint.object.QueryOptions;
+import sailpoint.object.Application;
+import sailpoint.object.Link;
+import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+import sailpoint.object.TaskResult;
+
+import sailpoint.tools.GeneralException;
+import sailpoint.tools.Util;
+import sailpoint.tools.IOUtil;
+import sailpoint.tools.ObjectNotFoundException;
+
+import java.util.Date;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+
+import sailpoint.integration.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+  
+import java.io.OutputStreamWriter;  
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+
+import sailpoint.plugin.PluginContext;
+import sailpoint.plugin.PluginsUtil;
+import sailpoint.plugin.Setting;
+import sailpoint.plugin.PluginBaseHelper;
+
+import sailpoint.server.Environment;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+    /**
+    * If Shadow mode is enabled or not (true means temp values will be generated, false means production mode)
+    */
+    boolean isShadowMode = false;
+    
+    /**
+    * The table to pull available N#s from (in shadow mode this table(tmp_sourceids) will have T1 values, production mode is N1 values)
+    */
+    String sourceIdTable = "sourceids";
+    
+	/**
+	 * The logger to use
+	 */
+	Log log = LogFactory.getLog("edu.nyu.RuleLibrary.IDGeneration");
+
+	/**
+	 * The custom lock object name
+	 */
+	String lockObjectName = "NYU ID Generation Lock";
+
+	/**
+	 * Check for disallowed initial combinations and replaces the middle value with an 'x' param leftSide The left side values or initials of the user return The left side values throws GeneralException If an error occurs
+	 */
+	public String checkDisallowedInitals(String leftSide) throws GeneralException {
+        SailPointContext context = SailPointFactory.getCurrentContext();
+		StringBuilder netIdBase = new StringBuilder();
+		netIdBase.append(leftSide);
+		context = SailPointFactory.getCurrentContext();
+        if (CustomGlobal.get("disallowedNetIdInitials") == null) {
+     		Custom custom = context.getObject(Custom.class, "Disallowed NetID Values");
+     		Attributes attr = custom.getAttributes();
+     		List initialValues = (List) attr.get("disallowed_initials");
+            CustomGlobal.put("disallowedNetIdInitials", initialValues);
+            context.decache(custom);
+        }
+        List disallowedInitials = CustomGlobal.get("disallowedNetIdInitials");
+		for (Object value : disallowedInitials) {
+			if (value.toString().equalsIgnoreCase(leftSide)) {
+				if (leftSide.length() == 2) {
+					netIdBase.insert(1, "x");
+				} else {
+					netIdBase.deleteCharAt(1);
+					netIdBase.insert(1, "x");
+				}
+				return netIdBase.toString();
+			}
+		}
+		log.debug("Returning leftSide:" + leftSide);
+		return leftSide;
+	}
+
+	/**
+	 * Check for disallowed numbers in the NetID param rightSide The right side value of the NetID param increment true if the right side value should be incremented or false if the right side value doesn't need to be incremented return The right side values throws GeneralException If an error
+	 * occurs
+	 */
+	public String checkDisallowedNumbers(String rightSide, boolean increment) throws GeneralException {
+		String finalRightSide = rightSide;
+		if (increment) {
+			int right = Integer.valueOf(finalRightSide);
+			finalRightSide = String.valueOf(right + 1);
+		}
+		context = SailPointFactory.getCurrentContext();
+  if (CustomGlobal.get("disallowedNetIdNumbers") == null) {
+       Custom custom = context.getObject(Custom.class, "Disallowed NetID Values");
+       Attributes attr = custom.getAttributes();
+       List numberValues = (List) attr.get("disallowed_numbers");
+            CustomGlobal.put("disallowedNetIdNumbers", numberValues);
+            context.decache(custom);
+        }
+        List numberValues = CustomGlobal.get("disallowedNetIdNumbers");
+		for (Object value : numberValues) {
+			if (value.toString().equalsIgnoreCase(finalRightSide)) {
+				log.debug("Rightside numbers match " + value + ", refactoring rightside...");
+				int right = Integer.valueOf(finalRightSide);
+				return String.valueOf(right + 1);
+			}
+		}
+		log.debug("Returning finalRightSide:" + finalRightSide);
+		return finalRightSide;
+	}
+
+	/**
+	 * Generate a GUID return The generated GUID
+	 */
+	public String generateGUID() {
+		String name = String.valueOf(System.currentTimeMillis()) + String.valueOf(Thread.currentThread().getId());
+		byte[] bytes = name.getBytes();
+		UUID guid = UUID.nameUUIDFromBytes(bytes);
+		log.debug("Generated guid is: " + guid.toString());
+		return guid.toString();
+	}
+
+	/**
+	 * Generate a NetID for a user param firstName The first name param middleName The middle name param lastName The last name return The generated NetID throws Throwable If an error occurs
+	 */
+	public String generateNetID(String firstName, String middleName, String lastName) throws GeneralException {
+		String initials = getInitials(firstName, middleName, lastName);
+		String leftSide = checkDisallowedInitals(initials);
+		log.debug("Getting rightside for: " + leftSide);
+		String rightSide = generateRightSide(leftSide);
+		log.debug("Checking for disallowed values: " + leftSide + " " + rightSide);
+		String finalRightSide = checkDisallowedNumbers(rightSide, false);
+		for (int attempt = 0; true; attempt++) {
+			if (isNetIdUnique(leftSide + finalRightSide, leftSide, finalRightSide)) {
+				log.debug("NetID is unique " + leftSide + finalRightSide);
+				break;
+			}
+			if (!isNetIdUnique(leftSide + finalRightSide, leftSide, finalRightSide)) {
+				finalRightSide = checkDisallowedNumbers(finalRightSide, true);
+				log.debug("NetID is not unique " + leftSide + finalRightSide + " trying attempt " + attempt);
+			}
+			if (attempt > 20) {
+				log.debug("NetID is not unique after " + attempt + " attempts...giving up");
+				throw new GeneralException("Couldn't create unique NetID");
+			}
+		}
+		log.debug("Generated NetID is " + leftSide + finalRightSide);
+        if (isShadowMode) {
+        return "temp_" + leftSide + finalRightSide;
+        }
+		return leftSide + finalRightSide;
+	}
+ 
+ /**
+  * Generate a NetID for a non-person accounts param firstName The first name param middleName The middle name param lastName The last name return The generated NetID throws Throwable If an error occurs
+  */
+ public String generateSpecialNetID(String firstName, String middleName, String lastName) throws GeneralException {
+  String initials = getInitials(firstName, middleName, lastName);
+  log.debug("Getting rightside for: " + initials);
+  String rightSide = generateRightSide(initials);
+  for (int attempt = 0; true; attempt++) {
+   if (isNetIdUnique(initials + rightSide, initials, rightSide)) {
+    log.debug("NetID is unique " + initials + rightSide);
+    break;
+   }
+   if (!isNetIdUnique(initials + rightSide, initials, rightSide)) {
+    rightSide = checkDisallowedNumbers(rightSide, true);
+    log.debug("NetID is not unique " + initials + rightSide + " trying attempt " + attempt);
+   }
+   if (attempt > 20) {
+    log.debug("NetID is not unique after " + attempt + " attempts...giving up");
+    throw new GeneralException("Couldn't create unique NetID");
+   }
+  }
+  log.debug("Generated NetID is " + initials + rightSide);
+        if (isShadowMode) {
+        return "temp_" + initials + rightSide;
+        }
+  return initials + rightSide;
+ }
+ 
+  /**
+  * Generate a NetID for AD Service Accounts param firstName The first name param middleName The middle name param lastName The last name return The generated NetID throws Throwable If an error occurs
+  */
+ public String generateADServiceNetID() throws GeneralException {
+  String initials = "adits";
+  log.debug("Getting rightside for: " + initials);
+  String rightSide = generateRightSide(initials);
+  for (int attempt = 0; true; attempt++) {
+   if (isNetIdUnique(initials + rightSide, initials, rightSide)) {
+    log.debug("NetID is unique " + initials + rightSide);
+    break;
+   }
+   if (!isNetIdUnique(initials + rightSide, initials, rightSide)) {
+    rightSide = checkDisallowedNumbers(rightSide, true);
+    log.debug("NetID is not unique " + initials + rightSide + " trying attempt " + attempt);
+   }
+   if (attempt > 20) {
+    log.debug("NetID is not unique after " + attempt + " attempts...giving up");
+    throw new GeneralException("Couldn't create unique NetID");
+   }
+  }
+  log.debug("Generated NetID is " + initials + rightSide);
+        if (isShadowMode) {
+        return "temp_" + initials + rightSide;
+        }
+  return initials + rightSide;
+ }
+
+	/**
+	 * Generate the right side values for a NetID param initials The initials for a user return The right side values throws GeneralException if an error occurs
+	 */
+	public String generateRightSide(String initials) throws GeneralException {
+		int rightSide = 0;
+		PreparedStatement preparedStatement = null;
+		ResultSet localResultSet = null;
+		try {
+			preparedStatement = PluginBaseHelper.prepareStatement(context.getJdbcConnection(), "SELECT nvl(MAX(rightside),0) AS rightside FROM identityiqplugin.lrids WHERE upper(leftside) = ? UNION SELECT nvl(MAX(to_number(right_side_net_id) ),0) AS rightside FROM  identityiq.spt_identity WHERE upper(left_side_net_id) = ? ORDER BY rightside DESC", new Object[] {initials.toUpperCase(), initials.toUpperCase()});
+			localResultSet = preparedStatement.executeQuery();
+			localResultSet.next();
+			rightSide = localResultSet.getInt("rightside");
+			rightSide = rightSide + 1;
+			log.debug("Right side value is: " + rightSide + " for initials " + initials);
+		} catch (SQLException localSQLException) {
+			throw new GeneralException(localSQLException);
+		} finally {
+			try {
+				if (localResultSet != null) {
+					localResultSet.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		log.debug("Right side value is: " + rightSide + " for initials " + initials);
+		return String.valueOf(rightSide);
+	}
+
+	/**
+	 * Generate a UniversityID for a user return The generated UniversityID throws Throwable If an error occurs
+	 */
+	public String generateUniversityId(String guid) throws GeneralException {
+		String universityId = getUniversityID(guid);
+   for (int attempt = 0; true; attempt++) {
+   if (isUniversityIDUnique(universityId)) {
+    log.debug("University ID is unique " + universityId);
+    break;
+   }
+   if (!isUniversityIDUnique(universityId)) {
+    universityId = getUniversityID(guid);
+    log.debug("University ID is not unique " + universityId + " trying attempt " + attempt);
+   }
+   if (attempt > 20) {
+    log.debug("University ID is not unique after " + attempt + " attempts...giving up");
+    throw new GeneralException("Couldn't create unique University ID");
+   }
+  }
+	log.debug("University ID for user is " + universityId);
+		return universityId;
+}
+
+	/**
+	 * Generate a Unix ID return The generated Unix ID throws GeneralException If an error occurs
+	 */
+	public String generateUnixID() throws GeneralException {
+		//Note: To give a starting point for where UnixIDs will be generated from the sp_internal account is setup with the starting value
+		//		this is controlled through the env.target.properites.
+		int unixId = 0;
+		PreparedStatement preparedStatement = null;
+		ResultSet localResultSet = null;
+		try {
+			preparedStatement = PluginBaseHelper.prepareStatement(context.getJdbcConnection(), "select max(to_number(unix_id)) as unix_id from identityiq.spt_identity", new Object[] {});
+			localResultSet = preparedStatement.executeQuery();
+			localResultSet.next();
+			unixId = Integer.valueOf(localResultSet.getString("unix_id"));
+			unixId = unixId + 1;
+			log.debug("Unix ID is: " + String.valueOf(unixId));
+			if (unixId <= 1) {
+				throw new GeneralException("No unix id found in source tables");
+			}
+			return String.valueOf(unixId);
+		} catch (SQLException localSQLException) {
+			throw new GeneralException(localSQLException);
+		} finally {
+			try {
+				if (localResultSet != null) {
+					localResultSet.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Get the left side initials for a given user removing any whitespace and non-alpha characters param first The first name param middle The middle name param last The last name return The formatted left side initials
+	 */
+	public String getInitials(String first, String middle, String last) {
+		String fi = "";
+		String mi = "";
+		String li = "";
+		String initials = "";
+		if (!Util.isNullOrEmpty(first)) {
+			fi = first.replaceAll("[^\\p{Alpha}]", "").trim().substring(0, 1);
+		}
+		if (!Util.isNullOrEmpty(middle)) {
+			mi = middle.replaceAll("[^\\p{Alpha}]", "").trim().substring(0, 1);
+		}
+		if (!Util.isNullOrEmpty(last)) {
+			li = last.replaceAll("[^\\p{Alpha}]", "").trim().substring(0, 1);
+		}
+		initials = fi + mi + li;
+		log.debug("Resulting initials are: " + initials.toLowerCase());
+		return initials.toLowerCase();
+	}
+
+	/**
+	 * Gets a random available University ID from the sourceids table return The university id throws GeneralException if an error occurs
+	 */
+	public String getUniversityID(String guid) throws GeneralException {
+	  String universityId = null;
+	  CallableStatement st = null;
+	  String mode = String.valueOf(isShadowMode);
+		try {
+			 Connection con = context.getJdbcConnection();
+      		 st = con.prepareCall("call IDENTITYIQPLUGIN.GENERATEUNIVERSITYID(?,?,?)");
+	  		 st.setString(1,guid);
+	 		 st.setString(2,mode);
+     		 st.registerOutParameter(3, Types.VARCHAR);
+			  st.execute();
+    		  universityId = st.getString(3);
+    		  log.debug("UniversityID from resultSet is: " + universityId);
+			} catch (SQLException localSQLException) {
+				throw new GeneralException(localSQLException);
+			}
+            finally {
+             if (st != null) {
+              st.close();
+      	     }
+            } 
+		log.debug("UniversityID is: " + universityId);
+		return universityId;
+	}
+
+	/**
+	 * Checks for uniqueness of the Net ID param netId The NetID return true if the NetID is unique or false if the NetID is not unique throws GeneralException If an error occurs
+	 */
+	public boolean isNetIdUnique(String netId, String leftSide, String rightSide) throws GeneralException {
+		QueryOptions queryOption = new QueryOptions();
+		queryOption.addFilter(Filter.ignoreCase(Filter.eq("netId", netId)));
+		context = SailPointFactory.getCurrentContext();
+		int count = context.countObjects(Identity.class, queryOption);
+		PreparedStatement preparedStatement = null;
+		int historicalCount = 0;
+		ResultSet localResultSet = null;
+		try {
+			preparedStatement = PluginBaseHelper.prepareStatement(context.getJdbcConnection(), "select max(total) as total from (select count(*) as total from identityiqplugin.lrids where upper(leftside) = ? and rightside = '0' union all  select count(*) as total from identityiqplugin.lrids where upper(leftside) = ? and rightside = ? union all  select count(*) as total from identityiq.spt_identity_external_attr where attribute_name = 'historicalNetIds' and upper(value) = ?)", new Object[] {leftSide, leftSide, rightSide, netId});
+			localResultSet = preparedStatement.executeQuery();
+			localResultSet.next();
+			historicalCount = localResultSet.getInt("total");
+		} catch (SQLException localSQLException) {
+			throw new GeneralException(localSQLException);
+		} finally {
+			try {
+				if (localResultSet != null) {
+					localResultSet.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+			try {
+				if (preparedStatement != null) {
+					preparedStatement.close();
+				}
+			} catch (SQLException sqle) {
+				sqle.printStackTrace();
+			}
+		}
+		if (count == 1 || historicalCount > 0) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Checks for uniqueness of the University ID param univeristyId The UniversityId return true if the UniversityId is unique or false if the UniversityId is not unique throws GeneralException If an error occurs
+	 */
+	public boolean isUniversityIDUnique(String univeristyId) throws GeneralException {
+		QueryOptions queryOption = new QueryOptions();
+		queryOption.addFilter(Filter.ignoreCase(Filter.eq("universityId", univeristyId)));
+		context = SailPointFactory.getCurrentContext();
+		int count = context.countObjects(Identity.class, queryOption);
+		if (count == 1) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Locks the ID Generation Custom object throws IllegalStateException If an error occurs
+	 */
+	public void lock() {
+		try {
+			context = SailPointFactory.getCurrentContext();
+			LockParameters lockParameters = new LockParameters();
+			// This is one minute and is the time the lock is held
+			lockParameters.setLockDuration(1);
+			// This is 15 seconds and is the time we wait at context.lockObject() before giving up
+			lockParameters.setLockTimeout(15);
+			lockParameters.setName(lockObjectName);
+			lockParameters.setLockType(PersistenceManager.LOCK_TYPE_TRANSACTION);
+			Object lock = context.lockObject(Custom.class, lockParameters);
+			if (lock == null) {
+				throw new IllegalStateException("Could not lock ID generation object");
+			}
+		} catch (GeneralException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Test script throws Throwable If an error occurs
+	 */
+	public void test() throws Throwable {
+		try {
+			lock();
+			log.debug("Name for user is: Grant Versfeld");
+			String netId = generateNetID("Grant", null, "Versfeld");
+			log.debug("NetID: " + netId);
+			String guid = generateGUID();
+			log.debug("Guid is: " + guid);
+			String unixId = generateUnixID();
+			log.debug("Unix ID:" + unixId);
+			unlock();
+			log.debug("---------------------------");
+			lock();
+			log.debug("Name for user is: Victoria A Sabo");
+			String netId2 = generateNetID("Victoria", "A", "Sabo");
+			log.debug("NetID: " + netId2);
+			String unixId2 = generateUnixID();
+			log.debug("Unix ID:" + unixId2);
+			String guid2 = generateGUID();
+			log.debug("Guid is: " + guid2);
+			unlock();
+			log.debug("---------------------------");
+			lock();
+			log.debug("Name for user is: Adam Stephen Sandler");
+			String netId3 = generateNetID("Adam", "Stephen", "Sandler");
+			log.debug("NetID: " + netId3);
+			String unixId3 = generateUnixID();
+			log.debug("Unix ID:" + unixId3);
+			String guid3 = generateGUID();
+			log.debug("Guid is: " + guid3);
+			unlock();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Unlocks the ID Generation Custom object throws IllegalStateException If an error occurs
+	 */
+	public void unlock() throws IllegalStateException {
+		try {
+			context = SailPointFactory.getCurrentContext();
+			Object lockedObject = context.getObjectByName(Custom.class, lockObjectName);
+			if ((Custom) lockedObject == null) {
+				throw new IllegalStateException("Could not unlock ID generation object");
+			}
+			context.unlockObject((Custom) lockedObject);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+ 
+ /**
+  * Get the left hand side of a given Net ID
+  */
+ public String getLeftSideNetId(String netId) {
+  netId = netId.replaceAll("[^a-zA-Z0-9]", "");
+  try {
+   String[] values = netId.split("(?<=\\D)(?=\\d)");
+   if (!values[0].toLowerCase().matches("[a-z]*$")) {
+    return "";
+   }
+   return values[0];
+  } catch (ArrayIndexOutOfBoundsException e) {
+   return "";
+  }
+ }
+
+ /**
+  * Get the right hand side of a given Net ID
+  */
+ public String getRightSideNetId(String netId) {
+  netId = netId.replaceAll("[^a-zA-Z0-9]", "");
+  try {
+   String[] values = netId.split("(?<=\\D)(?=\\d)");
+   if (!values[1].matches("^[0-9]*$")) {
+    return "";
+   }
+   return values[1];
+  } catch (ArrayIndexOutOfBoundsException e) {
+   return "";
+  }
+ }
+ 
+ 
+ public String create(String guid, String netId, String universityId, String unixId) throws Exception {
+    log.debug("Guid is " + guid);
+    log.debug("NetId is " + netId);
+    log.debug("UniversityID is " + universityId);
+    log.debug("UnixID is " + unixId);
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    ProvisioningPlan plan = new ProvisioningPlan(); 
+    String msg = null;
+    try {
+      Identity identity = context.getObjectByName(Identity.class, guid);
+      if (identity == null) {
+        msg = "No identity found for GUID: " + guid;
+        return msg;
+      }
+      java.util.Date now = new Date();
+      String idsCreatedOnDate = sailpoint.tools.Util.dateToString(now, "YYYYMMdd");
+      log.debug("Before Plan Build: " + System.currentTimeMillis());
+      plan.setIdentity(identity);
+      plan.setNativeIdentity(guid);
+      AccountRequest acr = new AccountRequest();
+      acr.setOperation(Operation.Modify);
+      acr.setNativeIdentity(identity.getName());
+      acr.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME);
+      ProvisioningPlan.AttributeRequest userTypeAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest netIdAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest uidAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest unixIdAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest leftNetIdAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest rightNetIdAttribute = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest idsCreatedDate = new ProvisioningPlan.AttributeRequest();
+      userTypeAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      netIdAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      uidAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      unixIdAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      leftNetIdAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      rightNetIdAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      idsCreatedDate.setOperation(ProvisioningPlan.Operation.Set);
+      userTypeAttribute.setName("type");
+      userTypeAttribute.setValue("nyu_person_account");
+      netIdAttribute.setName("netId");
+      netIdAttribute.setValue(netId);
+      uidAttribute.setName("universityId");
+      uidAttribute.setValue(universityId);
+      unixIdAttribute.setName("unixId");
+      unixIdAttribute.setValue(unixId);
+      leftNetIdAttribute.setName("leftSideNetId");
+      leftNetIdAttribute.setValue(getLeftSideNetId(netId));
+      rightNetIdAttribute.setName("rightSideNetId");
+      rightNetIdAttribute.setValue(getRightSideNetId(netId));
+      idsCreatedDate.setName("idsCreatedOn");
+      idsCreatedDate.setValue(idsCreatedOnDate);
+      acr.add(userTypeAttribute);
+      acr.add(netIdAttribute);
+      acr.add(unixIdAttribute);
+      acr.add(uidAttribute);
+      acr.add(leftNetIdAttribute);
+      acr.add(rightNetIdAttribute);
+      acr.add(idsCreatedDate);
+      plan.add(acr);
+      log.debug(plan.toXml());
+      // Provision the plan
+      Provisioner p = new Provisioner(context);
+      p.setNoLocking(false);
+      p.execute(p.compile(plan));
+      log.debug("After plan execution: " + System.currentTimeMillis());
+     
+      //Attributes args = new Attributes();
+      //args.put("filter", "name==\"" + guid + "\"");
+      //args.put("enablePartitioning", "false");
+      //args.put("correlateEntitlements", "true");
+      //args.put("provision", "true");
+      //TaskManager taskManager = new TaskManager(context);
+      //TaskResult result = taskManager.runSync("Research Case API Refresh Identity Cube", args);
+      //msg = result.getCompletionStatus().name();
+      msg = "Success";
+      log.debug("Result " + msg);
+      context.decache(identity);
+      return msg;
+    } catch (Exception e) {
+      return e.getMessage();
+    }
+  }
+
+  public String updateUserType(String guid, String type) throws Exception {
+    log.debug("Guid is " + guid);
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    ProvisioningPlan plan = new ProvisioningPlan(); 
+    String msg = null;
+    try {
+      Identity identity = context.getObjectByName(Identity.class, guid);
+      if (identity == null) {
+        msg = "No identity found for GUID: " + guid;
+        return msg;
+      }
+      log.debug("Before Plan Build: " + System.currentTimeMillis());
+      plan.setIdentity(identity);
+      plan.setNativeIdentity(guid);
+      AccountRequest acr = new AccountRequest();
+      acr.setOperation(Operation.Modify);
+      acr.setNativeIdentity(identity.getName());
+      acr.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME);
+      ProvisioningPlan.AttributeRequest userTypeAttribute = new ProvisioningPlan.AttributeRequest();
+      userTypeAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      userTypeAttribute.setName("type");
+      userTypeAttribute.setValue(type);
+      acr.add(userTypeAttribute);
+      plan.add(acr);
+      log.debug(plan.toXml());
+      // Provision the plan
+      Provisioner p = new Provisioner(context);
+      p.setNoLocking(false);
+      p.execute(p.compile(plan));
+      log.debug("After plan execution: " + System.currentTimeMillis());
+      // Refresh the users
+      Attributes args = new Attributes();
+      args.put("enablePartitioning", "false");
+      args.put("correlateEntitlements", "true");
+      args.put("provision", "true");
+      Identitizer identitizer = new Identitizer(context, args);
+      // LazyInitializationException
+      identity = context.getObjectByName(Identity.class, guid);
+      identitizer.refresh(identity);
+      msg = "Success";
+      log.debug("Result " + msg);
+      return msg;
+    } catch (Exception e) {
+      return e.getMessage();
+    }
+  }
+  
+ public JSONObject delete(String guid) throws Exception {
+    log.debug("Guid is " + guid);
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    Terminator terminator = new Terminator(context); 
+     JSONObject jsonString = new JSONObject();
+    try {
+      Identity identity = context.getObjectByName(Identity.class, guid);
+      if (identity == null) {
+       jsonString.put("error","No identity found for GUID: " + guid);
+        return jsonString;
+      }
+      terminator.deleteObject(identity);
+      jsonString.put("error","Succesfully delete record: " + guid);
+      context.decache(identity);
+      return jsonString;
+    } catch (Exception e) {
+         jsonString.put("error",e.getMessage());
+         return jsonString;
+    }
+  }
+
+
+  public JSONObject match(String unmatchedGuid, String matchToGuid) throws Exception {
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    JSONObject jsonString = new JSONObject();
+    ProvisioningPlan plan = new ProvisioningPlan();
+    try {
+      Identity unmatchedIdentity = context.getObjectByName(Identity.class, unmatchedGuid);
+      Identity matchToIdentity = context.getObjectByName(Identity.class, matchToGuid);
+      if (unmatchedIdentity == null) {
+        jsonString.put("error","No identity found for GUID: " + unmatchedGuid);
+      }
+       if (matchToIdentity == null) {
+        jsonString.put("error","No identity found for GUID: " + matchToGuid);
+      }
+      if (unmatchedIdentity.getLinks().size() != 1) {
+        jsonString.put("error","More than one link found for user, cannot determine which link to move to user " + matchToGuid);
+      }
+      Identity moveToIdentity = context.getObjectByName(Identity.class, matchToGuid);
+      if (moveToIdentity == null) {
+        jsonString.put("error","No identity found for GUID: " + matchToGuid);
+      }
+      Link link = unmatchedIdentity.getLinks().get(0); //TODO change to ID Service API as this is deprecated
+      String appName = link.getApplicationName();
+      Application appObj = context.getObjectByName(Application.class, appName);
+      if (null == appObj) {
+        String eMsg = "Could not find Application with name: " + appName;
+        jsonString.put("error",eMsg);
+        log.error(eMsg);
+        return jsonString;
+      }
+       IdentityService idService = new IdentityService(context);
+       List links = new ArrayList();
+       links = idService.getLinks(moveToIdentity, appObj);
+       if (links.size() == 1 && !appName.equalsIgnoreCase("Affiliate")) {
+             String eMsg = "The matched user already has the source application: " + appName + " assigned.";
+             jsonString.put("error",eMsg);
+             log.error(eMsg);
+             return jsonString;
+           }
+      // Helper library that is useful for loading specific Links from the datbase.
+      IdentityService ids = new IdentityService(context);
+      Link linkToMove = ids.getLink(unmatchedIdentity, appObj, null, link.getNativeIdentity());
+      if (null == linkToMove) {
+        String eMsg = "Could not find Link/Account named [" + link.getNativeIdentity() + "] from Application name: " + appName + " under Identity:" + unmatchedIdentity.getDisplayName();
+        log.error(eMsg);
+        jsonString.put("error",eMsg);
+        return jsonString;
+      }
+      if (links.size() >= 1 && appName.equalsIgnoreCase("Affiliate")) {
+          for (Link moveToLink : links){
+              //grab the AFFILTYPENAME attribute from link this the new request to compare existing link
+                if(moveToLink.getAttribute("AFFILTYPENAME") != null && moveToLink.getAttribute("AFFILTYPENAME").equals(linkToMove.getAttribute("AFFILTYPENAME"))){
+                       String eMsg = "ACTION: The matched user already has the same affiliate subtype: " + appName + " assigned.  This entry will be deleted.";
+                       jsonString.put("error",eMsg);
+                       log.error(eMsg);
+                       return jsonString;              
+                 }
+           }
+      }
+      
+      log.debug("OK, made it past all the affiliate checks and we should send the email here?");
+        log.debug("Lets get some link attributes...");
+      	log.debug("Time to send the email...");
+     		String unmatchedUserID = link.getAttribute("ID");
+      	log.debug("The ID is " + unmatchedUserID); 
+      
+      	String netID = matchToIdentity.getAttribute("netId");
+      	String univID = matchToIdentity.getAttribute("universityId");
+      	log.debug("The netID is " + netID);
+      	log.debug("The univID is " + univID);
+      
+        // send the Approved email in UnresolvedIDservice.match() instead bc3339 9/24/2021
+      	//   sendMail(unmatchedUserID, netID, univID, "Approved AffiliateOnboarding Email");
+      	
+      // We now have the srcId, tgtId, and linkToMove all verified and loaded.
+      // The correct way to have IdentityIQ "move" an account from one Identity to
+      // another is to submit a specially crafted ProvisioningPlan to request the Link
+      // be moved.
+      // The code for this specially crafted provisioning plan follows:
+      ProvisioningPlan movePlan = new ProvisioningPlan();
+      movePlan.setIdentity(moveToIdentity);
+      // Metadata for assignments and logging.
+      // You can specify your own requester as necessary:
+      movePlan.addRequester(context.getObjectByName(Identity.class, "spadmin"));
+      // You can also set your own Source, this sets "Rule" but "Batch" might be valid as well.
+      movePlan.setSource(sailpoint.object.Source.Rule);
+      ProvisioningPlan.AccountRequest account = new ProvisioningPlan.AccountRequest();
+      account.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+      account.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME); // Modify only IdentityIQ.
+      movePlan.add(account);
+      ProvisioningPlan.AttributeRequest req = new ProvisioningPlan.AttributeRequest();
+      req.setName(ProvisioningPlan.ATT_IIQ_LINKS); // Magic value to alter IdentityIQ links.
+      req.setOperation(ProvisioningPlan.Operation.Add);
+      req.put(ProvisioningPlan.ARG_SOURCE_IDENTITY, linkToMove.getIdentity().getName());
+      req.setValue(linkToMove.getId());
+      // Formatted as: appName: acctName (identityName)
+      String reqDisplayVal = linkToMove.getApplicationName() + ": " + linkToMove.getNativeIdentity() + "(" + linkToMove.getIdentity().getName() + ")";
+      req.setDisplayValue(reqDisplayVal);
+      ProvisioningPlan.AttributeRequest matchedOn = new ProvisioningPlan.AttributeRequest();
+      matchedOn.setOperation(ProvisioningPlan.Operation.Set);
+      java.util.Date now = new Date();
+      String matchedOnDate = sailpoint.tools.Util.dateToString(now, "YYYYMMdd");
+      matchedOn.setName("matchedOn");
+      matchedOn.setValue(matchedOnDate);
+      account.add(matchedOn);
+      account.add(req);
+      log.debug("Plan to move the account: " + movePlan.toXml());
+      // Fire off the plan to the Provisioner to execute:
+      Provisioner provisioner = new Provisioner(context);
+      provisioner.setAssigner("spadmin"); // String of Identity making the change.
+      provisioner.compile(movePlan);
+      provisioner.execute();
+      log.debug("Account moved!");
+      jsonString.put("guid", matchToGuid).put("netId", moveToIdentity.getAttribute("netId") == null ? "" : moveToIdentity.getAttribute("netId")).put("unixId", moveToIdentity.getAttribute("unixId")).put("universityId", moveToIdentity.getAttribute("universityId") == null ? "" : moveToIdentity.getAttribute("universityId")).put("id", moveToIdentity.getId());
+      ProvisioningPlan deprecatePlan = new ProvisioningPlan();
+      deprecatePlan.setIdentity(unmatchedIdentity);
+      String matchToUID = moveToIdentity.getAttribute("universityId");
+      String matchToNetId = moveToIdentity.getAttribute("netId");
+      deprecatePlan.setIdentity(unmatchedIdentity);
+      deprecatePlan.setNativeIdentity(unmatchedGuid);
+      AccountRequest acr = new AccountRequest();
+      acr.setOperation(Operation.Modify);
+      acr.setNativeIdentity(unmatchedIdentity.getName());
+      acr.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME);
+      ProvisioningPlan.AttributeRequest status = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest historicalUniverstyId = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest historicalNetId = new ProvisioningPlan.AttributeRequest();
+      ProvisioningPlan.AttributeRequest type = new ProvisioningPlan.AttributeRequest();
+      status.setOperation(ProvisioningPlan.Operation.Set);
+      type.setOperation(ProvisioningPlan.Operation.Set);
+      historicalUniverstyId.setOperation(ProvisioningPlan.Operation.Set);
+      historicalNetId.setOperation(ProvisioningPlan.Operation.Set);
+      status.setName("inactive");
+      status.setValue(true);
+      type.setName("type");
+      type.setValue("nyu_deprecated_account");
+      historicalUniverstyId.setName("historicalUniversityIds");
+      historicalUniverstyId.setValue(matchToUID);
+      historicalNetId.setName("historicalNetIds");
+      historicalNetId.setValue(matchToNetId);
+      acr.add(type);
+      acr.add(status);
+      acr.add(historicalNetId);
+      acr.add(historicalUniverstyId);
+      deprecatePlan.add(acr);
+      // Provision the plan
+      Provisioner p = new Provisioner(context);
+      p.setNoLocking(true);
+      p.execute(p.compile(deprecatePlan));
+      
+      // IAMR-2820 - LazyInitializationException
+      // Refresh the users
+      // First, Reload the Identities
+      unmatchedIdentity = context.getObjectByName(Identity.class, unmatchedGuid);
+      moveToIdentity = context.getObjectByName(Identity.class, matchToGuid);
+      
+      // Create the Args list for the call.
+      Attributes args = new Attributes();
+      args.put("enablePartitioning", "false");
+      args.put("correlateEntitlements", "true");
+      args.put("synchronizeAttributes", "true");
+      args.put("provision", "true");
+      Identitizer unMatchedIdentitizer = new Identitizer(context, args);
+      unMatchedIdentitizer.refresh(unmatchedIdentity);
+      Identitizer matchToIdentitizer = new Identitizer(context, args);
+      matchToIdentitizer.refresh(moveToIdentity);
+    } catch (Exception e) {
+      jsonString.put("error", e.getMessage());
+    }
+    context.decache();
+    return jsonString;
+  }
+  
+   String getEmailFromUnivID(String universityId)
+	{
+		String email = "";
+		SailPointContext context = SailPointFactory.getCurrentContext();
+    
+		try {
+	    	QueryOptions queryOption1 = new QueryOptions();
+			queryOption1.addFilter(Filter.eq("universityId",universityId));
+			List identities = context.getObjects(Identity.class, queryOption1);
+			if (identities != null && !identities.isEmpty()) {
+				Identity localIdentity = identities.get(0);
+				if (null != localIdentity.getStringAttribute("netId"))
+				{
+					email = localIdentity.getStringAttribute("netId") + "@nyu.edu";
+				}
+              context.decache(localIdentity);
+			}
+    	} catch (GeneralException e) {
+    	
+    		log.error("Error getting NetID: " + e);
+    	}
+		
+		return email;
+	}
+	
+void sendMail(String identityID, String netID, String univID, String templateName) throws GeneralException, SQLException {
+		SailPointContext context = SailPointFactory.getCurrentContext();
+		String EmailTemplateName = templateName;
+		
+		List emailRecipient = new ArrayList();
+		
+		String query = "";
+		String first     = "";
+		String last      = "";
+		String afftype   = "";
+		String mngSpnsr  = "";
+		String deptSpnsr = "";
+		String reqUnivID     = "";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = context.getJdbcConnection();
+
+			statement = PluginBaseHelper.prepareStatement(connection, "SELECT * from identityiqPlugin.affonboardingusers a JOIN identityiqPlugin.affonboardingroles  b ON b.id = a.id WHERE a.id = ?", identityID);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				if (null == resultSet.getString("PREFFIRSTNAME")) {
+					first = resultSet.getString("FIRSTNAME");
+          log.debug(first);
+				} else {
+					first  = resultSet.getString("PREFFIRSTNAME");
+				}
+				
+				if (null == resultSet.getString("PREFLASTNAME")) {
+					last = resultSet.getString("LASTNAME");
+          log.debug(last);
+				} else {
+					last  = resultSet.getString("PREFLASTNAME");
+				}
+				
+				afftype = resultSet.getString("AFFILTYPENAME");
+				mngSpnsr = resultSet.getString("MANAGINGSPONSOR");
+				deptSpnsr = resultSet.getString("DEPARTMENTSPONSOR");
+				reqUnivID = resultSet.getString("REQUESTERID");
+        
+        log.debug(afftype);
+        log.debug(mngSpnsr);
+        log.debug(deptSpnsr);
+        log.debug(reqUnivID);
+				
+			}
+
+		} catch (SQLException e) {
+			throw new GeneralException(e);
+		}
+    finally {
+      if (resultSet != null) {
+        resultSet.close();
+      }
+       if (statement != null) {
+        statement.close();
+      }
+    }
+		
+        String mngSpnsrEmail = getEmailFromUnivID(mngSpnsr);
+		String deptSpnsrEmail = getEmailFromUnivID(deptSpnsr);
+		
+		log.debug("Managing and Dept Sponsor emails: " + mngSpnsrEmail + " " + deptSpnsrEmail);
+		
+		// Now that we have the "emailRecipient" contain the TO addresses
+		String reqIDemail = getEmailFromUnivID(reqUnivID);
+		String reqID = getNetIDfromUniID(reqUnivID);
+		emailRecipient.add(reqIDemail);
+		emailRecipient.add(mngSpnsrEmail);
+		emailRecipient.add(deptSpnsrEmail);
+		//emailRecipient.add("its.accounts@nyu.edu");
+		
+		try {
+			EmailTemplate emailTemplate = (EmailTemplate) context.getObjectByName(EmailTemplate.class,
+					EmailTemplateName);
+			emailTemplate.setTo(reqIDemail);
+			emailTemplate.setCc("idm.services.noreply@nyu.edu");
+
+			if (emailTemplate != null) {
+				Map myargs = new HashMap();
+				myargs.put("firstName", first);
+				myargs.put("lastName",last);
+				myargs.put("universityId", univID);
+				myargs.put("netId", netID);
+				
+				EmailOptions ops = new EmailOptions(emailRecipient, myargs);
+				context.sendEmailNotification(emailTemplate, ops);
+                context.decache(emailTemplate);
+			}
+		} catch (Exception ex) {
+		log.error(ex);
+		}
+		return;
+	}
+	
+  String getNetIDfromUniID (String universityId) {
+    String netId = "N/A";
+    try {
+      SailPointContext context = SailPointFactory.getCurrentContext();
+      QueryOptions queryOption1 = new QueryOptions();
+      queryOption1.addFilter(Filter.eq("universityId",universityId));
+      List identities = context.getObjects(Identity.class, queryOption1);
+      if (identities != null && !identities.isEmpty()) {
+        Identity localIdentity = identities.get(0);
+        //log.error("\t\tNETID : " + localIdentity.getStringAttribute("netId"));
+        if ( null != localIdentity && null != localIdentity.getStringAttribute("netId") )
+        {
+          netId = localIdentity.getStringAttribute("netId");
+        }
+        context.decache(localIdentity);
+      }
+    } catch (GeneralException e) {
+      log.error(e);
+    }
+    return netId;
+  }
+    
+  /**
+   * Generate a NetID for a non-person accounts param firstName The first name param middleName The middle name param lastName The last name return The generated NetID throws Throwable If an error occurs
+   */
+  public String generateSpecialNetID(String firstName, String middleName, String lastName) throws GeneralException {
+    String initials = getInitials(firstName, middleName, lastName);
+    log.debug("Getting rightside for: " + initials);
+    String rightSide = generateRightSide(initials);
+    for (int attempt = 0; true; attempt++) {
+      if (isNetIdUnique(initials + rightSide, initials, rightSide)) {
+        log.debug("NetID is unique " + initials + rightSide);
+        break;
+      }
+      if (!isNetIdUnique(initials + rightSide, initials, rightSide)) {
+        rightSide = checkDisallowedNumbers(rightSide, true);
+        log.debug("NetID is not unique " + initials + rightSide + " trying attempt " + attempt);
+      }
+      if (attempt > 20) {
+        log.debug("NetID is not unique after " + attempt + " attempts...giving up");
+        throw new GeneralException("Couldn't create unique NetID");
+      }
+    }
+    log.debug("Generated NetID is " + initials + rightSide);
+    if (isShadowMode) {
+      return "temp_" + initials + rightSide;
+    }
+    return initials + rightSide;
+  }
+
+  /**
+   * Generate a PAM NetID i.e., zz_10001 and so on.
+   */
+  public String generatePAMNetID()
+  {
+    log.debug("*****Entered IN generatePAMNetID Method");
+    String netId = null;
+    boolean isUniqueNetId = false;
+    int count = 10001;
+
+    while(!isUniqueNetId)
+    {
+      boolean isUniqueSAMAccountName = false;
+      netId = "zz_" + String.valueOf(count);
+      Identity identity = context.getUniqueObject(Identity.class,Filter.eq("netId",netId));
+      if ( identity != null) 
+      {
+        isUniqueNetId = false;
+        context.decache(identity);
+        count++;
+      } 
+      else if (identity == null)
+      {
+        isUniqueNetId = true;
+        break;
+      }
+    }
+    log.debug("Generated NetID IN generatePAMNetID Method is " + netId);
+    return netId;
+  }   
+  /**
+   * Create admin, test, service, special accounts
+   */
+  public String createSpecialUser(String type, Map args) {
+    //System.out.println("inside rule for type " + type);
+    JSONObject obj = new JSONObject();
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    URL restUrl;
+    String administrator = "";
+    String basicAuthCreds = "";
+    String encoded = "";
+    String guid = args.get("name") != null ? args.get("name") : generateGUID();
+    String unixId = generateUnixID();
+    String universityId = generateUniversityId(guid);
+    String apiUrl = "http://localhost:8080/identityiq/rest/identities/" + guid;
+    restUrl = new URL(apiUrl);
+    HttpURLConnection httpconn = (HttpURLConnection) restUrl.openConnection();
+    httpconn.setRequestMethod("PUT");
+    httpconn.setDoOutput(true);
+
+    String user = "spadmin";
+    Identity identity = context.getObjectByName(Identity.class, user);
+    if (identity == null) {
+      throw new GeneralException("Could not find an identity " + user + " to invoke API call.");
+    }
+
+    String restPassword = context.decrypt(identity.getPassword());
+    basicAuthCreds = user + ":" + restPassword;
+    encoded = Base64.getEncoder().encodeToString(basicAuthCreds.getBytes(StandardCharsets.UTF_8));
+    httpconn.setRequestProperty("Authorization", "Basic " + encoded);
+    httpconn.setRequestProperty("Content-Type", "application/json");
+
+    String netId = "";
+    if (type.equalsIgnoreCase("nyu_test_account")) {
+      netId = generateSpecialNetID("t","s","t");
+    } else if(type.equalsIgnoreCase("nyu_special_account")) {
+      netId = generateSpecialNetID("n","y","u");
+    } else if(type.equalsIgnoreCase("nyu_service_account")) {
+      netId = generateSpecialNetID("n","y","u");
+    } else if(type.equalsIgnoreCase("special_service_account")) {
+      netId = generateSpecialNetID("n","y","u");
+    } else if(type.equalsIgnoreCase("nyu_pam_account")) {
+      String pamAccountType = args.get("selectedAction");
+      if (pamAccountType != null && pamAccountType.equals("Create Individual PAM Account")) {
+        String ownerNetId = args.get("ownerNetId");
+        if (Util.isNotNullOrEmpty(ownerNetId)) {
+          netId = "zz_"+ownerNetId;
+        }
+      }
+      else if (pamAccountType != null && pamAccountType.equals("Create Group PAM Account")) {
+        netId = generatePAMNetID();
+      }
+    } else if(type.equalsIgnoreCase("nyu_ad_service_account")) {
+      netId = generateADServiceNetID();
+      obj.put("firstname", "Service");
+      obj.put("lastname", "Account");
+      obj.put("currentAffiliationSubtypes", "special_service_account");
+      obj.put("primaryAffiliationSubtype", "special_service_account");
+      obj.put("netIdExpiration", "01/01/2099");
+    }
+    DateFormat df = new SimpleDateFormat("MM/dd/YYYY");
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.YEAR,1);
+    String passwordExpiresOn = df.format(calendar.getTime());
+    if(type.equalsIgnoreCase("nyu_special_account")) {
+      obj.put("passwordExpiresOn", "");
+    } else {
+      obj.put("passwordExpiresOn",passwordExpiresOn);
+    }
+    
+    for (Map.Entry entry : args.entrySet()) {  
+      if (entry.getKey().toString().equalsIgnoreCase("firstname")) {
+        obj.put("firstname", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("middlename")) {
+        obj.put("middleName", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("lastname")) {
+        obj.put("lastname", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("owner")) {
+        administrator = entry.getValue();
+        Identity owner = context.getObjectByName(Identity.class, entry.getValue());
+        if (owner != null && owner.getManager() != null){
+          obj.put("manager",  owner.getManager().getName());
+        } else {
+          obj.put("manager",  owner.getName());
+        }
+        if (type.equalsIgnoreCase("nyu_ad_administrator_account")) {
+          netId = owner.getAttribute("netId") + "-admin"; //admin naming convention
+          obj.put("currentAffiliationSubtypes", "admin_account");
+          obj.put("primaryAffiliationSubtype", "admin_account");
+          obj.put("netIdExpiration", "01/01/2099");
+        }
+        context.decache(owner);
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("accountDescription")) {
+        obj.put("accountDescription", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("affiliationSubtypes")) {
+        obj.put("currentAffiliationSubtypes", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("netIdExpiration")) {
+        obj.put("netIdExpiration", entry.getValue());
+      }
+      
+      obj.put("primaryAffiliation", "affiliate");
+	  
+	  if (entry.getKey().toString().equalsIgnoreCase("primaryAffiliation")) {
+        obj.put("primaryAffiliation", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("primary_affiliation_subtype")) {
+        obj.put("primaryAffiliationSubtype", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("primary_affiliation_status")) {
+        obj.put("primaryAffiliationStatus", entry.getValue());
+      }
+       
+      if (entry.getKey().toString().equalsIgnoreCase("domain")) {
+        if (entry.getValue().toString().toLowerCase().equals("shanghai ad") && type.equals("nyu_ad_service_account")) {
+          obj.put("shAdOu", "SERVICE.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("nyc ad") && type.equals("nyu_ad_service_account")) {
+          obj.put("adOu", "SERVICE.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("shanghai ad") && type.equals("nyu_ad_administrator_account")) {
+          obj.put("shAdOu", "DEPT.ADMINS.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("nyc ad") && type.equals("nyu_ad_administrator_account")) {
+          obj.put("adOu", "DEPT.ADMINS.ACCTS");
+        }
+        else {
+          log.error("Can't calculate an OU for " + entry.getValue());
+        }
+      } 	   
+    } 
+    
+    obj.put("type", type);
+    obj.put("netId", netId);
+    obj.put("guid", guid);
+    obj.put("universityId", universityId);
+    obj.put("unixId", unixId);
+    obj.put("leftSideNetId", getLeftSideNetId(netId));
+    obj.put("rightSideNetId", getRightSideNetId(netId));
+    
+    log.debug("JSON object: " + obj.toString());
+    OutputStreamWriter out = new OutputStreamWriter(httpconn.getOutputStream());
+    out.write(obj.toString());
+    out.flush();
+    out.close();
+    int responseCode = httpconn.getResponseCode();
+    setAdministrator(guid, administrator); //API won't set administrator right
+    return netId;
+  }
+  
+  /**
+  * Update admin, test, service, special accounts
+  */
+  public String updateSpecialUser(String guid, String type, Map args) {
+    //System.out.println("inside rule for type " + type);
+    JSONObject obj = new JSONObject();
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    URL restUrl;
+    String administrator = "";
+    String basicAuthCreds = "";
+    String encoded = "";
+
+    if (Util.isNullOrEmpty(guid)) {
+      throw new GeneralException("GUID may not be null when updating an Identity.");
+    }
+
+    Identity adHocidentity = context.getObjectByName(Identity.class, guid);
+    if (adHocidentity == null) {
+      throw new GeneralException("No Identity found for GUID " + guid);
+    }
+    
+    String netId = adHocidentity.getAttribute("netId");
+    log.debug("updateSpecialUser() NetID is: " + netId);
+  
+    String apiUrl = "http://localhost:8080/identityiq/rest/identities/" + guid;
+    restUrl = new URL(apiUrl);
+    HttpURLConnection httpconn = (HttpURLConnection) restUrl.openConnection();
+    httpconn.setRequestMethod("PUT");
+    httpconn.setDoOutput(true);
+    
+    String user = "spadmin";
+    Identity identity = context.getObjectByName(Identity.class, user);
+    if (identity == null) {
+      throw new GeneralException("Could not find an identity " + user + " to invoke API call.");
+    }
+    
+    String restPassword = context.decrypt(identity.getPassword());
+    basicAuthCreds = user + ":" + restPassword;
+    encoded = Base64.getEncoder().encodeToString(basicAuthCreds.getBytes(StandardCharsets.UTF_8));
+    httpconn.setRequestProperty("Authorization", "Basic " + encoded);
+    httpconn.setRequestProperty("Content-Type", "application/json");
+    String first = "";
+    String middle = " ";
+    String last = "";
+     
+    for (Map.Entry entry : args.entrySet()) {  
+      if (entry.getKey().toString().equalsIgnoreCase("firstname")) {
+        obj.put("firstname", entry.getValue());
+        first = entry.getValue() == null ? " " : entry.getValue() ;
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("middlename")) {
+        obj.put("middleName", entry.getValue());
+        middle = entry.getValue() == null ? " " : entry.getValue();
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("lastname")) {
+        obj.put("lastname", entry.getValue());
+        last = entry.getValue() == null ? " " : entry.getValue();
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("owner")) {
+        administrator = entry.getValue();
+        Identity owner = context.getObjectByName(Identity.class, entry.getValue());
+        if (owner != null && owner.getManager() != null){
+          obj.put("manager",  owner.getManager().getName());
+        } else {
+          obj.put("manager",  owner.getName());
+        }
+        context.decache(owner);
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("accountDescription")) {
+        obj.put("accountDescription", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("affiliationSubtypes")) {
+        obj.put("currentAffiliationSubtypes", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("netIdExpiration")) {
+        obj.put("netIdExpiration", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("primaryAffiliation")) {
+        obj.put("primaryAffiliation", entry.getValue());
+      }
+      //Add if statements for attributes in Run list
+      if (entry.getKey().toString().equalsIgnoreCase("primary_affiliation_subtype")) {
+        obj.put("primaryAffiliationSubtype", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("primary_affiliation_status")) {
+        obj.put("primaryAffiliationStatus", entry.getValue());
+      }
+      if (entry.getKey().toString().equalsIgnoreCase("domain")) {
+        if (entry.getValue().toString().toLowerCase().equals("shanghai ad") && type.equals("nyu_ad_service_account")) {
+          obj.put("shAdOu", "SERVICE.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("nyc ad") && type.equals("nyu_ad_service_account")) {
+          obj.put("adOu", "SERVICE.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("shanghai ad") && (type.equals("nyu_ad_admin_account") || type.equals("nyu_ad_administrator_account"))) {
+          obj.put("shAdOu", "DEPT.ADMINS.ACCTS");
+        }
+        else if (entry.getValue().toString().toLowerCase().equals("nyc ad") && (type.equals("nyu_ad_admin_account") || type.equals("nyu_ad_administrator_account"))) {
+          obj.put("adOu", "DEPT.ADMINS.ACCTS");
+        }
+        else {
+          log.error("Can't calculate an OU for " + entry.getValue());
+        }
+      }     
+    } 
+  
+    //obj.put("displayName", first + middle + last); 
+    
+    log.debug("JSON object: " + obj.toString());
+    OutputStreamWriter out = new OutputStreamWriter(httpconn.getOutputStream());
+    out.write(obj.toString());
+    out.flush();
+    out.close();
+    int responseCode = httpconn.getResponseCode();
+    setAdministrator(guid, administrator); //API won't set administrator right
+    
+    Identity iden = context.getObjectByName(Identity.class,guid);
+    if(iden!=null){
+      String certifierFieldValue = args.get("certifierValue");
+      if(certifierFieldValue!=null){
+        Identity certifier = context.getObjectByName(Identity.class,certifierFieldValue);
+        if(certifier!=null){
+          iden.setAttribute("Certifier",certifier);
+        } 
+      }
+      String humanORmachineFieldValue = args.get("humanORmachineValue");
+      if(humanORmachineFieldValue!=null){
+        iden.setAttribute("humanORmachineAccount",humanORmachineFieldValue);
+      }
+      context.saveObject(iden);
+      context.commitTransaction();
+    }
+    
+    return netId;
+  }
+  
+  
+  
+       public void setAdministrator(String guid, String owner) throws Exception {
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    ProvisioningPlan plan = new ProvisioningPlan(); 
+    String msg = null;
+    try {
+	    log.debug("Guid is " + guid);
+
+      Identity identity = context.getObjectByName(Identity.class, guid);
+      if (identity == null) {
+        log.error("No identity found for GUID: " + guid);
+      }
+      log.debug("Before Plan Build: " + System.currentTimeMillis());
+      plan.setIdentity(identity);
+      plan.setNativeIdentity(guid);
+      AccountRequest acr = new AccountRequest();
+      acr.setOperation(Operation.Modify);
+      acr.setNativeIdentity(identity.getName());
+      acr.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME);
+      ProvisioningPlan.AttributeRequest userTypeAttribute = new ProvisioningPlan.AttributeRequest();
+      userTypeAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      userTypeAttribute.setName("administrator");
+      userTypeAttribute.setValue(owner);
+      acr.add(userTypeAttribute);
+      plan.add(acr);
+      // Provision the plan
+      Provisioner p = new Provisioner(context);
+      p.setNoLocking(false);
+      p.execute(p.compile(plan));
+      log.debug("After plan execution: " + System.currentTimeMillis());
+
+      context.decache(identity);
+    } catch (Exception e) {
+      log.error("EXCEPTION in setAdministrator: " +  e.getMessage() );
+    }
+  }
+  
+     public String resetPassword(String guid, String pwd) throws Exception {
+    SailPointContext context = SailPointFactory.getCurrentContext();
+    ProvisioningPlan plan = new ProvisioningPlan(); 
+    String msg = null;
+    try {
+	    log.debug("Guid is " + guid);
+
+      Identity identity = context.getObjectByName(Identity.class, guid);
+      if (identity == null) {
+        msg = "No identity found for GUID: " + guid;
+        return msg;
+      }
+     log.debug("Before Plan Build: " + System.currentTimeMillis());
+      plan.setIdentity(identity);
+      plan.setNativeIdentity(guid);
+      AccountRequest acr = new AccountRequest();
+      acr.setOperation(Operation.Modify);
+      acr.setNativeIdentity(identity.getName());
+      acr.setApplication(ProvisioningPlan.IIQ_APPLICATION_NAME);
+      ProvisioningPlan.AttributeRequest userTypeAttribute = new ProvisioningPlan.AttributeRequest();
+      userTypeAttribute.setOperation(ProvisioningPlan.Operation.Set);
+      userTypeAttribute.setName("password");//pwd
+      userTypeAttribute.setValue(pwd);//pwd
+      acr.add(userTypeAttribute);
+      plan.add(acr);
+	  	    
+	  log.debug("plan.toXml() " + plan.toXml());
+
+      log.debug(plan.toXml());
+      // Provision the plan
+      Provisioner p = new Provisioner(context);
+      p.setNoLocking(false);
+      p.execute(p.compile(plan));
+      log.debug("After plan execution: " + System.currentTimeMillis());
+      // Refresh the users
+      Attributes args = new Attributes();
+      args.put("enablePartitioning", "false");
+      args.put("correlateEntitlements", "true");
+      args.put("provision", "true");
+      Identitizer identitizer = new Identitizer(context, args);
+      // LazyInitializationException
+      identity = context.getObjectByName(Identity.class, guid);
+      identitizer.refresh(identity);
+      msg = "Success";
+      log.debug("Result " + msg);
+      context.decache(identity);
+      return msg;
+    } catch (Exception e) {
+      return e.getMessage();
+    }
+  }
+  
+  
+  ]]></Source>
+        
+
+</Rule>

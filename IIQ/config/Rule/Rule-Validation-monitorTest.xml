@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="validation-monitor test" significantModified="1737994655584" type="Refresh">
+          
+    
+    <Description>Test rule</Description>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Identity;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.Link;
+  import sailpoint.object.EntitlementGroup;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.Operation;
+  import sailpoint.object.AttributeAssignment;
+  import java.text.SimpleDateFormat;
+  import java.util.Date;
+  import java.util.Calendar;
+  import sailpoint.object.ProvisioningPlan.ObjectRequest;
+  import sailpoint.tools.Util;
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.ProvisioningProject;
+
+  import sailpoint.api.Aggregator;
+  import sailpoint.object.*;
+  import sailpoint.connector.Connector;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.ResourceObject;
+
+  String emp = "cn=LDAPAdmin,ou=Group,dc=my-domain,dc=com";
+
+  Application appObject = context.getObjectByName(Application.class, "LDAPApplication");
+  Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);
+  Attributes argMap = new Attributes();
+  //argMap.put("promoteAttributes", "true");
+  //argMap.put("correlateEntitlements", "true");
+  //argMap.put("noOptimizeReaggregation", "true");
+
+  ResourceObject rOjb =(ResourceObject) appConnector.getObject("group", emp, null);
+
+  System.out.println("Raw Resource object for Application is "+rOjb.toXml());
+  Aggregator agg = new Aggregator(context, argMap);
+  agg.aggregate(appObject, rOjb);
+  return rOjb;
+
+  List list = new ArrayList();
+  list.add("cn=abdul.samad,ou=People,dc=my-domain,dc=com");
+  list.add("cn=Alan.Bradley,ou=People,dc=my-domain,dc=com");
+  ProvisioningPlan plan=new ProvisioningPlan();
+  plan.setTargetIntegration("LDAPApplication");
+  ObjectRequest objectRequest=new ObjectRequest();
+  objectRequest.setApplication("LDAPApplication");
+  objectRequest.setNativeIdentity("cn=contractors33,ou=Group,dc=my-domain,dc=com");
+  objectRequest.setOp(ProvisioningPlan.ObjectOperation.Create);
+  objectRequest.setType("group");
+  objectRequest.add(new AttributeRequest("dn", ProvisioningPlan.Operation.Set, "cn=contractors33,ou=Group,dc=my-domain,dc=com"));
+  objectRequest.add(new AttributeRequest("cn", ProvisioningPlan.Operation.Set, "contractors33"));
+  objectRequest.add(new AttributeRequest("description", ProvisioningPlan.Operation.Set, "Hi im test22221"));
+  objectRequest.add(new AttributeRequest("objectClass", ProvisioningPlan.Operation.Set, "top"));
+  objectRequest.add(new AttributeRequest("groupOfUniqueNames", ProvisioningPlan.Operation.Set,null));
+  objectRequest.add(new AttributeRequest("uniqueMember", ProvisioningPlan.Operation.Set,"cn=abdul.samad,ou=People,dc=my-domain,dc=com"));
+  plan.add(objectRequest);
+  Provisioner provisioner=new Provisioner(context);
+  ProvisioningProject  pProject=provisioner.compile(plan);
+  provisioner.execute(pProject);
+  return plan;
+
+
+
+
+
+  import sailpoint.task.TaskMonitor;
+
+  TaskMonitor monitor = new TaskMonitor(context, taskResult);
+
+  monitor.reattach(taskResult);
+  monitor.updateProgress("Starting...");
+  timeToRun = 1000;//1 second
+  int i = 0;
+  while (i < 10 && !taskResult.isTerminateRequested()) {
+    monitor.reattach(taskResult);
+    i++;
+    monitor.updateProgress(String.valueOf(i));
+    log.error(i);
+    Thread.sleep(timeToRun);
+  }
+  return "Success";
+
+
+  ]]></Source>
+        
+
+</Rule>

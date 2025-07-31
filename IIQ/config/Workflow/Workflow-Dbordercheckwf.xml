@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="DBOrderCheckWF" significantModified="1752509384249" type="">
+          
+    
+    <Variable name="formModel"/>
+          
+    
+    <Variable input="true" name="httpSession" transient="true"/>
+          
+    
+    <Variable initializer="true" name="transient"/>
+          
+    
+    <Variable initializer="true" name="trace"/>
+          
+    
+    <Variable name="lastApprovalState"/>
+          
+    
+    <Variable initializer="DB_operation_Selction_form" name="operationSelection"/>
+          
+    
+    <Variable initializer="Create_Operation_Details_Form" name="createOperationDetailsForm"/>
+          
+    
+    <Variable initializer="ModifyDBValues_Dateils_Form" name="modifyOperationDetailsForm"/>
+          
+    
+    <RuleLibraries>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="DB_Valuescheck_RuleLibrary"/>
+                  
+    
+    </RuleLibraries>
+          
+    
+    <Step action="script:buildFormModel()" icon="Start" name="Start" posX="25" posY="134" resultVariable="formModel">
+                    
+        
+        <Transition to="Operations"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Operations" posX="144" posY="129">
+                    
+        
+        <Approval name="Operations" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemForm" value="ref:operationSelection"/>
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="createStep" when="script:&quot;Finished&quot;.equals(lastApprovalState);&amp;&amp;formModel.get(&quot;operation&quot;).equalsIgnoreCase(&quot;Create&quot;)"/>
+                    
+        
+        <Transition to="readData" when="script:&quot;Finished&quot;.equals(lastApprovalState);&amp;&amp; formModel.get(&quot;operation&quot;).equalsIgnoreCase(&quot;Modify&quot;)"/>
+                    
+        
+        <Transition to="Add Cancel Message" when="script:&quot;Rejected&quot;.equals(lastApprovalState);"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="createStep" posX="334" posY="77">
+                    
+        
+        <Approval name="createForm" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemForm" value="ref:createOperationDetailsForm"/>
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="DBValuesInsertion" when="script:formModel.get(&quot;existcount&quot;)==0"/>
+                    
+        
+        <Transition to="Stop" when="script:formModel.get(&quot;existcount&quot;)!=0"/>
+                    
+        
+        <Transition to="Add Cancel Message" when="&quot;Rejected&quot;.equals(lastApprovalState)"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:insertData()" icon="Default" name="DBValuesInsertion" posX="537">
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:readDBData()" name="readData" posX="298" posY="202">
+                    
+        
+        <Transition to="modifyStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="modifyStep" posX="529" posY="207">
+                    
+        
+        <Approval name="ModifyForm" owner="$(launcher)" return="formModel" send="formModel">
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemForm" value="ref:modifyOperationDetailsForm"/>
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="changeOwner" when="&quot;Finished&quot;.equals(lastApprovalState);"/>
+                    
+        
+        <Transition to="Operations" when="&quot;Rejected&quot;.equals(lastApprovalState);"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:changeOwner()" name="changeOwner" posX="699" posY="163">
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:uiPopUp()" name="Add Cancel Message" posX="850" posY="206">
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="956" posY="77"/>
+        
+
+</Workflow>

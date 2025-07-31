@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE QuickLink PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<QuickLink action="workflow" category="Custom" messageKey="IDCreation" name="IdCreation" significantModified="1747302374301">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="workflowName" value="SecondaryIdcreation-Test"/>
+                              
+            
+            <entry key="workflowSuccess" value="SecondIdCreating22 workflow Executed Successfully"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <QuickLinkOptions allowSelf="true" significantModified="1747302374301">
+                    
+        
+        <DynamicScopeRef>
+                              
+            
+            <Reference class="sailpoint.object.DynamicScope" name="EveryOne"/>
+                            
+        
+        </DynamicScopeRef>
+                  
+    
+    </QuickLinkOptions>
+        
+
+</QuickLink>

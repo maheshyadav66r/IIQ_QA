@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="AuditEventDataWf1" significantModified="1738135986276" type="">
+          
+    
+    <Variable name="source" type="String"/>
+          
+    
+    <Variable name="serverHost" type="String"/>
+          
+    
+    <Variable name="created" type="Date"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+        log.error("--form triggered before qo--");
+
+        // Initialize variables
+        QueryOptions qo = new QueryOptions();
+        Filter filter = Filter.or(Filter.eq("action", "login"), Filter.eq("action", "logout"));
+        qo.addFilter(filter);
+
+        log.error("--form triggered before list--");
+        List propList=new ArrayList();
+        propList.add("action");
+        propList.add("source");
+        propList.add("serverHost");
+        propList.add("created");
+
+        log.error("--form triggered iterator--");
+
+        // Fetch propList data
+        Iterator it = context.search(AuditEvent.class, qo, propList);
+        while(it.hasNext()){
+        Object obj[]=it.next();
+
+        workflow.setVariable("action", obj[0]);
+        workflow.setVariable("source", obj[1]);
+        workflow.setVariable("serverHost",obj[2]);
+        workflow.setVariable("created", obj[3]);
+        }
+
+        log.error("--form triggered--");
+        for(int i=0;i<this.variables.length;i++)
+        {
+        log.error("------variables-----"+this.variables[i]);
+        }
+
+
+
+        /*  Fetch serverHost
+        Iterator hostIterator = context.search(AuditEvent.class, qo, "serverHost");
+        if (hostIterator.hasNext()) {
+        workflow.setVariable("serverHost", (String) hostIterator.next()[0]);
+        } else {
+        workflow.setVariable("serverHost", "No serverHost data found");
+        }
+
+        // Fetch created date
+        Iterator dateIterator = context.search(AuditEvent.class, qo, "created");
+        if (dateIterator.hasNext()) {
+        workflow.setVariable("created", (Date) dateIterator.next()[0]);
+        } else {
+        workflow.setVariable("created", null);
+        }*/
+
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="DisplayForm"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="DisplayForm" posX="319" posY="100">
+                    
+        
+        <Approval name="DemoFormApproval" owner="$(launcher)" return="" send="">
+                              
+            
+            <Form name="LoggingInfo">
+                                        
+                
+                <Section columns="4" name="Audit Event Details">
+                                                  
+                    
+                    <Field displayName="Action" name="actionField" readOnly="true" type="String" value="${action}"/>
+                                                  
+                    
+                    <Field displayName="Source" name="sourceField" readOnly="true" type="String" value="${source}"/>
+                                                  
+                    
+                    <Field displayName="Server Host" name="serverHostField" readOnly="true" type="String" value="${serverHost}"/>
+                                                  
+                    
+                    <Field displayName="Created Date" name="createdField" readOnly="true" type="Date" value="${created == null ? 'No data found' : created.toString()}"/>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

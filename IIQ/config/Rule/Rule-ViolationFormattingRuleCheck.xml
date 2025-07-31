@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="violation formatting rule check" significantModified="1730269029375" type="Violation">
+          
+    
+    <Description>This rule is used to format a PolicyViolation object.</Description>
+          
+    
+    <Signature returnType="PolicyViolation">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="identity">
+                                        
+                
+                <Description>
+          The Identity in violation.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="policy">
+                                        
+                
+                <Description>
+          The Policy being violated.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="constraint">
+                                        
+                
+                <Description>
+          The Constraint being violated.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="violation">
+                                        
+                
+                <Description>
+          The PolicyViolation object.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="state">
+                                        
+                
+                <Description>
+          A Map containing state information.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="violation">
+                                        
+                
+                <Description>
+          The formatted PolicyViolation object.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[log.error("-----Policy violation formatting rule-----");
+
+ log.error("-----Policy object-----"+policy.toXml());
+
+ log.error("----- violation  object-----"+violation.toXml());
+
+ log.error("----- constraint object-----"+constraint.toXml());
+
+return violation;]]></Source>
+        
+
+</Rule>

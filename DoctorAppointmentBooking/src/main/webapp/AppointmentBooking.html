@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="ISO-8859-1">
+<title>AppointmentBooking</title>
+<script>
+		function onClickSaveAppointmentBooking(context) {
+			var appointmentBooking = {};
+
+			appointmentBooking.patientName = document.getElementById("patientName").value;
+			appointmentBooking.bookingStartTime = document.getElementById("bookingStartTime").value;
+			appointmentBooking.bookingEndTime = document.getElementById("bookingEndTime").value;
+			appointmentBooking.appointmentFee = document.getElementById("appointmentFee").value;
+			appointmentBooking.appointmentStatus = document.getElementById("appointmentStatus").value;
+			appointmentBooking.rescheduleStartTime = document.getElementById("rescheduleStartTime").value;
+			appointmentBooking.rescheduleEndTime = document.getElementById("rescheduleEndTime").value;
+
+			appointmentBooking.action = "Save";
+
+			var requestJson = JSON.stringify(appointmentBooking);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/appointmentBookingControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					document.getElementById("status").innerHTML = "Saved Succesfully"
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function onClickDeleteAppointmentBooking(context) {
+			var appointmentBooking = {};
+			appointmentBooking.patientName = document.getElementById("patientName").value;
+			appointmentBooking.action = "Delete";
+			var requestJson = JSON.stringify(appointmentBooking);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/AppointmentBookingControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function onChangePatientName(context) {
+			var appointmentBooking = {};
+			appointmentBooking.patientName = document.getElementById("patientName").value;
+			appointmentBooking.action = "Retrieve";
+			var requestJson = JSON.stringify(appointmentBooking);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/AppointmentBookingControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					var appointmentBookingJson = xhr.response;
+					var appointmentBookingObj = JSON.parse(appointmentBooking);
+					var appointmentBookingObj1 = appointmentBookingObj.dataObject;
+					updateAppointmentBookingDetails(appointmentBookingObj1);
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function updateAppointmentBookingDetails(appointmentBooking) {
+			if (appointmentBooking.id) {
+				document.getElementById("id").value = appointmentBooking.id;
+				document.getElementById("patientName").value = appointmentBooking.patientName;
+				document.getElementById("bookingStartTime").value = appointmentBooking.bookingStartTime;
+				document.getElementById("bookingEndTime").value= appointmentBooking.bookingEndTime;
+				document.getElementById("appointmentFee").value = appointmentBooking.appointmentFee;
+				document.getElementById("appointmentStatus").value=appointmentBooking.appointmentStatus;
+				document.getElementById("rescheduleStartTime").value=appointmentBooking.rescheduleStartTime;
+				document.getElementById("rescheduleEndTime").value=appointmentBooking.rescheduleEndTime
+				
+
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<form id="appointmentBookingForm"
+		action="AppointmentBookingControllerServlet">
+		<div id="AppointmentBookingDetails">
+			<div>
+				<span id="status"></span>
+			</div>
+			<input type="hidden" id="id" value="" />
+			<div>
+				<label>Patient Name :</label><input type="text" id="patientName"
+					value="" onchange="javascript:onChangePatientName(this);" />
+			</div>
+			<br>
+			<div>
+				<label>Booking Start Time :</label><input type="text" id="bookingStartTime"
+					value="" />
+			</div>
+			<br>
+			<div>
+				<label>Booking End Time :</label><input type="text" id="bookingEndTime"
+					value="" />
+			</div>
+			<br>
+			<div>
+			<label>Appointment Fee :</label><input type="number"
+					id="appointmentFee" value="" />
+			</div>
+			<br>
+			<div>
+				<label>Appointment Status :</label><input type="text" id="appointmentStatus"
+					value="" />
+			</div>
+			<br>
+			<div>
+				<label>Reschedule Start Time :</label><input type="text" id="rescheduleStartTime"
+					value="" />
+			</div>
+			<br>
+			<div>
+				<label>Reschedule End Time:</label><input type="text" id="rescheduleEndTime"
+					value="" />
+			</div>
+			<br>
+		</div>
+		<div>
+			<button type="button" id="save" name="SaveAppointmentBooking"
+				onclick="onClickSaveAppointmentBooking(this);">SaveAppointmentBooking</button>
+			<button type="button" id="delete" name="deleteAppointmentBooking"
+				onclick="onClickDeleteAppointmentBooking(this);">DeleteAppointmentBooking</button>
+		</div>
+	</form>
+</body>
+
+</html>
+

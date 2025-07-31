@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="AuditEventDataReportFormWF" significantModified="1741077571764">
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        for(int i=0;i @lt this.variables.length;i++){
+        log.error("variables in workflow===="+this.variables[i]);
+        }
+
+        System.out.println("====startStep===");
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="MidStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Start" name="MidStep" posX="109" posY="100">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        System.out.println("==== MidStep startStep===");
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="GatheringData"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="GatheringData" posX="319" posY="100">
+                    
+        
+        <Approval name="AET" owner="$(launcher)">
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Form>
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="title" value="AuditEventReportInputForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Section name="ReportInputs">
+                                                  
+                    
+                    <Field displayName="LCEvent" dynamic="true" name="auditEvent" postBack="true" type="IdentityTrigger">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                System.out.println("====LCEvent startStep===");
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="FromDate" dynamic="true" name="fromDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Field displayName="ToDate" dynamic="true" name="toDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Field displayName="Department" dynamic="true" name="department" postBack="true">
+                                                            
+                        
+                        <AllowedValues>
+                                                                      
+                            
+                            <String>Executive Management</String>
+                                                                      
+                            
+                            <String>Information Technology</String>
+                                                                      
+                            
+                            <String>Engineering</String>
+                                                                      
+                            
+                            <String>Accounting</String>
+                                                                      
+                            
+                            <String>Finance</String>
+                                                                      
+                            
+                            <String>Human Resources</String>
+                                                                      
+                            
+                            <String>Inventory</String>
+                                                                      
+                            
+                            <String>Regional Operations</String>
+                                                                    
+                        
+                        </AllowedValues>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="back" label="Abort"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="SendingToTaskDefinition"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="SendingToTaskDefinition" posX="319" posY="100">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        for(int i=0;i @lt this.variables.length;i++){
+        log.error("variables in workflow===="+this.variables[i]);
+        }
+
+        //auditEvent,fromDate,toDate,department,launcher
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        
+        log.error("end step of workflow====");
+      ]]></Source>
+                            
+        
+        </Script>
+                  
+    
+    </Step>
+        
+
+</Workflow>

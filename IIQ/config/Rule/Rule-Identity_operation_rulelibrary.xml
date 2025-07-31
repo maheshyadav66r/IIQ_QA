@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Identity_operation_RuleLibrary" significantModified="1749814592942">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Identity;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.Application;
+  import sailpoint.object.AccountRequest;
+  import sailpoint.object.AttributeRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+  import sailpoint.object.ProvisioningPlan.Operation;
+  import sailpoint.object.Filter;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningProject;
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Filter;
+  import sailpoint.object.AuditEvent;
+  import java.util.Date;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.object.IdentityRequest;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.Link;
+
+
+  log.error(".....Entered into Identity_operation_RuleLibrary......");
+
+  public String  getIdentityEmail(String property){
+
+    log.error(".....Entered into getIdentityEmail......");
+
+    Filter f=Filter.or(Filter.eq("name",property),Filter.eq("displayName",property));
+    String mailId=context.getUniqueObject(Identity.class,f)!=null?context.getUniqueObject(Identity.class,f).getEmail():"No mail Address";
+
+    log.error(".....Exiting from  getIdentityEmail......"+mailId);
+    return mailId;
+  }
+
+
+
+
+  public String sendEmail(String appName,String user,String manager,String operation,String launcher){
+
+    log.error(".....Entered into sendEmail method......");
+    log.error("..... launcher variable  sendEmail method......"+launcher);
+
+    String from_mailId="admin@eshiam.com";
+    String to_UserEmail=getIdentityEmail(user);
+    String to_ManagerEmail=getIdentityEmail(manager);
+
+
+    EmailTemplate etu=context.getObjectByName(EmailTemplate.class,"identity_Operation_ET_for_user");
+    EmailTemplate etm=context.getObjectByName(EmailTemplate.class,"identity_Operation_ET_for_manager");
+
+    if(etu!=null @and etm!=null){
+
+      EmailOptions user_email_ops=new EmailOptions();
+      EmailOptions manager_email_ops=new EmailOptions();
+
+      Map variables_map=new HashMap();
+
+      variables_map.put("applicationName",appName);
+      variables_map.put("user",user);
+      variables_map.put("launcher",launcher);
+      variables_map.put("manager",manager);
+      variables_map.put("operation",operation);
+
+
+      user_email_ops.addVariables(variables_map);
+      user_email_ops.setTo(to_UserEmail);
+      etu.setFrom(from_mailId);
+
+      manager_email_ops.addVariables(variables_map);
+      manager_email_ops.setTo(to_ManagerEmail);
+      etm.setFrom(from_mailId);
+
+      context.sendEmailNotification(etu,user_email_ops);
+      context.sendEmailNotification(etm,manager_email_ops);
+
+    }
+    log.error(".....Exiting from  sendEmail method......");
+    return "Email Sent Successfully...";
+  }
+
+  
+  
+  public ProvisioningPlan disableAdAccountPlan(identityId){
+    log.error(".....Entered into disableAdAccountPlan method......");
+
+    /*Filter f=Filter.eq("displayName",formModel.get("adAccount"));
+    Link link=context.getUniqueObject(Link.class,f);
+    log.error("link object in disable method..."+link.toXml());*/
+
+    //List ents=link.getAttribute("memberOf");
+   // log.error("entitlements from link object in disable method..."+ents);
+
+    ProvisioningPlan plan=new ProvisioningPlan();
+    Filter filter=Filter.or(Filter.eq("name",identityId),Filter.eq("id",identityId));
+    Identity identity=context.getUniqueObject(Identity.class,filter);
+
+    Application app=context.getObjectByName(Application.class,"ActiveDirectory");
+
+    plan.setIdentity(identity);
+
+    AccountRequest accReq=new AccountRequest();
+    accReq.setApplication(app.getName());
+    accReq.setNativeIdentity("CN="+identity.getName()+",OU=People,OU=Demo,DC=Eshiam,DC=com");
+    accReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Disable);
+    accReq.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add ,"514"));
+    accReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add ,"CN=Disable,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+
+    plan.add(accReq);
+
+    log.error(".....Exiting from disableAdAccountPlan method ......");
+    return plan;
+
+  }
+
+
+  public ProvisioningPlan createAdAccountPlan(String identityId){
+
+    log.error(".....Entered into createAdAccountPlan method......");
+    log.error("identityId in  createAdAccountPlan method in rule library==="+identityId);
+
+    ProvisioningPlan plan=new ProvisioningPlan();
+    Filter filter=Filter.or(Filter.eq("name",identityId),Filter.eq("id",identityId));
+    Identity identity=context.getUniqueObject(Identity.class,filter);
+
+    Application app=context.getObjectByName(Application.class,"ActiveDirectory");
+
+    plan.setIdentity(identity);
+
+    AccountRequest accReq=new AccountRequest();
+    accReq.setApplication(app.getName());
+    accReq.setNativeIdentity("CN="+identity.getName()+",OU=People,OU=Demo,DC=Eshiam,DC=com");
+    accReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+    accReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add ,"CN=AccountsPayable,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+
+    plan.add(accReq);
+    log.error("plan in  createAdAccountPlan method in rule library==="+plan.toXml());
+    log.error(".....Exiting from createAdAccountPlan method 1......");
+
+    return plan;
+  }
+
+
+
+  public AuditEvent createAuditEvent(String identityId,ProvisioningPlan plan){
+
+    log.error(".....Entered into createAuditEvent method......");
+    log.error("identityId in rule library==="+identityId);
+    log.error("plan in  createAuditEvent method in rule library==="+plan.toXml());
+
+    Filter filter=Filter.or(Filter.eq("name",identityId),Filter.eq("id",identityId));
+    Identity identity=context.getUniqueObject(Identity.class,filter);
+
+
+    String manager=identity.getManager()!=null?identity.getManager().getName():"Mahesh Nattali";
+
+    Application app=context.getObjectByName(Application.class,"ActiveDirectory");
+    String appName=app.getName();
+    String identityRequestId;
+    AccountRequest accReq=null;
+    String operation=null;
+
+    AuditEvent ae=new AuditEvent();
+    Map attributes=new HashMap();
+
+    if(plan!=null){
+
+      identityRequestId=plan.get("identityRequestId");
+      log.error(" identityRequestId in audit method==="+identityRequestId);
+
+      IdentityRequest identityRequest=context.getObjectByName(IdentityRequest.class,identityRequestId);
+      if(identityRequest!=null){
+        ProvisioningProject project=identityRequest.getProvisionedProject();
+
+        if(null!=project){
+          ProvisioningPlan pplan=project.getPlan("ActiveDirectory");
+          log.error("pplan fron pproject---"+pplan.toXml());
+          if(pplan!=null){
+            AccountRequest accReqq=pplan.getAccountRequest(appName);
+
+            if(accReqq!=null){
+
+              operation=accReqq.getOp().toString()+"d";
+              log.error(" accReqq accReqq in accReq nul check block   "+operation);
+              ProvisioningResult pr=accReqq.getResult();
+              if(pr.getStatus().equals(ProvisioningResult.STATUS_COMMITTED)){
+
+                log.error("pr.getStatus      ProvisioningResult.STATUS_COMMITTED     :   "+pr.getStatus()+"     "+ProvisioningResult.STATUS_COMMITTED );
+                List attReqs=accReqq.getAttributeRequests();
+
+                if(attReqs!=null){
+
+                  for(AttributeRequest attReq:attReqs){
+
+                    ProvisioningPlan.Operation op=attReq.getOp();
+                    if(op.name().equals("Add") @or op.name().equals("Remove")){
+
+                      ae.setAction(accReqq.getOp().name());
+                      ae.setSource(launcher);
+                      ae.setApplication(appName);
+                      ae.setTarget(accReqq.getNativeIdentity());
+                      ae.setAttributeName(attReq.getName());
+                      ae.setAttributeValue(attReq.getValue());
+                      ae.setAccountName(accReqq.getNativeIdentity());
+                      ae.setAttribute("created", new java.util.Date());
+
+                      attributes.put("Account_CN",identity.getName());
+                      attributes.put("Manager",identity.getManager());
+                      attributes.put("Timestamp",new Date());
+                      attributes.put("TaskResultId",wfcontext.getWorkflowCase().getTaskResult().getId());
+                      attributes.put("TaskResultName",wfcontext.getWorkflowCase().getTaskResult().getName());
+                      attributes.put("TargetName",wfcontext.getWorkflowCase().getTaskResult().getTargetName());
+
+                      ae.setAttributes(new Attributes(attributes));
+
+                      context.saveObject(ae);
+                      context.commitTransaction();
+
+                      sendEmail(appName,identity.getName(),manager,operation,launcher);
+                      //sendEmail(String appName,String user,String manager,String operation,String launcher)
+
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    log.error("auditevent in  createAuditEvent method end in rule library==="+ae.toXml());
+    log.error(".....Exiting from createAuditEvent method ......");
+
+    return ae;
+
+  }
+
+
+
+  ]]></Source>
+        
+
+</Rule>

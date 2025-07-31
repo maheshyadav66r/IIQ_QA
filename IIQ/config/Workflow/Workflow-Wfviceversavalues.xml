@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="WFViceversaValues" significantModified="1733144463335" type="">
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="Add or Remove"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Add or Remove" posX="319" posY="100">
+                    
+        
+        <Approval name="DemoFormApproval" owner="$(launcher)" return="appName,applicationId" send="">
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                              
+            
+            <Form name="ViceVersaValues">
+                                        
+                
+                <Section name="FirstSection">
+                                                  
+                    
+                    <Field displayName="Select Application" dynamic="true" name="appName" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>JDBC</String>
+                                                                                          
+                                    
+                                    <String>JDBC001</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Select Application Id" dynamic="true" name="applicationId" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  log.error("-------application-------"+appName);
+                  List list = new ArrayList();
+                  if(appName != null)
+                  {
+                  if("JDBC".equalsIgnoreCase(appName)){
+                  log.error("entered");
+                  form.getField("applicationId").setValue("JDBC001");
+                  }else{
+                  form.getField("applicationId").setValue("JDBC");
+                  }
+                  }
+                  list.add("JDBC");
+                  list.add("JDBC001");
+                  return list;
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[
+                        import sailpoint.object.Field;
+                        
+                        if ( form.getField("applicationId").getValue() != null && form.getField("applicationId").getValue().equalsIgnoreCase("JDBC") ) {
+                        form.getField("applicationId").setValue("JDBC001");
+                        }
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Button action="next" label="Submit"/>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

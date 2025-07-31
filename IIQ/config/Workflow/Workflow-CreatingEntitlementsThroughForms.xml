@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="Creating Entitlements through Forms" significantModified="1737479237272" type="IdentityLifecycle">
+          
+    
+    <Variable initializer="true" name="trace"/>
+          
+    
+    <Variable initializer="true" name="transient"/>
+          
+    
+    <Description>Creating Entitlement using Forms</Description>
+          
+    
+    <Step icon="Start" name="Start" posX="20" posY="20">
+                    
+        
+        <Transition to="Create Entitlement form"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Create Entitlement form" posX="174" posY="16">
+                    
+        
+        <Approval name="Create Group form" owner="spadmin" return="Applications,group,groupDN">
+                              
+            
+            <Form name="Create ManagedAttribute">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="Create Entitlement in IIQ"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Button action="back" label="Cancel"/>
+                                        
+                
+                <Section label="Entitlement info">
+                                                  
+                    
+                    <Field displayName="application" displayType="combobox" dynamic="true" name="Applications" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[ 
+                  import sailpoint.object.*; 
+                  import sailpoint.api.*; 
+                  List apps = new ArrayList(); 
+                  List applications = context.getObjects(Application.class); 
+                  for(Application app :applications){
+                  apps.add(app.getName());
+                  } 
+                  return apps; 
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Group Name" displayType="combobox" dynamic="true" name="group" postBack="true" required="true" type="ManagedAttribute">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[ 
+                import sailpoint.object.*; 
+                import sailpoint.api.*; 
+                sailpoint.object.QueryOptions
+
+                log.error("---Group Name field value default--"+Applications);
+                log.error("---Group Name field value methods--"+form.getField("Applications").getValue());
+                String applictn=form.getField("Applications").getValue();
+                QueryOptions qo = new QueryOptions(); 
+                Filter f=Filter.eq("application.name",applictn);
+                qo.addFilter(f);
+                List entNames = new ArrayList(); 
+                List entitlements = context.getObjects(ManagedAttribute.class,qo); 
+                //for(ManagedAttribute managedAttribute :entitlements){
+                // entNames.add(managedAttribute.getDisplayName());
+                // } 
+                return entitlements; 
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="GroupDN" displayType="combobox" dynamic="true" name="groupDN" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[ 
+                        if(group != null)
+                        { 
+                        return false;
+                        } 
+                        return true; 
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.*; 
+                import sailpoint.api.*;
+                List n = new ArrayList(); 
+                QueryOptions qo = new QueryOptions(); 
+                qo.add(Filter.eq("application.name",Applications));
+                List mngdAttrs = context.getObjects(ManagedAttribute.class,qo); 
+                for(ManagedAttribute ma:mngdAttrs){ 
+                if(ma != null) 
+                n.add(ma.getDisplayName()); 
+                } 
+                if(n.contains(group)){ 
+                return "already exists"; 
+                } else { 
+                return "CN="+group+",OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+                } ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Entitlement Obj Create" when="approved"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Message" name="Entitlement Obj Create" posX="124" posY="23" resultVariable="isValid">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[ 
+        import sailpoint.object.*;
+        import sailpoint.api.*; 
+
+        Provisioner p = new Provisioner(context); 
+        ProvisioningPlan plan = new ProvisioningPlan(); 
+        ProvisioningPlan.ObjectRequest or = new ProvisioningPlan.ObjectRequest();
+        Application app = context.getObjectByName(Application.class,Applications); 
+
+        or.setApplication(app.getName()); 
+        or.setNativeIdentity(groupDN); 
+        or.setOp(ProvisioningPlan.ObjectOperation.Create); 
+        or.setType("group");
+        or.add(new AttributeRequest("distinguishedName", ProvisioningPlan.Operation.Add,groupDN));
+        or.add(new AttributeRequest("sAMAccountName", ProvisioningPlan.Operation.Add,group));
+        or.add(new AttributeRequest("cn", ProvisioningPlan.Operation.Add,group));
+        or.add(new AttributeRequest("objectClass", ProvisioningPlan.Operation.Add,"group")); 
+        or.add(new AttributeRequest("description", ProvisioningPlan.Operation.Add,group));
+        or.add(new AttributeRequest("GroupType", ProvisioningPlan.Operation.Add,"Security")); 
+        or.add(new AttributeRequest("ObjectType", ProvisioningPlan.Operation.Add,"Group"));
+        or.add(new AttributeRequest("GroupScope", ProvisioningPlan.Operation.Add,"Universal")); 
+        or.add(new AttributeRequest("sysAttribute", ProvisioningPlan.Operation.Add,"memberOf")); 
+        or.add(new AttributeRequest("displayName", ProvisioningPlan.Operation.Add,group)); 
+        or.add(new AttributeRequest("sysManagedAttributeType", ProvisioningPlan.Operation.Add,"group")); 
+        List accReqList = new ArrayList(); 
+        accReqList.add(or); 
+        plan.setObjectRequests(accReqList);
+        p.execute(plan);
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="provision to AD"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="provision to AD">
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="814" posY="34"/>
+        
+
+</Workflow>

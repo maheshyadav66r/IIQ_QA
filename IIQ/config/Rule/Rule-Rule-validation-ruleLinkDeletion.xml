@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-Rule Link Deletion" significantModified="1739336265970" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import sailpoint.connector.*;
+  import org.apache.commons.logging.Log;
+  import org.apache.commons.logging.LogFactory;
+  import sailpoint.connector.ConnectorFactory;
+  
+  List userEntList = new ArrayList();
+  Filter filter1 = Filter.eq("application.name","ActiveDirectory");
+  QueryOptions qo1 = new QueryOptions();
+  qo1.add(filter1);
+  Iterator it1 = context.search(Link.class,qo1);
+  while(it1.hasNext()){
+   userEntList.add(it1.next()[0]); 
+  }
+  List resultList = new ArrayList();
+  Filter filter2 = Filter.not(Filter.in("value",userEntList));
+  QueryOptions qo2 = new QueryOptions();
+  qo2.add(filter2);
+  Iterator it2 = context.search(ManagedAttribute.class,qo2,"value");
+  while(it2.hasNext()){
+    resultList.add(it2.next()[0]);
+  }
+  return resultList;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  // import sailpoint.connector.JDBCConnector;
+  //import org.apache.logging.log4j.Logger;
+  Log log = LogFactory.getLog("custom.aggregationLogger");
+  // Logger logger = LogManager.getLogger("custom.aggregationLogger");
+  Connector connector=null;
+  List applications = context.getObjects(Application.class);      
+
+  Map map=new HashMap();
+  int i=0;
+  while(i<=6){
+    for(Application application:applications){
+      log.error("-------- Application------"+application.getName());
+
+      if(!application.getType().equals("JDBC")){
+        if(!application.getType().equals("Web Services")){
+          // String applicationValueType=application.getappli
+          connector=ConnectorFactory.getConnector(application,null);
+          log.error(connector);
+
+          try {
+            connector.testConfiguration();
+            log.error("------Aggregation for application is success-------- " );
+
+          } catch (Exception e) {
+            log.error("------GeneralException for application is e-------- " );
+
+            // map.put(application.getName(),e.getMessage());
+            //log.error("Exception occurred while logging aggregation error message: ", e.getMessage());
+          }
+        }
+      }
+    }
+  }
+  log.error("--------while loop end -----"+i);
+  }
+  i++;
+  //log.error("---------------map values-----"+map);
+  return "sssss" ;
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="EntitlementRule" significantModified="1723525443951" type="GroupAggregationRefresh">
+          
+    
+    <Description>This rule is used to set the owner or modify the account group before it is persisted to the database.</Description>
+          
+    
+    <Signature returnType="Object">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="environment" type="Map">
+                                        
+                
+                <Description>
+          Arguments passed to the aggregation task.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="obj" type="ResourceObject">
+                                        
+                
+                <Description>
+          A sailpoint.object.ResourceObject generated from the application
+          and the ProvisioningPlan's ObjectRequest.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="accountGroup" type="ManagedAttribute">
+                                        
+                
+                <Description>
+          The account group being refreshed.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="groupApplication" type="Application">
+                                        
+                
+                <Description>
+          Application being aggregated.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="accountGroup" type="ManagedAttribute">
+                                        
+                
+                <Description>
+          The refreshed account group object.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import java.util.Locale;
+  import sailpoint.object.ManagedAttribute;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Profile;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Identity;
+
+
+  //log.error("------------accountGroup----------------"+accountGroup.toXml());
+  accountGroup.addDescription(Locale.US.toString(), accountGroup.getDisplayableName());
+  //log.error("------------accountGroup after setting discription----------------"+accountGroup.toXml());
+
+  Identity owner=context.getObjectByName(Identity.class,"spadmin");
+  Bundle bundle=new Bundle();
+  bundle.setDisplayName(accountGroup.getDisplayableName()+" IT_Role");
+  bundle.setName(accountGroup.getDisplayableName()+" IT_Role");
+  bundle.setType("it");
+  bundle.setOwner(owner);
+
+  Profile profile=new Profile();
+  List entList=new ArrayList();
+  entList.add(accountGroup.getValue());
+  profile.addConstraint(Filter.containsAll("memberOf",entList));
+
+  bundle.add(profile);
+  context.saveObject(bundle);
+  context.commitTransaction();
+
+  log.error("-------bundle object------------"+bundle.toXml());
+
+  return accountGroup;]]></Source>
+        
+
+</Rule>

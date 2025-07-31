@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-Rule-Mahesh" significantModified="1719997222608" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Workflow;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import sailpoint.object.Application;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.object.Filter;
+  import sailpoint.connector.ConnectorFactory;
+  import sailpoint.connector.*;
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Vijay Shankar");
+  log.error("SAM ACCOUNT CREATION");
+  // Application application = context.getObjectByName(Application.class, "ActiveDirectory");
+  Connector connector = sailpoint.connector.ConnectorFactory.getConnector( "ActiveDirectory", null).getInternalConnector();
+  log.error("--------connector---"+connector);
+
+  String finalSamAccount;
+
+  String lastName=identity.getLastname();
+  if(lastName.length() >=5 )
+  {
+    finalSamAccount=identity.getFirstname().charAt(0)+lastName.substring(0,5);
+  }
+  else
+  {
+    finalSamAccount=identity.getFirstname().charAt(0)+lastName;
+  }
+
+  Filter filter = Filter.eq("sAMAccountName", finalSamAccount);
+
+  CloseableIterator itr = connector.iterateObjects("account", filter, null);
+
+  int i = 1;
+
+  while ( (null != itr) & (itr.hasNext()) ) {
+    System.out.println("Inside while ");
+    HashMap accountdetails = itr.next().toMap();
+
+    log.error("===accountdetails==="+accountdetails);
+    if(accountdetails.get("attributes").get("sAMAccountName").equalsIgnoreCase(finalSamAccount)){
+      finalSamAccount = finalSamAccount + i;
+      i++;
+    }
+  }
+
+  return finalSamAccount;
+
+
+
+
+
+
+
+
+/* panda samaccount rule*/
+
+import sailpoint.api.SailPointContext;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorFactory;
+  import sailpoint.object.Application;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.object.Identity;
+  import java.util.Iterator;
+  import java.util.List;
+  import sailpoint.object.Filter;
+  import sailpoint.tools.*;
+
+  String appName = "ActiveDirectory";
+   String samAccountName="";
+  Application application = context.getObjectByName(Application.class, appName);
+  if(application != null){
+  Connector connector = ConnectorFactory.getConnector(application,"null");
+  int i=0;
+  boolean flag=true;
+  //System.out.println(flag);
+  String ln= identity.getLastname();
+  int i=1;
+  if(ln.length() <=5){
+    samAccountName = identity.getFirstname().substring(0,1)+identity.getLastname();
+  }else{
+    samAccountName = identity.getFirstname().substring(0,1)+identity.getLastname().substring(0,5);
+  }
+   while(flag==true){
+    Filter filter=Filter.eq("sAMAccountName",samAccountName);
+    CloseableIterator iterator = connector.iterateObjects("account", filter, null);
+      flag=iterator.hasNext();
+      while (iterator.hasNext()) {
+        Object element = iterator.next();
+        String sName=element.get("sAMAccountName");
+        System.out.println(sName);
+        if(samAccountName.equals(sName)){
+          samAccountName = identity.getFirstname().substring(0,1)+identity.getLastname().substring(0,5)+i;
+         // samAccountName=samAccountName+i;
+          i++;
+        }
+        else{
+          flag==false;
+        }
+      }
+       if(flag==false){
+         break;
+        }
+   }
+    }
+  
+System.out.println(" samAccountName == "+samAccountName);
+  return samAccountName;
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*   
+  Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+  String firstName=identity.getFirstname();
+  String lastName=identity.getLastname();
+  String sAMAccountName=null;
+  if(firstName.length()>0&&lastName.length()>=5)
+  {
+    sAMAccountName=firstName.substring(0,1)+lastName.substring(0,5);
+    log.error("====sAMAccountName from identity========="+sAMAccountName);
+  }
+  else
+  {
+    sAMAccountName=firstName.substring(0,1)+lastName;
+  }
+
+  Filter f=Filter.eq("links.application.name","ActiveDirectory");
+  QueryOptions qo=new QueryOptions();
+  qo.add(f);
+
+
+  Iterator links = context.search(Link.class,qo);
+  while(links.hasNext()){
+    int i=1;
+    Link link=links.next();
+    // list.add(links.next());
+    String linkSAMAccountName=(String)link.getAttribute("sAMAccountName"); 
+    log.error("----linkSAMAccountName---"+linkSAMAccountName);
+    if(linkSAMAccountName.equalsIgnoreCase(sAMAccountName))
+    {
+      sAMAccountName=sAMAccountName+i;
+      i++;
+    }
+
+  }
+  return sAMAccountName;*/
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+  String firstName=identity.getFirstname();
+  String lastName=identity.getLastname();
+  String sAMAccountName=null;
+  if(null!=firstName &&null!=firstName){
+    if(firstName.length()>0&&lastName.length()>=5)
+    {
+      sAMAccountName=firstName.substring(0,1)+lastName.substring(0,5);
+      log.error("====sAMAccountName from identity========="+sAMAccountName);
+    }
+    else
+    {
+      sAMAccountName=firstName.substring(0,1)+lastName;
+    }
+  }
+
+
+  log.error("====sAMAccountName from identity========="+sAMAccountName);
+
+
+  Filter f=Filter.eq("application.name","ActiveDirectory");
+  QueryOptions qo=new QueryOptions();
+  qo.add(f);
+  log.error("--------Filter -------"+f);
+  List listOfLinks=context.getObjects(Link.class,qo);
+  log.error("getObjects(Link.class,qo) executed"+listOfLinks);
+
+
+  if(listOfLinks.size() > 0)
+  {
+    log.error("--------AD links-------"+listOfLinks);
+    for(Link link:listOfLinks)
+
+    {
+      int i=1;
+      if(link!=null)
+      {
+        String linkSAMAccountName=(String)link.getAttribute("sAMAccountName"); 
+        log.error("----linkSAMAccountName---"+linkSAMAccountName);
+        if(linkSAMAccountName.equalsIgnoreCase(sAMAccountName))
+        {
+          sAMAccountName=sAMAccountName+i;
+          i++;
+        }
+      }
+    }
+  }
+  log.error("--sAMAccountName---"+sAMAccountName);
+  return sAMAccountName;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  String department=identity.getAttribute("department");
+
+  String distiguishedName="";
+
+  if(department.equalsIgnoreCase("Engineering")){
+    distiguishedName="CN="+identity.getDisplayName()+",OU=Engineering,OU=People,OU=Demo,DC=Eshiam,DC=com";
+  }else if(department.equalsIgnoreCase("Finance")){
+    distiguishedName="CN="+identity.getDisplayName()+",OU=Finance,OU=People,OU=Demo,DC=Eshiam,DC=com";
+  }else{
+    distiguishedName="CN="+identity.getDisplayName()+",OU=DefaultUsers,OU=People,OU=Demo,DC=Eshiam,DC=com";
+
+  }return distiguishedName;
+
+
+
+
+
+
+
+
+
+
+  String firstName=identity.getFirstname();
+  String lastName=identity.getLastname();
+
+  String sAMAccountName=null;
+  if(firstName.length()>0&&lastName.length()>=5){
+    sAMAccountName=firstName.substring(0,1)+lastName.substring(0,5);
+  }else{
+    sAMAccountName=firstName.substring(0,1)+lastName;
+  }
+  return sAMAccountName;
+
+
+
+
+
+
+
+
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+  String identityName=identity.getName();
+  return identityName;
+
+
+
+  Schema schm=Application.getAccountSchema();
+  return schm;
+
+  QueryOptions qo = new QueryOptions();
+  Filter f = Filter.notnull("department","IT");
+  qo.add(f);
+  List identities = context.getObjects(Identity.class,qo);
+  return identities;
+
+
+  QueryOptions qo = new QueryOptions();
+  Filter f = Filter.eq("department","Engineering");
+  qo.add(f);
+  List list = new ArrayList();
+  Iterator it = context.search(Identity.class,qo);
+  while(it.hasNext()){
+    list.add(it.next());
+  }
+  System.out.println(list.size());
+  return list.size();
+
+
+  QueryOptions qo = new QueryOptions();
+  Filter f = Filter.eq("department","Engineering");
+  qo.add(f);
+  List identities = context.getObjects(Identity.class,qo);
+  return identities.size();
+
+
+
+  List identities = context.getObjects(Identity.class);
+  return identities;
+
+
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

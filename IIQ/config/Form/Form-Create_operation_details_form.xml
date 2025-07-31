@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="Create_Operation_Details_Form" significantModified="1752509243755" type="Workflow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="isWizard" value="true"/>
+                              
+            
+            <entry key="pageTitle" value="CreateDetails"/>
+                              
+            
+            <entry key="title" value="Details"/>
+                              
+            
+            <entry key="width" value="300"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Section columns="3" name="dataCollection">
+                    
+        
+        <Field columnSpan="1" displayName="C1" name="c1" postBack="true" required="true" type="string"/>
+                    
+        
+        <Field columnSpan="1" displayName="C2" name="c2" postBack="true" required="true" type="string"/>
+                    
+        
+        <Field columnSpan="1" displayName="C3" name="c3" postBack="true" required="true" type="string">
+                              
+            
+            <ValidationScript>
+                                        
+                
+                <Includes>
+                                                  
+                    
+                    <Reference class="sailpoint.object.Rule" name="DBForm_Rule_Library"/>
+                                                
+                
+                </Includes>
+                                        
+                
+                <Source><![CDATA[
+          import sailpoint.tools.Message;
+
+          return checkExistance();
+        ]]></Source>
+                                      
+            
+            </ValidationScript>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="3" displayName="Owner" filterString="type==&quot;employee&quot;" name="ownerr" type="sailpoint.object.Identity"/>
+                  
+    
+    </Section>
+          
+    
+    <Button action="back" label="Cancel" value="Cancel"/>
+          
+    
+    <Button action="next" label="Submit" value="Submit"/>
+        
+
+</Form>

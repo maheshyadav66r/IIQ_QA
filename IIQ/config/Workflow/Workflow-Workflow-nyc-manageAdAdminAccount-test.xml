@@ -1,0 +1,1331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" handler="sailpoint.api.StandardWorkflowHandler" libraries="Identity" name="Workflow-NYC-Manage AD Admin Account-test" significantModified="1741845274481" type="Workflow">
+          
+    
+    <Variable name="formModel"/>
+          
+    
+    <Variable name="wfError"/>
+          
+    
+    <Variable name="adminGuid"/>
+          
+    
+    <Variable input="true" name="launcher"/>
+          
+    
+    <Variable initializer="true" input="true" name="transient"/>
+          
+    
+    <Variable initializer="string:false" name="trace"/>
+          
+    
+    <Variable initializer="Create AD Admin Account" name="formName" type="sailpoint.object.Form">
+                    
+        
+        <Description>Form for creating an identity.</Description>
+                  
+    
+    </Variable>
+          
+    
+    <RuleLibraries>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="Rule-NYU-RuleLibrary-IDGeneration"/>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="Rule-NYU-RuleLibrary-AssignRolesToSpecialAccounts"/>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="Rule-NYU-RuleLibrary-EnableOrdisableAccounts"/>
+                  
+    
+    </RuleLibraries>
+          
+    
+    <Step icon="Start" name="Start" posX="4" posY="131">
+                    
+        
+        <Transition to="Initialize"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Initialize" posX="98" posY="130" resultVariable="formModel">
+                    
+        
+        <Description>
+      Initialize the data in the model.
+    </Description>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+        import java.util.HashMap;
+        import sailpoint.transformer.IdentityTransformer;
+
+        HashMap model = new HashMap();
+        IdentityTransformer transformer = new IdentityTransformer(context);
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_CLASS, transformer.getClass().getName());
+        model.put(IdentityTransformer.ATTR_TRANSFORMER_OPTIONS, "");
+        return model;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="GenerateGuid"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="GenerateGuid" posX="192" posY="131" resultVariable="adminUserGuid">
+                    
+        
+        <Arg name="formModel" value="ref:formModel"/>
+                    
+        
+        <Arg name="adminGuid" value="ref:adminGuid"/>
+                    
+        
+        <Description>
+      Initialize the data in the model.
+    </Description>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+
+        String adminUserGuid = generateGUID();
+        formModel.put("name", adminUserGuid);
+        workflow.put("adminGuid",adminUserGuid);
+        // System.out.println("GUID is: " + adminUserGuid);
+        return adminUserGuid;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Request Form"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Approval" name="Request Form" posX="295" posY="131">
+                    
+        
+        <Approval mode="string:serial" name="CreateADAdminAccount" owner="script:return launcher;" return="formModel" send="launcher,formModel">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="CreateADAdminAccount">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="CreateADAdminAccount"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Description>Test account request form</Description>
+                                        
+                
+                <Section name="userInstructions" type="text">
+                                                  
+                    
+                    <Field value="This form will manage an AD Admin Account. Only submit this form if a request has been processed and approved in ServiceLink."/>
+                                                
+                
+                </Section>
+                                        
+                
+                <Section columns="2" name="selectAdmin">
+                                                  
+                    
+                    <Field columnSpan="2" displayName="Account Administrator" helpKey="Must be an active employee" name="owner" postBack="true" required="true" type="Identity">
+                                                            
+                        
+                        <ValidationScript>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.object.QueryOptions;
+                import sailpoint.object.Filter;
+                import sailpoint.tools.Message;
+                import sailpoint.api.IdentityService;
+                import sailpoint.object.Application;
+                import sailpoint.object.Link;
+
+                formModel.put("accountExists", false);
+                String owner = form.getField("owner").getValue();
+
+                log.error("workflow variables--");
+                for(int i=0;i @lt this.variables.length ; i++){
+
+                log.error(this.variables[i]);
+                }
+                log.error(" Account Administrator value ="+value);
+                 log.error(" Account Administrator owner ="+owner); 
+
+                Identity ownerId = context.getObjectByName(Identity.class, owner);
+                String employeeIdA = ((String) ownerId.getAttribute("employeeId")) + "-admin";
+                ArrayList returnCols = new ArrayList();
+                returnCols.add("id");
+                returnCols.add("name");
+                QueryOptions qo = new QueryOptions();
+                qo.addFilter(Filter.eq("employeeId", employeeIdA));
+                Iterator it = context.search(Identity.class, qo, returnCols);
+                List messages = new ArrayList();
+
+                log.error("Before checking admin account==");
+
+                while (it.hasNext()) {
+                formModel.put("accountExists", true);
+                Object [] retObjs = (Object []) it.next();
+                identityId   = (String) retObjs[0];
+                identityName = (String) retObjs[1];
+                formModel.put("name", identityName);
+
+                log.error("After checking admin account==");
+
+                log.debug("Identity Exists for the Admin Account"+identityName);
+                Identity adminIdn = context.getObjectById(Identity.class, identityId);
+                if(adminIdn!=null) {
+                IdentityService identityService = new IdentityService(context);
+                String domain = form.getField("domain").getValue();
+
+                log.error("  form.getField("domain").getValue()=="+domain);
+                log.error(" form.getField("operation").getValue()=="+form.getField("operation").getValue());
+
+
+                if(form.getField("operation").getValue()!=null @and form.getField("operation").getValue().equals("Create")){
+                if(domain.equalsIgnoreCase("ActiveDirectory")) {
+                Application adApp = context.getObjectByName(Application.class,"ActiveDirectory");
+                List links = identityService.getLinks(adminIdn,adApp);
+                if(null!=adApp && null!=links && !links.isEmpty()){
+                Message msg = new Message();
+                msg.setKey("User " + netId + " already has an AD admin account.");
+                messages.add(msg);
+                }
+                }
+                else {
+                Application shAdApp = context.getObjectByName(Application.class,"ADX");
+                List links = identityService.getLinks(adminIdn,shAdApp);
+                if(null!=shAdApp && null!=links && !links.isEmpty()) {
+                Message msg = new Message();
+                msg.setKey("User " + netId + " already has an ADX AD admin account.");
+                messages.add(msg);
+                }
+                }
+                }
+                }
+                }
+
+                return messages;
+              ]]></Source>
+                                                                    
+                        
+                        </ValidationScript>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Domain" dynamic="true" name="domain" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>ActiveDirectory</String>
+                                                                                          
+                                    
+                                    <String>ADX</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Operation" dynamic="true" helpKey="Create/Disable/Enable" name="operation" postBack="true" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  import sailpoint.object.*;
+                  import sailpoint.api.*;
+                  import sailpoint.tools.*;
+
+                  List valuesList = new ArrayList();
+
+                  //log.error("===adminId==="+form.getField("owner").getValue());
+
+                  Filter filter = Filter.and(Filter.or(Filter.eq("administrator.id",form.getField("owner").getValue()),Filter.eq("administrator.name",form.getField("owner").getValue())),Filter.eq("type","nyu_ad_administrator_account"));
+                  QueryOptions qo = new QueryOptions();
+                  qo.add(filter);
+                  List adminId = context.getObjects(Identity.class,qo);
+                  if(adminId!=null @and adminId.size()>0) {
+                  valuesList.add("Disable");
+                  valuesList.add("Enable");
+                  }
+                  else valuesList.add("Create");
+
+                  log.error("=== Create/Disable/Enable==="+valuesList);
+                  return valuesList;
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Request Form-Create" when="script:(formModel.get(&quot;operation&quot;).equals(&quot;Create&quot;))"/>
+                    
+        
+        <Transition to="Request Form-Disable" when="script:(formModel.get(&quot;operation&quot;).equals(&quot;Disable&quot;))"/>
+                    
+        
+        <Transition to="Request Form-Enable" when="script:(formModel.get(&quot;operation&quot;).equals(&quot;Enable&quot;))"/>
+                    
+        
+        <Transition to="end"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Approval" name="Request Form-Disable" posX="663" posY="203">
+                    
+        
+        <Approval mode="string:serial" name="DisableADAdminAccount" owner="script:return launcher;" return="formModel" send="launcher,formModel">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="DisableADAdminAccount">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="DisableADAdminAccount"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Description>Test account request form</Description>
+                                        
+                
+                <Section name="Account Attributes">
+                                                  
+                    
+                    <Field displayName="NetId" dynamic="true" name="disableNetId" required="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  import sailpoint.object.*;
+                  import sailpoint.api.*;
+                  import sailpoint.tools.*;
+
+                  Filter filter = Filter.and(Filter.or(Filter.eq("administrator.id",formModel.get("owner")),Filter.eq("administrator.name",formModel.get("owner"))),Filter.eq("type","nyu_ad_administrator_account"));
+                  QueryOptions qo = new QueryOptions();
+                  qo.add(filter);
+                  List adminAccounts = context.getObjects(Identity.class,qo);
+                  List netIdList = new ArrayList();
+                  if(adminAccounts!=null){
+                  for(Identity id : adminAccounts){
+                  netIdList.add(id.getAttribute("employeeId"));
+                  }
+                  }
+
+                  log.error("==disableNetId's  netIdList  "+netIdList);
+                  return netIdList;
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="disableAccount" when="approved"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="disableAccount" posX="906" posY="185" resultVariable="account">
+                    
+        
+        <Arg name="formModel" value="ref:formModel"/>
+                    
+        
+        <Arg name="adminGuid" value="ref:adminGuid"/>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+        import javax.faces.application.FacesMessage;
+        import sailpoint.object.AuditEvent;
+        import sailpoint.server.Auditor;
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+        import java.util.Date;
+        import java.text.SimpleDateFormat; 
+
+
+        Identity ide = context.getUniqueObject(Identity.class,Filter.eq("employeeId",formModel.get("disableNetId")));
+        if(ide!=null){
+
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(ide);
+        plan.setNativeIdentity(ide.getName());
+
+       String operation=formModel.get("operation");
+
+        Provisioner p = new Provisioner(context);
+
+        if(formModel.get("domain") != null && formModel.get("domain").equalsIgnoreCase("ADX")){
+        Application ADXapp = context.getObjectByName(Application.class,"ADX");
+
+        IdentityService idService = new IdentityService(context);
+        String roletoBeRemoved="ADGrantAccessException";
+        String roletoBeAdded="ADRevokeAccessException";
+
+        List ADXLinks = idService.getLinks(ide,ADXapp);
+        if (sailpoint.tools.Util.nullSafeSize(ADXLinks) > 0) {
+        Link ADXLink = ADXLinks.get(0);
+        if (ADXLink != null && !ADXLink.isDisabled()) {
+        Link link=ADXLinks.get(0);
+
+        plan=enableOrDisable( plan, ide, roletoBeAdded, roletoBeRemoved, link, operation);
+
+        log.error("===plan in ADX if block  "+plan.toXml());
+        }
+        }
+        }
+
+        if(formModel.get("domain") != null && formModel.get("domain").equalsIgnoreCase("ActiveDirectory")){
+        Application ADapp = context.getObjectByName(Application.class,"ActiveDirectory");
+
+        IdentityService idService = new IdentityService(context);
+        String roletoBeRemoved="ActiveDirectoryGrantAccessException";
+        String roletoBeAdded="ActiveDirectoryRevokeAccessException";
+
+        List adLinks = idService.getLinks(ide,ADapp);
+        if (sailpoint.tools.Util.nullSafeSize(adLinks) > 0) {
+        Link ADLink = adLinks.get(0);
+        if (ADLink != null && !ADLink.isDisabled()) {
+
+        plan=enableOrDisable(plan,identity,roletoBeAdded,roletoBeRemoved,link, operation);
+
+        log.error("===plan in ActiveDirectory if block  "+plan.toXml());
+        }
+        }
+        }
+
+        /*ide.setAttribute("formerAffiliations",identity.getAttribute("primaryAffiliation"));
+        ide.setAttribute("formerAffiliationSubtypes",identity.getAttribute("primaryAffiliationSubtype"));
+        ide.setAttribute("currentAffiliations",null);
+        ide.setAttribute("currentAffiliationSubtypes",null);
+        ide.setAttribute("primaryAffiliationStatus","former");*/
+
+        Date date = new Date();  
+       // DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");  
+       // String strDate = dateFormat.format(date);
+        
+         String strDate=Util.dateToString(date,"MM/dd/yyyy");
+        ide.setAttribute("joiningDate",strDate);
+        context.saveObject(ide);
+        context.commitTransaction();
+
+        if(plan.getAccountRequests()!=null @and plan.getAccountRequests().size()>0){
+        log.error("===planSize==="+plan.getAccountRequests().size());
+        p.execute(plan);
+        }
+
+        AuditEvent ae = new AuditEvent();
+        String loggedInUser = context.getUserName();
+        ae.setSource(loggedInUser);
+        ae.setTarget(ide.getAttribute("employeeId"));
+        ae.setApplication("ActiveDirectory");
+        ae.setAction("Disable ActiveDirectory Admin Account");
+
+        ae.setAttribute("Name : ", formModel.get("name") == null ? null : formModel.get("name"));
+        ae.setAttribute("Firstname : ", formModel.get("firstname") == null ? null : formModel.get("firstname"));
+        //ae.setAttribute("Middlename : ", formModel.get("middleName") == null ? null : formModel.get("middleName"));
+        ae.setAttribute("Lastname : ", formModel.get("lastname") == null ? null : formModel.get("lastname"));
+        ae.setAttribute("Account Description : ", formModel.get("accountDescription") == null ? null : formModel.get("accountDescription"));
+        ae.setAttribute("Owner : ", formModel.get("owner") == null ? null : formModel.get("owner"));
+        ae.setAttribute("Domain : ",formModel.get("domain") == null ? null : formModel.get("domain"));
+        ae.setAttribute("Disabled By : ", loggedInUser);
+
+        context.saveObject(ae);
+        context.commitTransaction();
+
+        //  return ide.getAttribute("employeeId");
+
+        }
+
+
+
+        /*
+        Log log = LogFactory.getLog("edu.nyu.Workflow.CreateADAdminAccount");
+        Map map = new HashMap();
+
+        map.put("name", formModel.get("name") == null ? null : formModel.get("name"));
+        map.put("firstname", formModel.get("firstname") == null ? null : formModel.get("firstname"));
+        // map.put("middlename", formModel.get("middleName") == null ? null : formModel.get("middleName"));
+        map.put("lastName", formModel.get("lastname") == null ? null : formModel.get("lastname"));
+        map.put("accountDescription",  formModel.get("accountDescription") == null ? null : formModel.get("accountDescription"));
+        map.put("owner", formModel.get("owner") == null ? null : formModel.get("owner"));
+        map.put("domain", formModel.get("domain") == null ? null : formModel.get("domain"));
+        map.put("primary_affiliation_subtype", "admin_account");
+        map.put("primary_affiliation_status", "current");
+
+        accountExists=formModel.get("accountExists");
+        workflow.put("adminGuid",formModel.get("name"));
+
+        if(null!=accountExists && accountExists){
+        netId = updateSpecialUser(formModel.get("name"),"nyu_ad_administrator_account", map);
+        }else{
+        netId = createSpecialUser("nyu_ad_administrator_account", map);
+        }
+        Map registryData = new HashMap();
+        registryData = getIdentityData(netId);
+        //call a method in the RuleLibrary to insert/update the record in registry
+        insertOrUpdateRegistryAccount(registryData);
+
+        assignADRoles(netId,formModel);
+
+        AuditEvent ae = new AuditEvent();
+        String loggedInUser = context.getUserName();
+        ae.setSource(loggedInUser);
+        ae.setTarget(netId);
+        ae.setApplication("Active Directory");
+        ae.setAction("Create AD Admin Account");
+
+        ae.setAttribute("Name : ", formModel.get("name") == null ? null : formModel.get("name"));
+        ae.setAttribute("Firstname : ", formModel.get("firstname") == null ? null : formModel.get("firstname"));
+        //ae.setAttribute("Middlename : ", formModel.get("middleName") == null ? null : formModel.get("middleName"));
+        ae.setAttribute("Lastname : ", formModel.get("lastname") == null ? null : formModel.get("lastname"));
+        ae.setAttribute("Account Description : ", formModel.get("accountDescription") == null ? null : formModel.get("accountDescription"));
+        ae.setAttribute("Owner : ", formModel.get("owner") == null ? null : formModel.get("owner"));
+        ae.setAttribute("Domain : ",formModel.get("domain") == null ? null : formModel.get("domain"));
+        ae.setAttribute("Created By : ", loggedInUser);
+
+        context.saveObject(ae);
+        context.commitTransaction();
+
+        return netId;
+        */
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Refresh Identity"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Approval" name="Request Form-Enable" posX="464" posY="6">
+                    
+        
+        <Approval mode="string:serial" name="EnableADAdminAccount" owner="script:return launcher;" return="formModel" send="launcher,formModel">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="EnableADAdminAccount">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="EnableADAdminAccount"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Description>Test account request form</Description>
+                                        
+                
+                <Section name="Account Attributes">
+                                                  
+                    
+                    <Field displayName="NetId" dynamic="true" name="enableNetId" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.*;
+                import sailpoint.api.*;
+                import sailpoint.tools.*;
+
+                List valuesList = new ArrayList();
+
+                Filter filter = Filter.and(Filter.or(Filter.eq("administrator.id",formModel.get("owner")),Filter.eq("administrator.name",formModel.get("owner"))),Filter.eq("type","nyu_ad_administrator_account"));
+                QueryOptions qo = new QueryOptions();
+                qo.add(filter);
+                List adminId = context.getObjects(Identity.class,qo);
+                if(adminId!=null @and adminId.size()>0 @and adminId.get(0)!=null @and adminId.get(0).getAttribute("employeeId")!=null) {
+                return adminId.get(0).getAttribute("employeeId");
+                }
+                else return "None";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="enableAccount" when="approved"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="enableAccount" posX="704" resultVariable="account">
+                    
+        
+        <Arg name="formModel" value="ref:formModel"/>
+                    
+        
+        <Arg name="adminGuid" value="ref:adminGuid"/>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+        import javax.faces.application.FacesMessage;
+        import sailpoint.object.AuditEvent;
+        import sailpoint.server.Auditor;
+        import sailpoint.object.*;
+        import sailpoint.api.*;
+
+        // log.error("===enableAccount Step===");
+        log.info("===enableAccount Step===");
+
+        Identity ide = context.getUniqueObject(Identity.class,Filter.eq("netId",formModel.get("enableNetId")));
+        if(ide!=null){
+        workflow.put("adminGuid",ide.getName());
+        }
+        //workflow.put("adminGuid","The Administrator");
+
+				String operation = formModel.get("operation");
+        
+        Identity ide = context.getObjectByName(Identity.class,formModel.get("owner"));
+
+        ProvisioningPlan plan = new ProvisioningPlan();
+        plan.setIdentity(ide);
+        plan.setNativeIdentity(ide.getName());
+
+        Provisioner p = new Provisioner(context);
+
+        if(formModel.get("domain") != null && formModel.get("domain").equalsIgnoreCase("ADX")){
+        Application ADXapp = context.getObjectByName(Application.class,"ADX");
+
+        IdentityService idService = new IdentityService(context);
+        String roleToBeRemoved = "ShanghaiADRevokeAccessException"; 
+        String roleToBeAdded="ShanghaiADGrantAccessException";
+
+        List ADXLinks = idService.getLinks(ide,ADXapp);
+        if (sailpoint.tools.Util.nullSafeSize(ADXLinks) > 0) {
+        Link ADXLink = ADXLinks.get(0);
+        if (ADXLink != null && ADXLink.isDisabled()) {
+
+        plan=enableOrDisable(plan, ide, roletoBeAdded, roletoBeRemoved, ADXLink, operation);
+
+        log.error("==plan after calling enableOrDisable() in enable op  "+plan.toXml());
+        }
+        }
+        }
+
+
+        if(formModel.get("domain") != null && formModel.get("domain").equalsIgnoreCase("ActiveDirectory")){
+        Application ADapp = context.getObjectByName(Application.class,"ActiveDirectory");
+
+        IdentityService idService = new IdentityService(context);
+        String roleToBeRemoved = "ActiveDirectoryRevokeAccessException"; 
+        String roleToBeAdded="ActiveDirectoryGrantAccessException";
+
+        List adLinks = idService.getLinks(ide,ADapp);
+        if (sailpoint.tools.Util.nullSafeSize(adLinks) > 0) {
+        Link ADLink = adLinks.get(0);
+        if (ADLink != null && ADLink.isDisabled()) {
+
+        plan=enableOrDisable(plan, ide, roletoBeAdded, roletoBeRemoved, ADLink, operation);
+        }
+        }
+        }
+
+        Date date = new Date();
+        String strDate = Util.dateToString(date,"MM/dd/yyyy");
+        String currentYearString = strDate.substring(strDate.length() - 4);
+        int futureYear = Integer.parseInt(currentYearString) + 1;
+        String futureYearString = String.valueOf(futureYear);
+        strDate = strDate.replace(currentYearString, futureYearString);
+        
+        if(plan.getAccountRequests()!=null @and plan.getAccountRequests().size()>0){
+        log.error("===planSize==="+plan.getAccountRequests().size());
+        p.execute(plan);
+        }
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Refresh Identity"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="script:return formModel;" icon="Approval" name="Request Form-Create" posX="438" posY="288">
+                    
+        
+        <Approval mode="string:serial" name="CreateADAdminAccount-2" owner="script:return launcher;" return="formModel" send="launcher,formModel">
+                              
+            
+            <Arg name="workItemType" value="Form"/>
+                              
+            
+            <Arg name="workItemFormBasePath" value="formModel"/>
+                              
+            
+            <Form name="CreateADAdminAccount-2">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="CreateADAdminAccount-2"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Description>Test account request form</Description>
+                                        
+                
+                <Section columns="2" name="Account Attributes">
+                                                  
+                    
+                    <Field columnSpan="1" displayName="NetId" dynamic="true" name="createNetId" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+
+                log.error("==createnetid f=");
+                String id = formModel.get("owner");
+                
+                if ((id != null) && (id != void))
+                {
+                Identity ident = context.getObjectByName(Identity.class,id);
+                if (ident != null) {
+                return ident.getAttribute("employeeId");
+                }
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Account First Name" dynamic="true" name="firstname" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                log.error("==firstname f=");
+                String id = formModel.get("owner");
+                if ((id != null) && (id != void))
+                {
+                Identity ident = context.getObjectByName(Identity.class,id);
+                if (ident != null) {
+                return ident.getAttribute("firstname");
+                }
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Owner NetID" dynamic="true" name="OwnerNetId" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+
+                log.error("==OwnerNetId f=");
+                String id = formModel.get("owner");
+                if ((id != null) && (id != void))
+                {
+                Identity ident = context.getObjectByName(Identity.class,id);
+                if (ident != null) {
+                return ident.getAttribute("employeeId");
+                }
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Administrator University ID" dynamic="true" name="OwnerUniversityID" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                String id = formModel.get("owner");
+                if ((id != null) && (id != void))
+                {
+                Identity ident = context.getObjectByName(Identity.class,id);
+                if (ident != null) {
+                return ident.getAttribute("department");
+                }
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Account Last Name" dynamic="true" name="lastname" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                String id = formModel.get("owner");
+                log.error("==lastname f=");
+                if ((id != null) && (id != void))
+                {
+                Identity ident = context.getObjectByName(Identity.class,id);
+                if (ident != null) {
+                return ident.getAttribute("lastname");
+                }
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Account Description" name="accountDescription" required="true" type="string">
+                                                            
+                        
+                        <ValidationScript>
+                                                                      
+                            
+                            <Source><![CDATA[
+                // validation variable comes in as "value"
+                import sailpoint.tools.Message;
+                List messages = new ArrayList();
+                if(value.length() > 400) {
+                Message msg = new Message();
+                msg.setKey("Description must not be more than 400 characters.");
+                messages.add(msg);
+                }
+                return messages;
+              ]]></Source>
+                                                                    
+                        
+                        </ValidationScript>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Account Certifier" name="certifier" postBack="true" type="Identity">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+                String certifierNetIdValue = formModel.get("owner");
+                if(certifierNetIdValue!=null @and certifierNetIdValue!=void){
+                Filter filter = Filter.or(Filter.eq("name",certifierNetIdValue),Filter.eq("id",certifierNetIdValue),Filter.eq("employeeId",certifierNetIdValue));
+                Identity certifierIdentity = context.getUniqueObject(Identity.class,filter);
+                if(certifierIdentity!=null){
+                if(certifierIdentity.getManager()!=null) return certifierIdentity.getManager().getName();
+                return certifierIdentity.getName();
+                }
+                }
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                            
+                        
+                        <ValidationScript>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.tools.Message;
+                import sailpoint.object.Identity;
+                import sailpoint.object.Filter;
+
+                List messages = new ArrayList();
+                Filter filter = Filter.or(Filter.eq("name",value),Filter.eq("id",value),Filter.eq("employeeId",value));
+                Identity certifierIdentity = context.getUniqueObject(Identity.class,filter);
+                if(certifierIdentity!=null){
+                //if(certifierIdentity.getAttribute("primaryAffiliation")!=null @and certifierIdentity.getAttribute("primaryAffiliationStatus")!=null){
+
+                /*if(certifierIdentity.getAttribute("department")!=null @and certifierIdentity.getAttribute("networkId")!=null){
+                // if(!(certifierIdentity.getAttribute("primaryAffiliation").equals("employee") @and certifierIdentity.getAttribute("primaryAffiliationStatus").equals("current"))){
+                Message msg = new Message();
+                msg.setKey("Certifier must be a Current Employee");
+                messages.add(msg);
+                }
+                }*/
+                
+                 if(certifierIdentity.getAttribute("department")!=null @and certifierIdentity.getAttribute("type")!=null){
+                if(!certifierIdentity.getAttribute("type").equals("employee")){
+                Message msg = new Message();
+                msg.setKey("Certifier must be a Current Employee");
+                messages.add(msg);
+                }
+                }
+                
+                }
+                return messages;
+              ]]></Source>
+                                                                    
+                        
+                        </ValidationScript>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field columnSpan="1" displayName="Human/Machine Account?" displayType="combobox" name="humanORmachine" postBack="true" type="string">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Value>
+                                                                                
+                                
+                                <List>
+                                                                                          
+                                    
+                                    <String>Human</String>
+                                                                                          
+                                    
+                                    <String>Machine</String>
+                                                                                        
+                                
+                                </List>
+                                                                              
+                            
+                            </Value>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[return "Human";]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="cancel" label="Cancel"/>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Description>Display the registration form to collect information
+      about the registrant.</Description>
+                    
+        
+        <Transition to="Create" when="approved"/>
+                  
+    
+    </Step>
+          
+    
+    <Step name="Create" posX="638" posY="290" resultVariable="account">
+                    
+        
+        <Arg name="formModel" value="ref:formModel"/>
+                    
+        
+        <Arg name="adminGuid" value="ref:adminGuid"/>
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import org.apache.commons.logging.Log;
+        import org.apache.commons.logging.LogFactory;
+        import javax.faces.application.FacesMessage;
+        import sailpoint.object.AuditEvent;
+        import sailpoint.server.Auditor;
+
+        //Log log = LogFactory.getLog("edu.nyu.Workflow.CreateADAdminAccount");
+        Map map = new HashMap();
+
+        map.put("name", formModel.get("name") == null ? null : formModel.get("name"));
+        map.put("firstname", formModel.get("firstname") == null ? null : formModel.get("firstname"));
+        // map.put("middlename", formModel.get("middleName") == null ? null : formModel.get("middleName"));
+        map.put("lastName", formModel.get("lastname") == null ? null : formModel.get("lastname"));
+        map.put("accountDescription",  formModel.get("accountDescription") == null ? null : formModel.get("accountDescription"));
+        map.put("owner", formModel.get("owner") == null ? null : formModel.get("owner"));
+        map.put("domain", formModel.get("domain") == null ? null : formModel.get("domain"));
+        // map.put("primary_affiliation_subtype", "admin_account");
+        // map.put("primary_affiliation_status", "current");
+
+        accountExists=formModel.get("accountExists");
+        
+        log.error("===accountExists==="+accountExists);
+        
+        workflow.put("adminGuid",formModel.get("name"));
+
+        if(null!=accountExists && accountExists){
+        
+        employeeId = updateSpecialUser(formModel.get("name"),"nyu_ad_administrator_account", map);
+        
+        }else{
+        
+        employeeId = createSpecialUser("nyu_ad_administrator_account", map);
+        
+        }
+        
+        log.error("===employeeId in create step==="+employeeId);
+        
+        Map registryData = new HashMap();
+        
+        registryData = getIdentityData(employeeId);
+        
+        //call a method in the RuleLibrary to insert/update the record in registry
+        
+        insertOrUpdateRegistryAccount(registryData);
+
+        /* Calling a method ("assignADRoles") in the RuleLibrary(NYU-RuleLibrary-AssignRolesToSpecialAccounts) to assign roles to AD Admin/Service accounts based on selected Domain(NYC/Shanghai) only (IAMR-2949) */
+        
+        assignADRoles(employeeId,formModel);
+
+        AuditEvent ae = new AuditEvent();
+        String loggedInUser = context.getUserName();
+        ae.setSource(loggedInUser);
+        ae.setTarget(netId);
+        ae.setApplication("ActiveDirectory");
+        ae.setAction("Create AD Admin Account");
+
+        ae.setAttribute("Name : ", formModel.get("name") == null ? null : formModel.get("name"));
+        ae.setAttribute("Firstname : ", formModel.get("firstname") == null ? null : formModel.get("firstname"));
+       //ae.setAttribute("Middlename : ", formModel.get("middleName") == null ? null : formModel.get("middleName"));
+        ae.setAttribute("Lastname : ", formModel.get("lastname") == null ? null : formModel.get("lastname"));
+       // ae.setAttribute("Account Description : ", formModel.get("accountDescription") == null ? null : formModel.get("accountDescription"));
+        ae.setAttribute("Owner : ", formModel.get("owner") == null ? null : formModel.get("owner"));
+        ae.setAttribute("Domain : ",formModel.get("domain") == null ? null : formModel.get("domain"));
+        ae.setAttribute("Created By : ", loggedInUser);
+
+        context.saveObject(ae);
+        context.commitTransaction();
+
+        return employeeId;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Refresh Identity"/>
+                  
+    
+    </Step>
+          
+    
+    <Step action="call:refreshIdentity" icon="Task" name="Refresh Identity" posX="986" posY="282">
+                    
+        
+        <Arg name="identityName" value="ref:adminGuid"/>
+                    
+        
+        <Arg name="provision" value="true"/>
+                    
+        
+        <Arg name="correlateEntitlements" value="true"/>
+                    
+        
+        <Arg name="synchronizeAttributes" value="true"/>
+                    
+        
+        <Description>
+      Add arguments as necessary to enable refresh features.
+      Typically you only want this to correlate roles and possibly provision if we notice new assigned roles.
+      Note that provisioning will be done in the Identity Refresh workflow so if there are any provisioning forms to display we won't feed them directly to the current user, they'll have to return to the inbox.
+    </Description>
+                    
+        
+        <Transition to="Success Message"/>
+                  
+    
+    </Step>
+          
+    
+    <Step catches="complete" icon="Catches" name="Success Message" posX="1076" posY="214">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import java.util.ArrayList;
+        import java.util.Iterator;
+        import sailpoint.object.Workflow;
+        import sailpoint.object.WorkflowLaunch;
+        import sailpoint.api.Workflower;
+        import java.util.HashMap;
+        import java.util.Map;
+        import sailpoint.object.Identity;
+        import sailpoint.tools.Message;
+
+        StringBuilder builder = new StringBuilder();
+        //Identity id = context.getObjectByName(Identity.class, account);
+        log.debug("wfcase** "+wfcase + "account*******"+account);
+
+        ArrayList messages = wfcase.getMessages();
+        log.debug("messages** "+messages);
+
+        if (messages != null) {
+        Iterator iter = messages.iterator();
+        while(iter.hasNext()) {
+        Message next = (Message) iter.next();
+        builder.append("ERROR: " + next.toString() + "; ");
+        }
+        Identity m = context.getObject(Identity.class,launcher);
+        Message msg = Message.error(builder.toString(), new Object[0]);
+        idwupeNotify(m, msg, false);
+        }
+        else {
+        Identity m = context.getObject(Identity.class,launcher);
+        Message msg = Message.info("AD Admin Account created successfully. NetID is: " + account, new Object[0]);
+        idwupeNotify(m, msg, false);
+        }
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="end"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="end" posX="1128" posY="119"/>
+        
+
+</Workflow>

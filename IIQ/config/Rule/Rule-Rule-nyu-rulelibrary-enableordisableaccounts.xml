@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-NYU-RuleLibrary-EnableOrdisableAccounts" significantModified="1741875362010">
+          
+    
+    <Source><![CDATA[ 
+
+  import sailpoint.object.*;	
+  import org.apache.commons.logging.Log;
+  import org.apache.commons.logging.LogFactory;
+  import sailpoint.object.Identity;
+  import sailpoint.tools.Util;
+  import sailpoint.api.IdentityService;
+  import sailpoint.object.Attributes;
+  import sailpoint.api.Provisioner;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.ProvisioningPlan.Operation;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Filter;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import sailpoint.object.Bundle;
+  import sailpoint.object.Application;
+  import sailpoint.object.QueryOptions;
+
+
+
+
+  public ProvisioningPlan enableOrDisable(ProvisioningPlan plan,Identity identity,String roletoBeAdded,String roletoBeRemoved,Link link,String operation){
+    
+    List roleNames=new ArrayList();
+
+    if(!Util.isAnyNullOrEmpty(plan,identity,roletoBeAdded,roletoBeRemoved,link,operation)){
+
+      List roles=identity.getAssignedRoles();
+      for(Bundle role:roles){
+        roleNames.add(role.getName());
+      }
+
+      if(operation.equalsIgnoreCase("Disable")){
+
+        AccountRequest accountRequest=new AccountRequest();
+        accountRequest.setApplication(link.getApplicationName());
+        accountRequest.setOperation(ProvisioningPlan.AccountRequest.Operation.Disable);
+        accountRequest.setNativeIdentity(link.getNativeIdentity());
+        ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("userAccountControl", ProvisioningPlan.Operation.Set, "514");
+        accountRequest.add(attrReq);
+        plan.add(accountRequest);
+
+        if(!roleNames.contains(roletoBeAdded)){
+          AccountRequest accountRequest1=new AccountRequest();
+          accountRequest1.setApplication("IIQ");
+          accountRequest1.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("assignedRoles", ProvisioningPlan.Operation.Add, roletoBeAdded);
+          accountRequest1.add(attrReq);
+          plan.add(accountRequest1);
+        }
+
+        if(roleNames.contains(roletoBeRemoved)){
+          AccountRequest accountRequest=new AccountRequest();
+          accountRequest.setApplication("IIQ");
+          accountRequest.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("assignedRoles", ProvisioningPlan.Operation.Remove, roletoBeRemoved);
+          accountRequest.add(attrReq);
+          plan.add(accountRequest);
+        }
+        return plan;
+
+      }
+
+      if(operation.equalsIgnoreCase("Enable")){
+        AccountRequest acctReq = new AccountRequest();
+        acctReq.setApplication(link.getApplicationName());
+        acctReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Enable);
+        acctReq.setNativeIdentity(link.getNativeIdentity());
+        ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("userAccountControl", ProvisioningPlan.Operation.Set, "512");
+        acctReq.add(attrReq);
+        plan.add(acctReq);
+
+
+        if(!roleNames.contains(roletoBeAdded)){
+          AccountRequest accountRequest1=new AccountRequest();
+          accountRequest1.setApplication("IIQ");
+          accountRequest1.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("assignedRoles", ProvisioningPlan.Operation.Add, roletoBeAdded);
+          accountRequest1.add(attrReq);
+          plan.add(accountRequest1);
+        }
+
+        if(roleNames.contains(roletoBeRemoved)){
+          AccountRequest accountRequest2=new AccountRequest();
+          accountRequest2.setApplication("IIQ");
+          accountRequest2.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+          ProvisioningPlan.AttributeRequest attrReq = new ProvisioningPlan.AttributeRequest("assignedRoles", ProvisioningPlan.Operation.Remove, roletoBeRemoved);
+          accountRequest2.add(attrReq);
+          plan.add(accountRequest2);
+        }
+
+        return plan;
+      }
+      
+    }
+    return plan;
+  }
+       ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Classification PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Classification displayName="Protected Health Information" name="PHI" origin="MyIndependentDataSource" significantModified="1751734562869">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US" value="Allows access to Protected Health Information"/>
+                                                            
+                        
+                        <entry key="fr_FR" value="Permet acces aux informations de santeprotegees"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+        
+
+</Classification>

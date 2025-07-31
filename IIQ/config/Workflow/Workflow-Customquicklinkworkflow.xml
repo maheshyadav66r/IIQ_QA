@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="CustomQuickLinkWorkFlow" significantModified="1726132229013" type="Subprocess">
+          
+    
+    <Variable input="true" name="launcher"/>
+          
+    
+    <Variable initializer="true" input="true" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="20" posY="20">
+                    
+        
+        <Transition to="Generic Step"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Generic Step" posX="258" posY="19">
+                    
+        
+        <Approval name="UserDetailsForm" return="" send="">
+                              
+            
+            <Form name="UserDetailsForm">
+                                        
+                
+                <Attributes>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="pageTitle" value="UserDetailsForm"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </Attributes>
+                                        
+                
+                <Description>details of user who is being requested</Description>
+                                        
+                
+                <Section name="UserDetails">
+                                                  
+                    
+                    <Field displayName="Firstname" dynamic="true" name="firstname" postBack="true" type="string"/>
+                                                  
+                    
+                    <Field displayName="Lastname" dynamic="true" name="lastname" postBack="true" type="string"/>
+                                                  
+                    
+                    <Field displayName="FullName" dynamic="true" name="fullName" postBack="true" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[return firstname+" "+lastname;]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Email" dynamic="true" name="email" postBack="true" type="string">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[return firstname+"."+lastname+"@eshiam.com";]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="517" posY="24"/>
+        
+
+</Workflow>

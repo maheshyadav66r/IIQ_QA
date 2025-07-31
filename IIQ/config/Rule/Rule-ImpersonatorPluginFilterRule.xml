@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Impersonator Plugin Filter Rule">
+          
+    
+    <Description>This is an example rule for selecting who can impersonate
+			whom. Features can be enabled or disabled by changing boolean variables.</Description>
+          
+    
+    <Source><![CDATA[
+
+// Expect: String impersonator
+import sailpoint.object.Capability;
+import sailpoint.object.Filter;    
+import sailpoint.object.Identity;    
+import sailpoint.api.ScopeService;
+
+// ----------------------------------------------------------------------
+// Control variables
+// ----------------------------------------------------------------------
+
+// Set to true of enforce search for correlated identities only
+boolean ENFORCE_CORRELATED = true;
+
+// Set to true of Scoping is enabled and must be enforces
+boolean ENFORCE_SCOPING = true;
+  
+// Set to true to allow a manager to impersonate subordinate
+boolean MANAGER_SUBORDINATE = false;
+
+// Set to true to allow a helpdesk employee to impersonate any active identity
+boolean HELPDESK_ASSISTANCE = false;
+
+// Set to true to allow a (temporary) assistant to impersonate e.g. a manager
+// Note that this requires additional configuration of a special, searchable identity attribute. In this
+// example, we use an attribute of type Identity, named "deputy". 
+boolean MANAGEMENT_ASSISTANT = false;
+
+// Fallback: if no rules, only spadmin (or equivalent) can impersonate
+boolean DEFAULT_SPADMIN_ONLY = true;
+
+
+// ----------------------------------------------------------------------
+// Main rule: create search filters based on control variables.
+// ----------------------------------------------------------------------
+
+List filters = new ArrayList();
+
+Identity impersonatorIdentity = context.getObjectByName(Identity.class, impersonator);
+if (impersonatorIdentity == null) {
+	log.error("Impersonator identity not found");
+	return null;
+}
+
+// Correlated
+if (ENFORCE_CORRELATED) {
+	log.debug("Correlated identities enforced");
+	filters.add(Filter.eq("correlated", true));
+}
+
+// Scoping
+if (ENFORCE_SCOPING) {
+	log.debug("Scoping enforced");
+	ScopeService scopeService = new ScopeService(context);
+	filters.add(scopeService.getControlledScopesQueryInfo(impersonatorIdentity).getFilter());
+}
+
+List orFilters = new ArrayList();
+
+// Manager
+if (MANAGER_SUBORDINATE && impersonatorIdentity.getManagerStatus()) {
+ 	log.debug("Subordinate impersonation allowed");
+	orFilters.add(Filter.eq("manager.name", impersonator));
+}
+
+// Assistant - MANAGEMENT_ASSISTANT
+if (MANAGEMENT_ASSISTANT) {
+	log.debug("Assistant allowed to impersonate manager");
+	orFilters.add(Filter.eq("deputy.name", impersonator));
+}
+  
+// Helpdesk
+if (HELPDESK_ASSISTANCE && impersonatorIdentity.getCapabilityManager().hasCapability(Capability.HELP_DESK)) {
+	log.debug("Helpdesk impersonation allowed");
+	orFilters.add(Filter.eq("inactive", false));
+}
+
+if (orFilters != null) {
+	orFilters.removeAll(Collections.singleton(null));
+	if (orFilters.size() > 0) {
+		if (orFilters.size() == 1) {
+			filters.add(orFilters.get(0));
+		} else {
+			filters.add(Filter.or(orFilters));
+		}
+  } else {
+    if (DEFAULT_SPADMIN_ONLY && !impersonatorIdentity.getCapabilityManager().hasCapability(Capability.SYSTEM_ADMINISTRATOR)) {
+      return null;
+    }
+  }
+}
+
+if (filters != null) {
+	filters.removeAll(Collections.singleton(null));
+	if (filters.size() == 0) {
+  	log.debug("No results");
+		return null;
+	} else if (filters.size() == 1) {
+  	log.debug("Only one result");
+		return (Filter) filters.get(0);
+	} else {
+  	log.debug("Multiple results");
+		return Filter.and(filters);
+	}
+}
+
+  ]]></Source>
+        
+
+</Rule>

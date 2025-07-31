@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Application PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Application connector="sailpoint.connector.DelimitedFileConnector" featuresString="DIRECT_PERMISSIONS, NO_RANDOM_ACCESS, DISCOVER_SCHEMA, ACCOUNT_ONLY_REQUEST, ADDITIONAL_ACCOUNT_REQUEST" icon="enterpriseIcon" name="NYUCertificationApplication" profileClass="" significantModified="1740474759628" type="DelimitedFile">
+          
+    
+    <AccountCorrelationConfig>
+                    
+        
+        <Reference class="sailpoint.object.CorrelationConfig" name="CertificationDataCorrelation"/>
+                  
+    
+    </AccountCorrelationConfig>
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="PassphraseForPrivateKey"/>
+                              
+            
+            <entry key="PrivateKeyFilePath"/>
+                              
+            
+            <entry key="acctAggregationEnd">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1739334793976</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="acctAggregationStart">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Date>1739334790930</Date>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="afterProvisioningRule"/>
+                              
+            
+            <entry key="aggregationPartitioned">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="aggregationType" value="account"/>
+                              
+            
+            <entry key="beforeProvisioningRule"/>
+                              
+            
+            <entry key="compositeDefinition"/>
+                              
+            
+            <entry key="delimiter" value=","/>
+                              
+            
+            <entry key="file" value="D:\csv files\CerificationData.txt"/>
+                              
+            
+            <entry key="filetransport" value="local"/>
+                              
+            
+            <entry key="filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="ftpsAuthMethod" value="password"/>
+                              
+            
+            <entry key="ftpsClientCertificateFilePath"/>
+                              
+            
+            <entry key="ftpsClientCertificatePassphrase"/>
+                              
+            
+            <entry key="group.filetransport" value="local"/>
+                              
+            
+            <entry key="group.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="group.partitionMode" value="auto"/>
+                              
+            
+            <entry key="hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionAttributeScope" value="entitlements"/>
+                              
+            
+            <entry key="nativeChangeDetectionAttributes"/>
+                              
+            
+            <entry key="nativeChangeDetectionEnabled">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="nativeChangeDetectionOperations"/>
+                              
+            
+            <entry key="orgGroup.columnNames"/>
+                              
+            
+            <entry key="orgGroup.commentCharacter"/>
+                              
+            
+            <entry key="orgGroup.delimiter"/>
+                              
+            
+            <entry key="orgGroup.file" value="D:\csv files\CerificationData.txt"/>
+                              
+            
+            <entry key="orgGroup.fileEncoding"/>
+                              
+            
+            <entry key="orgGroup.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="orgGroup.filterString"/>
+                              
+            
+            <entry key="orgGroup.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="orgGroup.indexColumn"/>
+                              
+            
+            <entry key="orgGroup.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="orgGroup.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="orgGroup.mergeColumns"/>
+                              
+            
+            <entry key="orgGroup.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="orgGroup.numberOfLinesToSkip"/>
+                              
+            
+            <entry key="orgGroup.regularExpression"/>
+                              
+            
+            <entry key="orgGroup.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="parseType" value="delimited"/>
+                              
+            
+            <entry key="partitionMode" value="auto"/>
+                              
+            
+            <entry key="port"/>
+                              
+            
+            <entry key="securityGroup.columnNames"/>
+                              
+            
+            <entry key="securityGroup.commentCharacter"/>
+                              
+            
+            <entry key="securityGroup.delimiter"/>
+                              
+            
+            <entry key="securityGroup.file" value="D:\csv files\CerificationData.txt"/>
+                              
+            
+            <entry key="securityGroup.fileEncoding"/>
+                              
+            
+            <entry key="securityGroup.filterEmptyRecords">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="securityGroup.filterString"/>
+                              
+            
+            <entry key="securityGroup.hasHeader">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean>true</Boolean>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="securityGroup.indexColumn"/>
+                              
+            
+            <entry key="securityGroup.isCaseInsensitiveMerge">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="securityGroup.isSortedByIndexColumn">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="securityGroup.mergeColumns"/>
+                              
+            
+            <entry key="securityGroup.mergeRows">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="securityGroup.numberOfLinesToSkip"/>
+                              
+            
+            <entry key="securityGroup.regularExpression"/>
+                              
+            
+            <entry key="securityGroup.stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="sftpAuthMethod" value="password"/>
+                              
+            
+            <entry key="stopIfLineHasWrongColumnLength">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Boolean/>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="sysDescriptions">
+                                        
+                
+                <value>
+                                                  
+                    
+                    <Map>
+                                                            
+                        
+                        <entry key="en_US"/>
+                                                          
+                    
+                    </Map>
+                                                
+                
+                </value>
+                                      
+            
+            </entry>
+                              
+            
+            <entry key="templateApplication" value="DelimitedFile Template"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Owner>
+                    
+        
+        <Reference class="sailpoint.object.Identity" name="spadmin"/>
+                  
+    
+    </Owner>
+          
+    
+    <Schemas>
+                    
+        
+        <Schema displayAttribute="Name" identityAttribute="NetID" instanceAttribute="" nativeObjectType="account" objectType="account" permissionsRemediationModificationType="None" significantModified="1739257800932">
+                              
+            
+            <AttributeDefinition name="Name" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="NetID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="User_Based_Security_Groups" schemaObjectType="securityGroup" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition entitlement="true" managed="true" multi="true" name="Organization_Role_Assignments" schemaObjectType="orgGroup" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Certifier Name" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                              
+            
+            <AttributeDefinition name="Certifier NetID" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="Organization_Role_Assignments" identityAttribute="Organization_Role_Assignments" instanceAttribute="" nativeObjectType="orgGroup" objectType="orgGroup" permissionsRemediationModificationType="None">
+                              
+            
+            <AttributeDefinition entitlement="true" multi="true" name="Organization_Role_Assignments" schemaObjectType="orgGroup" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                    
+        
+        <Schema aggregationType="group" descriptionAttribute="" displayAttribute="User_Based_Security_Groups" identityAttribute="User_Based_Security_Groups" instanceAttribute="" nativeObjectType="securityGroup" objectType="securityGroup" permissionsRemediationModificationType="None" significantModified="1739257800932">
+                              
+            
+            <AttributeDefinition entitlement="true" multi="true" name="User_Based_Security_Groups" schemaObjectType="securityGroup" type="string">
+                                        
+                
+                <Description/>
+                                      
+            
+            </AttributeDefinition>
+                            
+        
+        </Schema>
+                  
+    
+    </Schemas>
+          
+    
+    <ApplicationScorecard significantModified="1739257800931"/>
+        
+
+</Application>

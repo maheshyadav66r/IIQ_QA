@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-certificationEntitySelector" significantModified="1742977078501" type="CertificationScheduleEntitySelector">
+          
+    
+    <Source><![CDATA[
+
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+
+
+
+  log.error("--CertificationScheduleEntitySelector rule entry--");
+  // Identity identity=entity.getIdentity(context);
+
+  QueryOptions qo=new QueryOptions();
+  Filter  filter=Filter.eq("links.application.name","HR2");
+  qo.add(filter);
+  List identities=context.getObjects(Identity.class,qo);
+
+  return identities;
+  ]]></Source>
+        
+
+</Rule>

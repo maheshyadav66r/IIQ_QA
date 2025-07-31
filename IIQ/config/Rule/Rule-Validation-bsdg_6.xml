@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-BSDG_6" significantModified="1736240359349" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+
+
+  /*for(int i=0;i < this.variables.length;i++){
+    log.error("---variables-----"+this.variables[i]);
+  }*/
+  for(int i=0;i < this.variables.length;i++){
+    log.error("--"+this.variables[i]);
+  }
+
+  Identity identity=context.getObjectByName(Identity.class,"Abhishek sharma");
+  if(identities==null){
+    log.error("----identity couldn't find ---");
+  }
+  log.error("----identity email before ---"+identity.getEmail());
+  identity.setEmail("Abhishek.sharma@eshiam.com");
+  context.saveObject(identity);
+  context.commitTransaction();
+
+  log.error("----identity email after ---"+identity.getEmail());
+  context.decache(identity);
+
+  return "nnn";
+  ]]></Source>
+        
+
+</Rule>

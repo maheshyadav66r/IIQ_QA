@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC Delete operation" significantModified="1717047901730" type="JDBCOperationProvisioning">
+          
+    
+    <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+          
+    
+    <Signature returnType="ProvisioningResult">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>The application whose data file is being processed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="schema">
+                                        
+                
+                <Description>The Schema currently in use.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="connection">
+                                        
+                
+                <Description>A connection object to connect to database.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>The ProvisioningPlan created against the JDBC application.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="request">
+                                        
+                
+                <Description>The ProvisioningRequest created against the JDBC application.</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.object.*;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import java.sql.ResultSet;
+  import java.sql.Connection;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+
+
+  if(plan!=null){ 
+    List accReqs=plan.getAccountRequests();
+    for(int i=0;i<accReqs.size();i++){
+      AccountRequest accReq=accReqs.get(i);
+      String nativeIdentity = (String)accReq.getNativeIdentity();
+      String userIdQuery = "select id from jdbc.jdbc_user_data where Name ='" + nativeIdentity +"'";
+      PreparedStatement userIdStatement = connection.prepareStatement(userIdQuery);
+      ResultSet rs = userIdStatement.executeQuery();
+
+      int id;
+      if(rs.next()) {
+        id = rs.getInt(1);
+      }
+      String linkTableQuery = "delete from jdbc.jdbc_user_groups_data where usersid = ? ";
+      PreparedStatement linkTableQueryStatement = connection.prepareStatement(linkTableQuery);
+      linkTableQueryStatement.setInt(1,id);
+      linkTableQueryStatement.executeUpdate();
+
+      String userTableQuery = "delete from jdbc.jdbc_user_data where id = ? ";
+      PreparedStatement userTableQueryStatement = connection.prepareStatement(userTableQuery);
+      userTableQueryStatement.setInt(1,id);
+      userTableQueryStatement.executeUpdate();
+
+      connection.close();
+      log.error("------------------Account is Deleted -----------------------");
+    }
+  }]]></Source>
+        
+
+</Rule>

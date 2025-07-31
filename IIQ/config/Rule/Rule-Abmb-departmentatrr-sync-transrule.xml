@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ABMB-DepartmentAtrr-Sync-transRule" significantModified="1730129426553" type="IdentityAttributeTarget">
+          
+    
+    <Description>Identity attribute target rules are used to transform identity attribute values that are being pushed to targets.</Description>
+          
+    
+    <Signature returnType="Object"/>
+          
+    
+    <Source><![CDATA[import sailpoint.object.Custom;
+  
+  log.error("---------------------Dept-Atrr-Sync-transRule entry--------------------");
+
+  Custom custom=context.getObjectByName(Custom.class,"Attribute Change Custom Object");
+  if(custom == null){
+    custom=new Custom();
+    custom.setName("ABMB-AttributeChange-CustomObject");
+  }
+  Map departmentMap=new HashMap();
+  departmentMap.put("attributeName",target.getName());
+  departmentMap.put("oldValue",link.getAttribute(target.getName()));
+  departmentMap.put("newValue",value);
+  Map map = custom.get(identity.getName());
+  
+  if(null != map)
+  {
+    map.put("department",departmentMap);
+    custom.put(identity.getName(),map);
+  }
+  else
+  {
+    Map attributeMap = new HashMap();
+    attributeMap.put("department",departmentMap);
+    custom.put(identity.getName(),attributeMap);
+
+  }
+ // log.error("-------custom object  in deptmnt rule ----"+custom.toXml());
+    log.error("---------------------Dept-Atrr-Sync-transRule exit--------------------");
+  return value;]]></Source>
+        
+
+</Rule>

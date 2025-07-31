@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Email Creationfrom sAMAccountName" significantModified="1720004698176" type="FieldValue">
+          
+    
+    <Description>This rule can be used to generate a field value (eg - an account name) using data from the given Identity. If this rule is run in the context of a workflow step then the arguments passed into the step will also be available. Also, any field values that have been processed so far from the policy related to the Application/Role will be available.</Description>
+          
+    
+    <Signature returnType="String"/>
+          
+    
+    <Source><![CDATA[ import sailpoint.api.SailPointContext;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorFactory;
+  import sailpoint.object.Application;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.object.Identity;
+  import java.util.Iterator;
+  import java.util.List;
+  import sailpoint.object.Filter;
+  import sailpoint.tools.*;
+
+  String samAccountName=null;
+  String firstName=identity.getFirstname();
+  String lastName=identity.getLastname();
+  Application application = context.getObjectByName(Application.class, "ActiveDirectory");
+  if(application != null){
+    Connector connector = ConnectorFactory.getConnector(application,"null");
+    boolean flag=true;
+    int i=1;
+    if(firstName.length()>0&&lastName.length()>=5){
+      samAccountName = firstName.substring(0,1)+lastName.substring(0,5);
+
+    }else{
+      samAccountName = firstName.substring(0,1)+lastName;
+    }
+    while(flag){
+      Filter filter=Filter.eq("sAMAccountName",samAccountName);
+      CloseableIterator iterator = connector.iterateObjects("account", filter, null);
+      flag=iterator.hasNext();
+      while (iterator.hasNext()) {
+        Object element = iterator.next();
+        String sName=element.get("sAMAccountName");
+        System.out.println(sName);
+        if(samAccountName.equals(sName)){
+          samAccountName = firstName.substring(0,1)+lastName.substring(0,5)+i;
+          i++;
+        }
+        else{
+          flag==false;
+        }
+      }
+      if(flag==false){
+        break;
+      }
+    }
+  }
+
+  log.error("--- samAccountName-----"+samAccountName);
+  return samAccountName+"@eshiam.com";]]></Source>
+        
+
+</Rule>

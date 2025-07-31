@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="HR Source Joiner event LCM WorkFlow ref" significantModified="1720006425944" type="IdentityLifecycle">
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable input="true" name="event"/>
+          
+    
+    <Variable input="true" name="identityName"/>
+          
+    
+    <Variable input="true" name="trigger"/>
+          
+    
+    <Variable name="identity">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[import sailpoint.object.Identity;
+
+        Identity identity=null;
+        identity=context.getObjectByName(Identity.class, identityName);
+        return identity;]]></Source>
+                            
+        
+        </Script>
+                  
+    
+    </Variable>
+          
+    
+    <Variable initializer="true" name="trace">
+                    
+        
+        <Description>Used for debugging this workflow and when set to true trace
+      will be sent to stdout.</Description>
+                  
+    
+    </Variable>
+          
+    
+    <Step icon="Start" name="Start" posX="23" posY="12">
+                    
+        
+        <Transition to="create provisioning plan"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="create provisioning plan" posX="325" posY="14" resultVariable="plan">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import java.util.Date;
+        import sailpoint.object.*;
+        import sailpoint.tools.Util;
+        import java.text.SimpleDateFormat;
+        import sailpoint.object.ProvisioningPlan.Operation;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+
+        ProvisioningPlan plan=new ProvisioningPlan();
+        plan.setIdentity(identity);
+        AccountRequest accntReq=new AccountRequest();
+
+        log.error("-------------just after plan object creation----------------"+identity);
+        String accountingPayable="CN=AccountsPayable,OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+        String accountingRecievable="CN=AccountsReceivable,OU=Groups,OU=Demo,DC=Eshiam,DC=com";
+        String joiningDate=identity.getStringAttribute("joiningDate");
+
+        log.error("-----fetching joiningDate ----------------"+joiningDate);
+
+
+        SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-YYYY");
+        Date jod=sdf.parse(joiningDate);
+        Date currentDate=new Date();
+        log.error("-----fetching currentDate ----------------"+currentDate);
+
+        boolean dateTrigger=Util.isDateAfter(jod,currentDate);
+        log.error("-----date Triggering ----------------"+dateTrigger);
+
+
+        if(dateTrigger==false){  
+        log.error("---------------enabling block----------------"+dateTrigger);
+        accntReq.setApplication("ActiveDirectory");
+        accntReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+        accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingPayable));
+        accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingRecievable));
+        plan.add(accntReq);
+        }
+        else
+        {
+        log.error("-----disable condition ----------------"+dateTrigger);
+        accntReq.setApplication("ActiveDirectory");
+        accntReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+        accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingPayable));
+        accntReq.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,accountingRecievable));   
+        accntReq.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+        plan.add(accntReq);
+        }
+        log.error("---------------returning  plan ----------------");
+        return plan;
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="stop" posX="694" posY="15">
+                    
+        
+        <Arg name="plan" value="ref:plan"/>
+                    
+        
+        <Arg name="identityName" value="ref:identityName"/>
+                    
+        
+        <WorkflowRef>
+                              
+            
+            <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+                            
+        
+        </WorkflowRef>
+                  
+    
+    </Step>
+        
+
+</Workflow>

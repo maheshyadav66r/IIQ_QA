@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="ManagedAttributePromotion Rule" type="ManagedAttributePromotion">
+          
+    
+    <Description>A ManagedAttributePromotion rule is called when ManagedAttributes are automatically created during aggregation, refresh, or from the missing entitlement descriptions task.
+
+This can modify the ManagedAttribute that is passed in to set fields such as owner, requestable, or explanations before they are saved.</Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="attribute">
+                                        
+                
+                <Description>
+          The sailpoint.object.ManagedAttribute to modify during promotion.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+          The sailpoint.object.Application the managed attribute is from.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="state" type="Map">
+                                        
+                
+                <Description>
+          A Map that contains managed attribute promotion shared state during a task run.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[log.error("------ManagedAttributePromotion--------");
+log.error("------managedAttribute--------"+attribute.toXml());
+log.error("------application--------"+application.toXml());
+log.error("------state--------"+state);
+
+
+]]></Source>
+        
+
+</Rule>

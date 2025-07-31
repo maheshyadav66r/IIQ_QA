@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="WorkItemArchieve Retrival task-Validation2" significantModified="1735204936523" type="Validation">
+          
+    
+    <Source><![CDATA[
+
+  import java.io.FileWriter; 
+  import java.io.IOException;
+  import java.io.FileInputStream;
+  import java.io.BufferedWriter;
+  import sailpoint.object.Filter;
+  import sailpoint.object.EmailTemplate;
+  import sailpoint.object.EmailOptions;
+  import sailpoint.object.EmailFileAttachment;
+  import sailpoint.tools.Util;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.WorkItemArchive;
+  import sailpoint.object.ApprovalSet;
+  import sailpoint.object.ApprovalItem;
+  import sailpoint.object.IdentityRequest;
+  import sailpoint.object.WorkItem;
+
+  File csvFile = File.createTempFile("iiqWorkItemArchieveReport-", ".tmp.csv");
+  csvFile.deleteOnExit(); 
+  BufferedWriter bw=new BufferedWriter(new FileWriter(csvFile));
+
+  String delimiter=",";
+  String newLine="\n";
+
+  List columnHeaders=new ArrayList();
+  columnHeaders.addAll(Arrays.asList("applicationName","attributeName","approver","displayValue","nativeIdentity","operation","state","value"));
+  /* columnHeaders.add("applicationName");
+  columnHeaders.add("attributeName");
+  columnHeaders.add("approver");
+  columnHeaders.add("displayValue");
+  columnHeaders.add("nativeIdentity");
+  columnHeaders.add("operation");
+  columnHeaders.add("state");
+  columnHeaders.add("value");*/
+  boolean prefix=false;
+  for(String columnName:columnHeaders){
+    if(prefix){
+      bw.append(delimiter);
+    }
+    bw.append(columnName);
+    prefix=true;
+  }
+  bw.append("\n");
+
+  Filter f1=Filter.and(Filter.eq("completionStatus","Pending"),Filter.eq("executionStatus","Executing"));
+  QueryOptions qo=new QueryOptions();
+  qo.add(f1);
+
+  Iterator it=context.search(IdentityRequest.class,qo);
+  while(it.hasNext()){
+    IdentityRequest identityRequest=it.next();
+    String nameValue=identityRequest.getName();
+    Filter f=Filter.and(Filter.eq("state","Finished"),Filter.eq("identityRequestId",nameValue));
+    QueryOptions qo1=new QueryOptions();
+    qo1.add(f);
+    Iterator itwa=context.search(WorkItemArchive.class,qo1);
+    while(itwa.hasNext()){
+      WorkItemArchive workItemArchive=itwa.next();
+
+      Map output = new HashMap();
+      if(workItemArchive!=null){
+        ApprovalSet approvalSet=(ApprovalSet)workItemArchive.getAttribute("approvalSet");
+        if(approvalSet!=null){
+
+          List ai=(List)approvalSet.getItems();
+          if(ai!=null){
+            for(ApprovalItem approvalItem : ai ){
+              if(approvalItem.getApplication().equals(config.get("application"))) {      
+                // if(approvalItem.getApplication().equals("ActiveDirectory")) {      
+
+                String applicationName=approvalItem.getApplication();
+                String attributeName=approvalItem.getName();
+                String approver=approvalItem.getApprover();
+                String displayValue=approvalItem.getDisplayValue();
+                String nativeIdentity=approvalItem.getNativeIdentity();
+                String operation=approvalItem.getOperation();
+                String state=approvalItem.getState().toString();
+                String value=approvalItem.getValue();
+
+                if(applicationName!=null){
+                  output.put("applicationName",applicationName);
+                }else{
+                  output.put("applicationName",config.get("application"));
+                  // output.put("applicationName","ActiveDirectory");
+                  log.error("config applicatio into map----"+config.get("application"));
+                }
+                output.put("attributeName",attributeName);
+                output.put("approver",approver);
+                output.put("displayValue",displayValue);
+                output.put("nativeIdentity",nativeIdentity);
+                output.put("operation",operation);
+                output.put("state",state);
+                output.put("value",value);
+
+                boolean commaPrefix=false;
+                for(String columnName:columnHeaders){
+                  if(commaPrefix)
+                    bw.append(delimiter);
+                  String valToWrite=output.get(columnName);
+                  if (null != valToWrite)  {
+                    if (valToWrite.contains(",")) {
+                      bw.append("\"" + valToWrite + "\"");
+                    } else {
+                      bw.append(valToWrite);
+                    }     
+                  } else {
+                    bw.append("n/a");
+                  }
+                  commaPrefix = true;   
+                }
+                bw.append("\n");
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  bw.flush();
+  bw.close();
+
+  int num;
+  String text="";
+  FileInputStream fis=new FileInputStream(csvFile);
+  while ((num = fis.read()) != -1) {
+    text += String.valueOf((char)num);
+  }
+  log.error("----fis csv format ----"+text);
+  fis.close();
+
+  byte[] byteData=Util.readBinaryFile(csvFile);
+  EmailTemplate emailTemplate=context.getObjectByName(EmailTemplate.class,"WorkItemArchive_Approvals-Data_csvFile_Email_Template");
+  if(emailTemplate==null){
+    throw new GeneralException("Email Template was not found: " + templateName);
+  }
+  EmailFileAttachment attatchment=new EmailFileAttachment ("ApprovalItemsData.csv", EmailFileAttachment.MimeType.MIME_CSV,byteData);
+  List recipients=Util.csvToList(config.get("identities"));
+
+  Map args = new HashMap();
+  args.put("identities from rule",config.get("identities")); 
+  args.put("filename","ApprovalItemsData.csv");
+
+  EmailOptions options = new EmailOptions(recipients, args);
+  options.addAttachment(attatchment);
+  options.setSendImmediate(true);
+  options.setNoRetry(true);
+  context.sendEmailNotification(emailTemplate, options);
+  log.error("---email sent successfully----");
+
+  return "ssssss";
+  /*
+    log.error(" --------- name from identityrequest and identityRequestId in WorkItemArchive ------"+nameValue);
+    // WorkItemArchive workItemArchive=context.getObject(WorkItemArchive.class,f);
+      log.error("----workItemArchive------"+workItemArchive);
+            log.error("----approvalItem--- block---");
+        log.error("----workItemArchive--- block---");
+          log.error("----approvalSet--- block---");
+
+*/
+  /*for(int i=0;i<this.variables.length;i++){
+      log.error("-----variables------"+this.variables[i]);
+    }
+*/
+
+  ]]></Source>
+        
+
+</Rule>

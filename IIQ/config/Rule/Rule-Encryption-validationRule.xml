@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Encryption-Validation Rule" significantModified="1735298872469" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.Link;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.text.SimpleDateFormat;
+  import java.util.Date;
+  import java.util.Calendar;
+  import java.text.DateFormat;
+  import sailpoint.tools.Util;
+
+
+   return context.decrypt("1:ACP:wdzUvW3XqHMLMY9iJkBrOiU5zC3M9mDHxiplVO6c+BQ=");
+  Identity identity=context.getObjectbyName(Identity.class,"Muthaih Muralidharan");
+  String edate=identity.getStringAttribute("endDate");
+  SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+  Date endDateFromIdnty=sdf.parse(edate);
+  log.error( "endDate from identity after parsing    :"+edate);
+  
+  Calender cal=Calender.getInstance();
+  cal.setTime(edate);
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  Identity identity=context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+  String ed=identity.getStringAttribute("endDate");
+  SimpleDateFormat sdf=new SimpleDateFormat("dd-MM-yyyy");
+  Date date=sdf.parse(ed);
+  log.error(" parsed enddate from identity----:"+date);
+
+  Calendar cal = Calendar.getInstance();
+  cal.setTime(date);
+  cal.set(Calendar.HOUR_OF_DAY, 18);
+  cal.set(Calendar.MINUTE, 0);
+  cal.set(Calendar.SECOND, 0);
+  cal.set(Calendar.MILLISECOND, 0);
+  Date startDate=new Date(cal.getTimeInMillis());
+  log.error("  startDate-----:"+startDate);
+
+  Calendar ecal = Calendar.getInstance();
+  ecal.set(Calendar.HOUR_OF_DAY, 23);
+  ecal.set(Calendar.MINUTE, 59);
+  ecal.set(Calendar.SECOND, 59);
+  ecal.set(Calendar.MILLISECOND, 999);
+  Date endDate=new Date(ecal.getTimeInMillis());
+
+  Date currentDate=new Date();
+  log.error(" currentDate  :"+currentDate);
+
+   log.error("endDate  :"+endDate);
+  if(currentDate.compareTo(startDate)>=0&&currentDate.compareTo(endDate)<=0){
+    log.error("currentdate  "+currentDate+"  is between "+"  startDate  "+startDate+"  and endDate   "+endDate);
+  }
+
+  return true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
+  Identity identity=context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+  String ed=identity.getStringAttribute("endDate");
+  SimpleDateFormat sfd=new SimpleDateFormat("dd-MM-yyyy");
+  Date eod=sfd.parse(ed);
+  Date currentdate=new Date();
+  //  String sCurrentDate=Util.dateToString(currentdate,"yyyy-MM-dd");
+
+  log.error("identityDate --- "+eod);
+  log.error("currentdate --- "+currentdate);
+  if(currentdate.compareTo(eod)==0){
+    log.error("identityDate is matched to currentdate");
+    if(currentdate.getHours() >= 16 && (currentdate.getHours() <= 23 && currentdate.getMinutes() <= 59 && currentdate.getSeconds() <= 59)){     
+      log.error(" identityDate====currentdate ");
+      return true;
+    }
+    else{ 
+      log.error(" identityDate and currentdate are not under the condition ");
+      return false;
+    }
+  }
+  log.error("  final return  ");
+  return true;
+
+
+  Calendar cal=Calendar.getInstance();
+  cal.setTime(eod);
+  cal.add(Calendar.HOUR_OF_DAY,18);
+  Date startOfEnddate=cal.getTime();
+
+  // log.error("----startOfEnddate-----------"+startOfEnddate);
+  //log.error("-----Enddate---------"+enddate);
+
+
+  // Date eod=new SimpleDateFormat("dd/MM/yyyy").parse(ed);
+  log.error("-----date---------"+eod);
+  return startOfEnddate;  */
+
+
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+  List linksList=identity.getLinks();
+  ProvisioningPlan plan=new ProvisioningPlan();
+  AccountRequest accReq=new AccountRequest();
+  Object obj=identity.getPreference("attributeAssignments");
+  for(Link link:linksList){
+    if(link.getApplication().isAuthoritative()==false){
+      // accReq.set
+      if(obj instanceof List){
+        for(AttributeAssignment attAsgmnt:obj){
+          if(link.getApplicationName().equals(attAsgmnt.getApplicationName())){
+            accReq.add(new AttributeRequest(attAsgmnt.getName(),ProvisioningPlan.Operation.Remove,attAsgmnt.getValue()));
+            log.error("AttributeRequestName------"+attAsgmnt.getName()+"   AttributeRequestValue-------"+attAsgmnt.getValue());
+
+          }
+        }
+      }
+    }
+
+  }
+  plan.add(accReq);
+  return plan;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Identity identity = context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+  List entList = identity.getExceptions();
+  for(EntitlementGroup eg :entList){
+    String appname = eg.getApplicationName();
+    Map map = eg.getAttributes().getMap();
+    for(Map.Entry entry : map.entrySet()){
+      String key = entry.getKey();
+      Object val = entry.getValue();
+      if(val instanceof String){
+        String valu = val;
+      } else if(val instanceof String){
+        List list = val;
+      }
+      ProvisioningPlan plan = new ProvisioningPlan();
+      plan.setIdentity(identity);
+      plan.setApplication(appname);
+
+      AccountRequest acr = new AccountRequest();
+      // acr.set
+
+
+
+
+      ]]></Source>
+        
+
+</Rule>

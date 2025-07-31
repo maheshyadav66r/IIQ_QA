@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="BeforeProvisioningRule" significantModified="1734325897583" type="BeforeProvisioning">
+          
+    
+    <Description>An IdentityIQ server-side rule that is executed before the connector's provisioning method is called. This gives the customer the ability to customize or react to anything in the ProvisioningPlan BEFORE it is sent to the underlying connectors used in provisioning. 
+
+This rule will be called for any application found in a plan that also has a configured 'beforeProvisioningRule' configured.  
+
+The plan can be updated directly in the rule by reference and does not need to return the plan.</Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>
+          The ProvisioningPlan object on its way to the Connector.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+          The application object that references this before/after script.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+
+
+  log.error("---------------BeforeProvisioning Rule----------------------------"+plan.toXml());
+
+ /* log.error("START------------BeforeProvisioning Rule----------------------------"+plan.toXml());
+
+  List accReq=plan.getAccountRequests();
+  if(accReq!=null){
+    for(int i=0;i<accReq.size();i++){
+      AccountRequest ar=accReq.get(i);
+      if(ar!=null && (ar.getOperation()).equals(ProvisioningPlan.AccountRequest.Operation.Modify)){
+
+        ar.setOperation(ProvisioningPlan.AccountRequest.Operation.Create);
+        ar.add(new AttributeRequest("sAMAccountName",ProvisioningPlan.Operation.Add,plan.getNativeIdentity()));
+        ar.add(new AttributeRequest("password",ProvisioningPlan.Operation.Add,"Eshiam@12345"));
+        ar.add(new AttributeRequest("distinguishedName",ProvisioningPlan.Operation.Add,ar.getNativeIdentity()));
+
+      }
+    }
+  }
+  log.error("END------------BeforeProvisioning Rule----------------------------"+plan.toXml());*/]]></Source>
+        
+
+</Rule>

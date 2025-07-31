@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-SingelAccountOrGroup Creation-Rule" significantModified="1743069328326" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import java.io.IOException;
+  import java.io.InputStream;
+  import java.net.HttpURLConnection;
+  import java.net.URL;
+  import java.util.Scanner;
+
+  import java.text.SimpleDateFormat;
+  import java.text.DateFormat;
+  import sailpoint.tools.CloseableIterator;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.tools.Util;
+  import java.text.Normalizer;
+  import java.text.Normalizer.Form;
+  import java.io.File;
+  import java.nio.file.Files;
+
+  import sailpoint.connector.ADLDAPConnector;
+  import sailpoint.connector.Connector;
+  import sailpoint.connector.ConnectorException;
+  import org.apache.commons.lang3.StringUtils;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.logging.Log;
+  import sailpoint.api.Aggregator;
+  import sailpoint.object.Attributes;
+  import sailpoint.api.Terminator;
+
+
+  String applicationName="ActiveDirectory";
+  String groupName="CN=Group1,OU=DemoGroupsOU,OU=DemoGroups,OU=Demo,DC=Eshiam,DC=com";
+
+  public ManagedAttribute singleGroupAggregation(String applicationName,String groupName) throws GeneralException{
+    ManagedAttribute mg = null;
+
+    Application appObject = context.getObjectByName(Application.class, applicationName);
+    String appConnName = appObject.getConnector();  
+
+    Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);  
+
+    ResourceObject rObj = null;  
+
+    try{
+      rObj = (ResourceObject) appConnector.getObject("group", groupName, null);
+
+      log.error(" ResourceObject--"+rObj.toXml());
+      Attributes argMap = new Attributes();  
+      //argMap.put("accountGroupRefreshRule",preRefreshRule);
+      argMap.put("aggregationType","group");
+      argMap.put("applications",applicationName);
+      //argMap.put("checkDeleted","true");
+
+      Map grpSchemaMap = new HashMap();
+
+      List optsList = new ArrayList();
+      optsList.add("group");
+      optsList.add("displayName");
+
+      grpSchemaMap.put(applicationName,optsList);
+      Attributes attribs = new Attributes(grpSchemaMap);
+      argMap.put("groupSchema",attribs);
+
+      Aggregator agg = new Aggregator(context, argMap);
+      mg=agg.aggregateGroup(appObject, rObj);
+      log.error("ManagedAttribute---"+mg.toXml());
+      
+      if((mg.getDisplayName()!=null)&&(rObj.getDisplayName()!=null))
+      if(!mg.getDisplayName().equalsIgnoreCase(rObj.getDisplayName())){
+          mg.setDisplayName(rObj.getDisplayName());
+        log.error("setvalue if block--"+rObj.get("distinguishedName")+"    "+mg.getValue());
+      }
+         }catch(sailpoint.connector.ObjectNotFoundException onfe){
+
+           String exception=onfe.toString();
+           log.error("---exception--"+exception);
+
+           if(exception.contains("ObjectNotFoundException")){
+             Filter f= Filter.and(Filter.eq("application.name",applicationName),Filter.eq("value",groupName));
+
+             ManagedAttribute ma=context.getUniqueObject(ManagedAttribute.class,f);
+             if(ma!=null){
+               Terminator terminator=new Terminator(context);
+               terminator.deleteObject(ma);
+               context.commitTransaction();
+             }
+             else{
+               log.error("account not found in iiq");
+             }
+           }
+
+         }
+
+         return mg;
+
+         }
+         return singleGroupAggregation("ActiveDirectory","CN=Group1,OU=DemoGroupsOU,OU=DemoGroups,OU=Demo,DC=Eshiam,DC=com");
+
+
+
+
+
+
+
+
+         String applicationName="ActiveDirectory";
+         String accountName="CN=Aiden markram,OU=People,OU=Demo,DC=Eshiam,DC=com";
+
+         log.error("---Account creation method----");
+         public Attributes singleAccountAggregation(applicationName,accountName) throws GeneralException {
+           Attributes attributes = new Attributes();
+
+           Application appObject = context.getObjectByName(Application.class, applicationName);
+           if(null!=appObject){
+             String appConnName = appObject.getConnector(); 
+
+             Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);  
+
+             if(null!=appConnector){
+               Attributes argMap = new Attributes();
+               argMap.put("aggregationType", "account");
+               argMap.put("applications", applicationName);
+               argMap.put("correlateEntitlements",   "true");  
+               argMap.put("noOptimizeReaggregation", "false");
+               argMap.put("correlateOnly", "true");  
+
+               ResourceObject rObj=null;
+
+               try{
+                 rObj=(ResourceObject) appConnector.getObject("account", accountName, null);
+
+
+                 Aggregator agg = new Aggregator(context, argMap);
+
+                 TaskResult result =agg.aggregate(appObject, rObj);
+                 attributes = result.getAttributes();
+                 attributes.put("account", accountName);
+
+                 log.error("--account created in iiq");
+               }catch(sailpoint.connector.ObjectNotFoundException onfe){
+
+                 String exception=onfe.toString();
+                 log.error("---error--"+exception);
+                 if(exception.contains("ObjectNotFoundException")){
+                   Filter f= Filter.and(Filter.eq("application.name",applicationName),Filter.eq("nativeIdentity",accountName));
+
+                   Link link=context.getUniqueObject(Link.class,f);
+                   if(link!=null){
+                     Terminator terminator=new Terminator(context);
+                     terminator.deleteObject(link);
+                     context.commitTransaction();
+                   }
+                   else{
+                     log.error("account not found in iiq");
+                   }
+                 }
+
+               }
+             }
+           }
+           //log.error("--rObj.toXml()--"+rObj.toXml());
+           //log.error("--attributes.toXml()--"+attributes);
+
+           return attributes;
+         }
+         return singleAccountAggregation("ActiveDirectory","CN=Aiden markram,OU=People,OU=Demo,DC=Eshiam,DC=com");
+
+
+         ]]></Source>
+        
+
+</Rule>

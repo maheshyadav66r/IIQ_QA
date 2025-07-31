@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="WFEntManage" significantModified="1732688662216" type="">
+          
+    
+    <Variable initializer="true" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="Add or Remove"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Add or Remove" posX="319" posY="100">
+                    
+        
+        <Approval name="DemoFormApproval" owner="$(launcher)" return="operation,entitlements" send="">
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                              
+            
+            <Form name="LaucherFormDemo">
+                                        
+                
+                <Section label="FirstSectionlabel" name="FirstSection">
+                                                  
+                    
+                    <Field displayName="Operation" name="operation" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValues>
+                                                                      
+                            
+                            <String>Add</String>
+                                                                      
+                            
+                            <String>Remove</String>
+                                                                    
+                        
+                        </AllowedValues>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Select Entitlements" dynamic="true" multi="true" name="entitlements" type="String">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+                  import sailpoint.object.*;
+                  import sailpoint.api.*;
+                  import sailpoint.object.Filter;
+
+                  log.error("-----operation in entitlements field---"+operation);
+                  if(operation!=null && operation.equals("Add")){
+
+                  log.error("---launcher  in form------"+requester);
+
+                  //if(operation != null @and operation.equalsIgnoreCase("Add"))
+                  Filter filter1=Filter.eq("identity.name",requester);
+                  QueryOptions qo1=new QueryOptions();
+                  qo1.add(filter1);
+                  List usersEnt=new ArrayList();
+                  usersEnt.add("hello1");
+                  Iterator it1=context.search(IdentityEntitlement.class,qo1,"value");
+                  while(it1.hasNext()){
+                  usersEnt.add(it1.next()[0]);
+                  }
+
+                  Filter filter2=Filter.not(Filter.in("value",usersEnt));
+                  Filter filter3=Filter.eq("application.name","ActiveDirectory");
+                  QueryOptions qo2=new QueryOptions();
+                  qo2.add(filter2);
+                  qo2.add(filter3);
+
+                  Iterator it2=context.search(ManagedAttribute.class,qo2,"value");
+                  List allEntitlemetns=new ArrayList();
+                  while(it2.hasNext()){
+                  allEntitlemetns.add(it2.next()[0]);
+                  }
+                  return allEntitlemetns;
+                  } else if (operation!=null && !operation.equals("Add") ) {
+                  form.getField("entitlements").setValue(null);
+                  }
+                  if(operation!=null && operation.equals("Remove")){
+
+                  // log.error("------remove if block ent values------"+entitlements);
+                  // if(entitlements!=null)
+                  // form.getField("entitlements").setValue("");
+
+                  Identity identity=context.getObjectByName(Identity.class,requester);
+                  if(identity!=null){
+                  Filter f1=Filter.eq("identity.name",requester);
+                  QueryOptions qo1=new QueryOptions();
+                  qo1.add(f1);
+                  List reqList=new ArrayList();
+                  reqList.add("spadmin_ent11");
+                  Iterator it1=context.search(IdentityEntitlement.class,qo1,"value");
+                  while(it1.hasNext()){
+                  reqList.add(it1.next()[0]);
+                  }
+
+                  Filter f2=Filter.in("value",reqList);
+                  Filter f3=Filter.eq("application.name","ActiveDirectory");
+                  QueryOptions qo2=new QueryOptions();
+                  qo2.add(f2);
+                  qo2.add(f3);
+                  log.error("------remove if block------");
+
+                  List entList=new ArrayList();
+                  entList.add("spadmin_ent11");
+                  entList.add("spadmin_ent22");
+                  entList.add("spadmin_ent33");
+                  entList.add("spadmin_ent44");
+
+                  Iterator it2=context.search(ManagedAttribute.class,qo2,"value");
+                  while(it2.hasNext()){
+                  entList.add(it2.next()[0]);
+                  }
+                  return entList;
+                  }
+                  }
+
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Button action="next" label="Submit"/>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

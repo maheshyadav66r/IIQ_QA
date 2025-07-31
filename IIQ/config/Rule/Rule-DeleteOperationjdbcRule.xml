@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Delete OperationJDBC Rule" significantModified="1716876023729" type="JDBCProvision">
+          
+    
+    <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+          
+    
+    <Signature returnType="ProvisioningResult">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+                The application whose data file is being processed.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="schema">
+                                        
+                
+                <Description>
+                The Schema currently in use.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="connection">
+                                        
+                
+                <Description>
+                A connection object to connect to database.
+                </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>
+                The ProvisioningPlan created against the JDBC application.
+                </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>
+                A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan
+                </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[
+  if(null!=plan){
+List =plan.getAccountrequests();
+for(int i=0;i<accreqsList.size();i++){
+ProvisioningPlan.AccountRequest accReq=accreqsList.get(i);
+if(accReq!=null){
+ProvisioningPlan.Accountrequest.Operation op=accReq.getOperation();
+if(op!=null&&op.equalIgnoreCase(ProvisioningPlan.AccountRequest.Operation Delete)){
+
+}else
+accReq.setOperation(ProvisioningPlan.AccountRequest.Operation Delete);
+}
+}
+}return plan;
+  ]]></Source>
+        
+
+</Rule>

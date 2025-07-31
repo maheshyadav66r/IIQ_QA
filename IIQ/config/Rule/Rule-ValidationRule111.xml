@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation Rule111" significantModified="1739429021745" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  
+  
+  Application application = context.getObjectByName(Application.class,"ActiveDirectory");
+  
+  List listOfIdentities = context.getObjects(Identity.class);
+  if(listOfIdentities.size()>0){
+    IdentityService identityService = new IdentityService(context);
+    for(Identity identity : listOfIdentities){
+    	List listOfLinks = identityService.getLinks(identity,application);
+      if(listOfLinks != null @and listOfLinks.size() @gt 1){
+        log.error(identity.getName());
+      }
+      else
+      {
+        log.error("no double links ");
+      }
+    }
+  }
+  
+ /* import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.tools.Util;
+
+QueryOptions qo=new QueryOptions();
+Filter f1=Filter.eq("links.application.name","JDBCProvisioning");
+  qo.add(f1);
+  
+  List identities=context.getObjects(Identity.class,qo);
+  if(identities!=null){
+    log.error("----identities---"+identities.size());
+  }
+  return context.decrypt("1:ACP:kiiFlXS6DFbwxvYUcvt/ONTUvE2L2fDkrFI4+6BHwHU=");
+  
+  */
+  ]]></Source>
+        
+
+</Rule>

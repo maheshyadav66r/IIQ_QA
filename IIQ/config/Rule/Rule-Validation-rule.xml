@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-Rule" significantModified="1738388480275" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.SailPointContext;
+  import sailpoint.api.IdentityService;
+  import sailpoint.tools.GeneralException;
+  import java.io.*;
+
+  // public static void importFiles(SailPointContext context, String folderPath) throws GeneralException {
+  String folderPath="D:\\csv files\\Groups";
+  
+  File folder = new File(folderPath);
+  if (!folder.exists() || !folder.isDirectory()) {
+    throw new GeneralException("Invalid folder path: " + folderPath);
+  }
+
+  File[] files = folder.listFiles((dir, name)   //-> name.endsWith(".xml"));
+  if (files == null || files.length == 0) {
+    return;
+  }
+
+  for (File file : files) {
+    try {
+      String xmlContent = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+      Object importedObject = context.deSerialize(xmlContent);
+      context.saveObject(importedObject);
+      context.commitTransaction();
+      System.out.println("Imported: " + file.getName());
+    } catch (Exception e) {
+      System.out.println("Failed to import " + file.getName() + ": " + e.getMessage());
+    }
+  }
+  //  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import ailpoint.object.AccountRequest;
+  import ailpoint.object.ProvisioningPlan;
+  import ailpoint.object.AttributeAssignment;
+
+
+
+
+  Identity identity=context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+
+  /* String endDate=identity.getStringAttribute("endDate");
+  SimpleDateFormat sfd=new SimpleDateFormat("dd-MM-yyyy");
+  Date ed=sdf.parse(endDate);*/
+
+
+  /* Object objects=identity.getPreference("attributeAssignments");
+  List links=identity.getLinks();
+  log.error("-------links-----"+link.size()); 
+  for(Link link:links){
+    if(link.getApplication().isAuthoritative()==false){
+
+      // String appName=link.getApplicationName();
+      // AccountRequest accReq=new AccountRequest();
+
+
+      if(objects instanceOf List){
+        for(AttributeAssignment attributeAssignment:objects){
+          log.error("-------AttributeAssignment-----"+attributeAssignment);
+        }
+
+      }
+
+
+
+    }
+
+  }
+  return attributeAssignment.getName();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  String name="ActiveDirectory";
+  Filter filter = Filter.eq("links.application.name",name);
+  QueryOptions qo = new  QueryOptions();
+  qo.add(filter);
+
+  List ides = context.getObjects(Identity.class,qo);
+  //return ides.size();
+  Terminator term = new Terminator(context);
+  if(ides != null){
+    for(Identity ide:ides){
+      term.deleteObject(ide);
+    }
+  }
+  return ides.size();
+
+
+
+
+
+  /*  
+  Link link=context.getUniqueObject(Link.class,"ActiveDirectory");
+  Application app=link.getApplication();
+  return link;
+
+
+
+  Map returnMap = new HashMap();
+  System.out.println("Welllcome");
+  String mail = account.getAttribute("EmailAddress");
+  System.out.println(mail);
+  System.out.println(mail != null);
+  if(mail != null){
+    System.out.println("mail  "+mail);
+    Filter f= Filter.eq("email",mail);
+    System.out.println("filter object   ");
+    Identity identity=context.getUniqueObject(Identity.class, f);
+    System.out.println("identity object  "+identity);
+    //log.error(identity);
+    System.out.println("came to build list");
+    List l =identity.getLinks();
+    System.out.println("link names "+l);
+    String name="HR Application2";
+    System.out.println(name);
+    List list = new ArrayList();
+    for(Link lin:l){
+      System.out.println("welllllll--lllllllll");
+      String s=lin.getApplicationName();
+      System.out.println(s);
+      list.add(s);
+    }
+
+    System.out.println(list);
+    if(list.contains(name)){
+      System.out.println("map==="+returnMap);
+
+      return returnMap;
+    }else {
+      returnMap.put("identityAttributeName", "email");
+      returnMap.put("identityAttributeValue", mail);
+      System.out.println("map is ----"+returnMap);
+      return returnMap;
+    }
+  }
+  return returnMap;
+
+
+  // return context.getObjectByName(Workflow.class,"LCM Provisioning").toXml();
+
+  //return context.getObjectByName(Identity.class,"1c").toXml();
+
+  List identityList = context.getObjects(Identity.class);
+
+  for (Identity identity:identityList) {
+    boolean  status = identity.getManagerStatus();
+    if (status){
+      log.error("IdentityName--- "+identity.getName());
+      log.error("IdentityName--- "+identity.toXml());
+
+    }
+  }
+
+  return list;
+
+*/
+  return context.decrypt("1:iCAlakm5CVUe7+Q6hVJIBA==");
+
+  import sailpoint.object.Identity;
+  import sailpoint.object.*;
+  import sailpoint.object.Link;
+  import sailpoint.object.EntitlementGroup;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.Application;
+
+  Identity identity=context.getObjectByName(Identity.class,"Muthaih Muralidharan");
+  log.error("--------------identity-------------------"+identity);
+  Link applicationLinks=identity.getLinks();
+  log.error("--------------applicationLinks-------------------"+applicationLinks);
+  List listOfEntitlementGroup=identity.getExceptions();
+  log.error("--------------listOfEntitlementGroup-------------------"+listOfEntitlementGroup);
+  for(EntitlementGroup entitlementGroup : listOfEntitlementGroup)
+  {
+    String applicationName=entitlementGroup.getApplicationName();
+    log.error("--------------applicationName-------------------"+applicationName);
+    Attributes attributes=entitlementGroup.getAttributes();
+    log.error("--------------attributes-------------------"+attributes);
+    Map map=attributes.getMap();
+    log.error(map);
+  }
+
+  ]]></Source>
+        
+
+</Rule>

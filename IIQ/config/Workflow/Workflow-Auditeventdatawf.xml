@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="AuditEventDataWf" significantModified="1738231863217" type="">
+          
+    
+    <Variable initializer="false" name="trace"/>
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="Add or Remove"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="Add or Remove" posX="319" posY="100">
+                    
+        
+        <Approval name="DemoFormApproval" owner="$(launcher)" return="identity,startDate,endDate,action" send="identity,startDate,endDate,action">
+                              
+            
+            <Arg name="requester" value="ref:launcher"/>
+                              
+            
+            <Form name="LoggingInfo">
+                                        
+                
+                <Section columns="2" name="Working Logs-inputs">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="hidden">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                      
+                            
+                            <entry key="readOnly" value="false"/>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                  
+                    
+                    <Field displayName="Identity" dynamic="true" name="identity" postBack="true" type="identity"/>
+                                                  
+                    
+                    <Field displayName="StartDate" dynamic="true" name="startDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Field displayName="Action" dynamic="true" name="action" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValuesDefinition>
+                                                                      
+                            
+                            <Script>
+                                                                                
+                                
+                                <Source><![CDATA[
+
+                  return Arrays.asList("login","logout");
+                ]]></Source>
+                                                                              
+                            
+                            </Script>
+                                                                    
+                        
+                        </AllowedValuesDefinition>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="EndDate" dynamic="true" name="endDate" postBack="true" type="date"/>
+                                                  
+                    
+                    <Button action="next" label="Next"/>
+                                                
+                
+                </Section>
+                                        
+                
+                <Section columns="2" name="DataSection">
+                                                  
+                    
+                    <Field displayName="Source" dynamic="true" name="idName" postBack="true" type="String">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.*;
+                import sailpoint.api.*;
+                if(identity!=null){
+                return context.getObjectById(Identity.class,identity).getDisplayName();
+                }else
+                log.error("--else block---");
+                Filter filter = Filter.eq("action","login");
+                QueryOptions qo = new QueryOptions();
+                qo.add(filter);
+                List sourcelist=context.getObjects(AuditEvent.class,qo);
+                int i=0;
+                while(i<sourcelist.size()){
+                return sourcelist.get(i).getSource().toString();
+                }
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="ServerHost" dynamic="true" name="serverHost" postBack="true" type="String">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                import sailpoint.object.*;
+                import sailpoint.api.*;
+                if(identity!=null){
+                Filter filter = Filter.eq("action","login");
+                Filter f1 = Filter.eq("source",context.getObjectById(Identity.class,identity).getName());
+                QueryOptions qo = new QueryOptions();
+                qo.add(f1);
+                List ae = context.getObjects(AuditEvent.class,qo);
+                return ae.get(0).getServerHost().toString();
+                }else
+                Filter filter = Filter.eq("action","login");
+                QueryOptions qo = new QueryOptions();
+                qo.add(filter);
+                List sourcelist=context.getObjects(AuditEvent.class,qo);
+                int i=0;
+                while(i<sourcelist.size()){
+                return sourcelist.get(i).getSource().toString();
+                }
+                return "";
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

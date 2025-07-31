@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="sailpointcontext-usage" significantModified="1716208933107" type="Validation">
+          
+    
+    <Signature returnType="Map"/>
+          
+    
+    <Source><![CDATA[
+
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+ // import object.QueryOptions();
+  
+  
+  
+
+ //QueryOptions qo1=new QueryOptions();
+ /*Filter f1=Filter.eq("links.application.name","HR-Application");
+   Filter f2=Filter.eq("links.application.name","ActiveDirectory");*/
+  //qo1.add(f1);
+  //qo1.add(f2);
+  
+ /* Application app1=context.getObjectbyName("ActiveDirectory");
+   Application app2=context.getObjectbyName("HR-Application");*/
+
+ 
+List list=new ArrayList();
+  Filter filter =Filter.and(Filter.eq("links.application.name","HR-Application"),Filter.eq("links.application.name","ActiveDirectory"));
+  //Filter filter=Filter.eq("links.application.name","HR-Application");
+  QueryOptions qo1=new QueryOptions();
+  qo1.add(filter);
+   List idnties=context.getObjects(Identity.class,qo1);
+ // return idnties;
+ return idnties.size();
+  if(idnties!=null){
+    for(Identity id:idnties){
+      list.add(id.getName());
+      
+    }
+  }
+  return list.size();
+ 
+  
+  
+  
+  
+  
+  
+  QueryOptions qo=new QueryOptions();
+  Filter f1=Filter.eq("firstname","James");
+  qo.add(f1);
+  List idtsList=context.getObjects(Identity.class,qo);
+  //return idtsList.size();
+   return idtsList;
+
+  
+  
+  
+  List listOfIdnts=new ArrayList();
+  List idnts=context.getObjects(Identity.class);
+  if(idnts!=null){
+    for(Identity ids:idnts){
+      List links=ids.getLinks();
+      if(links.size()>=2){
+        listOfIdnts.add(ids);
+      }
+    }
+  }
+  return listOfIdnts;
+
+
+
+
+
+
+  Filter f=Filter.eq("firstname","Albert");
+  Identity id=context.getUniqueObject(Identity.class,f);
+
+  List entList=id.getExceptions();
+  if(entList!=null){
+    for(EntitlementGroup ent:entList){
+      Attributes attrs=ent.getAttributes();
+      List memberOfList=attrs.get("memberOf");
+      for(String str:memberOfList){
+        if(str.equalsIgnoreCase("CN=AccountsPayable,OU=Groups,OU=Demo,DC=Eshiam,DC=com")){
+          return str;
+        }
+      }
+    }
+  }
+
+
+  //return entList.size();
+  // return entList;
+
+
+  /*  List exceptionList=id.getExceptions();
+  return exceptionList;*/
+  return id.getName();
+
+  Identity idnty=context.getObjectById(Identity.class,"c0a81d898f331f7b818f3404b51b004c");
+  List idLinks=idnty.getLinks();
+  // return idLinks.size();
+  return idnty.getName();
+
+
+
+  ]]></Source>
+        
+
+</Rule>

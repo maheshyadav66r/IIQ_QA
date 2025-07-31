@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>DoctorRegistry </title>
+	<script>
+		function onClickSaveDoctorRegistry(context) {
+			var doctorRegistry = {};
+
+			doctorRegistry.doctorCode = document.getElementById("doctorCode").value;
+			doctorRegistry.doctorQualification = document.getElementById("doctorQualification").value;
+			doctorRegistry.doctorName = document.getElementById("doctorName").value;
+			doctorRegistry.yearsOfExperience = document.getElementById("yearsOfExperience").value;
+			doctorRegistry.action = "Save";
+
+			var requestJson = JSON.stringify(doctorRegistry);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/DoctorRegistryControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					document.getElementById("status").innerHTML = "Saved Succesfully"
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function onClickDeleteDoctorRegistry(context) {
+			var doctorRegistry = {};
+			doctorRegistry.doctorCode = document.getElementById("doctorCode").value;
+			doctorRegistry.action = "Delete";
+			var requestJson = JSON.stringify(doctorRegistry);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/DoctorRegistryControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function onChangeDoctorCode(context) {
+			var doctorRegistry = {};
+			doctorRegistry.doctorCode = document.getElementById("doctorCode").value;
+			doctorRegistry.action = "Retrieve";
+			var requestJson = JSON.stringify(doctorRegistry);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/DoctorAppointmentBooking/DoctorRegistryControllerServlet", true);
+			xhr.onload = () => {
+				if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+					console.log(xhr.response);
+					var doctorRegistryJson = xhr.response;
+					var doctorRegistryObj = JSON.parse(doctorRegistryJson);
+					var doctorRegistryObj1 = doctorRegistryObj.dataObject;
+					updateDishDetails(doctorRegistryObj1);
+				}
+			};
+			xhr.send(requestJson);
+		}
+
+		function updateDoctorRegistryDetails(doctorRegistry) {
+			if (doctorRegistry.id) {
+				document.getElementById("id").value = doctorRegistry.id;
+				document.getElementById("doctorCode").value = doctorRegistry.doctorCode;
+				document.getElementById("doctorQualification").value = doctorRegistry.doctorQualification;
+				document.getElementById("doctorName").value = doctorRegistry.doctorName;
+				document.getElementById("yearsOfExperience").value = doctorRegistry.yearsOfExperience;
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<form id="doctorRegistryForm" action="DoctorRegistryControllerServlet">
+		<div id="DoctorRegistryDetails">
+			<div><span id="status"></span></div>
+			<input type="hidden" id="id" value="" />
+			<div>
+				<label>Doctor Qualification :</label><input type="text" id="doctorQualification" value="" />
+			</div><br>
+			<div>
+				<label>Doctor Code :</label><input type="text" id="doctorCode" value=""
+					onchange="javascript:onChangeDoctorCode(this);" />
+			</div><br>
+			<div>
+				<label>Doctor Name :</label><input type="text" id="doctorName" value="" />
+			</div><br>
+			<div>
+				<label>Years Of Experience :</label><input type="number" id="yearsOfExperience" value="" />
+			</div><br>
+		</div>
+		<div>
+			<button type="button" id="save" name="SaveDoctorRegistry" onclick="onClickSaveDoctorRegistry(this);">SaveDoctorRegistry</button>
+			<button type="button" id="delete" name="deleteDoctorRegistry" onclick="onClickDeleteDoctorRegistry(this);">DeleteDoctorRegistry</button>
+		</div>
+	</form>
+</body>
+
+</html>  
+
+ 

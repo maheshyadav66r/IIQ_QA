@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC Provisioning validation Rule" significantModified="1716722054180" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import java.sql.ResultSet;
+  import java.sql.Connection;
+  import java.sql.PreparedStatement;
+  import java.sql.SQLException;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.api.SailPointContext;  
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+
+
+  if(plan!=null){
+    int groupId;
+    String FirstName;
+    String LastName;
+    String EmployeeID;
+    String EmailAddress;
+    String ManagerID;
+    String NetworkID;
+    String temp;
+
+
+    List acctReqs=plan.getAccountRequests();
+    for(AccountRequest acntReq:acctReqs){
+      List attrReqs=acntReq.getAttributeRequests();
+      for(AttributeRequest attReq:attrReqs){
+        ProvisioningPlan.Accountrequest.Pl
+        if(op.equals(ProvisioningPlan.AccountRequest
+        if(attReq.getName().equalsignoreCase("FirstName"){
+          FirstName= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("LastName"){
+          LastName= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("EmployeeID"){
+          EmployeeID= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("EmailAddress"){
+          EmailAddress= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("EmailAddress"){
+          EmailAddress= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("ManagerID"){
+          ManagerID= attReq.getValue();
+        }else if(attReq.getName().equalsignoreCase("NetworkID"){
+          NetworkID= attReq.getValue();
+        }
+                 
+
+
+
+                 }
+                 }
+                 }
+                 ]]></Source>
+        
+
+</Rule>

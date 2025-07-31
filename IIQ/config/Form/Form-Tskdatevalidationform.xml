@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="TskDateValidationForm" significantModified="1749128383312" type="Report">
+          
+    
+    <Section columns="2" name="DateValidationSection">
+                    
+        
+        <Field columnSpan="1" displayName="StartDate" name="startDate" type="date" value="ref:startDate"/>
+                    
+        
+        <Field columnSpan="1" displayName="EndDate" name="endDate" type="date" value="ref:endDate">
+                              
+            
+            <ValidationScript>
+                                        
+                
+                <Source><![CDATA[
+          for(int i=0;i<this.variables.length;i++){
+          log.error("------variables in report form-----"+this.variables[i]);
+          }
+
+
+          // if (value!=null) {
+
+
+          log.error("startdate====="+form.getField("startDate").getValue());
+
+          Calendar  cal1=Calendar.getInstance();
+          cal1.setTime(form.getField("startDate").getValue());
+
+          Calendar cal2=Calendar.getInstance();
+          cal2.setTime(value);
+
+          int sYear=cal1.get(Calendar.YEAR);
+          int smonth=cal1.get(Calendar.MONTH);
+
+          int eYear=cal2.get(Calendar.YEAR);
+          int emonth=cal2.get(Calendar.MONTH);
+
+          int yearDiff=Math.subtractExact(sYear,eYear);
+          int monthsDiff=Math.subtractExact(smonth,emonth);
+          int diff=yearDiff*12+monthsDiff;
+
+          log.error("sy   sm   ey   em  ==== "+sYear+"....."+smonth+"...."+eYear+"...."+smonth);
+          log.error("yearDiff   monthsDiff==="+yearDiff+"    "+monthsDiff);
+          log.error("final  diff  ===   "+diff);
+
+
+          if(diff >12)
+          return "Date must be within  12 Months";
+          else
+          return null;
+        ]]></Source>
+                                      
+            
+            </ValidationScript>
+                            
+        
+        </Field>
+                    
+        
+        <Field columnSpan="1" displayName="SelectObject" name="object" type="String">
+                              
+            
+            <AllowedValues>
+                                        
+                
+                <String>Accounting</String>
+                                        
+                
+                <String>Manufacturing</String>
+                                        
+                
+                <String>Engineering</String>
+                                      
+            
+            </AllowedValues>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+        
+
+</Form>

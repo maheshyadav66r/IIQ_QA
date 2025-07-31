@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="SendingDataToManager_csvFile_Email_Template" significantModified="1747196198453">
+          
+    
+    <Body>
+    Dear $!manager Sir/Madam,
+
+    This email contains a csv file of yuor sub-ordinate belongs to $!department  department data from SailPoint IdentityIQ. The attached file includes the detailed identity data report.
+    If you have any questions or  further assistance, do not hesitate to contact the Eshiam IAM Team. to managerObject $!managerObject
+
+     Thanks, 
+
+  </Body>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="file" type="string"/>
+                              
+            
+            <Argument name="manager" type="string"/>
+                              
+            
+            <Argument name="department" type="string"/>
+                              
+            
+            <Argument name="managerObject" type="sailpoint.object.Identity"/>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Subject>Sending Identity Data to their Manager </Subject>
+        
+
+</EmailTemplate>

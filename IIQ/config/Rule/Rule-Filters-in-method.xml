@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Filters-in-method" type="Validation">
+          
+    
+    <Signature returnType="Map"/>
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import java.util.*;
+  
+  List list=new ArrayList();
+  List filters=new ArrayList();
+  QueryOptions qo=new QueryOptions();
+   Filter f2= Filter.eq("links.applicaion.name","ActiveDirectory");
+  Filter f1=Filter.eq("department","Engineering");
+  filters.add(f1);
+  filters.add(f2);
+  Filter f=Filter.and(filters);
+  qo.add(f);
+  List ids=context.getObjects(Identity.class,qo);
+  for(Identity idnty:ids){
+    list.add(idnty);
+  }
+  return list;
+  
+   /* List list=new ArrayList();
+  QueryOptions qo1=new QueryOptions();
+  Filter fn=Filter.eq("department","Engineering");
+  qo1.add(fn);
+  List idnty=context.getObjects(Identity.class,qo1);
+  for(identity id:idnty){
+    list.add(id);
+  }
+  return list;*/
+  
+ 
+  ]]></Source>
+        
+
+</Rule>

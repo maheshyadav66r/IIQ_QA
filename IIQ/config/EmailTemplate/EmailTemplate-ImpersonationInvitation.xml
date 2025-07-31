@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="Impersonation Invitation">
+          
+    
+    <Body>Hi,
+
+${targetDisplayName} has created a token to impersonate this identity.
+
+Token code: ${token}
+
+#if(${oneTime})The token can be used only once.#{end}
+
+#if(${expiration})The token will expire on $spTools.formatDate($expiration,"d MMMM yyyy HH:mm:ss, zzzz")#{end}
+</Body>
+          
+    
+    <Description>
+			Email template used to notify a person that an impersonation token has been created and is ready to use.
+		</Description>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="targetIdentity" type="string">
+                                        
+                
+                <Description>The identity that can be impersonated .</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="targetDisplayName" type="string">
+                                        
+                
+                <Description>The display name of the identity that can be impersonated .</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="token" type="String">
+                                        
+                
+                <Description>The token code.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="oneTime" type="boolean">
+                                        
+                
+                <Description>Tells whether or not the token is for single use only.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="expiration" type="date">
+                                        
+                
+                <Description>The expiration date of the token code.</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Subject>Impersonation token create for identity ${targetDisplayName}</Subject>
+        
+
+</EmailTemplate>

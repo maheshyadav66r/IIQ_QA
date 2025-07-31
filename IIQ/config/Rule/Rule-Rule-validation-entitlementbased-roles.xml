@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-EntitlementBased-Roles" significantModified="1739448978138" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import java.util.Date;
+  import java.util.Calendar;
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+  import sailpoint.api.SailPointContext;
+
+
+  String querry=" SELECT spt_bundle.* FROM spt_bundle LEFT JOIN spt_profile ON spt_bundle.id = spt_profile.bundle_id LEFT JOIN spt_profile_constraints ON spt_profile.id = spt_profile_constraints.profile WHERE  spt_profile_constraints.elt like "+"'%"+"CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"+"%'";
+
+  QueryOptions qo=new QueryOptions();
+  qo.setQuery(querry);
+
+  List bundles=context.getObjects(Bundle.class,qo);
+  log.error("bundle list--"+bundles);
+  return bundles.size();
+
+
+
+
+
+
+
+
+
+  // Filter filter=Filter.and(Filter.leftJoin("id", "Profile.bundle.id Filter.leftJoin("Profile.id","ProfileContraints.profile.id"),Filter.like("ProfileContraints.elt","%CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com%"));
+
+  /* qo.add(Filter.leftJoin("id", "Profile.bundle.id"));
+  qo.add(Filter.leftJoin("Profile.id", "ProfileConstraints.profile"));
+  qo.add(Filter.like("ProfileConstraints.elt", "CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));*/
+
+  /*Filter filter = Filter.leftJoin("id", "profile.bundleId")
+                      .leftJoin("profileId", "someOtherTable.profileId")
+                      .leftJoin("anotherTableId", "yetAnotherTable.someField");
+
+*/
+
+  /*QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("links.application.name","ActiveDirectory");
+  qo.addFilter(f);
+
+  List ids=context.getObjects(Identity.class,qo);
+
+  return ids.size();*/
+
+
+  //Filter.leftJoin("id",
+
+
+
+
+
+  /* ManagedAttribute ma=context.getObjectByName(ManagedAttribute.class,"AccountingGeneral");
+  public List fetchRoles(ManagedAttribute managedAttribute){
+
+
+  }
+
+  return fetchRoles;
+*/
+
+
+
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="SVB-Role_Assignments_by_Sup_Org PreIterate" significantModified="1739169764251" type="PreIterate">
+          
+    
+    <Description>This rule is called before the connector processes the data in a file.</Description>
+          
+    
+    <Signature returnType="void"/>
+          
+    
+    <Source><![CDATA[
+  import java.io.File;
+  import java.io.FileInputStream;
+  import java.io.FileNotFoundException;
+  import java.io.IOException;
+  import java.io.PrintWriter;
+  import java.text.DateFormat;
+  import java.text.SimpleDateFormat;
+  import java.util.Date;
+  import java.util.Iterator;
+  import org.apache.poi.ss.usermodel.Cell;
+  import org.apache.poi.ss.usermodel.CellType;
+  import org.apache.poi.ss.usermodel.Row;
+  import org.apache.poi.ss.usermodel.Sheet;
+  import org.apache.poi.ss.usermodel.Workbook;
+  import org.apache.poi.ss.usermodel.WorkbookFactory;
+  import org.apache.poi.xssf.usermodel.XSSFSheet;
+  import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+  import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+  import org.apache.commons.logging.Log;
+  import org.apache.commons.logging.LogFactory;
+  import org.apache.commons.io.FilenameUtils;
+  import sailpoint.tools.Util;
+  import sailpoint.object.Custom;
+  import sailpoint.tools.GeneralException;
+
+
+  Log svbLog = LogFactory.getLog("rule.SVB_Rule_Debtx_PreIterate");
+  if(svbLog.isTraceEnabled()){
+    svbLog.trace("Entering SVB Rule Debtx PreIterate ");
+
+  }
+
+  Custom svbCustomObj = context.getObjectByName(Custom.class,"SVB Custom Common");
+
+  if(svbCustomObj == null){
+
+    throw new GeneralException("Unable to get SVB custom object");
+
+  }
+
+  String INPUT_FILEPATH_LOCATION = svbCustomObj.get("FinastraFilePath");
+
+  String OUTPUT_FILEPATH_LOCATION = stats.get("absolutePath");
+
+  String ARCHIVE_FILEPATH_LOCATION = svbCustomObj.get("archiveFilePath");
+
+  String OUTPUT_FILE_NAME_SP = stats.get("fileName");
+
+
+  log.error(" stats object---"+stats);
+
+
+  log.error("   OUTPUT_FILE_NAME_SP   --"+stats.get("fileName"));
+  log.error("  OUTPUT_FILEPATH_LOCATION   --"+stats.get("absolutePath"));
+
+
+  // decache custom object
+
+  context.decache(svbCustomObj);
+
+  public StringBuffer readExcel(){
+
+    // For storing data into CSV files
+
+    StringBuffer data = new StringBuffer();
+
+    FileInputStream fileInput = null;
+
+    Workbook wb = null;
+
+    try {
+
+      fileInput = new FileInputStream(INPUT_FILEPATH_LOCATION);
+
+      // Get the workbook instance for XLSX file
+
+      String ext = FilenameUtils.getExtension(INPUT_FILEPATH_LOCATION);
+
+      if (Util.nullSafeCaseInsensitiveEq(ext,"xlsx")) {
+
+        wb = new XSSFWorkbook(fileInput);
+
+      } else if (Util.nullSafeCaseInsensitiveEq(ext,"xls")) {
+
+        wb = new HSSFWorkbook(fileInput);
+
+      }
+
+      if(null != wb) {
+
+        // Get first sheet from the workbook
+
+        Sheet sheet = wb.getSheetAt(0);
+
+        if(null != sheet) {
+
+          // Iterate through each rows from first sheet
+
+          Row rowObj = null;
+
+          for (int i = 0; i <= sheet.getLastRowNum(); i++) {
+
+            rowObj = sheet.getRow(i);
+
+            for (int j = 0; rowObj !=null && j < rowObj.getLastCellNum(); j++) {
+
+              if(j > 0){
+
+                data.append(",");
+
+              }
+
+              data.append("\"" + (rowObj.getCell(j)!=null?rowObj.getCell(j):"") + "\"");
+
+            }
+
+            data.append("\n");
+
+          }
+
+        }
+
+      }
+
+    } catch (FileNotFoundException fileNotFound) {
+
+      svbLog.error("Input file not found. Exception : " + fileNotFound.getMessage());
+
+    } catch (IOException ioException) {
+
+      svbLog.error("I/O Exception : " + ioException.getMessage());
+
+    } finally {
+
+      if(null != fileInput){
+
+        try {
+
+          fileInput.close();
+
+        } catch (IOException ioException) {
+
+          svbLog.error("I/O Exception : " + ioException.getMessage());
+
+        }
+
+      }
+
+      if(null != wb){
+
+        try {
+
+          wb.close();
+
+        } catch (IOException ioException) {
+
+          svbLog.error("I/O Exception : " + ioException.getMessage());
+
+        }
+
+      }
+
+    }
+
+
+
+    return data;
+
+  }
+
+  public void WriteCSV(StringBuffer outputData) throws IOException {
+
+    File outputFile = new File(OUTPUT_FILEPATH_LOCATION);
+
+    if(outputFile.exists()){
+
+      DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmss");
+
+      String currentDate = dateFormat.format(new Date());
+
+      String archiveFilePath = ARCHIVE_FILEPATH_LOCATION + OUTPUT_FILE_NAME_SP.replace(".csv", "_" + currentDate + ".csv");
+
+      copyContent(OUTPUT_FILEPATH_LOCATION, archiveFilePath);
+
+    } else {
+
+      if(svbLog.isDebugEnabled()) {
+
+        svbLog.debug("Creating a new output file");
+
+      }
+
+    }
+
+    PrintWriter pw = null;
+
+    try
+
+    {
+
+      pw = new PrintWriter(new File(OUTPUT_FILEPATH_LOCATION));
+
+      if(null != outputData && null != pw) {
+
+        svbLog.debug("Writing Data in file-Debtx");
+
+        pw.write(outputData.toString());
+
+      }
+
+      if(svbLog.isDebugEnabled()) {
+
+        svbLog.debug("File writing complete");
+
+      }
+
+    } catch (FileNotFoundException fileNotFound) {
+
+      svbLog.error("Exception trying to get output file : " + fileNotFound.getMessage());
+
+    } finally {
+
+      if(null != pw) {
+
+        pw.close();
+
+      }
+
+    }
+
+  }
+
+
+  try {
+
+    if(null != schema.getObjectType() && "account".equalsIgnoreCase(schema.getObjectType())){
+      WriteCSV(readExcel());
+    }
+
+    if(svbLog.isTraceEnabled()){
+
+      svbLog.trace("Exiting SVB Rule Debtx PreIterate ");
+
+    }
+
+  } catch (IOException ioException) {
+
+    svbLog.error("I/O Exception : " + ioException.getMessage());
+
+  }]]></Source>
+        
+
+</Rule>

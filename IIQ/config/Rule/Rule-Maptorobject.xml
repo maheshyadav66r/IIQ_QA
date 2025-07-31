@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="MapToRObject" type="Transformation">
+          
+    
+    <Description>This rule is used by the delimited file connector and will transform a Map into a ResourceObject.</Description>
+          
+    
+    <Signature returnType="ResourceObject"/>
+          
+    
+    <Source><![CDATA[log.error("---MapTorObj---");
+
+return resourceObject;]]></Source>
+        
+
+</Rule>

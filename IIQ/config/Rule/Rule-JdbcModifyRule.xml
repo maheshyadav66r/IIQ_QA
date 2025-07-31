@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC Modify Rule" significantModified="1735291762583" type="JDBCOperationProvisioning">
+          
+    
+    <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+          
+    
+    <Signature returnType="ProvisioningResult">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>The application whose data file is being processed.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="schema">
+                                        
+                
+                <Description>The Schema currently in use.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="connection">
+                                        
+                
+                <Description>A connection object to connect to database.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="plan">
+                                        
+                
+                <Description>The ProvisioningPlan created against the JDBC application.</Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="request">
+                                        
+                
+                <Description>The ProvisioningRequest created against the JDBC application.</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan</Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AttributeRequest;
+  import java.sql.SQLException;
+  import java.sql.Connection;
+  import java.sql.ResultSet;
+  import java.sql.PreparedStatement;
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import sailpoint.object.ProvisioningResult;
+  import sailpoint.object.ProvisioningPlan.Operation;
+
+    log.error("--------------------plan available in jdbc modify rule------------------"+plan.toXml());   
+
+  ProvisioningResult pr=new ProvisioningResult();
+  if(plan!=null){
+    int groupId;
+    List groupNameList=new ArrayList();
+    List groupIdList=new ArrayList();
+    List accReqList=plan.getAccountRequests();
+
+    for(AccountRequest accReq:accReqList)
+    {
+      List attrReqList=accReq.getAttributeRequests();
+      String nativeIdentity=accReq.getNativeIdentity();
+      String userIdQuery="select id from jdbc.jdbc_user_data where Name='"+nativeIdentity+"'";
+      PreparedStatement userIdStatement=connection.prepareStatement(userIdQuery);
+      ResultSet rs=userIdStatement.executeQuery();
+         log.error("--------------------accountrequest  in jdbc modify rule------------------"+nativeIdentity);   
+
+      int userId;
+      if(rs.next())
+      { 
+        userId=rs.getInt(1);
+      }
+      log.error("----userId----from database by rs---"+userId);
+      
+      if(attrReqList!=null && attrReqList.size()>0)
+      {
+        for(AttributeRequest attReq:attrReqList)
+        {
+          if(attReq.getName().equals("GroupName"))
+          {
+            String groupName=(String)attReq.getValue();
+                  log.error("----groupName----from getValue()---"+groupName);
+            // groupNameList.add(groupName);
+            String groupIdQuery="select gid from jdbc.jdbc_groups_data where GroupName='"+groupName+"'";
+            PreparedStatement groupIdStatement=connection.prepareStatement(groupIdQuery);
+            ResultSet rs=groupIdStatement.executeQuery();
+
+            if(rs.next())
+            {
+              groupId=rs.getInt(1);
+              // groupIdList.add(groupId);
+            }
+            log.error("------groupId from database by rs-----"+groupId);
+            rs.close();
+            groupIdStatement.close();
+
+            if(attReq.getOperation().equals(ProvisioningPlan.Operation.Add)|| attReq.getOperation().equals(ProvisioningPlan.Operation.Set)){
+
+              //groupIdList.add(groupId);
+              // for(int group_id:groupIdList){
+
+              String linkTableUpdateQuery="insert into jdbc.jdbc_user_groups_data(usersid,groupid) values(?,?)";
+              PreparedStatement linkTableStatement=connection.prepareStatement(linkTableUpdateQuery);
+              linkTableStatement.setInt(1,userId);
+              linkTableStatement.setInt(2,groupId);
+              linkTableStatement.executeUpdate();
+              // }
+            }else if(attReq.getOperation().equals(ProvisioningPlan.Operation.Remove)){
+
+              //groupId=Integer.valueOf(obj);
+              //groupIdList.add(groupId);
+              // for(int group_id:groupIdList){
+              String linkTableRemoveQuery="delete from jdbc.jdbc_user_groups_data where  groupid="+groupId+" and  usersid="+userId;
+              PreparedStatement linkTableRemoveStatement=connection.prepareStatement(linkTableRemoveQuery);  
+              linkTableRemoveStatement.executeUpdate();
+              linkTableRemoveStatement.close();
+
+              //}
+            }
+          }
+
+        }
+      }
+
+    }
+    pr.setStatus(ProvisioningResult.STATUS_COMMITTED);    
+  }
+
+
+  connection.close();
+  return pr;]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="CF-JoinerTrigger-Rule" significantModified="1738574507089" type="IdentityTrigger">
+          
+    
+    <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+          
+    
+    <ReferencedRules>
+                    
+        
+        <Reference class="sailpoint.object.Rule" name="CF-Constants-Rule"/>
+                  
+    
+    </ReferencedRules>
+          
+    
+    <Signature returnType="boolean">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="previousIdentity">
+                                        
+                
+                <Description>
+          The identity before the refresh/aggregation (this will be null when an
+          identity is created).
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="newIdentity">
+                                        
+                
+                <Description>
+          The identity after the refresh/aggregation (this will be null when an
+          identity is deleted).
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="result">
+                                        
+                
+                <Description>
+          A boolean describing the result of the rule.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import sailpoint.tools.Util;
+import sailpoint.object.*;
+import sailpoint.api.*;
+  import org.apache.log4j.Logger;
+
+  log.error("---newIdentity---"+newIdentity.toXml());
+    log.error("---previousIdentity---"+previousIdentity.toXml());
+
+  Logger mylogger = Logger.getLogger("com.carefirst.loggers");
+  System.out.println("Starting Carefirst Joiner Trigger Rule");
+  try{
+
+    //return true;
+
+
+    String strAction = newIdentity.getAttribute(ATR_ACTION) != null ? newIdentity.getAttribute(ATR_ACTION) : "";
+    String strEmpStatus = newIdentity.getAttribute(ATR_HRSTATUS) != null ? newIdentity.getAttribute(ATR_HRSTATUS) : "";
+
+   log.error("**** Starting CareFirst Joiner Trigger Rule ****");
+
+    if(newIdentity != null && previousIdentity == null && Util.isNotNullOrEmpty(strAction) && Util.isNotNullOrEmpty(strEmpStatus) && strAction.equalsIgnoreCase(STR_ACTION_HIR) && strEmpStatus.equalsIgnoreCase("A")) {
+      return true;
+
+    }else{
+      return false;
+    }
+  }
+  catch(Exception e){
+    return false;
+  }]]></Source>
+        
+
+</Rule>

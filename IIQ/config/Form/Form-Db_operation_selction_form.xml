@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="DB_operation_Selction_form" significantModified="1752486821731" type="Workflow">
+          
+    
+    <Attributes>
+                    
+        
+        <Map>
+                              
+            
+            <entry key="pageTitle" value="Operatio_Type"/>
+                            
+        
+        </Map>
+                  
+    
+    </Attributes>
+          
+    
+    <Section label="Operation Selection" name="operationSelection">
+                    
+        
+        <Field displayName="Operation" displayType="radio" name="operation">
+                              
+            
+            <AllowedValuesDefinition>
+                                        
+                
+                <Value>
+                                                  
+                    
+                    <List>
+                                                            
+                        
+                        <String>Create</String>
+                                                            
+                        
+                        <String>Modify</String>
+                                                          
+                    
+                    </List>
+                                                
+                
+                </Value>
+                                      
+            
+            </AllowedValuesDefinition>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+          
+    
+    <Button action="next" label="Next"/>
+          
+    
+    <Button action="back" label="Cancel"/>
+        
+
+</Form>

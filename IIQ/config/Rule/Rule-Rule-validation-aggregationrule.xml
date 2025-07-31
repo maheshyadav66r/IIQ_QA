@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-Validation-AggregationRule" significantModified="1742206206368" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Application;
+  import sailpoint.object.Attributes;
+  import sailpoint.object.Custom;
+  import sailpoint.object.Filter;
+  import sailpoint.object.Identity;
+  import sailpoint.object.Link;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.ResourceObject;
+  import sailpoint.object.TaskResult;
+  import sailpoint.object.Rule;
+  import sailpoint.connector.JDBCConnector;
+  import sailpoint.api.Aggregator;
+  import sailpoint.connector.Connector;
+  import org.apache.log4j.Logger;
+  import org.apache.log4j.Level;
+
+
+
+  File file=new File("D:\\csv files\\Data.csv");
+
+  BufferedReader br=new BufferedReader(new FileReader(file));
+
+  Map customMap=new HashMap();
+  String line;
+
+  Custom custom=context.getObjectByName(Custom.class,"NetIdApplicationDataCustomObject");
+
+  if(custom!=null){
+    Custom custom=new Custom();
+    custom.setName("NetIdApplicationDataCustomObject");
+  }
+
+
+  while((line=br.readLine())!=null){
+
+    List list=sailpoint.tools.Util.csvToList(line);
+
+    customMap.put(list.get(0),sailpoint.tools.Util.csvToList(list.get(1)));
+
+  }
+
+  log.error("  end==="+customMap);
+
+  custom.put(customMap);
+  context.saveObject(custom);
+  context.commitTransaction();
+
+  log.error("  end==="+custom.toXml());
+  return custom;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* while((line=br.readLine()!=null)){
+
+    String[] record=line.split(",");
+    String netId=record[0].trim();
+
+    List list=new ArrayList();
+    //customMap.put(netId,list);
+
+    if(record!=null){
+
+  }*/
+
+
+  String errorMessage = "";
+  String applicationName = "ActiveDirectory";
+  String accountName = "Abdul samad";
+
+  // We have already validated all of the arguments.  Now just load the objects.
+
+  Application appObject = context.getObjectByName(Application.class, applicationName);
+  String appConnName = appObject.getConnector();
+
+  log.error("Application " + applicationName + " uses connector " + appConnName);
+
+  Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);
+
+  ResourceObject rObj = null;
+
+  try {
+
+    rObj = (ResourceObject) appConnector.getObject("account", accountName, null);
+
+  } catch (sailpoint.connector.ObjectNotFoundException onfe) {
+
+    log.error(onfe);  
+    return errorMessage;
+  }
+
+  Attributes argMap = new Attributes();
+  argMap.put("promoteAttributes",       "true");
+  argMap.put("correlateEntitlements",   "true");
+  argMap.put("noOptimizeReaggregation", "true");  
+  argMap.put("checkDeleted", "true");                       // Note: Set to false to disable re-correlation.
+
+  // Consturct an aggregator instance.
+  Aggregator agg = new Aggregator(context, argMap);
+  if (null == agg) {
+    errorMessage = "Null Aggregator returned from constructor.  Unable to Aggregate!";
+    log.eror(errorMessage);
+    return errorMessage;
+  }
+
+  // Invoke the aggregation task by calling the aggregate() method.
+  // Note: the aggregate() call may take serveral seconds to complete.
+  TaskResult taskResult = agg.aggregate(appObject, rObj);
+
+  return rObj;
+
+
+
+
+
+
+
+
+
+
+
+
+  //After try block
+  // Now we have a raw ResourceObject.  The Application in IdentityIQ may have a
+  // Customization rule defined to transform the ResourceObject.  We need to
+  // honor that configuration, so if the Applicaiton has a Rule then we run it.
+
+  /*Rule customizationRule = appObject.getCustomizationRule();
+  if (null != customizationRule) {
+    log.debug("Customization rule found for applicaiton " + applicationName);  
+
+    try {
+      // Pass the mandatory arguments to the Customization rule for the app.
+
+      HashMap ruleArgs = new HashMap();
+      ruleArgs.put("context",     context);
+      ruleArgs.put("log",         log);
+      ruleArgs.put("object",      rObj);
+      ruleArgs.put("application", appObject);
+      ruleArgs.put("connector",   appConnector);
+      ruleArgs.put("state",       new HashMap());
+
+      // Call the customization rule just like a normal aggregation would.
+      ResourceObject newRObj = context.runRule(customizationRule, ruleArgs, null);
+      // Make sure we got a valid resourceObject back from the rule. 
+      if (null != newRObj) {
+        rObj = newRObj;
+        log.debug("Got post-customization resourceObject: " + rObj.toXml());
+      }   
+    } catch (Exception ex) {
+      // Swallow any customization rule errors, the show must go on!
+      log.error("Error while running Customization rule for " + applicationName);
+    } 
+  }*/
+  // Next we perform a miniature "Aggregation" using IIQ's built in Aggregator.
+  // Create an arguments map for the aggregation task.
+  // To change this (if you need to), the map contains aggregation options and is the same as the
+  // arguments to the acocunt aggregation tasks.  Some suggestied defaults are:
+  //  Attributes argMap = new Attributes();
+
+
+
+
+
+
+
+  //single group/account creation in target application
+  String emp = "Potta Aresh";
+
+  Application appObject = context.getObjectByName(Application.class, "LDAPApplication");
+  Connector appConnector = sailpoint.connector.ConnectorFactory.getConnector(appObject, null);
+  Attributes argMap = new Attributes();
+  argMap.put("promoteAttributes", "true");
+  argMap.put("correlateEntitlements", "true");
+  argMap.put("noOptimizeReaggregation", "true");
+
+  ResourceObject rOjb =(ResourceObject) appConnector.getObject("account", emp, null);
+
+  System.out.println("Raw Resource object for Application is "+rOjb.toXml());
+  Aggregator agg = new Aggregator(context, argMap);
+  agg.aggregate(appObject, rOjb);
+  System.out.println("Aggregation Completed");
+  //return "nnn";
+  ]]></Source>
+        
+
+</Rule>

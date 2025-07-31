@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" name="WFFormdemo" significantModified="1732257582642" type="">
+          
+    
+    <Step icon="Start" name="Start" posX="109" posY="100">
+                    
+        
+        <Transition to="DemoFormStep"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Default" name="DemoFormStep" posX="319" posY="100">
+                    
+        
+        <Approval name="DemoFormApproval" owner="$(launcher)" return="Name" send="">
+                              
+            
+            <Form name="MaheshNattaliForm">
+                                        
+                
+                <Section columns="2" label="FirstSectionlabel" name="FirstSection">
+                                                  
+                    
+                    <Attributes>
+                                                            
+                        
+                        <Map>
+                                                                      
+                            
+                            <entry key="hidden">
+                                                                                
+                                
+                                <value>
+                                                                                          
+                                    
+                                    <Boolean/>
+                                                                                        
+                                
+                                </value>
+                                                                              
+                            
+                            </entry>
+                                                                    
+                        
+                        </Map>
+                                                          
+                    
+                    </Attributes>
+                                                  
+                    
+                    <Field displayName="IdentityFN" name="idfn" type="Identity">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[
+                        log.error("--------hiddden attr---");
+                        return false;
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                                
+                                
+                                <entry key="valueProperty"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="FirstName" name="firstname" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValues>
+                                                                      
+                            
+                            <String> N</String>
+                                                                      
+                            
+                            <String> R</String>
+                                                                      
+                            
+                            <String> CH</String>
+                                                                      
+                            
+                            <String> U</String>
+                                                                    
+                        
+                        </AllowedValues>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="LastName" name="lastName" postBack="true" type="String">
+                                                            
+                        
+                        <AllowedValues>
+                                                                      
+                            
+                            <String> Mahesh</String>
+                                                                      
+                            
+                            <String> Naveen</String>
+                                                                      
+                            
+                            <String> SriRam</String>
+                                                                      
+                            
+                            <String> Suresh</String>
+                                                                    
+                        
+                        </AllowedValues>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="Username" dynamic="true" name="Name" type="Identity">
+                                                            
+                        
+                        <Attributes>
+                                                                      
+                            
+                            <Map>
+                                                                                
+                                
+                                <entry key="hidden">
+                                                                                          
+                                    
+                                    <value>
+                                                                                                    
+                                        
+                                        <Script>
+                                                                                                              
+                                            
+                                            <Source><![CDATA[
+                        boolean hidden=false;
+                        if((String)form.getField("firstname").getValue()!=null && (String)form.getField("lastName").getValue()!=null){
+                        return hidden;
+                        }
+                      ]]></Source>
+                                                                                                            
+                                        
+                                        </Script>
+                                                                                                  
+                                    
+                                    </value>
+                                                                                        
+                                
+                                </entry>
+                                                                                
+                                
+                                <entry key="valueProperty" value="name"/>
+                                                                              
+                            
+                            </Map>
+                                                                    
+                        
+                        </Attributes>
+                                                          
+                    
+                    </Field>
+                                                
+                
+                </Section>
+                                        
+                
+                <Button action="next" label="Submit"/>
+                                        
+                
+                <Section label="SecondSectionlabel" name="SecondSection">
+                                                  
+                    
+                    <Field displayName="Email" dynamic="true" name="email" required="true" type="String">
+                                                            
+                        
+                        <Script>
+                                                                      
+                            
+                            <Source><![CDATA[
+                if((String)form.getField("firstname").getValue()!=null && (String)form.getField("lastName").getValue()!=null){
+                String fn=(String)form.getField("firstname").getValue();
+                String ln=(String)form.getField("lastName").getValue();
+                return fn.toLowerCase()+"."+ln.toLowerCase()+"@eshiam.com";
+                }
+              ]]></Source>
+                                                                    
+                        
+                        </Script>
+                                                          
+                    
+                    </Field>
+                                                  
+                    
+                    <Field displayName="DateOfBirth" name="dob" required="true" type="date"/>
+                                                
+                
+                </Section>
+                                      
+            
+            </Form>
+                            
+        
+        </Approval>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="677" posY="98"/>
+        
+
+</Workflow>

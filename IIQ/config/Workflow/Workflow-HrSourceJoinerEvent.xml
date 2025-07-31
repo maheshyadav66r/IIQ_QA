@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" libraries="Identity" name="HR Source Joiner event" significantModified="1720270881381" type="IdentityLifecycle">
+          
+    
+    <Variable input="true" name="trigger">
+                    
+        
+        <Description>The IdentityTrigger</Description>
+                  
+    
+    </Variable>
+          
+    
+    <Variable input="true" name="event" transient="true">
+                    
+        
+        <Description>
+      The IdentityChangeEvent.  It can be used to build
+      the provisioning plan, but does not need to be
+      persisted with the case, so marked as transient.
+    </Description>
+                  
+    
+    </Variable>
+          
+    
+    <Variable input="true" name="identityName">
+                    
+        
+        <Description>The name of the identity.</Description>
+                  
+    
+    </Variable>
+          
+    
+    <Variable name="plan"/>
+          
+    
+    <Variable name="audit"/>
+          
+    
+    <Variable name="identity">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.Identity;
+
+        Identity identity=null;
+        identity=context.getObjectByName(Identity.class, identityName);
+        return identity;]]></Source>
+                            
+        
+        </Script>
+                  
+    
+    </Variable>
+          
+    
+    <Variable initializer="false" name="trace">
+                    
+        
+        <Description>Used for debugging this workflow and when set to true trace
+      will be sent to stdout.</Description>
+                  
+    
+    </Variable>
+          
+    
+    <Step icon="Start" name="Start" posX="28" posY="10">
+                    
+        
+        <Transition to="create provisioning plan"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="create provisioning plan" posX="213" posY="11" resultVariable="plan">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import java.util.Date;
+        import java.util.Calendar;
+        import sailpoint.object.*;
+        import sailpoint.tools.Util;
+        import sailpoint.api.Provisioner;
+        import java.text.SimpleDateFormat;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningProject;
+        import sailpoint.object.ProvisioningPlan.Operation;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+        log.error("--------enter into event---------------");
+        Provisioner pr=new Provisioner(context);
+        String department=identity.getAttribute("department");
+        ProvisioningPlan plan=new ProvisioningPlan();
+        AccountRequest accntReqForAD=new AccountRequest();
+        AccountRequest accntReqForLDAP=new AccountRequest();
+
+        plan.setIdentity(identity);
+        accntReqForAD.setApplication("ActiveDirectory");
+        accntReqForAD.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+        accntReqForLDAP.setApplication("LDAPApplication");
+        accntReqForLDAP.setOperation(ProvisioningPlan.AccountRequest.Operation.Modify);
+
+
+        if(department.equalsIgnoreCase("Engineering"))
+        {
+        accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=ENG_All,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+        accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=ENG_EastCoast,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+        accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+        plan.add(accntReqForAD);
+
+        accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Employees,ou=Group,dc=my-domain,dc=com"));
+        accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Managers,ou=Group,dc=my-domain,dc=com"));
+        accntReqForLDAP.add(new AttributeRequest("businessCategory",ProvisioningPlan.Operation.Add,"Inactive"));
+        plan.add(accntReqForAD);
+        plan.add(accntReqForLDAP);
+
+        }
+        else if(department.equalsIgnoreCase("Finance"))
+        {
+
+        accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+        accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,	"CN=Finance,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));   
+        accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+        plan.add(accntReqForAD);
+
+        accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Contractors,ou=Group,dc=my-domain,dc=com"));
+        accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=WebApplicationAccess,ou=Group,dc=my-domain,dc=com"));
+        accntReqForLDAP.add(new AttributeRequest("businessCategory","Inactive"));
+        plan.add(accntReqForAD);
+        plan.add(accntReqForLDAP);
+        }
+        else
+        {
+        accntReqForAD.add(new AttributeRequest("memberOf",ProvisioningPlan.Operation.Add,"CN=All_Users,OU=Groups,OU=Demo,DC=Eshiam,DC=com"));
+        accntReqForAD.add(new AttributeRequest("userAccountControl",ProvisioningPlan.Operation.Add,"514"));
+
+        accntReqForLDAP.add(new AttributeRequest("groups",ProvisioningPlan.Operation.Add,"cn=Users,ou=Group,dc=my-domain,dc=com"));
+        accntReqForLDAP.add(new AttributeRequest("businessCategory","Inactive"));
+
+        plan.add(accntReqForAD);
+        plan.add(accntReqForLDAP);
+
+        }
+
+        ProvisioningProject project= pr.compile(plan);
+        log.error("-----project--"+project.toXml());
+        pr.execute(project);
+
+        Attributes attrs =new Attributes();
+        attrs.put("ADAccntReq",accntReqForAD);
+        attrs.put("LDAPccntReq",accntReqForLDAP);
+        workflow.put("audit",attrs);
+        log.error("--------attrs----------------"+attrs);
+
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="AuditEvent creation"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Task" name="AuditEvent creation" posX="213" posY="11">
+                    
+        
+        <Script>
+                              
+            
+            <Source><![CDATA[
+        import sailpoint.object.*;
+        import sailpoint.object.ProvisioningPlan.AccountRequest;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.AuditEvent;
+        import sailpoint.object.Attributes;
+
+
+        AuditEvent auditEvent=new AuditEvent();
+
+        auditEvent.setAction("HR Source Joiner event");
+        auditEvent.setSource(launcher);
+        auditEvent.setTarget(identityName);
+        auditEvent.setApplication("ActiveDirectory");
+        auditEvent.setAttributeName("memberOf");
+
+        Attributes attrs1 =new Attributes();
+        attrs1.setMap(audit);
+        auditEvent.setAttributes(attrs1);
+        log.error("--------attrs1----------------"+attrs1);
+
+        context.saveObject(auditEvent);
+        log.error("-----auditEvent----------"+auditEvent.toXml());
+        context.commitTransaction();
+      ]]></Source>
+                            
+        
+        </Script>
+                    
+        
+        <Transition to="Stop"/>
+                  
+    
+    </Step>
+          
+    
+    <Step icon="Stop" name="Stop" posX="367" posY="6"/>
+        
+
+</Workflow>

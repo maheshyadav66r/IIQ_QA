@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="email correlation" type="BuildMap">
+          
+    
+    <Description>This rule is used by the delimited file connector to build a map representation of the delimited data.</Description>
+          
+    
+    <Signature returnType="Map"/>
+          
+    
+    <Source><![CDATA[import sailpoint.connector.DelimitedFileConnector;
+
+Map map=DelimitedFileConnector.defaultBuildMap(cols,record);
+
+//System.out.println("cols"+cols);
+//System.out.println("record"+record);
+
+String fName=map.get("FirstName");
+String lName=map.get("LastName");
+
+
+
+if(map.get("Email")==null){
+String mail=fName+"."+lName+"@eshiam.com";
+map.put("Email",mail);
+}
+if(map.get("status").equalsIgnoreCase("inactive")){
+//map.put("status","active");
+
+map.replace("status","active");
+}
+System.out.println(map);
+
+return map;]]></Source>
+        
+
+</Rule>

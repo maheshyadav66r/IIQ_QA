@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="sailpoint-Rule-Practice" significantModified="1716297449839" type="Validation">
+          
+    
+    <Signature returnType="Map"/>
+          
+    
+    <Source><![CDATA[
+
+  import sailpoint.api.*;
+  import sailpoint.object.*;
+  import java.lang.String;
+  import java.util.HashMap;
+
+  // import object.QueryOptions();
+
+
+
+
+  Identity id = new Identity();
+  /*
+  id.setDisplayName("Mahesh Yadav");
+  id.setName("Mahesh Yadav");
+  id.setEmail("mahesh.yadav@sailpoint.com");
+  id.setFirstname("Mahesh");
+  id.setLastname("Yadav");
+  id.setManager(context.getObjectByName(Identity.class,"Aaron Nichols"));
+  id.setManagerStatus(true);
+  id.setPassword("Mahesh@123");
+  */
+
+
+  Attributes attrs=new Attributes();
+  Map map=new HashMap();
+  map.put("employeeId","1997");
+  map.put("firstname","DJ");
+  map.put("lastname","Tillu");
+  map.put("email","djtillu@eshiam.com");
+  attrs.setMap(map);
+  id.setAttributes(attrs);
+
+
+  Attributes entAttrs=new Attributes();
+  List entlist=new ArrayList();
+  Map entMap=new HashMap();
+  entMap.put("memberOf",entlist);
+  entAttrs.setMap(entlist);
+
+
+  entlist.add("CN=AccountingGeneral,OU=Groups,OU=Demo,DC=Eshiam,DC=com");
+  entlist.add("CN=Contractors,OU=Groups,OU=Demo,DC=Eshiam,DC=com");
+  id.setAttributes(entAttrs);
+
+  return id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Filter filter = Filter.collectionCondition("links",Filter.and(Filter.eq("application.name","ActiveDirectory"),Filter.eq("application.name","HR-Application"))); 
+  QueryOptions qo=new QueryOptions();
+  qo.add(filter);
+  List identitiesList=context.getObjects(Identity.class,qo);
+  return identitiesList.size();
+
+
+
+
+
+
+
+  Application app1=context.getObjectByName(Application.class,"HR-Application");
+  Application app2=context.getObjectByName(Application.class,"ActiveDirectory");
+
+  List idList=new ArrayList();
+  List ids=context.getObjects(Identity.class);
+  for(Identity idnty:ids){
+    List linksList=idnty.getLinks();
+    for(Liks link:linksList){
+      if(link.application.name.equalsIgnoreCase(app1)){
+        return idnty;
+      }
+    }
+  }
+
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

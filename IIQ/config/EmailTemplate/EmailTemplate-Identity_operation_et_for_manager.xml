@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE EmailTemplate PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<EmailTemplate name="identity_Operation_ET_for_manager" significantModified="1749554868468">
+          
+    
+    <Body>
+    Dear  $!manager, 
+    
+    An account has been $!operation for $!user in the $!applicationName application successfully which was requested by $!launcher. 
+    
+    Thank you 
+
+    
+  </Body>
+          
+    
+    <From>admin@eshiam.com</From>
+          
+    
+    <Signature>
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="operation" type="string"/>
+                              
+            
+            <Argument name="manager" type="string"/>
+                              
+            
+            <Argument name="launcher" type="string"/>
+                              
+            
+            <Argument name="user" type="string"/>
+                              
+            
+            <Argument name="applicationName" type="string"/>
+                            
+        
+        </Inputs>
+                  
+    
+    </Signature>
+          
+    
+    <Subject>Regarding the Updates on the identity accounts </Subject>
+        
+
+</EmailTemplate>

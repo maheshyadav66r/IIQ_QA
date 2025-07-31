@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-uncorrelatedIdentities" type="Validation">
+          
+    
+    <Description>This rule can be used for Certification Events that use rule triggers. The previousIdentity and newIdentity hold snapshots of the identity before the update has occurred and the state of the identity after the update, respectively.</Description>
+          
+    
+    <Source><![CDATA[import java.text.SimpleDateFormat;
+  import java.util.Date;
+  import java.util.Calendar;
+  import sailpoint.tools.Util;
+  import sailpoint.object.*;
+
+  Filter f1=Filter.eq("correlated","false");
+Identity newIdentity=context.getObjectByName(Identity.class,"Vijay Shankar");
+
+  
+  
+  
+  
+  return currentDateCheck;]]></Source>
+        
+
+</Rule>

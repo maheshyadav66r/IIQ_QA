@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+
+
+
+<title>Doctor Appointment FORM</title>
+<script>
+
+
+
+
+
+function onClickSaveHospitalRegistry(context) {
+	var  hospitalRegistry= {};
+
+	hospitalRegistry.hospitalName = document.getElementById("hospitalName").value;
+	hospitalRegistry.hospitalCode = document.getElementById("hospitalCode").value;
+	hospitalRegistry.action = "Save";
+
+	hospitalRegistry.hospitalToDoctorList= [];
+	var index = 0;
+	while (document.getElementById("hospitalToDoctor_" + index + "_appointmentFee")) {
+		console.log(hospitalRegistry.hospitalToDoctorList.length);
+		hospitalRegistry.hospitalToDoctorList[index] = {};
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor = {};
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor.appointmentFee = document.getElementById("hospitalToDoctor_" + index + "_appointmentFee").value;
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor.startHours = document.getElementById("hospitalToDoctor_" + index + "_startHours").value;
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor.startMinutes = document.getElementById("hospitalToDoctor_" + index + "_startMinutes").value;
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor.endHours = document.getElementById("hospitalToDoctor_" + index + "_endHours").value;
+		hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor.endMinutes = document.getElementById("hospitalToDoctor_" + index + "_endMinutes").value;
+		//hospitalRegistry.hospitalToDoctorList[index].hospitalToDoctor = action;
+		index = index + 1;
+	}
+
+
+
+	var requestJson = JSON.stringify(hospitalRegistry);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/DoctorAppointmentBooking/HospitalRegistryServlet", true);
+	xhr.onload = () => {
+		if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+			console.log(xhr.response);
+			document.getElementById("status").innerHTML = "Saved Succesfully"
+		}
+	};
+	xhr.send(requestJson);
+}
+
+
+
+function onClickDeleteHospitalRegistry(context) {
+	var hospitalRegistry = {};
+	hospitalRegistry.hospitalName = document.getElementById("hospitalName").value;
+	hospitalRegistry.action = "Delete";
+	var requestJson = JSON.stringify(hospitalRegistry);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", "/DoctorAppointmentBooking/HospitalRegistryServlet", true);
+	xhr.onload = () => {
+		if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+			console.log(xhr.response);
+			//var fuelStationObj = {};
+			//fuelStationObj.addresses = [];
+			//fuelStationObj.addresses[0] = {};
+			//updateFuelStationDetails(fuelStationObj);
+		}
+	};
+	xhr.send(requestJson);
+}
+
+	function onClickAddHospitalToDoctor(context) {
+		var eventNode = context;
+		var id = eventNode.id;
+		var index = eventNode.getAttribute("data-index");
+		var node = document.getElementById("hospitalToDoctorTableBody");
+		var newIndex = parseInt(index) + 1;
+		while (document.getElementById("hospitalToDoctorRegistryTableRow_"
+				+ newIndex)) {
+			newIndex = newIndex + 1;
+		}
+		node.appendChild(getHospitalToDoctorRow(newIndex));
+		node.innerHTML = node.innerHTML;
+	}
+
+	function getHospitalToDoctorRow(index) {
+		var row = document.createElement("tr");
+		row.id = "hospitalToDoctorTableRow_" + index;
+		row.required = "required";
+
+		row.appendChild(getAppointmentFeeTd(index));
+		row.appendChild(getStartHoursTd(index));
+		row.appendChild(getStartMinutesTd(index));
+		row.appendChild(getEndHours(index));
+		row.appendChild(getEndMinutes(index));
+		row.appendChild(getHospitalToDoctorAddTd(index));
+		row.appendChild(getHospitalToDoctorDeleteTd(index));
+		return row;
+
+	}
+	 <!-- by giving doctor name in UI get doctor id from doctorRegistry table -->
+
+	function getDoctorNameTd(index) {
+		var td = document.createElement("td");
+		var select = document.createElement("select");
+		select.id = "hospitalToDoctorList" + index + "doctorName";
+
+		td.appendChild(select);
+		return td;
+	}
+	function getAppointmentFeeTd(index) {
+		var td = document.createElement("td");
+		var select = document.createElement("select");
+		select.id = "hospitalToDoctorList" + index + "_appointmentFee";
+
+		td.appendChild(select);
+		return td;
+
+	}
+	function getStartHoursTd(index) {
+		var td = document.createElement("td");
+		var input = document.createElement("input");
+		input.type = "text";
+		input.required = "";
+		input.id = "hospitalTodoctorList_" + index + "_startHours";
+
+		td.appendChild(input);
+
+		return td;
+	}
+	function getStartMinutesTd(index) {
+		var td = document.createElement("td");
+		var select = document.createElement("select");
+		select.id = "hospitalTodoctorList_" + index + "_startMinutes";
+
+		td.appendChild(select);
+		return td;
+	}
+	function getEndHours(index) {
+		var td = document.createElement("td");
+		var input = document.createElement("input");
+		input.type = "text";
+		input.id = "hospitalTodoctorList_" + index + "_endHours";
+
+		td.appendChild(input);
+
+		return td;
+	}
+
+	function getEndMinutes(index) {
+		var td = document.createElement("td");
+		var input = document.createElement("input");
+		input.type = "text";
+		input.id = "hospitalTodoctorList_" + index + "_endMinutes";
+
+		td.appendChild(input);
+
+		return td;
+	}
+	function getHospitalToDoctorAddTd(index) {
+		var td = document.createElement("td");
+		td.innerHTML = '<button id="Add"' + index + ' data-index="' + index
+				+ '" onclick="onClickAddHospitalToDoctor(this)">Add</button>';
+		return td;
+	}
+	function getHospitalToDoctorDeleteTd(index) {
+		var td = document.createElement("td");
+
+		td.innerHTML = '<button id="Delete"'
+				+ index
+				+ ' data-index="'
+				+ index
+				+ '" onclick="onClickDeleteHospitalToDoctor(this)">Delete</button>';
+		return td;
+	}
+
+	function onClickDeleteHospitalToDoctor(context) {
+		var node = context;
+		var id = node.id;
+		var index = node.getAttribute("data-index");
+		var node = document.getElementById("hospitalToDoctorTableBody");
+		if (document.getElementById("hospitalToDoctorTableRow_" + index))
+			node.removeChild(document
+					.getElementById("hospitalToDoctorTableRow_" + index));
+	}
+</script>
+<body>
+	<form id="hospitalRegistryForm" action="HospitalRegistryServlet">
+		<div id="HospitalRegistryDetails">
+			<div>
+				<span id="status"></span>
+			</div>
+			<input type="hidden" id="id" value="" />
+			<div>
+				<label>Hospital Name :</label><input type="text" id="hospitalName"
+					value="" onchange="javascript:onChangeHospitalName(this);" />
+			</div>
+			<br>
+			<div>
+				<label>Hospital Code :</label><input type="text" id="hospitalCode"
+					value="" />
+			</div>
+			<br>
+			<div>
+				<label>Hospital Start Date :</label><input type="text"
+					id="hospitalStartDate" value=""
+					onchange="javascript:onChangehospitalStartDate(this);" />
+			</div>
+			<br>
+			<div>
+				<label>Hospital End Date :</label><input type="text"
+					id="hospitalEndDate" value=""
+					onchange="javascript:onChangeHospitalEndDate(this);" />
+			</div>
+			<br>
+		</div>
+		<div id="hospitalToDoctor">
+			<table id="hospitalToDoctorTable">
+				<thead id="hospitalToDoctorableHeader">
+					<tr id="hospitalToDoctorTableHeaderRow">
+						<td>Doctor Name</td>
+						<td>Appointment Fee</td>
+						<td>Start Hours</td>
+						<td>Start Minutes</td>
+						<td>End Hours</td>
+						<td>End Minutes</td>
+
+
+						<td>
+							<button type="button" id="Add0" doctorName="addHospitalToDoctor"
+								onclick="onClickAddHospitalToDoctor(this);">Add</button>
+
+						</td>
+					</tr>
+				</thead>
+				<tbody id="hospitalToDoctorTableBody">
+					<tr id="hospitalToDoctorTableRow_0">
+						<td><input type="text" id="hospitalToDoctor_0_doctorName"
+							value="" /></td>
+						<td><input type="number"
+							id="hospitalToDoctor_0_appointmentFee" value="" /></td>
+						<td><input type="number" id="hospitalToDoctor_0_startHours"
+							value="" /></td>
+						<td><input type="number" id="hospitalToDoctor_0_startMinutes"
+							value="" /></td>
+						<td><input type="number" id="hospitalToDoctor_0_endHours"
+							value="" /></td>
+						<td><input type="number" id="hospitalToDoctor_0_endMinutes"
+							value="" /></td>
+						<td>
+							<button type="button" id="Delete0" name="deleteHospitalToDoctor"
+								onclick="onClickDeleteHospitalToDoctor(this);">Delete</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>
+				<button type="button" id="save" name="SaveHospitalRegistry"
+					onclick="onClickSaveHospitalRegistry(this);">SaveHospitalRegistry</button>
+				<button type="button" id="delete" name="deleteCustomer"
+					onclick="onClickDeleteHospitalRegistry(this);">DeleteHospitalRegistry</button>
+			</div>
+		</div>
+	</form>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+

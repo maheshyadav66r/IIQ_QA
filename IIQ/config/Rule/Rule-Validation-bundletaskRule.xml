@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-BundleTask Rule" significantModified="1729672890693" type="Validation">
+          
+    
+    <Source><![CDATA[
+  import sailpoint.object.Identity;
+  import sailpoint.object.Bundle;
+  import sailpoint.api.*;
+  import sailpoint.object.Filter;
+  import sailpoint.object.QueryOptions;
+  import sailpoint.object.Profile;
+  import sailpoint.object.Schema;
+  import sailpoint.object.Application;
+  import sailpoint.object.AttributeDefinition;
+  import java.lang.Exception.*;
+
+  log.error("---------------Rule is triggered from requestDefinition ----------------");
+
+  QueryOptions qo=new QueryOptions();
+  Filter f=Filter.eq("type","it");
+  qo.addFilter(f);
+
+  Iterator it=context.search(Bundle.class,qo);
+    //log.error("---AD Account Schema ---"+schema.toXml());
+
+    while(it.hasNext()){
+    Bundle bundle=it.next();
+    String propertyName="";
+    List profilelist=bundle.getProfiles();
+    if(profilelist!=null){
+      for(Profile profile:profilelist){
+        Application application=profile.getApplication();
+        if(application!=null){
+          Schema schema=application.getAccountSchema();
+          // log.error("---AD Account Schema ---"+schema.toXml());
+          if(constrantsList!=null){
+            List constrantsList=profile.getConstraints();
+            for(Filter filter:constrantsList){
+              propertyName=filter.getProperty(); 
+              // log.error("--- propertyName  from filter ---"+propertyName);
+              List EntValueList=filter.getValue();
+              //log.error("--- EntValueList  from filters of profile ---"+EntValueList);
+              AttributeDefinition attributeDefinition = schema.	getAttributeDefinition(propertyName);
+              if(attributeDefinition==null){
+                log.error("For role"+bundle.getName()+" profile, unable to find attribute "+ propertyName +" in ' account ' schema for application "+application.getName());
+              }
+              /*else{
+                  log.error(" Attribute  found in  application "+application.getName()+" Schema named: " + propertyName);
+
+                }*/
+              else if(attributeDefinition.isEntitlement()==true @and !attributeDefinition.isManaged()){
+                log.error(" Attribute  found in  application "+application.getName()+" Schema named: " + propertyName +" but not managed ");
+
+              }
+              /*else{
+                  log.error(" Attribute  found in  application "+application.getName()+" Schema named: " + propertyName+"and it is managed");
+                }*/
+              else if(attributeDefinition.isEntitlement()==true @and attributeDefinition.isManaged()==true){
+                if(EntValueList==null)
+                  log.error(" Attribute  " + propertyName +" does not contain value ");
+                else
+                  log.error(" Attribute " + propertyName +" has values");
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return "success";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Bundle bundle=context.getObjectByName(Bundle.class,"AccountingITRoleHTask");
+  // log.error("------AccountingITRoleHTask------------"+bundle.toXml());
+
+  /*  for(Profile profile:bundle.getProfiles()){
+    log.error("---------Profile obje ct-----------"+profile.toXml());
+    for(Filter filter:profile.getConstraints()){
+      List entValues=filter.getValue();
+      log.error("---------filter-----------"+filter.toXml());
+      log.error("---------entValues-----------"+entValues);
+
+    }
+  }
+
+  return bundle;*/
+
+
+
+
+
+  ]]></Source>
+        
+
+</Rule>

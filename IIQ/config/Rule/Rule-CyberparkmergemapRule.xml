@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="CyberParkMergeMap rule" significantModified="1722254634757" type="MergeMaps">
+          
+    
+    <Description>This rule merges two maps together. This is used when there are multiple lines that represent the same object, and certain attributes have to merged.</Description>
+          
+    
+    <Signature returnType="Map">
+                    
+        
+        <Inputs>
+                              
+            
+            <Argument name="log" type="org.apache.commons.logging.Log">
+                                        
+                
+                <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="context" type="sailpoint.api.SailPointContext">
+                                        
+                
+                <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="application">
+                                        
+                
+                <Description>
+          The application associated with the Connector calling the rule.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="schema">
+                                        
+                
+                <Description>
+          The Schema from the application.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="current">
+                                        
+                
+                <Description>
+          The current Map object that needs merging.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="newObject">
+                                        
+                
+                <Description>
+          The new Map object that needs merging.
+        </Description>
+                                      
+            
+            </Argument>
+                              
+            
+            <Argument name="mergeAttrs">
+                                        
+                
+                <Description>
+          A List of the attributes to merge.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Inputs>
+                    
+        
+        <Returns>
+                              
+            
+            <Argument name="map">
+                                        
+                
+                <Description>
+          A Map of the current and new maps, merged according to the attributes list.
+        </Description>
+                                      
+            
+            </Argument>
+                            
+        
+        </Returns>
+                  
+    
+    </Signature>
+          
+    
+    <Source><![CDATA[import org.apache.log4j.Logger;
+Logger custLog = Logger.getLogger("CyberParkMergeMap rule");
+Map mergedMap=new HashMap(current);
+  List attrList=new ArrayList();
+  List additionalattrList=new ArrayList();
+
+custLog.fatal("This is a fatal error message.");
+custLog.error("This is an error message.");
+custLog.warn("This is a warn message.");
+custLog.info("This is an info message.");
+custLog.debug("This is a debug message.");
+custLog.trace("This is a trace message.");
+
+  String currentAttValue=(String)mergedMap.get(mergeAttrs.get(0));
+  //log.error("---currentAttValue ---------"+currentAttValue);
+  String  newAttType=(String)newObject.get(mergeAttrs.get(0));
+  //log.error("---newAttType ---------"+newAttType);
+  if(currentAttValue!=null){
+    if(newAttType!=null)
+    {
+      if(!mergedMap.containsKey(currentAttValue))
+      {
+        attrList.add(mergedMap.get("Entitlement_Value"));
+        mergedMap.put(currentAttValue,attrList);
+        log.error("-----mergedMap after first setting of attrvalue---"+mergedMap);
+      }
+      if(mergedMap.containsKey(newAttType))
+      {
+        List existAttrValue=(List)mergedMap.get(newAttType);
+        existAttrValue.add(newObject.get("Entitlement_Value"));
+        mergedMap.put(newAttType,existAttrValue);
+        log.error("-----mergedMap after additional attr setting ---"+mergedMap);
+      }
+      else
+      {
+        additionalattrList.add(newObject.get("Entitlement_Value"));
+        mergedMap.put(newAttType,additionalattrList);
+
+        log.error("mergedMap-----after "+mergedMap);
+      }
+    }
+  }
+
+  log.error("--- mergedMap---------"+mergedMap);
+
+  return mergedMap;]]></Source>
+        
+
+</Rule>

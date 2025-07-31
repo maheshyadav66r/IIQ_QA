@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Validation-Rule-MaheshTwo" significantModified="1719330861337" type="Validation">
+          
+    
+    <Source><![CDATA[
+ import sailpoint.object.*;
+ import sailpoini.api.sailpointContext;
+  
+  Identity identity=context.getObjectByName(Identity.class,"Aaron Nichols");
+  
+  String dn=identity.getFirstname()+"."+identity.getLastname();
+    String fullName=identity.getDisplayName();
+
+  return fullName;
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  Application app=context.getobjectByName(Application.class,"JDBC");
+  link link=identity.getLink(app);
+ // String fn=(String)link.getAttribute("FirstName");
+  //if(link.getApplicationName().equals("JDBC-Application"))
+   
+    return link;
+  ]]></Source>
+        
+
+</Rule>

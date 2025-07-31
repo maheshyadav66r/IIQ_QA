@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Filters-and method" significantModified="1715775485500" type="Validation">
+          
+    
+    <Source><![CDATA[   
+  import sailpoint.object.*;
+  import sailpoint.api.*;
+
+											
+  Filter f=Filter.eq("firstname","Aaron");
+  Identity identity=context.getUniqueObject(Identity.class,f);
+  List links=identity.getLinks();
+  return links;
+  
+  
+  
+  
+  
+  
+ /* Filter f=Filter.eq("firstname","Aaron");
+  Identity identity=context.getUniqueObject(Identity.class,f);
+  List links=identity.getLinks();
+   //return links;
+   return links.size();*/
+ // return identity.getFirstname();
+  
+  
+  
+  
+  Filter f1=Filter.eq("firstname","robert");
+  Filter f2=Filter.eq("lastname","brown");
+  filter=Filter.ignoreCase(Filter.and(f1,f2));
+  Identity id=context.getUniqueObject(Identity.class,filter);
+
+// To fetch all the links(List) of a particular identity
+  List linkslist=id.getLinks();
+  return linkslist;
+  
+  
+  //To fetch the specified link of a particular identity
+  Application app=context.getObjectByName(Application.class,"ActiveDirectory");
+    Link l=id.getLink(app);
+  return l;
+
+
+
+
+  if(null!=id){
+
+    return  id.getLink(context.getObject("ActiveDirectory"));
+    //return id.getName();
+    // return id;
+    //return id.getManager().getName();
+    return id.getLinks();
+
+  }   
+  ]]></Source>
+        
+
+</Rule>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Form PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Form name="Form-EventTriggersForIdentities" significantModified="1740979727715" type="Workflow">
+          
+    
+    <Section name="Report Inputs">
+                    
+        
+        <Field displayName="AuditEvent" name="auditEvent" type="AuditEvent">
+                              
+            
+            <Script>
+                                        
+                
+                <Source><![CDATA[
+          import sailpoint.object.*;
+          import sailpoint.api.*;
+
+          QueryOptions qo=new QueryOptions();
+          Filter f=Filter.eq("action",context.getObjectById(IdentityTrigger.class,value).getName())
+          qo.add(f)
+          Iterator it=context.search(AuditEvent.class,qo);
+          
+          List aelist=new ArrayList();
+          while(it.hasNext()){
+          aelist.add(it.next()[0]);
+          }
+
+
+          return aelist;
+
+        ]]></Source>
+                                      
+            
+            </Script>
+                            
+        
+        </Field>
+                  
+    
+    </Section>
+        
+
+</Form>
